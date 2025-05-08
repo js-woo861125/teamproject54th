@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	</th:block>
+
+    <th:block layout:fragment="content">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title" th:text="@{#}"></h2>
+            </div>
+            <div>
+                <a th:href="@{#}" class="btn btn-primary btn-sm rounded">등록하기</a>
+            </div>
+         </div>
+        <div class="card mb-4">
+            <header class="card-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <form class="searchform">
+                            <div class="input-group">
+                                <input list="search_terms" type="text" class="form-control" placeholder="Search term" />
+                                <button class="btn btn-light bg" type="button"><i class="material-icons md-search"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col">
+                        <select class="form-select">
+                            <option>모든 카테고리</option>
+                            <option>TV</option>
+                            <option>노트북</option>
+                            <option>전기레인지</option>
+                            <option>냉장고</option>
+                            <option>식탁</option>
+                            <option>소파</option>
+                            <option>침대</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <select class="form-select">
+                            <option>판매상태</option>
+                            <option>활성화</option>
+                            <option>비활성화</option>
+                            <option>판매중단</option>
+                        </select>
+                    </div>
+                </div>
+            </header>
+            <!-- card-header end// -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class=text-center>
+                                <th>No.</th>
+                                <th>상품명</th>
+                                <th>카테고리</th>
+                                <th>판매상태</th>
+                                <th>등록일자</th>
+                                <th>수정/삭제</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class=text-center>
+                                <td>1</td>
+                                <td class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
+                                    <a class="itemside" href="#">
+                                        <div class="img">
+                                            <img src="https://storage.bilrigo.com/data/thumbnails/230421/QXWVYba3s51p1vlpZVXnKF3dd8JYAC.jpg" class="img-sm img-thumbnail" alt="Item" />
+                                        </div>
+                                        <div class="info">
+                                            <h6 class="mb-0">라온 LED 저상형 침대 SS</h6>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-products_category"><span>침대</span></td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-status">
+                                    <span class="badge rounded-pill alert-success">활성화</span>
+                                    <div class="dropdown">
+                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">활성화</a>
+                                            <a class="dropdown-item" href="#">비활성화</a>
+                                            <a class="dropdown-item text-danger" href="#">판매중단</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="col-lg-1 col-sm-2 col-4 p-1 col-date">
+                                    <span>2023.01.01</span>
+                                </td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-action">
+                                    <a href="#" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
+                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
+                                </td>
+                            </tr>
+                            <tr class=text-center>
+                                <td>2</td>
+                                <td class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
+                                    <a class="itemside" href="#">
+                                        <div class="left">
+                                            <img src="https://storage.bilrigo.com/data/thumbnails/230421/gkBmzbkUyfafXpDJFjeFbTtdGUDjq9.jpg" class="img-sm img-thumbnail" alt="Item" />
+                                        </div>
+                                        <div class="info">
+                                            <h6 class="mb-0">라온 LED 저상형 침대 Q</h6>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-products_category"><span>침대</span></td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-status">
+                                    <span class="badge rounded-pill alert-warning">비활성화</span>
+                                    <div class="dropdown">
+                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">활성화</a>
+                                            <a class="dropdown-item" href="#">비활성화</a>
+                                            <a class="dropdown-item text-danger" href="#">판매중단</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="col-lg-1 col-sm-2 col-4 p-1 col-date">
+                                    <span>2023.01.01</span>
+                                </td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-action">
+                                    <a href="#" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
+                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
+                                </td>
+                            </tr>
+                            <tr class=text-center>
+                                <td>3</td>
+                                <td class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
+                                    <a class="itemside" href="#">
+                                        <div class="left">
+                                            <img src="https://storage.bilrigo.com/data/thumbnails/230412/11541_11538_11537_W6ryaAqhlECwBnWJSKAeDyZwv8l9bW.jpg" class="img-sm img-thumbnail" alt="Item" />
+                                        </div>
+                                        <div class="info">
+                                            <h6 class="mb-0">라온 LED 저상형 침대 SS+SS</h6>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-products_category"><span>침대</span></td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-status">
+                                    <span class="badge rounded-pill alert-danger">판매중단</span>
+                                    <div class="dropdown">
+                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">활성화</a>
+                                            <a class="dropdown-item" href="#">비활성화</a>
+                                            <a class="dropdown-item text-danger" href="#">판매중단</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="col-lg-1 col-sm-2 col-4 p-1 col-date">
+                                    <span>2023.01.01</span>
+                                </td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-action">
+                                    <a href="#" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
+                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
+                                </td>
+                            </tr>
+                            <tr class=text-center>
+                                <td>4</td>
+                                <td class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
+                                    <a class="itemside" href="#">
+                                        <div class="left">
+                                            <img src="https://storage.bilrigo.com/data/thumbnails/230719/xhVLckmrrMJY3Dzlvu9eg41c4MLfeS.jpg" class="img-sm img-thumbnail" alt="Item" />
+                                        </div>
+                                        <div class="info">
+                                            <h6 class="mb-0">LG스텐바이미 go 27''</h6>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-products_category"><span>TV</span></td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-status">
+                                    <span class="badge rounded-pill alert-warning">비활성화</span>
+                                    <div class="dropdown">
+                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">활성화</a>
+                                            <a class="dropdown-item" href="#">비활성화</a>
+                                            <a class="dropdown-item text-danger" href="#">판매중단</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="col-lg-1 col-sm-2 col-4 p-1 col-date">
+                                    <span>2023.01.01</span>
+                                </td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-action">
+                                    <a href="#" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
+                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
+                                </td>
+                            </tr>
+                            <tr class=text-center>
+                                <td>5</td>
+                                <td class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
+                                    <a class="itemside" href="#">
+                                        <div class="left">
+                                            <img src="https://storage.bilrigo.com/data/thumbnails/240307/FJdxDTcJvhbLTaXF8JX1VW4NcCMZs3.jpg" class="img-sm img-thumbnail" alt="Item" />
+                                        </div>
+                                        <div class="info">
+                                            <h6 class="mb-0">삼성크리스탈 UHDTV 85인치''</h6>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-products_category"><span>TV</span></td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-status">
+                                    <span class="badge rounded-pill alert-success">활성화</span>
+                                    <div class="dropdown">
+                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">활성화</a>
+                                            <a class="dropdown-item" href="#">비활성화</a>
+                                            <a class="dropdown-item text-danger" href="#">판매중단</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="col-lg-1 col-sm-2 col-4 p-1 col-date">
+                                    <span>2023.01.01</span>
+                                </td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-action">
+                                    <a href="#" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
+                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- table-responsive //end -->
+            </div>
+            <!-- card-body end// -->
+        </div>
+   </th:block>    
+        <!-- card end// -->
+        <div class="pagination-area mt-15 mb-50">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-start">
+                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                    <li class="page-item"><a class="page-link" href="#">02</a></li>
+                    <li class="page-item"><a class="page-link" href="#">03</a></li>
+                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#">16</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    <!-- content-main end// -->
+
+        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/vendors/select2.min.js"></script>
+        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+    </body>
+</html>

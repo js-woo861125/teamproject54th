@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <meta charset="utf-8" />
+        <title th:text="${title}">관리자페이지</title>
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" th:href="@{/manage/assets/imgs/theme/favicon.svg}" />
+        <!-- Template CSS -->
+        <link th:href="@{/manage/assets/css/main.css}" rel="stylesheet" type="text/css" />
+    </head>
+
+    <body>
+        <div class="screen-overlay"></div>
+        <!--/* "src/main/resources/templates/" + 논리주소 + ".html" ~{논리주소 :: 조각이름} */-->
+        <!--/* 제일 실수하는 부분, 정말 많이 실수하는 부분, 이렇게 얘기를해도 실수하는 부분, 백날 얘기해도 실수하는 부분 */-->
+        <!-- aside start -->
+        <aside th:replace="~{enterprise/fragments/aside :: asideFragment}"></aside>
+        <!-- aside end -->
+        <main class="main-wrap">
+        	<!-- header start -->
+            <!--/* <header th:replace="~{enterprise/fragments/header :: headerFragment}"></header> */-->
+            <!-- header end -->
+            <section class="content-main">
+            	
+            	<!--/* 페이지 삽입 공간 지정 start */-->
+            	<th:block layout:fragment="content"></th:block>
+            	<!--/* 페이지 삽입 공간 지정 end */-->
+            	
+            </section>
+            <!-- content-main end// -->
+            <footer th:replace="~{enterprise/fragments/footer :: footerFragment}"></footer>
+        </main>
+        <script th:src="@{/manage/assets/js/vendors/jquery-3.6.0.min.js}"></script>
+        <script th:src="@{/manage/assets/js/vendors/bootstrap.bundle.min.js}"></script>
+        <script th:src="@{/manage/assets/js/vendors/select2.min.js}"></script>
+        <script th:src="@{/manage/assets/js/vendors/perfect-scrollbar.js}"></script>
+        <script th:src="@{/manage/assets/js/vendors/jquery.fullscreen.min.js}"></script>
+        <!-- Main Script -->
+        <script th:src="@{/manage/assets/js/main.js}" type="text/javascript"></script>
+        <!--/* js 파일 삽입 공간 */-->
+       	<th:block layout:fragment="jsFile"></th:block>
+       	<!--/* 스크립트 작성 공간 */-->
+       	<th:block layout:fragment="jsScript"></th:block>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

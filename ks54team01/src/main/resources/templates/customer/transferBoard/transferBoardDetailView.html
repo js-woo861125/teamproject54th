@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{customer/layout/default}">
+
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+	
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+        <div class="container mb-30">
+            <div class="row">
+                <div class="col-xl-11 col-lg-12 m-auto">
+                    <div class="row">
+                        <div class="col-xl-9 product-info mt-30">
+                            <div class="product-detail accordion-detail" th:object="${transferBoardInfo}">
+                                <div class="row mb-50 mt-30">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="detail-info pr-30 pl-30 product-info">
+                                            <h2 th:text="*{transferTitle}" class="title-detail">SK매직 올인원 정수기 양도합니다! 곧 약정 만료됩니다.</h2>
+                                            <div class="product-detail-rating">
+                                                <div class="product-rate-cover text-end">
+                                                    <th:block th:switch="*{transferRentalProcsssingStatus}">
+			                                        	<span th:case="${'2.양도계약상태'}" 
+			                                        		  class="stock-status in-stock"> 진행중 </span>
+			                                        	<span th:case="${'3.양도계약완료'}" 
+			                                        		  class="stock-status out-stock"> 마감 </span>
+			                                        </th:block>
+                                                </div>
+                                            </div>
+                                            <div class="fs-5">
+                                                <ul class="mr-50 float-start">
+                                                    <li class="mb-20">마감일</li>
+                                                    <li class="mb-20">설치지역</li>
+                                                    <li class="mb-20">작성자</li>
+                                                </ul>
+                                                <ul class="mr-50 float-start">
+                                                    <li th:text="*{boardValidDate}" class="mb-20 text-brand">2025-05-05</li>
+                                                    <li th:text="*{customerDeliveryList.delAddr}" class="mb-20 text-brand">서울 영등포구 버드나루로 11길</li>
+                                                    <li th:text="*{customerId}" class="mb-20 text-brand">렌고쿠</li>
+                                                </ul>
+                                                <div style="clear: both;"></div>
+                                            </div>
+                                        </div>
+                                        <!-- Detail Info -->
+                                    </div>
+                                </div>
+                                <div style="width: 100%; height: 2px; min-height: 1px; margin: 0px; background-color: rgba(112, 115, 124, 0.16);"></div>
+                                <h3 class="mt-20 mb-20">찾는 상품</h3>
+                                <div class="product-info">
+                                    <div class="tab-style3">
+                                        <div class="entry-main-content">
+                                            <h4 th:text="*{productInfo.productsName}">삼성크리스탈 UHDTV 85인치</h4>
+
+                                            <div class="tab-pane fade show active" id="Description">
+                                                <div class="fs-5">
+                                                    <ul class="mr-60 float-start product-more-infor mt-30">
+                                                        <li class="mb-20">남은 계약기간</li>
+                                                        <li class="mb-20">렌탈료</li>
+                                                        <li class="mb-20">지원금</li>
+                                                    </ul>
+                                                    <ul class="mr-50 float-start product-more-infor mt-30">
+                                                        <li th:text="*{remainingMonths}" class="mb-20 text-brand">24개월</li>
+                                                        <li th:text="*{rentalFee}" class="mb-20 text-brand">₩ 20,000</li>
+                                                        <li th:text="*{individualGrants}" class="mb-20 text-brand">₩ 10,000</li>
+                                                    </ul>
+                                                    <div style="clear: both;"></div>
+                                                </div>
+                                                <div style="width: 100%; height: 1px; min-height: 1px; margin: 24px 0px; background-color: rgba(112, 115, 124, 0.16);"></div>
+                                                <h4>기타 전달사항</h4>
+                                                <p th:text="*{transferContent}">매월 첫째주에 방문케어 해주십니다!</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 primary-sidebar sticky-sidebar mt-30">
+                            <div class="sidebar-widget widget-category-2 mb-30">
+                                <h5 class="section-title style-1 mb-30">💪 내 제품 추천 하기</h5>
+                                <ul>
+                                    <li>
+                                        <a href="shop-grid-right.html">버튼으로 수정</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</th:block>
+	
+</html>

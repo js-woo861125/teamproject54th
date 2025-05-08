@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{customer/layout/default}">
+
+
+	<!-- head 삽입공간 -->
+
+	<head>
+
+	</head>
+
+
+	<th:block layout:fragment="jsFile">
+
+	</th:block>
+	
+
+	<th:block layout:fragment="jsScript">
+
+	</th:block>
+
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+    	<div class="container mb-30">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-title">
+                        <h1 class="heading-2 mb-40">양도 하기!</h1>
+                        <div class="col-md-2 col-2 ms-auto mt-50">
+                            <button type="submit"
+                                    class="btn btn-success w-50 rounded font-lg hover-up text-white justify-content-center fs-6 mb-50">글쓰기</button>
+                        </div>
+                    </div>
+                    <div class="w-50 widget_search mb-50">
+                        <div class="search-form">
+                            <form action="#">
+                                <input type="text" placeholder="게시글 검색어를 입력해주세요." />
+                                <button type="submit"><i class="fi-rs-search"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="shop-product-fillter">
+                        <div class="totall-product">
+                            <h5 class="text-body">전체 <span class="text-brand">5</span></h5>
+                        </div>
+                        <div class="sort-by-product-area">
+                            <div class="sort-by-cover mr-10">
+                                <div class="sort-by-product-wrap">
+                                    <div class="sort-by">
+                                        <a href = "#"><span>최근등록순</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sort-by-cover mr-10">
+                                <div class="sort-by-product-wrap">
+                                    <div class="sort-by">
+                                        <a href = "#"><span>낮은가격순</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sort-by-cover mr-10">
+                                <div class="sort-by-product-wrap">
+                                    <div class="sort-by">
+                                        <a href = "#"><span>마감임박순</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row product-grid">    
+                        <th:block th:if="${!#lists.isEmpty(transferBoardList)}"
+		                     	  th:each="l : ${transferBoardList}">
+	                        <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+                            	<div class="product-cart-wrap mb-30">
+	                             	<div class="product-img-action-wrap">
+	                                    <div class="product-img product-img-zoom">
+		                   					<a th:href="@{/customer/transferBoard/transferBoardDetail(transferBoardNum=${l.transferBoardNum})}">
+                                            	<img class="default-img" th:src="@{'/user/assets/imgs/shop/' + ${l.productInfo.productsImage}}" alt="" />
+	                                    	</a>
+	                                    </div>		
+	                                </div>
+	                                <div class="product-content-wrap">
+	                                    <div class="product-category">
+	                                        <a href="shop-grid-right.html">TV</a>
+	                                    </div>
+	                                    <h2 th:text="${l.transferTitle}"><a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a></h2>
+	                                    <div>
+	                                        <span th:text="${l.customerId}" class="font-small text-muted">작성자 <a href="vendor-details-1.html">우에하라 아유무</a></span>
+	                                    </div>
+	                                    <div class="product-card-bottom">
+	                                        <div class="product-price">
+	                                            <span>💸월렌탈료</span>
+	                                            <span th:text="|₩${#numbers.formatInteger(l.rentalFee, 3, 'COMMA')}">85,000원</span>
+	                                        </div>
+	                                    </div>
+	                                    <div class="product-card-bottom">
+	                                        <div class="product-price">
+	                                            <span>💰지원금</span>
+	                                            <span th:text="|₩${#numbers.formatInteger(l.individualGrants, 3, 'COMMA')}">1,000원</span>
+	                                        </div>
+	                                    </div>
+	                                    <div class = "product-card-bottom">
+	                                        <p>등록일</p>
+	                                        <p th:text="${l.registerDate}">2025-04-09</p>
+	                                        <div></div>
+	                                        <th:block th:switch="${l.transferRentalProcsssingStatus}">
+	                                        	<span th:case="${'2.양도계약상태'}" 
+	                                        		  class="stock-status in-stock"> 진행중 </span>
+	                                        	<span th:case="${'3.양도계약완료'}" 
+	                                        		  class="stock-status out-stock"> 마감 </span>
+	                                        </th:block>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+                    	</th:block>
+                    </div>
+                    <div class="pagination-area mt-20 mb-20">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item">
+                                    <a class="page-link" href="#"><i class="fi-rs-arrow-small-left"></i></a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                                <li class="page-item"><a class="page-link" href="#">6</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#"><i class="fi-rs-arrow-small-right"></i></a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</th:block>
+</html>

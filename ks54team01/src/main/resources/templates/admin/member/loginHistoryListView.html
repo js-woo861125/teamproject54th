@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	</th:block>
+	
+	<th:block layout:fragment="content">
+        <div class="content-header">
+            <h2 class="content-title" th:text="@{#}"></h2>
+        </div>
+        <div class="card mb-4">
+            <header class="card-header">
+                <div class="row gx-3">
+                    <div class="col-lg-4 col-md-6 me-auto">
+                        <input type="text" placeholder="검색어를 입력해주세요" class="form-control" />
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-6">
+                        <select class="form-select">
+                            <option>회원유형</option>
+                            <option>플랫폼직원</option>
+                            <option>개인고객</option>
+                            <option>기업고객</option>
+                            <option>입점업체 대표</option>
+                            <option>입점업체 직원</option>
+                        </select>
+                    </div>
+                </div>
+            </header>
+            <!-- card-header end// -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class=text-center>
+                                <th>로그인고유코드</th>
+                                <th>회원아이디</th>
+                                <th>회원유형</th>
+                                <th>로그인시간</th>
+                                <th>로그아웃시간</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class=text-center>
+                                <td>login_1</td>
+                                <td>ent_ceo_1</td>
+                                <td>입점업체 대표</td>
+                                <td>2023-03-01 00:00:00</td>
+                                <td>2023-03-01 00:00:00</td>
+                            </tr>
+                            <tr class=text-center>
+                                <td>login_2</td>
+                                <td>ent_ceo_2</td>
+                                <td>입점업체 대표</td>
+                                <td>2023-03-01 00:00:00</td>
+                                <td>2023-03-01 00:00:00</td>
+                            </tr>
+                            <tr class=text-center>
+                                <td>login_3</td>
+                                <td>entempid2</td>
+                                <td>입점업체 직원</td>
+                                <td>2023-03-01 14:00:00</td>
+                                <td>2023-03-01 00:00:00</td>
+                            </tr>
+                            <tr class=text-center>
+                                <td>login_4</td>
+                                <td>corpcustid2</td>
+                                <td>기업고객</td>
+                                <td>2023-04-16 00:00:00</td>
+                                <td>2023-04-16 00:00:00</td>
+                            </tr>
+                            <tr class=text-center>
+                                <td>login_5</td>
+                                <td>corpcustid3</td>
+                                <td>기업고객</td>
+                                <td>2023-04-16 00:00:00</td>
+                                <td>2023-04-16 00:00:00</td>
+                            </tr>
+                            <tr class=text-center>
+                                <td>login_6</td>
+                                <td>entempid1</td>
+                                <td>입점업체 직원</td>
+                                <td>2023-06-15 00:00:00</td>
+                                <td>2023-06-15 00:00:00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- table-responsive.// -->
+                </div>
+            </div>
+            <!-- card-body end// -->
+        </div>
+     </th:block>          
+                <!-- card end// -->
+                <div class="pagination-area mt-15 mb-50">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                            <li class="page-item"><a class="page-link" href="#">02</a></li>
+                            <li class="page-item"><a class="page-link" href="#">03</a></li>
+                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                            <li class="page-item"><a class="page-link" href="#">16</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            <!-- content-main end// -->
+        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/vendors/select2.min.js"></script>
+        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+    </body>
+</html>

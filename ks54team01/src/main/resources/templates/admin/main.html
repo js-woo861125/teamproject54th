@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script th:src="@{/manage/assets/js/vendors/chart.js}"></script>
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+		<script></script>	
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="content">
+		<div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Dashboard</h2>
+                <p>Whole data about your business here</p>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <header class="card-header">
+                <h4 class="card-title">콘텐츠 타이틀</h4>
+            </header>
+            <div class="card-body">
+                
+            </div>
+        </div>
+        
+	</th:block>
+	
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{customer/layout/default}">
+
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+		<script>
+			$('#daumPostBtn').click(function(e){
+				new daum.Postcode({
+		            oncomplete: function(data) {
+		                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+	
+		                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+		                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+		                var addr = ''; // 주소 변수
+		                var extraAddr = ''; // 참고항목 변수
+	
+		                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+		                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+		                    addr = data.roadAddress;
+		                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+		                    addr = data.jibunAddress;
+		                }
+	
+		                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+		                if(data.userSelectedType === 'R'){
+		                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+		                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+		                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+		                        extraAddr += data.bname;
+		                    }
+		                    // 건물명이 있고, 공동주택일 경우 추가한다.
+		                    if(data.buildingName !== '' && data.apartment === 'Y'){
+		                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+		                    }
+		                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+		                    if(extraAddr !== ''){
+		                        extraAddr = ' (' + extraAddr + ')';
+		                    }
+		                    // 조합된 참고항목을 해당 필드에 넣는다.
+		                    document.getElementById("memberAddress").value = extraAddr;
+		                
+		                } else {
+		                    document.getElementById("memberAddress").value = '';
+		                }
+	
+		                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+		                document.getElementById('memberZip').value = data.zonecode;
+		                document.getElementById("memberAddress").value = addr;
+		                // 커서를 상세주소 필드로 이동한다.
+		                document.getElementById("memberDetailAddress").focus();
+		            }
+		        }).open();
+			});
+			
+			
+			
+			
+		</script>
+	
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+       <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                    <span></span> Pages <span></span> My Account
+                </div>
+            </div>
+        </div>
+        <div class="page-content pt-150 pb-150">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-10 col-md-12 m-auto">
+                       <div class="row d-flex justify-content-center">
+                            <div class="col-lg-6 col-md-8">
+                                <div class="login_wrap widget-taber-content background-white">
+                                    <div class="padding_eight_all bg-white">
+                                        <div class="heading_s1 mb-20">
+                                            <h1 class="mb-30" th:text="${title}"></h1>
+                                        </div>
+                                        <form  id="entRegisterForm" th:action="@{/customer/member/entRegister}" method="post">
+                                            <div class="form-group position-relative d-flex justify-content-end">
+                                                <input type="text" name="ent-ceo-no" placeholder="대표코드를 입력하세요" required />
+                                                <button type="submit" class="btn btn-heading btn-block p-10 mt-10 mr-10 position-absolute">코드확인</button>
+                                            </div>                                   
+                                            <div class="form-group">
+                                                <input type="text" name="name" placeholder="이름" required />                                              
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" name="ent-brno" placeholder="사업자번호" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" name="ent-position" placeholder="업체명" required />
+                                            </div>
+                                            <div class="form-group d-flex">
+                                                <select class="w-auto border-1 border-radius-10 mr-10">
+                                                    <option>010</option>
+                                                    <option>02</option>
+                                                    <option>063</option>
+                                                </select>                          
+                                                <input type="text" name="ent-ceo-phone" placeholder="전화번호" required />
+                                                <button type="submit" class="btn btn-heading btn-block p-10 ml-10">인증요청</button>                                              
+                                            </div>
+			                        		 <div class="form-group position-relative d-flex justify-content-end">
+                                                <input type="text" name="memberZip" placeholder="우편번호를 입력해주세요" readonly disabled />
+                                                <button type="submit" id="daumPostBtn" class="btn btn-heading btn-block p-10 mt-10 mr-10 position-absolute">우편번호찾기</button>
+                                            </div> 
+				                        	<div class="row">
+				                        		<div class="col-6">
+						                            <div class="mb-4">
+						                                <input type="text" id="memberAddress" name="memberAddress" 
+						                                	   placeholder="주소를 입력해주세요" class="form-control fs-6" readonly disabled/>
+						                            </div>
+				                        		</div>
+				                        		<div class="col-6">
+						                            <div class="mb-4">
+						                                <input type="text" id="memberDetailAddress" name="memberDetailAddress" 
+						                                	   placeholder="상세주소를 입력해주세요" class="form-control fs-6" disabled/>
+						                            </div>
+				                        		</div>
+				                        	</div>
+                                            <div class="form-group d-flex">
+                                                <input type="text" class="w-60" name="ent-ceo-email" placeholder="Email" required />
+                                                <select class="w-auto border-1 border-radius-10 ml-10">
+                                                    <option>@naver.com</option>
+                                                    <option>@daum.net</option>
+                                                    <option>@google.com</option>                                                    
+                                                </select>                                               
+                                            </div>
+                                            <div class="form-group d-flex">
+                                                <select class="w-auto border-1 border-radius-10 mr-10">
+                                                    <option>농협</option>
+                                                    <option>기업은행</option>
+                                                    <option>국민은행</option>
+                                                </select>                          
+                                                <input type="text" name="ent-ceo-bank" placeholder="계좌번호" required />                                        
+                                            </div>                                                                                                                              
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-heading btn-block hover-up" name="add-member" th:href="@{#}">회원가입</button>
+                                            </div>
+                                            <p class="font-xs text-muted"><strong>참고:</strong>귀하의 개인 데이터는 이 웹사이트 전체에서 귀하의 경험을 지원하고, 귀하의 계정에 대한 액세스를 관리하고, 당사의 개인 정보 보호 정책에 설명된 기타 목적을 위해 사용됩니다.</p>
+                                        </form>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>                     
+                      </div>
+                  </div>
+              </div>
+          </div>
+	</th:block>
+	
+</html>

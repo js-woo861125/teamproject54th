@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/layout/default}">
+	
+	<!-- head 삽입공간 -->
+	<head>
+	
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+	
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+	
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="content">
+		<div class="content-header">
+			<div>
+				<h2 class="content-title card-title" th:text="${title}">타이틀</h2>
+			</div>
+	
+		</div>
+		<div class="card mb-4">
+			<header class="card-header">
+				<form th:action="@{/admin/contract/searchContractList}" method="get">
+					<div class="row gx-3">
+	                   <div class="col-lg-2 col-md-3 col-12">
+	                       <select class="form-select" name="searchKey">
+	                           <option value="custId" th:selected="${searchKey == 'custId'}">주문자아이디</option>
+	                           <option value="entCeoNo" th:selected="${searchKey == 'entCeoNo'}">입점업체코드</option>
+	                           <option value="sellProdNo" th:selected="${searchKey == 'sellProdNo'}">상품코드</option>
+	                       </select>
+	                   </div>
+	                   <div class="col-lg-4 col-md-5">
+	                       <input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
+	                   </div>
+	                   <div class="col-lg-1 col-md-1 me-auto">
+						   <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
+	                   </div>
+	                   <div class="col-lg-2 col-md-3 col-12">
+	                       <select class="form-select">
+	                           <option>Show 20</option>
+	                           <option>Show 30</option>
+	                           <option>Show 40</option>
+	                       </select>
+	                   </div>
+	               </div>
+				</form>
+			</header>
+			<!-- card-header end// -->
+			<div class="card-body">
+				<div class="table-responsive">
+					<div class="table-responsive">
+						<table class="table align-middle table-nowrap mb-0">
+							<thead class="table-light text-center">
+								<tr>
+									<th scope="col">
+										<div class="form-check align-middle">
+											<input class="form-check-input" type="checkbox" value="" />
+										</div>
+									</th>
+									<th class="align-middle" scope="col">주문자아이디</th>
+									<th class="align-middle" scope="col">입점업체코드</th>
+									<th class="align-middle" scope="col">상품코드</th>
+									<th class="align-middle" scope="col">계약상태</th>
+									<th class="align-middle" scope="col">수량</th>
+									<th class="align-middle" scope="col">렌탈기간</th>
+									<th class="align-middle" scope="col">계약시작일자</th>
+									<th class="align-middle" scope="col">계약종료일자</th>
+									<th class="align-middle" scope="col">계약해지일자</th>
+									<th class="align-middle" scope="col">계약등록일자</th>
+								</tr>
+							</thead>
+							<tbody class="text-center">
+								<tr th:if="${!#lists.isEmpty(ContractList)}" th:each="l : ${ContractList}">
+									<td>
+										<div class="form-check">
+											<input class="form-check-input" type="checkbox" th:value="${l.rentContNo}" />
+										</div>
+									</td>
+									<td th:text="${l.custId}">주문자아이디</td>
+									<td th:text="${l.entCeoNo}">입점업체코드 </td>
+									<td th:text="${l.entEmpId}">상품코드</td>
+									<td th:text="${l.rentContStatus}">계약상태</td>
+									<td th:text="${l.contQuantity}">수량</td>
+									<td th:text="${l.contPeriod}">렌탈기간</td>
+									<td th:text="${l.rentStartDate}">계약시작일자</td>
+									<td th:text="${l.rentEndDate}">계약종료일자</td>
+									<td th:text="${l.rentCancelDate}">계약해지일자</td>
+									<td th:text="${l.contDate}">계약등록일자</td>
+								</tr>
+								<tr th:unless="${!#lists.isEmpty(ContractList)}">
+                                	<td colspan="12">등록없음</td>
+                                </tr>
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- table-responsive //end -->
+			</div>
+			<!-- card-body end// -->
+		</div>
+		<!-- card end// -->
+		<div class="pagination-area mt-15 mb-50">
+			<nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-start">
+					<li class="page-item active"><a class="page-link" href="#">01</a></li>
+					<li class="page-item"><a class="page-link" href="#">02</a></li>
+					<li class="page-item"><a class="page-link" href="#">03</a></li>
+					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
+					<li class="page-item"><a class="page-link" href="#">16</a></li>
+					<li class="page-item"><a class="page-link" href="#"><i
+							class="material-icons md-chevron_right"></i></a></li>
+				</ul>
+			</nav>
+		</div>
+	</th:block>
+
+</html>

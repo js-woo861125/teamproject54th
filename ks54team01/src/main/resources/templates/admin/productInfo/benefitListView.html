@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	</th:block>
+
+    <th:block layout:fragment="content">
+		<div class="content-header">
+            <div>
+                <h2 class="content-title card-title" th:text="@{#}"></h2>
+            </div>
+        </div>
+        <div class="card mb-4 col-12">
+        	<form id="productInfoListForm" th:action="@{/admin/productInfo/benefitList}" method="post">	
+                 <div class="card-body">
+	           		 <div class="col-12">
+                        <div class="row gx-4">
+                            <aside class="col-lg-2 border-end">
+                                <nav class="nav nav-pills flex-column mb-4">
+                                    <a class="nav-link" th:href="@{/admin/productInfo/categoryList}">카테고리</a>
+                                    <a class="nav-link" th:href="@{/admin/productInfo/brandList}">브랜드</a>
+                                    <a class="nav-link" th:href="@{/admin/productInfo/itemList}">품목</a>
+                                    <a class="nav-link" th:href="@{/admin/productInfo/modelList}">모델</a>
+                                    <a class="nav-link active" aria-current="page" th:href="@{/admin/productInfo/benefitList}">전체혜택</a>
+                                    <a class="nav-link" th:href="@{/admin/productInfo/categorySpecList}">카테고리별/상세스펙</a>
+                                    <a class="nav-link" th:href="@{/admin/productInfo/modelSpecList}">모델별/상세스펙</a>
+                                </nav>
+                            </aside>
+                            <div class="col-lg-10">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr class=text-center>
+                                                <th>No.</th>
+                                                <th>전체혜택코드</th>
+                                                <th>혜택명</th>
+                                                <th>사용유무</th>
+                                                <th>수정/삭제</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class=text-center>
+                                                <td>1</td>
+                                                <td>benefit_1</td>
+                                                <td>방문케어</td>
+                                                <td class="col-lg-1 col-sm-2 col-4 col-status">
+                                                    <span class="badge rounded-pill alert-success">사용중</span>
+                                                </td>
+                                                <td>
+                                                    <div class="dropdown">
+                                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item" href="54.modifyCategory(카테고리수정).html">수정</a>
+                                                            <a class="dropdown-item text-danger" href="#">삭제</a>
+                                                        </div>
+                                                    </div>
+                                                    <!-- dropdown //end -->
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                       </div>
+                       <!-- row.// -->
+
+                   </div>
+                   <!-- card body end// -->
+               </div>
+           </div>
+        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/vendors/select2.min.js"></script>
+        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+    </body>
+</html>

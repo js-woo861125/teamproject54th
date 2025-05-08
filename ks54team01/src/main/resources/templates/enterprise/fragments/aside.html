@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<!-- 관리자페이지 aside 메뉴 : 2단메뉴 -->
+	<aside class="navbar-aside" id="offcanvas_aside" th:fragment="asideFragment">
+		<div class="aside-top">
+		    <a th:href="@{/enterprise/}" class="brand-wrap">
+		        <img th:src="@{/manage/assets/imgs/theme/logo.svg}" class="logo" alt="Nest Dashboard" />
+		    </a>
+		</div>
+		<nav>
+		    <ul class="menu-aside">
+		        <li class="menu-item">
+		            <div class="menu-link">
+		                <i class="icon material-icons md-home"></i>
+		                <span class="text">OOO님</span>
+		            </div>
+		        </li>
+		         <li class="menu-item has-submenu">
+		            <a class="menu-link" href="#" >
+		                <i class="icon material-icons md-person"></i>
+		                <span class="text">업체관리(대표만)</span>
+		            </a>
+		            <div class="submenu">
+		                <a th:href="@{#}">재직상태 전환</a>
+		                <a th:href="@{#}">계정 생성</a>
+		                <a th:href="@{#}">플랫폼&입점업체 계약정보</a>
+		            </div>
+		        </li>
+		        <li class="menu-item has-submenu">
+		            <a class="menu-link" href="page-products-list.html">
+		                <i class="icon material-icons md-shopping_bag"></i>
+		                <span class="text">상품관리</span>
+		            </a>
+		            <div class="submenu">
+		                <a th:href="@{#}">마진율</a>
+		                <a th:href="@{#}">플랫폼 상품목록</a>
+		                <a href="page-products-grid-2.html">업체상품 목록</a>
+		                <a href="page-categories.html">재고관리</a>
+		            </div>
+		        </li>
+		        <li class="menu-item has-submenu">
+		            <a class="menu-link" href="page-products-list.html">
+		                <i class="icon material-icons md-shopping_bag"></i>
+		                <span class="text">계약관리</span>
+		            </a>
+		            <div class="submenu">
+		                <a th:href="@{#}">렌탈계약 목록</a>
+		            </div>
+		        </li>
+		        <li class="menu-item has-submenu">
+		            <a class="menu-link" href="page-orders-1.html">
+		                <i class="icon material-icons md-shopping_cart"></i>
+		                <span class="text">주문관리</span>
+		            </a>
+		            <div class="submenu">
+		                <a href="page-orders-1.html">주문정보</a>
+		            </div>
+		        </li>
+		        <li class="menu-item has-submenu">
+		            <a class="menu-link" href="page-orders-1.html">
+		                <i class="icon material-icons md-shopping_cart"></i>
+		                <span class="text">결제관리</span>
+		            </a>
+		            <div class="submenu">
+		                <a th:href="@{/enterprise/paymentCancel/paymentCancelList}">결제취소요청 목록</a>
+		                <a th:href="@{/enterprise/refund/refundList}">환불요청 목록</a>
+		                <a th:href="@{/enterprise/rentalCancel/rentalCancelList}">렌탈해지요청 목록</a>
+		            </div>
+		        </li>
+		        <li class="menu-item has-submenu th:if">
+		            <a class="menu-link" th:href="@{#}">
+		                <i class="icon material-icons md-store"></i>
+		                <span class="text">정산관리</span>
+		            </a>
+		            <div class="submenu">
+		                <a th:href="@{#}">매출조회</a>		               
+		            </div>
+		        </li>
+		        
+		    </ul>
+		    <hr />
+		    <ul class="menu-aside">
+		        <li class="menu-item">
+		            <div class="menu-link">
+		                <i class="icon material-icons md-settings"></i>
+		                <span class="text">정보 수정</span>
+		            </div>
+		        </li>
+		        <li class="menu-item">
+		            <a class="menu-link" href="#">
+		                <i class="icon material-icons md-local_offer"></i>
+		                <span class="text">로그아웃</span>
+		            </a>
+		        </li>
+		    </ul>
+		    <br />
+		    <br />
+		</nav>
+	</aside>
+</html>

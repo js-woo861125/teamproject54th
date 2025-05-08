@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.admin.payment.mapper.AdminPaymentMapper">
+
+	<!-- resultMap : 조회 결과를 자바 클래스(domain,dto)와 명시적으로 매핑설정 -->
+	<resultMap type="AdminPayment" id="paymentResultMap">
+		<!-- id : 테이블 pk 컬럼 -->
+		<id 	column="payment_completed_no" 		property="payCompNo" />
+		<!-- result : 테이블 일반 컬럼 -->
+		<result column="cust_id" 					property="custId" />
+		<result column="sell_products_no" 			property="sellProdNo" />
+		<result column="rental_contract_no" 		property="rentalContractNo" />
+		<result column="pay_info_no" 				property="payInfoNo" />
+		<result column="ent_ceo_no" 				property="entCeoNo" />
+		<result column="ent_emp_id" 				property="entEmpId" />
+		<result column="manager_id" 				property="managerId" />
+		<result column="payment_type" 				property="paymentType" />
+		<result column="contract_details" 			property="contractDetails" />
+		<result column="payment_details" 			property="payDetails" />
+		<result column="payment_count" 				property="payCount" />
+		<result column="product_unit_price" 		property="prodUnitPrice" />
+		<result column="total_price" 				property="totalPrice" />
+		<result column="payment_completed_date" 	property="payCompDate" />
+		<result column="payment_status" 			property="payStatus" />
+		<result column="revision_date" 				property="revDate" />
+		
+		<association property="customerInfo" 	javaType="AdminCustomer">
+			<id 	column="cust_id"			property="custId"/>
+			<result column="cust_nm"			property="custNm"/>
+		</association>
+		
+		<association property="entCeoInfo" 		javaType="AdminEntCeo">
+			<id 	column="ent_ceo_no"			property="entCeoNo"/>
+			<result column="ent_nm"			property="entNm"/>
+		</association>
+		
+	</resultMap>
+	
+	
+	
+	<select id="getSearchPaymentList" parameterType="string" resultMap="paymentResultMap">
+		/* 회원 검색 결제내역 조회 */
+		SELECT
+			p.payment_completed_no,
+			c.cust_nm,
+			p.sell_products_no,
+			ec.ent_nm,
+			p.total_price,
+			p.payment_status,
+			p.payment_completed_date
+		from
+			payment p inner join customer c
+			using(cust_id)
+			inner join ent_ceo ec 
+			using(ent_ceo_no)
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%');
+			</if>
+		</where>
+	</select>
+	
+	
+	
+	<select id="getPaymentList" resultMap="paymentResultMap">
+		/* 결제내역 조회 */
+		SELECT
+			p.payment_completed_no,
+			c.cust_nm,
+			p.sell_products_no,
+			ec.ent_nm,
+			p.total_price,
+			p.payment_status,
+			p.payment_completed_date
+		from
+			payment p inner join customer c
+			using(cust_id)
+			inner join ent_ceo ec 
+			using(ent_ceo_no);
+	</select>
+	
+	
+	
+</mapper>
+
+

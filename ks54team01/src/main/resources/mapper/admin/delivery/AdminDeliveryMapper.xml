@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.admin.delivery.mapper.AdminDeliveryMapper">
+
+	<!-- resultMap : 조회 결과를 자바 클래스(domain,dto)와 명시적으로 매핑설정 -->
+	<resultMap type="AdminDelivery" id="deliveryResultMap">
+		<!-- id : 테이블 pk 컬럼 -->
+		<id 	column="delivery_location_no" 	property="delNo" />
+		<!-- result : 테이블 일반 컬럼 -->
+		<result column="cust_id" 				property="custId" />
+		<result column="delivery_nm" 			property="delNm" />
+		<result column="primary_location" 		property="primaryLocation" />
+		<result column="delivery_addr" 			property="delAddr" />
+		<result column="delivery_daddr" 		property="delDaddr" />
+		<result column="delivery_zip_no" 		property="delZipNo" />
+		<result column="recipient_phone" 		property="recipientPhone" />
+		<result column="delivery_request" 		property="delRequest" />
+		<result column="register_date" 			property="regDate" />
+		<result column="revision_date" 			property="revDate" />
+		
+		<association property="customerInfo" javaType="AdminCustomer">
+			<id 	column="cust_id"		property="custId"/>
+			<result column="cust_nm"		property="custNm"/>
+		</association>
+	</resultMap>
+	
+	
+	<resultMap type="AdminDeliveryInfo" id="deliveryInfoResultMap">
+	
+		<id 	column="del_info_no"			property="delInfoNo"/>
+		<result column="sell_products_no"		property="sellProdNo"/>
+		<result column="recipient_nm"		property="recipientNm"/>
+		<result column="delivery_company"		property="delCompany"/>
+		<result column="billing_number"			property="billNo"/>
+		<result column="delivery_request"		property="delRequest"/>
+		<result column="delivery_progress"		property="delProgress"/>
+		<result column="register_date"			property="regDate"/>
+		<result column="depart_date"			property="departDate"/>
+		<result column="arrive_date"			property="arriveDate"/>
+		
+	</resultMap>
+	
+	
+	<select id="getSearchDeliveryInfoList" parameterType="string" resultMap="deliveryInfoResultMap">
+		/* 배송정보 조회 검색 */
+		SELECT
+			del_info_no,
+			sell_products_no,
+			recipient_nm,
+			delivery_company,
+			billing_number,
+			delivery_request,
+			delivery_progress,
+			register_date,
+			depart_date,
+			arrive_date
+		from
+			delivery_information
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%');
+			</if>
+		</where>
+	</select>
+	
+	
+	
+	<select id="getDeliveryInfoList" parameterType="string" resultMap="deliveryInfoResultMap">
+		/* 배송정보 조회 */
+		SELECT
+			di.del_info_no,
+			di.sell_products_no,
+			di.recipient_nm,
+			di.delivery_company,
+			di.billing_number,
+			di.delivery_request,
+			di.delivery_progress,
+			di.register_date,
+			di.depart_date,
+			di.arrive_date
+		from
+			delivery_information di;
+	</select>
+	
+	
+	<select id="getSearchDeliveryList" parameterType="string" resultMap="deliveryResultMap">
+		/* 회원 검색 배송지 정보 조회 */
+		SELECT
+			dl.delivery_location_no,
+			dl.cust_id,
+			c.cust_nm,
+			dl.delivery_nm,
+			dl.primary_location,
+			dl.delivery_addr,
+			dl.delivery_daddr,
+			dl.delivery_zip_no,
+			dl.recipient_phone,
+			dl.delivery_request,
+			dl.register_date,
+			dl.revision_date
+		FROM
+			delivery_list dl inner join customer c
+			using(cust_id)
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%');
+			</if>
+		</where>
+	</select>
+
+	
+	<select id="getDeliveryList" resultMap="deliveryResultMap">
+		/* 배송지 정보 조회 */
+		SELECT
+			dl.delivery_location_no,
+			dl.cust_id,
+			c.cust_nm,
+			dl.delivery_nm,
+			dl.primary_location,
+			dl.delivery_addr,
+			dl.delivery_daddr,
+			dl.delivery_zip_no,
+			dl.recipient_phone,
+			dl.delivery_request,
+			dl.register_date,
+			dl.revision_date
+		FROM
+			delivery_list dl inner join customer c
+			using(cust_id)
+		ORDER BY
+			c.cust_nm;
+	</select>
+	
+	
+	
+	
+	
+</mapper>
+
+

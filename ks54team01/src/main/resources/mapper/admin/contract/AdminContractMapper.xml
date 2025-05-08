@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.admin.contract.mapper.AdminContractMapper">
+
+	<!-- resultMap : 조회 결과를 자바 클래스(domain,dto)와 명시적으로 매핑설정 -->
+	<resultMap type="AdminContract" id="contractResultMap">
+		<!-- id : 테이블 pk 컬럼 -->
+		<id 	column="rental_contract_no" 			property="rentContNo" />
+		<!-- result : 테이블 일반 컬럼 -->
+		<result column="ent_ceo_no" 					property="entCeoNo" />
+		<result column="ent_emp_id" 					property="entEmpId" />
+		<result column="sell_products_no" 				property="sellProdNo" />
+		<result column="cust_id" 						property="custId" />
+		<result column="rental_contract_status" 		property="rentContStatus" />
+		<result column="contract_quantity" 				property="contQuantity" />
+		<result column="contract_period" 				property="contPeriod" />
+		<result column="rental_start_date" 				property="rentStartDate" />
+		<result column="rental_end_date" 				property="rentEndDate" />
+		<result column="rental_cancel_date" 			property="rentCancelDate" />
+		<result column="contract_date" 					property="contDate" />
+	</resultMap>
+
+
+	<select id="getSearchContractList" parameterType="string" resultMap="contractResultMap">
+		/* 입점업체과 고객 렌탈 계약정보 조회 */
+		select
+			cust_id,
+			ent_ceo_no,
+			sell_products_no,
+			rental_contract_status,
+			contract_quantity,
+			contract_period,
+			rental_start_date,
+			rental_end_date,
+			rental_cancel_date,
+			contract_date
+		from
+			rental_contract
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%');
+			</if>
+		</where>
+	</select>	
+	
+	
+	
+	<select id="getContractList" parameterType="string" resultMap="contractResultMap">
+		/* 입점업체과 고객 렌탈 계약정보 조회 */
+		select
+			cust_id,
+			ent_ceo_no,
+			sell_products_no,
+			rental_contract_status,
+			contract_quantity,
+			contract_period,
+			rental_start_date,
+			rental_end_date,
+			rental_cancel_date,
+			contract_date
+		from
+			rental_contract;
+	</select>
+	
+	
+	
+	
+</mapper>
+
+
