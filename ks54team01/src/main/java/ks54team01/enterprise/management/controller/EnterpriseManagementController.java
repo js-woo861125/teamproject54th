@@ -7,6 +7,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/enterprise/management")
 public class EnterpriseManagementController {
+	
+	@GetMapping("/contractInfo")
+	public String contractInfo() {
+		
+		return "enterprise/management/contractInfoView";
+	}
+	
+	@GetMapping("/addEmployee")
+	public String addEmployee() {
+		
+		return "enterprise/management/addEmployeeView";
+	}
 
 	@GetMapping("/employeeList")
 	public String employeeList() {
