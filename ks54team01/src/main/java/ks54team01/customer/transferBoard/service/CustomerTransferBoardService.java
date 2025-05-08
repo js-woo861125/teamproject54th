@@ -6,6 +6,9 @@ import ks54team01.customer.transferBoard.domain.CustomerTransferBoard;
 
 public interface CustomerTransferBoardService {
 
+	// 양도 게시글 검색 조회
+	List<CustomerTransferBoard> getSearchTransferBoard(String searchKey, String searchValue);
+	
 	// 회원 정보 조회
 	CustomerTransferBoard getTransferBoardInfoByCode(String transferBoardNum);
 	
