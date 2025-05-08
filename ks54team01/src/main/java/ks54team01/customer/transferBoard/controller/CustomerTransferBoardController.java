@@ -23,7 +23,7 @@ public class CustomerTransferBoardController {
 	
 	@GetMapping("/transferBoardDetail")
 	public String getTransferBoardDetail(@RequestParam(name="transferBoardNum", required = false) String transferBoardNum,
-								Model model) {
+											Model model) {
 		
 		log.info("게시글조회 코드: {}", transferBoardNum);
 		
@@ -33,7 +33,7 @@ public class CustomerTransferBoardController {
 		model.addAttribute("title", "양도 게시글 상세 조회");
 		model.addAttribute("transferBoardInfo", transferBoardInfo);
 		
-		return "/customer/transferBoard/transferBoardDetailView";
+		return "customer/transferBoard/transferBoardDetailView";
 	}
 	
 	
@@ -44,7 +44,7 @@ public class CustomerTransferBoardController {
 		
 		model.addAttribute("titel", "양도게시글목록");
 		model.addAttribute("transferBoardList", transferBoardList);
-		return "/customer/transferBoard/transferBoardListView";
+		return "customer/transferBoard/transferBoardListView";
 	}
 	
 }
