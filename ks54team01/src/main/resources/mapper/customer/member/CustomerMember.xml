@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="ks54team01.customer.member.mapper.CustomerMemberMapper">
+  
+  	<!-- resultMap : 조회 결과를 자바 클래스(domain,dto)와 명시적으로 매핑설정 -->
+	<resultMap type="CustomerMember" id="memberResultMap">
+		<!-- id : 테이블 pk 컬럼 -->
+		<id 	column="members_id" 			property="memberId" />
+		<!-- result : 테이블 일반 컬럼 -->
+		<result column="members_pw" 			property="memberPw" />
+		<result column="members_type" 			property="memberType" />
+		<result column="register_date" 			property="memberReisterDate" />
+		<result column="revision_date" 			property="memberRevisionDate" />
+		<result column="dormant_status" 		property="memberDormantStatus" />
+		<result column="withdraw_status" 		property="memberWithdrawStatus" />
+		<result column="state_transition_date" 	property="memberStateTransitionDate" />
+	</resultMap>
+	
+	
+	<insert id="addBasicMember" parameterType="CustomerMember">
+		/* 공통회원정보 등록 */
+		INSERT INTO members
+		(members_id, members_pw, members_type, register_date, revision_date, dormant_status, withdraw_status, state_transition_date)
+		VALUES
+		(#{memberId}, #{memberPw}, #{memberType}, CURDATE(), CURDATE(), #{memberDormantStatus}, #{memberWithdrawStatus}, #{memberStateTransitionDate});
+	</insert>
+	
+	<insert id="addMember" parameterType="CustomerMember">
+		/* 일반회원정보 등록 */
+		INSERT INTO customer
+		(cust_id, cust_nm, cust_brdt, cust_addr, cust_daddr, cust_email, cust_phone, register_date, revision_date)
+		VALUES
+		(#{custId}, #{custName}, #{custBrdt}, #{custAddr}, #{custDaddr}, #{custEmail}, #{custPhone}, CURDATE(), CURDATE());
+	</insert>
+	
+	<insert id="addCorpMember" parameterType="CustomerMember">
+		/* 기업정보 등록 */
+		cust_id, corp_brno, corp_nm, register_date, revision_date
+		INSERT INTO corp_customer
+		(cust_id, corp_brno, corp_nm, register_date, revision_date)
+		VALUES
+		(#{custId}, #{corpBrno}, #{corpName}, CURDATE(), CURDATE());
+	</insert>
+	
+  	<select id="getMemberInfoById" parameterType="string" resultMap="memberResultMap">
+		/* 회원 정보 조회 */
+		SELECT
+			members_id, 
+			members_pw, 
+			members_type, 
+			register_date, 
+			revision_date, 
+			dormant_status, 
+			withdraw_status, 
+			state_transition_date
+		FROM 
+			members
+		WHERE 
+			members_id = #{memberId};		
+	</select>
+  	
+  	<select id="isIdCheck" parameterType="string" resultType="boolean">
+		/* 아이디 중복 체크 */
+		select 
+			count(*)
+		from 
+			members m
+		where 
+			m.members_id = #{memberId};
+	</select>
+  </mapper>

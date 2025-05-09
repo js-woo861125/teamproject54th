@@ -22,15 +22,18 @@
         <div class="card mb-4">
             <header class="card-header">
                 <div class="row align-items-center">
-                    <div class="col">
-                        <form class="searchform">
-                            <div class="input-group">
-                                <input list="search_terms" type="text" class="form-control" placeholder="Search term" />
-                                <button class="btn btn-light bg" type="button"><i class="material-icons md-search"></i></button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col">
+					   <div class="col-lg-1 col-md-3 col-12">
+	                       <select class="form-select" name="searchKey">
+	                           <option>상품명</option>
+	                       </select>
+	                   </div>
+	                   <div class="col-lg-3 col-md-5">
+	                       <input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
+	                   </div>
+	                   <div class="col-lg-1 col-md-1 me-auto">
+						   <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
+	                   </div>
+                    <div class="col-lg-2">
                         <select class="form-select">
                             <option>모든 카테고리</option>
                             <option>TV</option>
@@ -42,7 +45,7 @@
                             <option>침대</option>
                         </select>
                     </div>
-                    <div class="col">
+                    <div class="col-lg-2">
                         <select class="form-select">
                             <option>판매상태</option>
                             <option>활성화</option>

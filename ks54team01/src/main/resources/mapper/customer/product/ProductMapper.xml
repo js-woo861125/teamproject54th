@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ks54team01.customer.product.mapper.ProductMapper">
+
+	<resultMap type="customerProduct" 			id="customerProductResultMap">
+		<id column="products_no" 				property="productsNum"/>
+		<result column="item_no"				property="itemNum"/>
+		<result column="manager_id" 			property="managerId"/>
+		<result column="model_no"				property="modelNum"/>
+		<result column="product_category_no" 	property="productCategoryNum"/>
+		<result column="products_nm" 			property="productsName"/>
+		<result column="products_status" 		property="productsStatus"/>
+		<result column="products_image" 		property="productsImage"/>
+		<result column="register_date" 			property="registerDate"/>
+		<result column="revision_date" 			property="revisionDate"/>
+
+		<association property="customerSellProduct" javaType="CustomerSellProduct">
+			<id column="sell_products_no" 		property="sellProductsNo"/>
+			<result column="margin_ratio_no" 	property="marginRatioNo"/>
+			<result column="ent_ceo_no" 		property="entCeoNo"/>
+			<result column="ent_emp_id" 		property="entEmpId"/>
+			<result column="products_no" 		property="productsNo"/>
+			<result column="lump_sum_pay_price" property="lumpSumPayPrice"/>
+			<result column="period" 			property="period"/>
+			<result column="calculate_price"	property="calculatePrice"/>
+			<result column="final_price" 		property="finalPrice"/>
+			<result column="sp_register_date" 	property="registerDate"/> 
+			<result column="sp_revision_date" 	property="revisionDate"/> 
+			<result column="use_status" 		property="useStatus"/>
+		</association>
+
+		<association property="productCate" 	javaType="ProductCate">
+			<id column="product_category_no" 	property="productCateNo"/>
+			<result column="pc_manager_id" 		property="managerId"/> 
+			<result column="large_category_no"	property="largeCategoryNo"/>
+			<result column="large_category" 	property="largeCategory"/>
+			<result column="middle_category_no" property="middleCategoryNo"/>
+			<result column="middle_category" 	property="middleCategory"/>
+			<result column="small_category" 	property="smallCategory"/>
+			<result column="pc_register_date" 	property="registerDate"/> 
+			<result column="pc_revision_date" 	property="revisionDate"/> 
+			<result column="use_status" 		property="use_status"/>
+		</association>
+
+		<association property="entCeo" javaType="EntCeo">
+			<id column="ent_ceo_no" 			property="entCeoNo"/>
+			<result column="ent_ceo_id" 		property="entCeoId"/>
+			<result column="ent_ceo_nm" 		property="entCeoNm"/>
+			<result column="ent_brno" 			property="entBrno"/>
+			<result column="ent_nm" 			property="entNm"/>
+			<result column="ent_ceo_addr" 		property="entCeoAddr"/>
+			<result column="ent_ceo_daddr" 		property="entCeodaddr"/>
+			<result column="ent_ceo_email" 		property="entCeoEmail"/>
+			<result column="ent_bank" 			property="entBank"/>
+			<result column="ent_bank_num" 		property="entBankNum"/>
+			<result column="ent_ceo_phone" 		property="entCeoPhon"/>
+			<result column="ec_register_date" 	property="registerDate"/> 
+			<result column="ec_revision_date" 	property="ruvisionDate"/> 
+		</association>
+	</resultMap>
+
+	<select id="getCustomerProductList" parameterType= "String" resultMap="customerProductResultMap">
+		SELECT
+			sp.sell_products_no,
+			p.products_nm,
+			sp.lump_sum_pay_price,
+			sp.period,
+			sp.final_price,
+			sp.register_date,
+			p.products_nm,
+			pc.middle_category,
+			pc.small_category,
+			ec.ent_nm
+		FROM
+			sell_products sp INNER JOIN products p
+			ON sp.products_no = p.products_no
+			INNER JOIN ent_ceo ec
+			ON sp.ent_ceo_no = ec.ent_ceo_no
+			INNER JOIN products_category pc
+			ON p.product_category_no = pc.product_category_no
+		WHERE
+			pc.small_category = #{smallCategory};
+	</select>
+
+</mapper>
+
+
+
+
+
+
+
+<!-- <mapper namespace="ks54team01.customer.product.mapper.ProductMapper">
+
+	resultMap : 조회 결과를 자바 클래스(domaim, dto)와 명시적으로 매핑설정
+	id: 테이블 pk컬럼
+	
+	<resultMap type="customerProduct" id="customerProductResultMap">
+
+		<id column="products_no" 				property="productsNum"/>
+		<result column="manager_id" 			property="managerId"/>
+		<result column="model_no"	 			property="modelNum"/>
+		<result column="product_category_no"	property="productCategoryNum"/>
+		<result column="products_nm" 			property="productsName"/>
+		<result column="products_status" 		property="productsStatus"/>
+		<result column="products_image" 		property="productsImage"/>
+		<result column="register_date" 			property="registerDate"/>
+		<result column="revision_date" 			property="revisionDate"/>
+		
+	
+		<association property="customerSellProduct" javaType="CustomerSellProduct">
+		
+			<id column="sell_products_no" 			property="sellProductsNo"/>
+			<result column="margin_ratio_no" 		property="marginRatioNo"/>
+			<result column="ent_ceo_no" 			property="entCeoNo"/>
+			<result column="ent_emp_id" 			property="entEmpId"/>
+			<result column="products_no" 			property="productsNo"/>
+			<result column="lump_sum_pay_price" 	property="lumpSumPayPrice"/>
+			<result column="period" 				property="period"/>
+			<result column="calculate_price" 		property="calculatePrice"/>
+			<result column="final_price" 			property="finalPrice"/>
+			<result column="register_date" 			property="registerDate"/>
+			<result column="revision_date" 			property="revisionDate"/>
+			<result column="use_status" 			property="useStatus"/>
+		
+		</association>
+	
+		<association property="productCate" javaType="ProductCate">
+	
+			<id column="product_category_no" 		property="productCateNo"/>
+			<result column="manager_id" 			property="managerId"/>
+			<result column="large_category_no" 		property="largeCategoryNo"/>
+			<result column="large_category" 		property="largeCategory"/>
+			<result column="middle_category_no" 	property="middleCategoryNo"/>
+			<result column="middle_category" 		property="middleCategory"/>
+			<result column="small_category" 		property="smallCategory"/>
+			<result column="register_date" 			property="registerDate"/>
+			<result column="revision_date" 			property="revisionDate"/>
+			<result column="use_status" 			property="use_status"/>
+	
+		</association>
+		
+			<association property="entCeo" javaType="EntCeo">
+			
+				<id column="ent_ceo_no" 			property="entCeoNo"/>
+				<result column="ent_ceo_id"	 		property="entCeoId"/>
+				<result column="ent_ceo_nm" 		property="entCeoNm"/>
+				<result column="ent_brno"	 		property="entBrno"/>
+				<result column="ent_nm" 			property="entNm"/>
+				<result column="ent_ceo_addr"		property="entCeoAddr"/>
+				<result column="ent_ceo_daddr" 		property="entCeodaddr"/>
+				<result column="ent_ceo_email" 		property="entCeoEmail"/>
+				<result column="ent_bank" 			property="entBank"/>
+				<result column="ent_bank_num" 		property="entBankNum"/>
+				<result column="ent_ceo_phone" 		property="entCeoPhon"/>
+				<result column="register_date"		property="registerDate"/>
+				<result column="revision_date" 		property="ruvisionDate"/>
+			
+			</association> 
+	</resultMap>
+	
+	
+	
+	<select id="getCustomerProductList" parameterType= "String" resultMap="customerProductList">
+	
+		SELECT 
+			sp.sell_products_no,
+			p.products_nm,
+			sp.lump_sum_pay_price,
+			sp.period,
+			sp.final_price,
+			sp.register_date,
+			p.products_nm,
+			pc.middle_category,
+			pc.small_category,
+			ec.ent_nm
+		FROM
+			sell_products sp INNER JOIN products p 
+			ON sp.products_no = p.products_no
+			INNER JOIN ent_ceo ec 
+			ON sp.ent_ceo_no = ec.ent_ceo_no
+			INNER JOIN products_category pc 
+			ON p.product_category_no = pc.product_category_no
+		WHERE
+			pc.small_category = #{smallCategory};
+			
+	</select> 
+	
+</mapper> -->
+
+
+
+
