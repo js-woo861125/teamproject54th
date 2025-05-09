@@ -21,6 +21,22 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	private final CustomerTransferBoardMapper customerTransferBoardMapper;
 	
 	/**
+	 * 양도게시글검색조회
+	 */
+	@Override
+	public List<CustomerTransferBoard> getSearchTransferBoard(String searchKey, String searchValue) {
+
+		switch (searchKey) {
+		case "productsName" -> searchKey = "p.products_nm";
+		case "transferTitle" -> searchKey = "tb.transfer_title";
+		}
+		
+		List<CustomerTransferBoard> transferBoardList = customerTransferBoardMapper.getSearchTransferBoard(searchKey, searchValue);
+		
+		return transferBoardList;
+	}
+	
+	/**
 	 * 양도게시글상세조회
 	 */
 	@Override

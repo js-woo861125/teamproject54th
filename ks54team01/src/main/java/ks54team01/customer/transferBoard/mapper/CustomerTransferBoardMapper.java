@@ -9,6 +9,9 @@ import ks54team01.customer.transferBoard.domain.CustomerTransferBoard;
 @Mapper
 public interface CustomerTransferBoardMapper {
 	
+	// 회원 검색 조회
+	List<CustomerTransferBoard> getSearchTransferBoard(String searchKey, String searchValue);
+	
 	// 양도게시글상세조회
 	CustomerTransferBoard getTransferBoardInfoByCode(String transferBoardNum);
 	
