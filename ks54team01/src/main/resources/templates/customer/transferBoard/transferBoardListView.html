@@ -1,149 +1,204 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{customer/layout/default}">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{customer/layout/default}">
 
 
 	<!-- head 삽입공간 -->
-
+	
 	<head>
-
+	
 	</head>
-
-
+	
+	
 	<th:block layout:fragment="jsFile">
-
+	
 	</th:block>
 	
-
+	
 	<th:block layout:fragment="jsScript">
-
+		<script>
+			$('.sort-by a').click(function(e){
+				e.preventDefault();
+				const sortValue = $(this).data('sortValue');
+				//console.log(sortValue);
+				const href = location.href;
+				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
+				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
+				urlParams.set('sortValue', sortValue);
+				//console.log(`${url.pathname}?${urlParams.toString()}`);
+				
+				location.href = `${url.pathname}?${urlParams.toString()}`;
+			});
+			
+			$('transfer-search').click(function(e){
+				e.preventDefault();
+				const searchValue = $(this).data('searchValue');
+				
+				const href = location.href; // 현재 url 가져온다.
+				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
+				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
+				urlParams.set('searchValue', searchValue);
+				
+				location.href = `${url.pathname}?${urlParams.toString()}`;
+			});
+		</script>
 	</th:block>
-
+	
 	<!-- 페이지 삽입공간 -->
 	<th:block layout:fragment="customContents">
-    	<div class="container mb-30">
-            <div class="row">
-                <div class="col-12">
-                    <div class="section-title">
-                        <h1 class="heading-2 mb-40">양도 하기!</h1>
-                        <div class="col-md-2 col-2 ms-auto mt-50">
-                            <button type="submit"
-                                    class="btn btn-success w-50 rounded font-lg hover-up text-white justify-content-center fs-6 mb-50">글쓰기</button>
-                        </div>
-                    </div>
-                    <div class="w-50 widget_search mb-50">
-                        <div class="search-form">
-                            <form th:action="@{/customer/transferBoard/searchTransferBoard}" method="get">
-                                <input type="text" name="searchValue" th:value="${searchValue}" placeholder="게시글 검색어를 입력해주세요." />
-                                <button type="submit"><i class="fi-rs-search"></i></button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="shop-product-fillter">
-                        <div class="totall-product">
-                            <h5 class="text-body">양도 상품<span th:text="${'&emsp;' + #lists.size(transferBoardList)}" class="text-brand">5</span>
-                            	<span>건</span>
-                            </h5>
-                        </div>
-                        <div class="sort-by-product-area">
-                            <div class="sort-by-cover mr-10">
-                                <div class="sort-by-product-wrap">
-                                    <div class="sort-by">
-                                        <a href = "#"><span>최신등록순</span></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="sort-by-cover mr-10">
-                                <div class="sort-by-product-wrap">
-                                    <div class="sort-by">
-                                        <a href = "#"><span>높은가격순</span></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="sort-by-cover mr-10">
-                                <div class="sort-by-product-wrap">
-                                    <div class="sort-by">
-                                        <a href = "#"><span>낮은가격순</span></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="sort-by-cover mr-10">
-                                <div class="sort-by-product-wrap">
-                                    <div class="sort-by">
-                                        <a href = "#"><span>마감임박순</span></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row product-grid">    
-                        <th:block th:if="${!#lists.isEmpty(transferBoardList)}"
-		                     	  th:each="l : ${transferBoardList}">
-	                        <div class="col-lg-3 col-md-4 col-12 col-sm-6">
-                            	<div class="product-cart-wrap mb-30">
-	                             	<div class="product-img-action-wrap">
-	                                    <div class="product-img product-img-zoom">
-		                   					<a th:href="@{/customer/transferBoard/transferBoardDetail(transferBoardNum=${l.transferBoardNum})}">
-                                            	<img class="default-img" th:src="@{'/user/assets/imgs/shop/' + ${l.productInfo.productsImage}}" alt="" />
-	                                    	</a>
-	                                    </div>		
-	                                </div>
-	                                <div class="product-content-wrap">
-	                                    <div class="product-category">
-	                                        <a href="shop-grid-right.html">TV</a>
-	                                    </div>
-	                                    <h2 th:text="${l.transferTitle}"><a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a></h2>
-	                                    <div>
-	                                        <span th:text="${l.customerId}" class="font-small text-muted">작성자 <a href="vendor-details-1.html">우에하라 아유무</a></span>
-	                                    </div>
-	                                    <div class="product-card-bottom">
-	                                        <div class="product-price">
-	                                            <span>💸월렌탈료</span>
-	                                            <span th:text="|₩${#numbers.formatInteger(l.rentalFee, 3, 'COMMA')}">85,000원</span>
-	                                        </div>
-	                                    </div>
-	                                    <div class="product-card-bottom">
-	                                        <div class="product-price">
-	                                            <span>💰지원금</span>
-	                                            <span th:text="|₩${#numbers.formatInteger(l.individualGrants, 3, 'COMMA')}">1,000원</span>
-	                                        </div>
-	                                    </div>
-	                                    <div class = "product-card-bottom">
-	                                        <p>등록일</p>
-	                                        <p th:text="${l.registerDate}">2025-04-09</p>
-	                                        <div></div>
-	                                        <th:block th:switch="${l.transferRentalProcsssingStatus}">
-	                                        	<span th:case="${'2.양도계약상태'}" 
-	                                        		  class="stock-status in-stock"> 진행중 </span>
-	                                        	<span th:case="${'3.양도계약완료'}" 
-	                                        		  class="stock-status out-stock"> 마감 </span>
-	                                        </th:block>
-	                                    </div>
-	                                </div>
-	                            </div>
-	                        </div>
-                    	</th:block>
-                    </div>
-                    <div class="pagination-area mt-20 mb-20">
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item">
-                                    <a class="page-link" href="#"><i class="fi-rs-arrow-small-left"></i></a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                                <li class="page-item"><a class="page-link" href="#">6</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#"><i class="fi-rs-arrow-small-right"></i></a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-	</th:block>
+		<div class="container mb-30">
+			<div class="row">
+				<div class="col-12">
+					<div class="section-title">
+						<h1 class="heading-2 mb-40">양도 하기!</h1>
+						<div class="col-md-2 col-2 ms-auto mt-50">
+							<button type="submit"
+								class="btn btn-success w-50 rounded font-lg hover-up text-white justify-content-center fs-6 mb-50">글쓰기</button>
+						</div>
+					</div>
+					<div class="w-50 widget_search mb-50">
+						<div class="search-form">
+							<form th:action="@{/customer/transferBoard/searchTransferBoard}"
+								method="get">
+								<input type="text" name="searchValue" th:value="${searchValue}"
+									placeholder="게시글 검색어를 입력해주세요." />
+								<button class="transfer-search" type="submit">
+									<i class="fi-rs-search"></i>
+								</button>
+							</form>
+						</div>
+					</div>
+					<div class="shop-product-fillter">
+						<div class="totall-product">
+							<h5 class="text-body">
+								양도 상품<span th:text="${'&emsp;' + contentRowCount}"
+								class="text-brand">5</span> 
+								<span>건</span>
+							</h5>
+						</div>
+						<div class="sort-by-product-area">
+							<div class="sort-by-cover mr-10">
+								<div class="sort-by">
+									<!--/* <a th:href="@{/customer/transferBoard/sortTransferBoardList(sortValue=recentReg)}"> */-->
+									<a th:href="@{#}" th:data-sort-value="recentReg">
+										<span>최신등록순</span>
+									</a>
+								</div>
+							</div>
+							<div class="sort-by-cover mr-10">
+								<div class="sort-by">
+									<a th:href="@{#}" th:data-sort-value="highPrice">
+										<span>높은가격순</span>
+									</a>
+								</div>
+							</div>
+							<div class="sort-by-cover mr-10">
+								<div class="sort-by">
+									<a th:href="@{#}" th:data-sort-value="rowPrice">
+										<span>낮은가격순</span>
+									</a>
+								</div>
+							</div>
+							<div class="sort-by-cover mr-10">
+								<div class="sort-by">
+									<a th:href="@{#}" th:data-sort-value="deadline">
+										<span>마감임박순</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row product-grid">
+						<th:block th:if="${!#lists.isEmpty(transferBoardList)}"
+							th:each="l : ${transferBoardList}">
+							<div class="col-lg-3 col-md-4 col-12 col-sm-6">
+								<div class="product-cart-wrap mb-30">
+									<div class="product-img-action-wrap">
+										<div class="product-img product-img-zoom">
+											<a
+												th:href="@{/customer/transferBoard/transferBoardDetail(transferBoardNum=${l.transferBoardNum})}">
+												<img class="default-img"
+												th:src="@{'/user/assets/imgs/shop/' + ${l.productInfo.productsImage}}"
+												alt="" />
+											</a>
+										</div>
+									</div>
+									<div class="product-content-wrap">
+										<div class="product-category">
+											<a href="shop-grid-right.html">TV</a>
+										</div>
+										<h2 th:text="${l.transferTitle}">
+											<a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a>
+										</h2>
+										<div>
+											<span th:text="${l.customerId}" class="font-small text-muted">작성자
+												<a href="vendor-details-1.html">우에하라 아유무</a>
+											</span>
+										</div>
+										<div class="product-card-bottom">
+											<div class="product-price">
+												<span>💸월렌탈료</span> <span
+													th:text="|₩${#numbers.formatInteger(l.rentalFee, 3, 'COMMA')}">85,000원</span>
+											</div>
+										</div>
+										<div class="product-card-bottom">
+											<div class="product-price">
+												<span>💰지원금</span> <span
+													th:text="|₩${#numbers.formatInteger(l.individualGrants, 3, 'COMMA')}">1,000원</span>
+											</div>
+										</div>
+										<div class="product-card-bottom">
+											<p>등록일</p>
+											<p th:text="${l.registerDate}">2025-04-09</p>
+											<div></div>
+											<th:block th:switch="${l.transferRentalProcsssingStatus}">
+												<span th:case="${'2.양도계약진행'}" class="stock-status in-stock">
+													진행중 </span>
+												<span th:case="${'3.양도계약완료'}" class="stock-status out-stock">
+													마감 </span>
+											</th:block>
+										</div>
+									</div>
+								</div>
+							</div>
+						</th:block>
+					</div>
+					<div class="pagination-area mt-30 mb-50">
+						<nav aria-label="Page navigation example">
+							<ul class="pagination justify-content-center">
+								<li class="page-item"><a class="page-link"
+									th:href="@{/customer/transferBoard/transferBoardList}">
+									<i class="material-icons md-first_page"></i></a></li>
+								<li class="page-item"
+									th:classappend="${currentPage < 2} ? 'disabled'"><a
+									class="page-link"
+									th:href="@{/customer/transferBoard/transferBoardList(currentPage=${currentPage - 1})}">
+										<i class="fi-rs-arrow-small-left"></i>
+								</a></li>
+								<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
+									<li class="page-item"
+										th:classappend="${num eq currentPage} ? 'active disabled'">
+										<a class="page-link"
+										th:href="@{/customer/transferBoard/transferBoardList(currentPage=${num})}"
+										th:text="${num < 10 ? '0' + num : num}">01</a>
+									</li>
+								</th:block>
+								<li class="page-item"
+									th:classappend="${currentPage eq lastPage} ? 'disabled'"><a
+									class="page-link"
+									th:href="@{/customer/transferBoard/transferBoardList(currentPage=${currentPage + 1})}">
+										<i class="material-icons md-chevron_right"></i>
+								</a></li>
+								<li class="page-item"><a class="page-link"
+									th:href="@{/customer/transferBoard/transferBoardList(currentPage=${lastPage})}">
+										<i class="material-icons md-last_page"></i>
+								</a></li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+			</div>
+		</div>
+	</th:block> 
 </html>
