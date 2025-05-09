@@ -13,7 +13,7 @@
     <th:block layout:fragment="content">
 		<div class="content-header">
             <div>
-                <h2 class="content-title card-title" th:text="@{#}"></h2>
+                <h2 class="content-title card-title" th:text="${title}"></h2>
             </div>
         </div>
         <div class="card mb-4 col-12">
@@ -37,38 +37,43 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr class=text-center>
-                                                <th>No.</th>
                                                 <th>모델코드</th>
                                                 <th>카테고리</th>
-                                                <th>품목</th>
                                                 <th>브랜드</th>
+                                                <th>품목</th>
                                                 <th>모델명</th>
                                                 <th>사용유무</th>
                                                 <th>수정/삭제</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class=text-center>
-                                                <td>1</td>
-                                                <td>model_1</td>
-                                                <td>침대</td>
-                                                <td>침대</td>
-                                                <td>인홈</td>
-                                                <td>라온 LED 저상형 침대 SS</td>
+                                            <tr class=text-center
+				                            	th:if="${!#lists.isEmpty(modelList)}"
+				                          	  	th:each="l : ${modelList}">
+                                                <td th:text="${l.modelNo}">model_1</td>
+                                                <td th:text="${l.categoryInfo.smCategory}">침대</td>
+                                                <td th:text="${l.brandInfo.brandName}">인홈</td>
+                                                <td th:text="${l.itemInfo.itemName}">침대</td>
+                                                <td th:text="${l.modelName}">라온 LED 저상형 침대 SS</td>
                                                 <td class="col-lg-1 col-sm-2 col-4 col-status">
-                                                    <span class="badge rounded-pill alert-success">사용중</span>
-                                                </td>
-                                                <td>
+												    <span class="badge rounded-pill"
+												          th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'"
+												          th:text="${l.useStatus}">사용중</span>    
+												</td>
+												<td>
                                                     <div class="dropdown">
                                                         <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
                                                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="54.modifyCategory(카테고리수정).html">수정</a>
+                                                            <a class="dropdown-item" href="#">수정</a>
                                                             <a class="dropdown-item text-danger" href="#">삭제</a>
                                                         </div>
                                                     </div>
                                                     <!-- dropdown //end -->
                                                 </td>
                                             </tr>
+                                            	<tr th:unless="${not #lists.isEmpty(modelList)}">
+	              					  				<td colspan="7">등록없음</td>
+              					 	 			</tr>	
                                         </tbody>
                                     </table>
                                 </div>

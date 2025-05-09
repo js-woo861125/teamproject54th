@@ -63,7 +63,6 @@
 			
 			
 			
-			
 		</script>
 	
 	</th:block>
@@ -113,20 +112,18 @@
                                                 <button type="submit" class="btn btn-heading btn-block p-10 ml-10">인증요청</button>                                              
                                             </div>
 			                        		 <div class="form-group position-relative d-flex justify-content-end">
-                                                <input type="text" name="memberZip" placeholder="우편번호를 입력해주세요" readonly disabled />
-                                                <button type="submit" id="daumPostBtn" class="btn btn-heading btn-block p-10 mt-10 mr-10 position-absolute">우편번호찾기</button>
+                                                <input type="text" id="memberZip" name="memberZip" placeholder="우편번호를 입력해주세요" readonly disabled />
+                                                <button type="button" id="daumPostBtn" class="btn btn-heading btn-block p-10 mt-10 mr-10 position-absolute">우편번호찾기</button>
                                             </div> 
 				                        	<div class="row">
 				                        		<div class="col-6">
 						                            <div class="mb-4">
-						                                <input type="text" id="memberAddress" name="memberAddress" 
-						                                	   placeholder="주소를 입력해주세요" class="form-control fs-6" readonly disabled/>
+						                                <input type="text" id="memberAddress" name="memberAddress" placeholder="기본주소" class="form-control fs-6" readonly />
 						                            </div>
 				                        		</div>
 				                        		<div class="col-6">
 						                            <div class="mb-4">
-						                                <input type="text" id="memberDetailAddress" name="memberDetailAddress" 
-						                                	   placeholder="상세주소를 입력해주세요" class="form-control fs-6" disabled/>
+						                                <input type="text" id="memberDetailAddress" name="memberDetailAddress" placeholder="상세주소를 입력하세요" class="form-control fs-6" disabled/>
 						                            </div>
 				                        		</div>
 				                        	</div>
