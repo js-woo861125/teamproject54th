@@ -13,7 +13,7 @@
     <th:block layout:fragment="content">
 		<div class="content-header">
             <div>
-                <h2 class="content-title card-title" th:text="@{#}"></h2>
+                <h2 class="content-title card-title" th:text="${title}"></h2>
             </div>
         </div>
         <div class="card mb-4 col-12">
@@ -37,7 +37,6 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr class=text-center>
-                                                <th>No.</th>
                                                 <th>상품카테고리코드</th>
                                                 <th>대분류코드</th>
                                                 <th>대분류</th>
@@ -49,35 +48,40 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class=text-center>
-                                                <td>1</td>
-                                                <td>L1_M1_1</td>
-                                                <td>L1</td>
-                                                <td>가전</td>
-                                                <td>M1</td>
-                                                <td>TV/디지털</td>
-                                                <td>TV</td>
+                                            <tr class=text-center
+				                            	th:if="${!#lists.isEmpty(categoryList)}"
+				                          	  	th:each="l : ${categoryList}">
+                                                <td th:text="${l.categoryNo}">L1_M1_1</td>
+                                                <td th:text="${l.lgCategoryNo}">L1</td>
+                                                <td th:text="${l.lgCategory}">가전</td>
+                                                <td th:text="${l.mdCategoryNo}">M1</td>
+                                                <td th:text="${l.mdCategory}">TV/디지털</td>
+                                                <td th:text="${l.smCategory}">TV</td>
                                                 <td class="col-lg-1 col-sm-2 col-4 col-status">
-                                                    <span class="badge rounded-pill alert-success">사용중</span>
-                                                </td>
-                                                <td>
+												    <span class="badge rounded-pill"
+												          th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'"
+												          th:text="${l.useStatus}">사용중</span>    
+												</td>
+												<td>
                                                     <div class="dropdown">
                                                         <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
                                                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="54.modifyCategory(카테고리수정).html">수정</a>
+                                                            <a class="dropdown-item" href="#">수정</a>
                                                             <a class="dropdown-item text-danger" href="#">삭제</a>
                                                         </div>
                                                     </div>
                                                     <!-- dropdown //end -->
                                                 </td>
                                             </tr>
+                                            	<tr th:unless="${not #lists.isEmpty(categoryList)}">
+	              					  				<td colspan="7">등록없음</td>
+              					 	 			</tr>	
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                        </div>
                        <!-- row.// -->
-
                    </div>
                    <!-- card body end// -->
                </div>
