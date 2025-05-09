@@ -37,10 +37,16 @@
                                <li>
                                    <a href="shop-grid-right.html">TV/디지털<i class="fi-rs-angle-down"></i></a>
                                    <ul class="sub-menu">
-                                       <li><a href="vendors-grid.html">TV</a></li>
+                                       <li><a href="/customer/product/productList?smallCategory=TV">TV</a></li>
                                        <li><a href="vendors-list.html">전자칠판</a></li>
-                                       <li><a th:href="@{/customer/product/productList}">노트북</a></li>
-                                       <li><a href="vendor-details-2.html">컴퓨터</a></li>
+                                       <!-- <li th:each="category : ${categories}">
+                                       	<a th:href="@{/customer/product/productList(smallCategory=${category.smallCategory})}">노트북
+                           
+                                       	<span th:text="${category.smallCategory}"></span>
+                                       	</a>
+                                       	</li> -->
+                                       <li><a href="/customer/product/productList?smallCategory=노트북">노트북</a></li>
+                                       <li><a href="/customer/product/productList?smallCategory=컴퓨터">컴퓨터</a></li>
                                        <li><a href="vendor-dashboard.html">모니터</a></li>
                                        <li><a href="vendor-guide.html">빔프로젝트</a></li>
                                        <li><a href="vendor-guide.html">빔프로젝트</a></li>
@@ -126,7 +132,7 @@
                                <li>
                                    <a href="#">가구/침대<i class="fi-rs-angle-down"></i></a>
                                     <ul class="sub-menu">
-                                       <li><a href="vendors-grid.html">침대</a></li>
+                                       <li><a href="/customer/product/productList?smallCategory=침대">침대</a></li>
                                        <li><a href="vendors-list.html">소파</a></li>
                                        <li><a href="vendor-details-1.html">모션베드</a></li>
                                        <li><a href="vendor-details-2.html">건강침대</a></li>

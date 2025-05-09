@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.admin.productInfo.mapper.AdminProductInfoMapper">
+
+	<!-- resultMap : 조회 결과를 자바 클래스(domain,dto)와 명시적으로 매핑설정 -->
+	<resultMap type="ProductInfoCategory" id="categoryResultMap">
+		<!-- id : 테이블 pk 컬럼 -->
+		<id 	column="product_category_no" property="categoryNo"/>
+		<!-- result : 테이블 일반 컬럼 -->
+		<result column="large_category_no" 	 property="lgCategoryNo"/>	
+		<result column="large_category" 	 property="lgCategory"/>	
+		<result column="middle_category_no"  property="mdCategoryNo"/>	
+		<result column="middle_category" 	 property="mdCategory"/>	
+		<result column="small_category" 	 property="smCategory"/>	
+		<result column="use_status" 		 property="useStatus"/>	
+	</resultMap>
+	
+	<resultMap type="ProductInfoBrand" id="brandResultMap">
+		<id 	column="brand_no" 	 property="brandNo"/>
+		<result column="brand_nm" 	 property="brandName"/>	
+		<result column="use_status"  property="useStatus"/>	
+	</resultMap>
+	
+	<resultMap type="ProductInfoItem" id="itemResultMap">
+		<id 	column="item_no" 	 property="itemNo"/>
+		<result column="item_nm" 	 property="itemName"/>	
+		<result column="use_status"  property="useStatus"/>	
+		
+		<association property="categoryInfo" javaType="ProductInfoCategory">
+			<id 	column="product_category_no"	property="categoryNo"/>
+			<result column="small_category"			property="smCategory"/>
+		</association>
+	</resultMap>
+	
+	<resultMap type="ProductInfoModel" id="modelResultMap">
+		<id 	column="model_no" 	 property="modelNo"/>
+		<result column="model_nm" 	 property="modelName"/>	
+		<result column="use_status"  property="useStatus"/>	
+		
+		<association property="categoryInfo" javaType="ProductInfoCategory">
+			<id 	column="product_category_no"	property="categoryNo"/>
+			<result column="small_category"			property="smCategory"/>
+		</association>
+		<association property="brandInfo" javaType="ProductInfoBrand">
+			<id 	column="brand_no"	property="brandNo"/>
+			<result column="brand_nm"	property="brandName"/>
+		</association>
+		<association property="itemInfo" javaType="ProductInfoItem">
+			<id 	column="item_no"	property="itemNo"/>
+			<result column="item_nm"	property="itemName"/>
+		</association>
+	</resultMap>
+	
+	<resultMap type="ProductInfoBenefit" id="benefitResultMap">
+		<id 	column="benefit_no" 	 property="benefitNo"/>
+		<result column="benefit_nm" 	 property="benefitName"/>	
+		<result column="use_status"  property="useStatus"/>	
+	</resultMap>
+	
+	<resultMap type="ProductInfoCategorySpec" id="categorySpecResultMap">
+		<id 	column="spec_no" 	 property="specNo"/>
+		<result column="spec_nm" 	 property="specName"/>	
+		<result column="use_status"  property="useStatus"/>	
+		
+		<association property="categoryInfo" javaType="ProductInfoCategory">
+			<id 	column="product_category_no"	property="categoryNo"/>
+			<result column="small_category"			property="smCategory"/>
+		</association>
+	</resultMap>
+	
+	<select id="getCategorySpecList" resultMap="categorySpecResultMap">
+		/* 상품정보 카테고리별/상세스펙 목록 조회 */
+		SELECT
+			psc.spec_no,
+			pc.small_category,
+			psc.SPEC_NM,
+			psc.use_status
+		FROM
+			products_spec psc inner join products_category pc 
+			using(product_category_no);
+	</select>
+	
+	<select id="getBenefitList" resultMap="benefitResultMap">
+		/* 상품정보 전체혜택 목록 조회 */
+		SELECT 
+			benefit_no,
+			benefit_nm,
+			use_status
+		FROM 
+			benefit;	
+	</select>
+	
+	<select id="getModelList" resultMap="modelResultMap">
+		/* 상품정보 모델 목록 조회 */
+		SELECT 
+			m.model_no,
+			b.brand_nm,
+			i.item_nm,
+			pc.small_category,
+			m.model_nm,
+			m.use_status
+		FROM 
+			model m inner join products_category pc
+			using(product_category_no)
+			inner join item i
+			using(item_no)
+			left join brand b
+			using(brand_no);
+	</select>
+	
+	<select id="getItemList" resultMap="itemResultMap">
+		/* 상품정보 품목 목록 조회 */
+		SELECT 
+			i.item_no,
+			pc.small_category,
+			i.item_nm,
+			i.use_status
+		FROM 
+			item i inner join products_category pc
+			using(product_category_no);
+	</select>
+	
+	<select id="getBrandList" resultMap="brandResultMap">
+		/* 상품정보 브랜드 목록 조회 */
+		SELECT 
+			brand_no, 
+			brand_nm, 
+			use_status
+		FROM 
+			brand;
+	</select>
+	
+	<select id="getCategoryList" resultMap="categoryResultMap">
+		/* 상품정보 카테고리 목록 조회 */
+		SELECT 
+			product_category_no,
+			large_category_no, 
+			large_category, 
+			middle_category_no, 
+			middle_category, 
+			small_category, 
+			use_status
+		FROM 
+			products_category;	 
+	</select>
+	
+</mapper>

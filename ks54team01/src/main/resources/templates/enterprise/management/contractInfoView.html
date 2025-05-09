@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{admin/layout/default}">
+	  layout:decorate="~{enterprise/layout/default}">
 	<!-- head 삽입공간 -->
 	<head>
 	</head>
@@ -9,7 +9,94 @@
 	<th:block layout:fragment="jsFile">
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	</th:block>
-<body>
-
-</body>
+	
+	<th:block layout:fragment="content">
+		<div class="content-header">
+             <div>
+                <h2 class="content-title card-title" th:text="@{#}"></h2>
+            </div>
+         </div>
+         <div class="card">
+             <header class="card-header">
+                 <div class="row align-items-center">
+                     <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
+                         <span><h3>계약상태</h3> </span>
+                         <div class="badge rounded-pill alert-success">계약중</div>
+                     </div>
+                 </div>
+             </header>
+             <!-- card-header end// -->
+			<div class="card-body">
+			    <div class="row mb-50 mt-20 enterprise-info-wrap">
+			        <div class="col-md-4">
+			            <article class="icontext align-items-start">
+			                <span class="icon icon-sm rounded-circle bg-primary-light">
+			                    <i class="text-primary material-icons md-store"></i>
+			                </span>
+			                <div class="text">
+			                    <h6 class="mb-1">사업자</h6>
+			                    <p class="mb-1">
+			                        (주)스마트렌탈 <br />
+			                        402-00-00004<br />
+			                        전북 전주시 덕진구 기린대로 499 3층<br />
+			                        301호
+			                     </p>   
+			                </div>
+			            </article>
+			        </div>
+			        <div class="col-md-4">
+			            <article class="icontext align-items-start">
+			                <span class="icon icon-sm rounded-circle bg-primary-light">
+			                    <i class="text-primary material-icons md-person"></i>
+			                </span>
+			                <div class="text">
+			                    <h6 class="mb-1">대표자</h6>
+			                    <p class="mb-1">
+			                        이형열 <br />
+			                        ceo1@naver.com <br />
+			                        010-0011-0011
+			                    </p>
+			                </div>
+			            </article>
+			        </div>
+			        <!-- col// -->
+			</div>
+			<!-- row // -->
+			<div class="row">
+			    <div class="col-lg-12">
+			        <div class="table-responsive">
+			            <table class="table">
+			                <thead>
+			                    <tr class=text-center>
+			                        <th>일반판매 수수료율</th>
+			                        <th>렌탈 수수료율</th>
+			                        <th>위약금 수수료율</th>
+			                        <th>입점비</th>
+			                        <th>계약일자</th>
+			                        <th>계약만료일자</th>
+			                        <th>월정산일자</th>
+			                    </tr>
+			                </thead>
+			                <tbody>
+			                    <tr class=text-center>
+			                        <td>0.1</td>
+			                        <td>0.05</td>
+			                        <td>0.05</td>
+			                        <td>3,000,000</td>
+			                        <td>2023-03-01</td>
+			                        <td>2026-02-28</td>
+			                        <td>20</td>
+			                    </tr>
+			                </tbody>
+			            </table>
+			        </div>
+			        <!-- table-responsive// -->
+					</div>
+				<!-- col// -->
+			    </div>
+			</div>
+		<!-- card-body end// -->
+		</div>
+		<!-- card end// -->
+	</th:block>
 </html>
