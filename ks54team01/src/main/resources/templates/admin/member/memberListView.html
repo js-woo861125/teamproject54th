@@ -14,7 +14,7 @@
 	<div class="content-header">
          <div class="row gx-3">
 			  <div class="col">
-			    <h2 class="content-title card-title" th:text="@{#}"></h2>
+			    <h2 class="content-title card-title" th:text="${title}"></h2>
 			  </div>
 			  <div class="col-auto">
 			    <a href="#" class="btn btn-primary">
@@ -57,7 +57,6 @@
                     <table class="table table-hover">
                         <thead>
                             <tr class=text-center>
-                                <th>No.</th>
                                 <th>회원아이디</th>
                                 <th>회원비밀번호</th>
                                 <th>회원유형</th>
@@ -69,49 +68,32 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class=text-center>
-                                <td>1</td>
-                                <td>corpcustid1</td>
-                                <td>corpcustpw1</td>
-                                <td>기업고객</td>
-                                <td class="col-lg-2 col-sm-2 col-4 col-status">
-                                    <span class="badge rounded-pill alert-success">N</span>
-                                    <div class="dropdown">
+                            <tr class=text-center
+                            	th:if="${!#lists.isEmpty(memberList)}"
+                          	  	th:each="l : ${memberList}">
+                                <td th:text="${l.memberId}">corpcustid1></td>
+                                <td th:text="${l.memberPw}">corpcustpw1</td>
+                                <td th:text="${l.memberType}">기업고객</td>
+                                <td class="col-2 col-status">
+								    <span class="badge rounded-pill"
+								          th:classappend="${l.dormantStatus == 'N'} ? 'alert-success' : 'alert-danger'"
+								          th:text="${l.dormantStatus}">N</span>
+								    <div class="dropdown">
                                         <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
                                         <div class="dropdown-menu">
                                             <a class="dropdown-item" href="#">N</a>
                                             <a class="dropdown-item text-danger" href="#">Y</a>
                                         </div>
-                                    </div>
+                                    </div>      
+								</td>
+                                <td class="col-status"> 
+                                	<span class="badge rounded-pill"
+                                		  th:classappend="${l.withdrawStatus == 'N'} ? 'alert-success' : 'alert-danger'"
+                                		  th:text="${l.withdrawStatus}">N</span>
                                 </td>
-                                <td class="col-lg-2 col-sm-2 col-4 col-status">
-                                    <span class="badge rounded-pill alert-success">N</span>
-                                </td>
-                                <td>2023-04-14 00:00:00</td>
-                                <td>2023-04-14 00:00:00</td>
-                                <td></td>
-                            </tr>
-                            <tr class=text-center>
-                                <td>2</td>
-                                <td>corpcustid2</td>
-                                <td>corpcustpw2</td>
-                                <td>기업고객</td>
-                                <td class="col-lg-2 col-sm-2 col-4 col-status">
-                                    <span class="badge rounded-pill alert-danger">Y</span>
-                                    <div class="dropdown">
-                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="#">N</a>
-                                            <a class="dropdown-item text-danger" href="#">Y</a>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="col-lg-2 col-sm-2 col-4 col-status">
-                                    <span class="badge rounded-pill alert-success">N</span>
-                                </td>
-                                <td>2023-04-15 00:00:00</td>
-                                <td>2023-04-15 00:00:00</td>
-                                <td>2023-05-16 00:00:00</td>
+                                <td th:text="${l.memberRegDate}">2023-04-14 00:00:00</td>
+                                <td th:text="${l.memberRevDate}">2023-04-14 00:00:00</td>
+                                <td th:text="${l.stateTransDate}"></td>
                             </tr>
                         </tbody>
                     </table>

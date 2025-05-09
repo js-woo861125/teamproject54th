@@ -12,7 +12,7 @@
 	
 	<th:block layout:fragment="content">
         <div class="content-header">
-            <h2 class="content-title" th:text="@{#}"></h2>
+            <h2 class="content-title" th:text="${title}"></h2>
         </div>
         <div class="card mb-4">
             <header class="card-header">
@@ -38,55 +38,20 @@
                     <table class="table table-hover">
                         <thead>
                             <tr class=text-center>
-                                <th>로그인고유코드</th>
+                                <th>로그인코드</th>
                                 <th>회원아이디</th>
-                                <th>회원유형</th>
                                 <th>로그인시간</th>
                                 <th>로그아웃시간</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class=text-center>
-                                <td>login_1</td>
-                                <td>ent_ceo_1</td>
-                                <td>입점업체 대표</td>
-                                <td>2023-03-01 00:00:00</td>
-                                <td>2023-03-01 00:00:00</td>
-                            </tr>
-                            <tr class=text-center>
-                                <td>login_2</td>
-                                <td>ent_ceo_2</td>
-                                <td>입점업체 대표</td>
-                                <td>2023-03-01 00:00:00</td>
-                                <td>2023-03-01 00:00:00</td>
-                            </tr>
-                            <tr class=text-center>
-                                <td>login_3</td>
-                                <td>entempid2</td>
-                                <td>입점업체 직원</td>
-                                <td>2023-03-01 14:00:00</td>
-                                <td>2023-03-01 00:00:00</td>
-                            </tr>
-                            <tr class=text-center>
-                                <td>login_4</td>
-                                <td>corpcustid2</td>
-                                <td>기업고객</td>
-                                <td>2023-04-16 00:00:00</td>
-                                <td>2023-04-16 00:00:00</td>
-                            </tr>
-                            <tr class=text-center>
-                                <td>login_5</td>
-                                <td>corpcustid3</td>
-                                <td>기업고객</td>
-                                <td>2023-04-16 00:00:00</td>
-                                <td>2023-04-16 00:00:00</td>
-                            </tr>
-                            <tr class=text-center>
-                                <td>login_6</td>
-                                <td>entempid1</td>
-                                <td>입점업체 직원</td>
-                                <td>2023-06-15 00:00:00</td>
-                                <td>2023-06-15 00:00:00</td>
+                            <tr class=text-center
+                            	th:if="${!#lists.isEmpty(loginHistoryList)}"
+                                th:each="l : ${loginHistoryList}">
+                                <td th:text="${l.loginNo}">login_1</td>
+                                <td th:text="${l.memberId}">ent_ceo_1</td>
+                                <td th:text="${l.loginDate}">2023-03-01 00:00:00</td>
+                                <td th:text="${l.logoutDate}">2023-03-01 00:00:00</td>
                             </tr>
                         </tbody>
                     </table>

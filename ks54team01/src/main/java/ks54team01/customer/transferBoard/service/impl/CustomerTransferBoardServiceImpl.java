@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ks54team01.customer.transferBoard.domain.CustomerTransferBoard;
 import ks54team01.customer.transferBoard.mapper.CustomerTransferBoardMapper;
 import ks54team01.customer.transferBoard.service.CustomerTransferBoardService;
+import ks54team01.system.util.PageInfo;
+import ks54team01.system.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,19 +23,38 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	private final CustomerTransferBoardMapper customerTransferBoardMapper;
 	
 	/**
+	 * 양도게시글정렬조회
+	 */
+	@Override
+	public PageInfo<CustomerTransferBoard> getSortTransferBoardList(String sortValue, Pageable pageable) {
+		
+		// 마지막 페이지를 구하기 위해 전체 행의 개수 조회
+		int contentRowCount = customerTransferBoardMapper.getTransferBoardCount();
+		
+		
+		
+		List<CustomerTransferBoard> transferBoardList = customerTransferBoardMapper.getSortTransferBoardList(sortValue, pageable);
+		
+		return new PageInfo<>(transferBoardList, pageable, contentRowCount);
+	}
+	
+	/**
 	 * 양도게시글검색조회
 	 */
 	@Override
-	public List<CustomerTransferBoard> getSearchTransferBoard(String searchKey, String searchValue) {
+	public PageInfo<CustomerTransferBoard> getSearchTransferBoard(String searchKey, String searchValue, Pageable pageable) {
 
+		// 마지막 페이지를 구하기 위해 전체 행의 개수 조회
+		int contentRowCount = customerTransferBoardMapper.getSearchTransferBoardCount();
+		
 		switch (searchKey) {
 		case "productsName" -> searchKey = "p.products_nm";
 		case "transferTitle" -> searchKey = "tb.transfer_title";
 		}
 		
-		List<CustomerTransferBoard> transferBoardList = customerTransferBoardMapper.getSearchTransferBoard(searchKey, searchValue);
+		List<CustomerTransferBoard> transferBoardList = customerTransferBoardMapper.getSearchTransferBoard(searchKey, searchValue, pageable);
 		
-		return transferBoardList;
+		return new PageInfo<>(transferBoardList, pageable, contentRowCount);
 	}
 	
 	/**
@@ -51,8 +72,15 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	 * 양도게시글목록조회
 	 */
 	@Override
-	public List<CustomerTransferBoard> getTransferBoardList() {
-		List<CustomerTransferBoard> transferBoardList = customerTransferBoardMapper.getTransferBoardList();
-		return transferBoardList;
+	public PageInfo<CustomerTransferBoard> getTransferBoardList(Pageable pageable) {
+		// 마지막 페이지를 구하기 위해 전체 행의 개수 조회
+		int contentRowCount = customerTransferBoardMapper.getTransferBoardCount();
+		
+		List<CustomerTransferBoard> transferBoardList = customerTransferBoardMapper.getTransferBoardList(pageable);
+		
+		log.info("contentRowCount: {}", contentRowCount);
+		log.info("transferBoardList: {}", transferBoardList);
+		
+		return new PageInfo<>(transferBoardList, pageable, contentRowCount);
 	}
 }
