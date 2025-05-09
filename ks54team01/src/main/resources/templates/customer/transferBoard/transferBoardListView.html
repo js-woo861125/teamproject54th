@@ -34,21 +34,30 @@
                     </div>
                     <div class="w-50 widget_search mb-50">
                         <div class="search-form">
-                            <form action="#">
-                                <input type="text" placeholder="게시글 검색어를 입력해주세요." />
+                            <form th:action="@{/customer/transferBoard/searchTransferBoard}" method="get">
+                                <input type="text" name="searchValue" th:value="${searchValue}" placeholder="게시글 검색어를 입력해주세요." />
                                 <button type="submit"><i class="fi-rs-search"></i></button>
                             </form>
                         </div>
                     </div>
                     <div class="shop-product-fillter">
                         <div class="totall-product">
-                            <h5 class="text-body">전체 <span class="text-brand">5</span></h5>
+                            <h5 class="text-body">양도 상품<span th:text="${'&emsp;' + #lists.size(transferBoardList)}" class="text-brand">5</span>
+                            	<span>건</span>
+                            </h5>
                         </div>
                         <div class="sort-by-product-area">
                             <div class="sort-by-cover mr-10">
                                 <div class="sort-by-product-wrap">
                                     <div class="sort-by">
-                                        <a href = "#"><span>최근등록순</span></a>
+                                        <a href = "#"><span>최신등록순</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sort-by-cover mr-10">
+                                <div class="sort-by-product-wrap">
+                                    <div class="sort-by">
+                                        <a href = "#"><span>높은가격순</span></a>
                                     </div>
                                 </div>
                             </div>

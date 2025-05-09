@@ -21,6 +21,24 @@ public class CustomerTransferBoardController {
 
 	private final CustomerTransferBoardService customerTransferBoardService;
 	
+	@GetMapping("/searchTransferBoard")
+	public String getSearchTransferBoard(@RequestParam(name="searchKey", required = false, defaultValue="transferTitle") String searchKey
+										, @RequestParam(name="searchValue", required = false) String searchValue
+										, Model model) {
+		
+		log.info("searchKey: {}, searchValue: {}", searchKey, searchValue);
+		
+		
+		 List<CustomerTransferBoard> transferBoardList = customerTransferBoardService.getSearchTransferBoard(searchKey, searchValue);
+		 
+		model.addAttribute("title", "양도게시글목록");
+		model.addAttribute("transferBoardList", transferBoardList);
+		model.addAttribute("searchKey", searchKey);
+		model.addAttribute("searchValue", searchValue);
+		
+		return "customer/transferBoard/transferBoardListView";
+	}
+	
 	@GetMapping("/transferBoardDetail")
 	public String getTransferBoardDetail(@RequestParam(name="transferBoardNum", required = false) String transferBoardNum
 										, Model model) {

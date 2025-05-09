@@ -9,7 +9,85 @@
 	<th:block layout:fragment="jsFile">
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	</th:block>
-<body>
-
-</body>
+	
+	<th:block layout:fragment="content">
+		<div class="content-header">
+            <div>
+                <h2 class="content-title card-title" th:text="@{#}"></h2>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <header class="card-header">
+                <div class="row gx-3">
+                    <div class="col-lg-2 col-md-3 col-6">
+                        <select class="form-select">
+                            <option>재직상태</option>
+                            <option>재직자</option>
+                            <option>퇴직자</option>
+                        </select>
+                    </div>
+		            <div class="col-lg-2">
+		                <a th:href="@{#}" class="btn btn-primary"><i class="material-icons md-plus"></i>직원 등록</a>
+		            </div>
+                </div>
+            </header>
+            <!-- card-header end// -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>직원아이디</th>
+                                <th>직원직책</th>
+                                <th>직원이름</th>
+                                <th>직원이메일</th>
+                                <th>직원연락처</th>
+                                <th>재직상태</th>
+                                <th>등록일자</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>entempid1</td>
+                                <td>부장</td>
+                                <td>곽철용</td> 
+                                <td>emp1@naver.com</td>
+                                <td>010-0013-0013</td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-status">
+                                    <span class="badge rounded-pill alert-success">재직자</span>
+                                    <div class="dropdown">
+                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">재직자</a>
+                                            <a class="dropdown-item text-danger" href="#">퇴직자</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>2023-03-01</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- table-responsive.// -->
+                </div>
+            </div>
+            <!-- card-body end// -->
+        </div>
+        <!-- card end// -->
+        <div class="pagination-area mt-15 mb-50">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-start">
+                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                    <li class="page-item"><a class="page-link" href="#">02</a></li>
+                    <li class="page-item"><a class="page-link" href="#">03</a></li>
+                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#">16</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                    </li>
+                </ul>
+            </nav>
+    	</div>
+	</th:block>
 </html>
