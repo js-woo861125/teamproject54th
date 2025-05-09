@@ -15,5 +15,10 @@ import lombok.Data;
 		private String productsImage;
 		private String registerDate;
 		private String revisionDate;
+		
+		private CustomerSellProduct customerSellProduct;
+		private ProductCate productCate;
+		private EntCeo entCeo;
+		
 
 	}
