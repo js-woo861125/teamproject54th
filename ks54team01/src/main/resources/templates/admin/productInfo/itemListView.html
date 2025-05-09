@@ -13,7 +13,7 @@
     <th:block layout:fragment="content">
 		<div class="content-header">
             <div>
-                <h2 class="content-title card-title" th:text="@{#}"></h2>
+                <h2 class="content-title card-title" th:text="${title}"></h2>
             </div>
         </div>
         <div class="card mb-4 col-12">
@@ -37,7 +37,6 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr class=text-center>
-                                                <th>No.</th>
                                                 <th>품목코드</th>
                                                 <th>카테고리</th>
                                                 <th>품목명</th>
@@ -46,25 +45,31 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class=text-center>
-                                                <td>1</td>
-                                                <td>item_1</td>
-                                                <td>침대</td>
-                                                <td>건강돌침대</td>
+                                            <tr class=text-center
+				                            	th:if="${!#lists.isEmpty(itemList)}"
+				                          	  	th:each="l : ${itemList}">
+                                                <td th:text="${l.itemNo}">item_1</td>
+                                                <td th:text="${l.categoryInfo.smCategory}">침대</td>
+                                                <td th:text="${l.itemName}">건강돌침대</td>
                                                 <td class="col-lg-1 col-sm-2 col-4 col-status">
-                                                    <span class="badge rounded-pill alert-success">사용중</span>
-                                                </td>
-                                                <td>
+												    <span class="badge rounded-pill"
+												          th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'"
+												          th:text="${l.useStatus}">사용중</span>    
+												</td>
+												<td>
                                                     <div class="dropdown">
                                                         <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
                                                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="54.modifyCategory(카테고리수정).html">수정</a>
+                                                            <a class="dropdown-item" href="#">수정</a>
                                                             <a class="dropdown-item text-danger" href="#">삭제</a>
                                                         </div>
                                                     </div>
                                                     <!-- dropdown //end -->
                                                 </td>
                                             </tr>
+                                            	<tr th:unless="${not #lists.isEmpty(itemList)}">
+	              					  				<td colspan="7">등록없음</td>
+              					 	 			</tr>	
                                         </tbody>
                                     </table>
                                 </div>
@@ -76,20 +81,6 @@
                    <!-- card body end// -->
                </div>
            </div>
-            <footer class="main-footer font-xs">
-                <div class="row pb-30 pt-15">
-                    <div class="col-sm-6">
-                        <script>
-                            document.write(new Date().getFullYear());
-                        </script>
-                        &copy; Nest - HTML Ecommerce Template .
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-sm-end">All rights reserved</div>
-                    </div>
-                </div>
-            </footer>
-        </main>
         <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
         <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
         <script src="assets/js/vendors/select2.min.js"></script>
