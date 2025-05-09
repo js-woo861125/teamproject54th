@@ -22,8 +22,8 @@ public class CustomerTransferBoardController {
 	private final CustomerTransferBoardService customerTransferBoardService;
 	
 	@GetMapping("/transferBoardDetail")
-	public String getTransferBoardDetail(@RequestParam(name="transferBoardNum", required = false) String transferBoardNum,
-											Model model) {
+	public String getTransferBoardDetail(@RequestParam(name="transferBoardNum", required = false) String transferBoardNum
+										, Model model) {
 		
 		log.info("게시글조회 코드: {}", transferBoardNum);
 		
