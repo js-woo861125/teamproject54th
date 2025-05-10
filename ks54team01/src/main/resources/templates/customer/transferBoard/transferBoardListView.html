@@ -31,10 +31,10 @@
 				location.href = `${url.pathname}?${urlParams.toString()}`;
 			});
 			
-			$('transfer-search').click(function(e){
+			$('button.transfer-search').click(function(e){
 				e.preventDefault();
-				const searchValue = $(this).data('searchValue');
-				
+				const searchValue = $(this).prev().data('searchValue');
+				console.log(searchValue);
 				const href = location.href; // 현재 url 가져온다.
 				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
 				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
@@ -59,9 +59,8 @@
 					</div>
 					<div class="w-50 widget_search mb-50">
 						<div class="search-form">
-							<form th:action="@{/customer/transferBoard/searchTransferBoard}"
-								method="get">
-								<input type="text" name="searchValue" th:value="${searchValue}"
+							<form th:action="@{#}" th:data-search-value="${searchValue}" method="get">
+								<input type="text" name="searchValue" th:data-search-value="${searchValue}"
 									placeholder="게시글 검색어를 입력해주세요." />
 								<button class="transfer-search" type="submit">
 									<i class="fi-rs-search"></i>
@@ -116,8 +115,7 @@
 								<div class="product-cart-wrap mb-30">
 									<div class="product-img-action-wrap">
 										<div class="product-img product-img-zoom">
-											<a
-												th:href="@{/customer/transferBoard/transferBoardDetail(transferBoardNum=${l.transferBoardNum})}">
+											<a th:href="@{/customer/transferBoard/transferBoardDetail(transferBoardNum=${l.transferBoardNum})}">
 												<img class="default-img"
 												th:src="@{'/user/assets/imgs/shop/' + ${l.productInfo.productsImage}}"
 												alt="" />
@@ -167,33 +165,39 @@
 					<div class="pagination-area mt-30 mb-50">
 						<nav aria-label="Page navigation example">
 							<ul class="pagination justify-content-center">
-								<li class="page-item"><a class="page-link"
-									th:href="@{/customer/transferBoard/transferBoardList}">
-									<i class="material-icons md-first_page"></i></a></li>
-								<li class="page-item"
-									th:classappend="${currentPage < 2} ? 'disabled'"><a
-									class="page-link"
-									th:href="@{/customer/transferBoard/transferBoardList(currentPage=${currentPage - 1})}">
-										<i class="fi-rs-arrow-small-left"></i>
-								</a></li>
+								<li class="page-item">
+									<a class="page-link"
+										th:href="@{/customer/transferBoard/transferBoardList}">
+										<i class="material-icons md-first_page"></i>
+									</a>
+								</li>
+								<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
+									<a class="page-link"
+									   th:href="@{/customer/transferBoard/transferBoardList(currentPage=${currentPage - 1})}">
+									   <i class="fi-rs-arrow-small-left"></i>
+									</a>
+								</li>
 								<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
 									<li class="page-item"
 										th:classappend="${num eq currentPage} ? 'active disabled'">
 										<a class="page-link"
-										th:href="@{/customer/transferBoard/transferBoardList(currentPage=${num})}"
-										th:text="${num < 10 ? '0' + num : num}">01</a>
+										   th:href="@{/customer/transferBoard/transferBoardList(currentPage=${num})}"
+										   th:text="${num < 10 ? '0' + num : num}">01</a>
 									</li>
 								</th:block>
 								<li class="page-item"
-									th:classappend="${currentPage eq lastPage} ? 'disabled'"><a
-									class="page-link"
-									th:href="@{/customer/transferBoard/transferBoardList(currentPage=${currentPage + 1})}">
-										<i class="material-icons md-chevron_right"></i>
-								</a></li>
-								<li class="page-item"><a class="page-link"
-									th:href="@{/customer/transferBoard/transferBoardList(currentPage=${lastPage})}">
-										<i class="material-icons md-last_page"></i>
-								</a></li>
+									th:classappend="${currentPage eq lastPage} ? 'disabled'">
+									<a class="page-link"
+									   th:href="@{/customer/transferBoard/transferBoardList(currentPage=${currentPage + 1})}">
+									   <i class="material-icons md-chevron_right"></i>
+									</a>
+								</li>
+								<li class="page-item">
+									<a class="page-link"
+									   th:href="@{/customer/transferBoard/transferBoardList(currentPage=${lastPage})}">
+									   <i class="material-icons md-last_page"></i>
+									</a>
+								</li>
 							</ul>
 						</nav>
 					</div>
