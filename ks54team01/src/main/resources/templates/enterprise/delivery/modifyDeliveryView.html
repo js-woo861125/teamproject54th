@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	<meta charset="utf-8" />
+	<title th:text="${title}">Nest Dashboard</title>
+	<meta http-equiv="x-ua-compatible" content="ie=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<!-- Favicon -->
+	<link rel="shortcut icon" type="image/x-icon"
+		href="/manage/assets/imgs/theme/favicon.svg" />
+	<!-- Template CSS -->
+	<link href="/manage/assets/css/main.css?v=1.1" rel="stylesheet"
+		type="text/css" />
+	</head>
+	
+	<body>
+		<main>
+			<header class="main-header style-2 navbar justify-content-center">
+				<div class="col-brand">
+					<a href="/admin/" class="brand-wrap"> <img
+						src="/manage/assets/imgs/theme/logo.svg" class="logo"
+						alt="Nest Dashboard" />
+					</a>
+				</div>
+	
+			</header>
+			<section class="content-main mt-80 mb-80">
+				<div class="row justify-content-center mt-50">
+					<div class="card mb-4 col-8 justify-content-center" th:object="${deliveryInfo}">
+						<form id="modifyDeliveryForm" th:action="@{/enterprise/delivery/modifyDelivery}" method="post">
+							<div class="card mx-auto ">
+								<header class="card-header">
+									<div class="row align-items-center">
+										<div class="col-lg-6 col-md-6 mb-lg-0">
+											<small class="text-muted"
+												th:text="*{adminDeliveryInfo.delInfoNo}">주문번호 나오게 수정</small>
+										</div>
+										<div class="col-lg-3 col-md-3 ms-auto text-md-end">
+											<button type="submit" id="modifyDeliveryBtn"
+												class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6">배송정보수정</button>
+										</div>
+									</div>
+								</header>
+								<!-- card-header end// -->
+								<div class="card-body">
+									<div class="row mb-50 mt-20 order-info-wrap">
+										<div class="col-md-4">
+											<article class="icontext align-items-start">
+												<div class="text">
+													<h6 class="mb-1">수령인명</h6>
+													<p class="mb-1" th:text="*{adminDeliveryInfo.recipientNm}"></p>
+												</div>
+											</article>
+										</div>
+										<!-- col// -->
+										<div class="col-md-4">
+											<article class="icontext align-items-start">
+												<div class="text">
+													<h6 class="mb-1">배송정보</h6>
+													<p class="mb-1">
+														택배사 정보 : <input type="text" placeholder="택배사를 입력하세요"
+															id="delCompany" name="delCompany"
+															th:value="*{adminDeliveryInfo.delCompany}">
+													</p>
+													<p class="mb-1">
+														운송장 번호 : <input type="text" placeholder="운송장번호를 입력하세요"
+															id="billNo" name="billNo"
+															th:value="*{adminDeliveryInfo.billNo}">
+													</p>
+												</div>
+											</article>
+										</div>
+										<!-- col// -->
+										<div class="col-md-4">
+											<article class="icontext align-items-start">
+												<div class="text">
+													<h6 class="mb-1">배송 주소</h6>
+													<p class="mb-1" th:text="*{adminDelivery.delAddr}"></p>
+													<p class="mb-1" th:text="*{adminDelivery.delDaddr}"></p>
+												</div>
+											</article>
+										</div>
+										<!-- col// -->
+									</div>
+									<div class="row mb-50 mt-20 order-info-wrap">
+										<div class="col-md-4">
+											<article class="icontext align-items-start">
+												<div class="text">
+													<h6 class="mb-1">요청사항</h6>
+													<p class="mb-1" th:text="*{adminDeliveryInfo.delRequest}"></p>
+												</div>
+											</article>
+										</div>
+										<!-- col// -->
+										<div class="col-md-4">
+											<article class="icontext align-items-start">
+												<div class="text">
+													<h6 class="mb-1">택배설정</h6>
+													<p class="mb-1">
+														출발일 : <input type="text" placeholder="출발일을 입력하세요"
+															id="departDate" name="departDate"
+															th:value="*{adminDeliveryInfo.departDate}">
+													</p>
+													<p class="mb-1">
+														완료일 : <input type="text" placeholder="완료일을 입력하세요"
+															id="arriveDate" name="arriveDate"
+															th:value="*{adminDeliveryInfo.arriveDate}">
+													</p>
+												</div>
+											</article>
+										</div>
+										<!-- col// -->
+										<div class="col-md-4">
+											<article class="icontext align-items-start">
+												<div class="text">
+													<h6 class="mb-1">배송진행상황</h6>
+													<th:block th:if="${not #lists.isEmpty(deliveryInfo)}"
+														th:each="l : ${deliveryInfo}">
+														<span th:text="${l.adminDeliveryInfo.delProgress}"></span>
+													</th:block>
+													<select class="form-select text-center fs-7" id="delProgress"
+														name="delProgress">
+														<!-- <th:block th:if="${not #lists.isEmpty(deliveryInfo)}" th:each="l : ${deliveryInfo}">
+			                                    		<option th:value="${l.adminDeliveryInfo.delInfoNo}" th:text="${l.adminDeliveryInfo.delProgress}">1. 상품준비중</option>
+			                                    		<option th:value="${l.adminDeliveryInfo.delProgress}">2. 배송중</option>
+			                                    		<option th:value="${l.adminDeliveryInfo.delProgress}">3. 배송완료(설치완료)</option>
+			                                    	</th:block> -->
+		
+														<option value="1.상품준비중">1.상품준비중</option>
+														<option value="2.배송중">2.배송중</option>
+														<option value="3.배송완료(설치완료)">3.배송완료(설치완료)</option>
+		
+													</select>
+												</div>
+											</article>
+										</div>
+										<!-- col// -->
+									</div>
+								</div>
+								<!-- card-body end// -->
+							</div>
+							<!-- card end// -->
+						</form>
+					</div>
+				</div>
+			</section>
+			<footer class="main-footer text-center">
+				<p class="font-xs">
+					<script>
+						document.write(new Date().getFullYear());
+					</script>
+					&copy; Nest - HTML Ecommerce Template .
+				</p>
+				<p class="font-xs mb-30">All rights reserved</p>
+			</footer>
+		</main>
+		<script src="/manage/assets/js/vendors/jquery-3.6.0.min.js"></script>
+		<script src="/manage/assets/js/vendors/bootstrap.bundle.min.js"></script>
+		<script src="/manage/assets/js/vendors/jquery.fullscreen.min.js"></script>
+		<!-- Main Script -->
+		<script src="/manage/assets/js/main.js?v=1.1" type="text/javascript"></script>
+		<script>
+			
+		</script>
+	</body>
+</html>

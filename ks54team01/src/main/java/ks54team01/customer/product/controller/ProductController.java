@@ -3,33 +3,43 @@ package ks54team01.customer.product.controller;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import ch.qos.logback.core.model.Model;
+import ks54team01.customer.product.domain.CustomerProduct;
+import ks54team01.customer.product.service.CustomerProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("customer/product")
-@lombok.extern.slf4j.Slf4j
+@RequestMapping("/customer/product")
+@Slf4j
 public class ProductController {
 
-	@GetMapping("productDetail")
+	private final CustomerProductService customerProductService;
+	
+	@GetMapping("/productDetail")
 	public String getProductDetail() {
 		
 		return "customer/product/productDetail";
 	}
 	
 	
-	@GetMapping("productList")
-	public String getProductList() {
+	@GetMapping("/productList")
+	public String getProductList(@RequestParam(name="smallCategory") String smallCategory, Model model) {
 		
-//		List<Product> productList = productService.getProductList();
-//		
-//		model.addAttribute("title", "상품리스트");
-//		model.addAttribute("productList", productList);
+		List<CustomerProduct> productList = customerProductService.getCustomerProductList(smallCategory);
+		
+		model.addAttribute("title", smallCategory);
+		model.addAttribute("productList", productList);
+		
+		log.info("smallCategory : {}", smallCategory);
+		log.info("customerProduct: {}",  productList);
+		
 		
 		return "customer/product/productList";
 	}
