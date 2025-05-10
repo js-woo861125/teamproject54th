@@ -60,9 +60,6 @@
 		            }
 		        }).open();
 			});
-			
-			
-			
 		</script>
 	
 	</th:block>
@@ -102,15 +99,12 @@
                                             <div class="form-group">
                                                 <input type="text" name="ent-position" placeholder="업체명" required />
                                             </div>
-                                            <div class="form-group d-flex">
-                                                <select class="w-auto border-1 border-radius-10 mr-10">
-                                                    <option>010</option>
-                                                    <option>02</option>
-                                                    <option>063</option>
-                                                </select>                          
-                                                <input type="text" name="ent-ceo-phone" placeholder="전화번호" required />
-                                                <button type="submit" class="btn btn-heading btn-block p-10 ml-10">인증요청</button>                                              
-                                            </div>
+                                           <div class="form-group d-flex">
+											   	<input type="text" class="w-10" id="phoneFixed" name="phoneFixed" placeholder="010" disabled />
+											    <input type="text" class="mr-10 ml-10" id="phone1" name="phone1" placeholder="1234" required />
+											    <input type="text" placeholder="5678" id="phone2" name="phone2" required />
+											</div>
+                                            <!-- 주소 -->
 			                        		 <div class="form-group position-relative d-flex justify-content-end">
                                                 <input type="text" id="memberZip" name="memberZip" placeholder="우편번호를 입력해주세요" readonly disabled />
                                                 <button type="button" id="daumPostBtn" class="btn btn-heading btn-block p-10 mt-10 mr-10 position-absolute">우편번호찾기</button>
@@ -127,14 +121,22 @@
 						                            </div>
 				                        		</div>
 				                        	</div>
+				                        	<!-- 이메일 본인인증 -->
                                             <div class="form-group d-flex">
-                                                <input type="text" class="w-60" name="ent-ceo-email" placeholder="Email" required />
-                                                <select class="w-auto border-1 border-radius-10 ml-10">
-                                                    <option>@naver.com</option>
-                                                    <option>@daum.net</option>
-                                                    <option>@google.com</option>                                                    
-                                                </select>                                               
+                                                <input type="text" class="w-60" id="emailFirst" name="emailFirst" placeholder="Email" required />
+                                                <select class="w-auto border-1 border-radius-10 ml-10" id="emailLast" name="emailLast">
+                                                    <option value="@naver.com">@naver.com</option>
+                                                    <option value="@daum.net">@daum.net</option>
+                                                    <option value="@google.com">@google.com</option>                                                    
+                                                </select> 
+                                                <button type="button" class="btn btn-heading btn-block p-10 ml-10" onclick="sendVerificationCode()">인증</button>                                               
                                             </div>
+											<div class="form-group" id="verify-section" style="display:none;">
+												<div class="form-group d-flex">
+												    <input type="text" id="verifyCode" name="verifyCode" placeholder="인증코드 입력">
+												    <button type="button" class="btn btn-heading btn-block p-10 ml-10"  onclick="verifyCodeSubmit()">확인</button>
+											    </div>
+											</div>
                                             <div class="form-group d-flex">
                                                 <select class="w-auto border-1 border-radius-10 mr-10">
                                                     <option>농협</option>

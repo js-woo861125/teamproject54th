@@ -11,7 +11,7 @@ import ks54team01.customer.member.domain.CustomerMember;
 @Mapper
 public interface CustomerMemberMapper {
 	// 공통회원정보 등록
-	void addBasicMember(CustomerMember member);
+	int addBasicMember(CustomerMember member);
 	
 	// 일반회원정보 등록
 	int addMember(CustomerMember member);
