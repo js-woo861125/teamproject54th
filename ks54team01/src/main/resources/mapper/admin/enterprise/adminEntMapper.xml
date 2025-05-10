@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.admin.enterprise.mapper.AdminEntMapper">
+ 	
+
+ 	
+ 	
+ 	
+	 <select id="getEntList" parameterType="string">
+		/* 입점업체 목록 조회 */
+		 SELECT 
+			ec.ent_ceo_no as ceoCode,
+			ec.ent_nm as entName, 
+			ec.ent_ceo_phone as ceoTelNo,
+			ec.ent_brno as entBrNo,
+			ct.contract_status as entContractStatus,
+			ct.contract_expiry_date as contractEndDate
+		FROM 
+			ent_ceo ec LEFT JOIN ent_contract ct
+			ON ec.ent_ceo_no = ct.ent_ceo_no; 
+	 </select>
+	 
+	 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ </mapper>
