@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ks54team01.admin.enterprise.domain.AdminEntDetail;
 import ks54team01.admin.enterprise.domain.AdminEntList;
 import ks54team01.admin.enterprise.mapper.AdminEntMapper;
 import ks54team01.admin.enterprise.service.AdminEntListService;
@@ -25,5 +26,10 @@ public class AdminEntSeriveiceImpl implements AdminEntListService{
 		
 		return entList;
 	}
+	@Override
+	public AdminEntDetail getEntDetail(String ceoCode) {
+	    return adminEntMapper.getEntDetail(ceoCode);
+	}
+	
 	
 }
