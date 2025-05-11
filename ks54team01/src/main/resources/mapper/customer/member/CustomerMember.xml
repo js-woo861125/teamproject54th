@@ -19,7 +19,6 @@
 		<result column="state_transition_date" 	property="memberStateTransitionDate" />
 	</resultMap>
 	
-	
 	<insert id="addBasicMember" parameterType="CustomerMember">
 		/* 공통회원정보 등록 */
 		INSERT INTO members
@@ -33,16 +32,15 @@
 		INSERT INTO customer
 		(cust_id, cust_nm, cust_brdt, cust_addr, cust_daddr, cust_email, cust_phone, register_date, revision_date)
 		VALUES
-		(#{custId}, #{custName}, #{custBrdt}, #{custAddr}, #{custDaddr}, #{custEmail}, #{custPhone}, CURDATE(), CURDATE());
+		(#{memberId}, #{custName}, #{custBrdt}, #{custAddr}, #{custDaddr}, #{custEmail}, #{custPhone}, CURDATE(), CURDATE());
 	</insert>
 	
 	<insert id="addCorpMember" parameterType="CustomerMember">
 		/* 기업정보 등록 */
-		cust_id, corp_brno, corp_nm, register_date, revision_date
 		INSERT INTO corp_customer
 		(cust_id, corp_brno, corp_nm, register_date, revision_date)
 		VALUES
-		(#{custId}, #{corpBrno}, #{corpName}, CURDATE(), CURDATE());
+		(#{memberId}, #{corpBrno}, #{corpName}, CURDATE(), CURDATE());
 	</insert>
 	
   	<select id="getMemberInfoById" parameterType="string" resultMap="memberResultMap">

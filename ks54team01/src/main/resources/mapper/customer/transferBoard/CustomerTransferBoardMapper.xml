@@ -54,7 +54,64 @@
 		</association>
   	</resultMap>	
 
-	<select id="getSearchTransferBoard" parameterType="string" resultMap="transferBoardResultMap">
+	<select id="getSortTransferBoardList" parameterType="string" resultMap="transferBoardResultMap">
+  		/* 양도 게시글 목록 정렬 조회*/
+	  	 SELECT 
+	   		tb.transfer_board_no ,
+			p.products_image ,
+			tb.cust_id ,
+			tb.transfer_title ,
+			tb.rental_fee ,
+			tb.individual_grants ,
+			tb.transfer_rental_processing_status ,
+			tb.register_date 
+		 FROM 
+			transfer_board tb INNER JOIN sell_products sp 
+			USING (sell_products_no) 
+			INNER JOIN products p 
+			USING (products_no)
+		 ORDER BY
+		 <if test="sortValue != null and sortValue == 'rowPrice'">
+			tb.rental_fee ASC,
+		 </if>
+		 <if test="sortValue != null and sortValue == 'highPrice'">
+			tb.rental_fee DESC,
+		 </if>
+		 <if test="sortValue != null and sortValue == 'deadline'">
+			DATEDIFF(tb.board_valid_date, NOW()) ASC,
+		 </if>
+		 tb.register_date DESC;
+  	</select>
+
+
+	<select id="getSearchTransferBoardCount" resultType="int">
+		/* 검색 시 행 수 */
+		SELECT
+			COUNT(tb.transfer_board_no)
+		FROM
+			transfer_board tb INNER JOIN sell_products sp 
+			USING (sell_products_no) 
+			INNER JOIN products p 
+			USING (products_no)
+		<where>
+			<if test="searchValue != null and searchValue != ''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%');
+			</if>
+		</where>	
+	</select>
+
+	<select id="getTransferBoardCount" resultType="int">
+		/* 전체 행 수 */
+		SELECT
+			COUNT(tb.transfer_board_no)
+		FROM
+			transfer_board tb INNER JOIN sell_products sp 
+			USING (sell_products_no) 
+			INNER JOIN products p 
+			USING (products_no);
+	</select>
+
+	<select id="getSearchTransferBoard" parameterType="Pageable" resultMap="transferBoardResultMap">
   		/* 양도 게시글 검색 조회 */
   		SELECT 
 	   		tb.transfer_board_no ,
@@ -72,9 +129,10 @@
 			USING (products_no)
 		<where>
 			<if test="searchValue != null and searchValue != ''">
-				${searchKey} LIKE CONCAT('%', #{searchValue}, '%');
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
 			</if>
 		</where>
+		ORDER BY tb.register_date DESC;
   	</select>
 
 	<select id="getTransferBoardInfoByCode" parameterType="string" resultMap="transferBoardResultMap">
@@ -103,7 +161,7 @@
 			tb.transfer_board_no = #{transferBoardNum};
   	</select>
 
-  	<select id="getTransferBoardList" parameterType="CustomerTransferBoard" resultMap="transferBoardResultMap">
+  	<select id="getTransferBoardList" parameterType="Pageable" resultMap="transferBoardResultMap">
   		/* 양도 게시글 목록 조회 (제목, 작성자, 상품명, 이미지)*/
 	   SELECT 
 	   		tb.transfer_board_no ,
@@ -118,6 +176,18 @@
 			transfer_board tb INNER JOIN sell_products sp 
 			USING (sell_products_no) 
 			INNER JOIN products p 
-			USING (products_no);
+			USING (products_no)
+		ORDER BY tb.register_date DESC
+		LIMIT #{rowPerPage} OFFSET #{offset};
+		<!-- <if test="searchValue != null and searchValue != ''">
+			tb.register_date DESC,
+		</if>
+		<if test="searchValue != null and searchValue != ''">
+			tb.register_date DESC,
+		</if>
+		<if test="searchValue != null and searchValue != ''">
+			tb.register_date DESC,
+		</if> -->
+		<!-- tb.register_date DESC -->
   	</select>
   </mapper>

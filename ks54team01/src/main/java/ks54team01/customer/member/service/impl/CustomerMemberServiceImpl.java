@@ -19,8 +19,6 @@ public class CustomerMemberServiceImpl implements CustomerMemberService{
 	
 	private final CustomerMemberMapper customerMemberMapper;
 	
-	
-	
 	/**
 	 * 공통회원정보 등록
 	 */

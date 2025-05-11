@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{customer/layout/default}">
+
+
+	<!-- head 삽입공간 -->
+	
+	<head>
+	
+	</head>
+	
+	
+	<th:block layout:fragment="jsFile">
+	
+	</th:block>
+	
+	
+	<th:block layout:fragment="jsScript">
+		
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+		<div class="container mb-30">
+            <div class="row flex-row-reverse">
+                <div class="col-lg-11">
+                    <div class="section-title">
+                        <h1 class="heading-2 mb-50">양도 받기!</h1>
+                        <div class="col-md-2 col-2 ms-auto mt-50">
+                            <button type="submit"
+                                    class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6 mb-50">글쓰기</button>
+                        </div>
+                    </div>
+                    <div class="w-50 widget_search mb-50">
+                        <div class="search-form">
+                            <form action="#">
+                                <input type="text" placeholder="게시글 검색어를 입력해주세요." />
+                                <button type="submit"><i class="fi-rs-search"></i></button>
+                            </form>
+                        </div>
+                    </div> 
+                    <div class="shop-product-fillter">
+						<div class="totall-product">
+							<h5 class="text-body">
+								양수 상품<span th:text="${'&emsp;' + contentRowCount}"
+								class="text-brand">5</span> 
+								<span>건</span>
+							</h5>
+						</div>
+						<div class="sort-by-product-area">
+							<div class="sort-by-cover mr-10">
+								<div class="sort-by">
+									<a th:href="@{#}" th:data-sort-value="recentReg">
+										<span>최신등록순</span>
+									</a>
+								</div>
+							</div>
+							<div class="sort-by-cover mr-10">
+								<div class="sort-by">
+									<a th:href="@{#}" th:data-sort-value="deadline">
+										<span>마감임박순</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+                    <div class="product-list mb-50">
+                        <th:block th:if="${!#lists.isEmpty(assigneeBoardList)}"
+								  th:each="l : ${assigneeBoardList}">
+	                        <!-- 상품1 -->
+	                        <div class="product-cart-wrap border">
+	                            <div class="product-content-wrap mt-50 mb-30 ml-50">
+	                                <h4><a th:text="${l.productName}" th:href="@{/customer/assigneeBoard/assigneeBoardDetail(assigneeBoardNum=${l.assigneeBoardNum})}">그램 프로 노트북 16인치 (옵시디안 블랙)</a></h4>
+	                                <div class="product-rate-cover">
+	                                    <span th:text="${l.productInfoCategory.smCategory}" class="font-small ml-5 text-muted">TV/디지털</span>
+	                                </div>
+	                                <p class="mt-15 mb-15">급구</p>
+	                                <div class="product-price d-flex">
+	                                     <div>
+	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">희망렌탈료</span>
+	                                        <span th:text="|₩${#numbers.formatInteger(l.rentalFee, 3, 'COMMA')}" 
+	                                        	  style="color: black; font-size: 20px;">상관없음</span>
+	                                     </div>
+	                                     <div>
+	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">희망계약기간</span>
+	                                        <span th:text="${l.remainingMonths} + '개월'" style="color: black; font-size: 20px;">상관없음</span>
+	                                     </div>
+	                                     <div>
+	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">희망설치지역</span>
+	                                        <span th:text="${l.desiredInstallArea}" style="color: black; font-size: 20px;">전주</span>
+	                                     </div>
+	                                     <div>
+	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">마감일</span>
+	                                        <span th:text="${l.boardValidDate}" style="color: black; font-size: 20px;">2025-04-10</span>
+	                                     </div>
+	                                </div>
+	                                <div class = "board">
+	                                    <p>등록일</p>
+										<p th:text="${l.registerDate}">2025-04-09</p>
+	                                    <div></div>
+	                                    <p th:text="${l.customerMember.custName}">personalcustid3</p>
+	                                </div>
+	                            </div>
+	                        </div>
+                        </th:block>
+                    </div>
+                    <div class="pagination-area mt-30 mb-50">
+						<nav aria-label="Page navigation example">
+							<ul class="pagination justify-content-center">
+								<li class="page-item">
+									<a class="page-link"
+										th:href="@{/customer/assigneeBoard/assigneeBoardList}">
+										<i class="material-icons md-first_page"></i>
+									</a>
+								</li>
+								<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
+									<a class="page-link"
+									   th:href="@{/customer/assigneeBoard/assigneeBoardList(currentPage=${currentPage - 1})}">
+									   <i class="fi-rs-arrow-small-left"></i>
+									</a>
+								</li>
+								<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
+									<li class="page-item"
+										th:classappend="${num eq currentPage} ? 'active disabled'">
+										<a class="page-link"
+										   th:href="@{/customer/assigneeBoard/assigneeBoardList(currentPage=${num})}"
+										   th:text="${num < 10 ? '0' + num : num}">01</a>
+									</li>
+								</th:block>
+								<li class="page-item"
+									th:classappend="${currentPage eq lastPage} ? 'disabled'">
+									<a class="page-link"
+									   th:href="@{/customer/assigneeBoard/assigneeBoardList(currentPage=${currentPage + 1})}">
+									   <i class="material-icons md-chevron_right"></i>
+									</a>
+								</li>
+								<li class="page-item">
+									<a class="page-link"
+									   th:href="@{/customer/assigneeBoard/assigneeBoardList(currentPage=${lastPage})}">
+									   <i class="material-icons md-last_page"></i>
+									</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
+                </div>
+            </div>
+        </div>
+	</th:block> 
+</html>

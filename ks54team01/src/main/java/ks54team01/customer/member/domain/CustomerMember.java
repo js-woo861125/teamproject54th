@@ -24,7 +24,6 @@ public class CustomerMember {
 	
 	private String corpBrno;
 	private String corpName;
-
 	
 }
 

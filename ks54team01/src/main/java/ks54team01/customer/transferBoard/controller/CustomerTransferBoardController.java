@@ -1,7 +1,5 @@
 package ks54team01.customer.transferBoard.controller;
 
-import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ks54team01.customer.transferBoard.domain.CustomerTransferBoard;
 import ks54team01.customer.transferBoard.service.CustomerTransferBoardService;
+import ks54team01.system.util.PageInfo;
+import ks54team01.system.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,20 +21,67 @@ public class CustomerTransferBoardController {
 
 	private final CustomerTransferBoardService customerTransferBoardService;
 	
+	@GetMapping("/sortTransferBoardList")
+	public String getSortTransferBoard(@RequestParam(name="sortValue", required = false) String sortValue
+										, Pageable pageable
+										, Model model) {
+		
+		log.info("sortValue: {}", sortValue);
+		
+		PageInfo<CustomerTransferBoard> transferBoard = customerTransferBoardService.getSortTransferBoardList(sortValue, pageable);
+		
+		var transferBoardList = transferBoard.getContents();
+		int currentPage = transferBoard.getCurrentPage();
+		int lastPage = transferBoard.getLastPage();
+		int startPageNum = transferBoard.getStartPageNum();
+		int endPageNum = transferBoard.getEndPageNum();
+		int rowPerPage = pageable.getRowPerPage();
+		int contentRowCount = transferBoard.getTotalRowCount();	
+		
+		model.addAttribute("titel", "양도게시글목록");
+		model.addAttribute("transferBoardList", transferBoardList);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("lastPage", lastPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("rowPerPage", rowPerPage);
+		
+		model.addAttribute("sortValue", sortValue);
+		model.addAttribute("contentRowCount", contentRowCount);
+		
+		return "customer/transferBoard/transferBoardListView";
+	}
+	
 	@GetMapping("/searchTransferBoard")
 	public String getSearchTransferBoard(@RequestParam(name="searchKey", required = false, defaultValue="transferTitle") String searchKey
 										, @RequestParam(name="searchValue", required = false) String searchValue
-										, Model model) {
+										, Model model
+										, Pageable pageable) {
 		
 		log.info("searchKey: {}, searchValue: {}", searchKey, searchValue);
+		log.info("pageable: {}", pageable);
 		
+		PageInfo<CustomerTransferBoard> transferBoard = customerTransferBoardService.getSearchTransferBoard(searchKey, searchValue, pageable);
 		
-		 List<CustomerTransferBoard> transferBoardList = customerTransferBoardService.getSearchTransferBoard(searchKey, searchValue);
-		 
-		model.addAttribute("title", "양도게시글목록");
+		var transferBoardList = transferBoard.getContents();
+		int currentPage = transferBoard.getCurrentPage();
+		int lastPage = transferBoard.getLastPage();
+		int startPageNum = transferBoard.getStartPageNum();
+		int endPageNum = transferBoard.getEndPageNum();
+		int rowPerPage = pageable.getRowPerPage();
+		int contentRowCount = transferBoard.getTotalRowCount();	
+		
+		model.addAttribute("titel", "양도게시글목록");
 		model.addAttribute("transferBoardList", transferBoardList);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("lastPage", lastPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("rowPerPage", rowPerPage);
+		
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
+		model.addAttribute("contentRowCount", contentRowCount);
 		
 		return "customer/transferBoard/transferBoardListView";
 	}
@@ -56,12 +103,29 @@ public class CustomerTransferBoardController {
 	
 	
 	@GetMapping("/transferBoardList")
-	public String getTransferBoardList(Model model) {
+	public String getTransferBoardList(Pageable pageable, Model model) {
 		
-		List<CustomerTransferBoard> transferBoardList = customerTransferBoardService.getTransferBoardList();
+		PageInfo<CustomerTransferBoard> transferBoard = customerTransferBoardService.getTransferBoardList(pageable);
+		
+		var transferBoardList = transferBoard.getContents();
+		int currentPage = transferBoard.getCurrentPage();
+		int lastPage = transferBoard.getLastPage();
+		int startPageNum = transferBoard.getStartPageNum();
+		int endPageNum = transferBoard.getEndPageNum();
+		int rowPerPage = pageable.getRowPerPage();
+		int contentRowCount = transferBoard.getTotalRowCount();	
+		
 		
 		model.addAttribute("titel", "양도게시글목록");
 		model.addAttribute("transferBoardList", transferBoardList);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("lastPage", lastPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("rowPerPage", rowPerPage);
+		model.addAttribute("contentRowCount", contentRowCount);
+		
+		
 		return "customer/transferBoard/transferBoardListView";
 	}
 	
