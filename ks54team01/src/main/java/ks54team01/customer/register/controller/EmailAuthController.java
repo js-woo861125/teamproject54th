@@ -1,4 +1,4 @@
-package ks54team01.customer.member.controller;
+package ks54team01.customer.register.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ks54team01.customer.member.service.EmailService;
+import ks54team01.customer.register.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/customer/member")
+@RequestMapping("/customer/register")
 @Slf4j
 public class EmailAuthController {
 	
