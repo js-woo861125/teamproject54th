@@ -3,7 +3,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace="ks54team01.customer.member.mapper.CustomerMemberMapper">
+  <mapper namespace="ks54team01.customer.register.mapper.RegisterMapper">
   
   	<!-- resultMap : 조회 결과를 자바 클래스(domain,dto)와 명시적으로 매핑설정 -->
 	<resultMap type="CustomerMember" id="memberResultMap">
@@ -19,13 +19,12 @@
 		<result column="state_transition_date" 	property="memberStateTransitionDate" />
 	</resultMap>
 	
-	
 	<insert id="addBasicMember" parameterType="CustomerMember">
 		/* 공통회원정보 등록 */
 		INSERT INTO members
-		(members_id, members_pw, members_type, register_date, revision_date, dormant_status, withdraw_status, state_transition_date)
+		(members_id, members_pw, members_type, register_date, revision_date, state_transition_date)
 		VALUES
-		(#{memberId}, #{memberPw}, #{memberType}, CURDATE(), CURDATE(), #{memberDormantStatus}, #{memberWithdrawStatus}, #{memberStateTransitionDate});
+		(#{memberId}, #{memberPw}, #{memberType}, CURDATE(), CURDATE(), #{memberStateTransitionDate});
 	</insert>
 	
 	<insert id="addMember" parameterType="CustomerMember">
@@ -33,16 +32,15 @@
 		INSERT INTO customer
 		(cust_id, cust_nm, cust_brdt, cust_addr, cust_daddr, cust_email, cust_phone, register_date, revision_date)
 		VALUES
-		(#{custId}, #{custName}, #{custBrdt}, #{custAddr}, #{custDaddr}, #{custEmail}, #{custPhone}, CURDATE(), CURDATE());
+		(#{memberId}, #{custName}, #{custBrdt}, #{custAddr}, #{custDaddr}, #{custEmail}, #{custPhone}, CURDATE(), CURDATE());
 	</insert>
 	
 	<insert id="addCorpMember" parameterType="CustomerMember">
 		/* 기업정보 등록 */
-		cust_id, corp_brno, corp_nm, register_date, revision_date
 		INSERT INTO corp_customer
 		(cust_id, corp_brno, corp_nm, register_date, revision_date)
 		VALUES
-		(#{custId}, #{corpBrno}, #{corpName}, CURDATE(), CURDATE());
+		(#{memberId}, #{corpBrno}, #{corpName}, CURDATE(), CURDATE());
 	</insert>
 	
   	<select id="getMemberInfoById" parameterType="string" resultMap="memberResultMap">
