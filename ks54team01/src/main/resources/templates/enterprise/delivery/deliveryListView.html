@@ -59,7 +59,8 @@
 								<th class="align-middle" scope="col">등록일</th>
 								<th class="align-middle" scope="col">출발일</th>
 								<th class="align-middle" scope="col">배송완료일</th>
-								<th class="align-middle" scope="col">정보등록</th>
+								<th class="align-middle" scope="col">정보수정</th>
+								<th class="align-middle" scope="col">배송완료</th>
 							</tr>
 						</thead>
 						<tbody class="text-center">
@@ -75,14 +76,17 @@
 								<td th:text="${l.adminDeliveryInfo.regDate}">03.12.2020</td>
 								<td th:text="${l.adminDeliveryInfo.departDate}">03.13.2020</td>
 								<td th:text="${l.adminDeliveryInfo.arriveDate}">03.14.2020</td>
+								<td><a th:href="@{/enterprise/delivery/modifyDelivery(delInfoNo=${l.adminDeliveryInfo.delInfoNo})}" class="btn btn-sm font-sm rounded btn-warning text-white">수정 </a></td>
 								<td>
-									<a th:href="@{/enterprise/delivery/modifyDelivery(delInfoNo=${l.adminDeliveryInfo.delInfoNo})}" class="btn btn-sm font-sm rounded btn-brand">수정 </a>
-									<a th:href="@{#}" class="btn btn-sm font-sm rounded btn-brand">완료 </a>
+									<form th:action="@{/enterprise/delivery/completeDelivery}" method="post">
+										<input type="hidden" name="delInfoNo" th:value="${l.adminDeliveryInfo.delInfoNo}" />
+										<button type="submit" class="btn btn-sm font-sm rounded btn-brand">완료</button>
+									</form>
 								</td>
 							</tr>
 							<tr th:unless="${!#lists.isEmpty(DeliveryList)}">
                           		<td colspan="12">등록없음</td>
-                            </tr>
+                            </tr>																						
 	
 						</tbody>
 					</table>
