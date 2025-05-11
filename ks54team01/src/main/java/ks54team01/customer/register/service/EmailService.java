@@ -1,4 +1,4 @@
-package ks54team01.customer.member.service;
+package ks54team01.customer.register.service;
 
 import java.util.Map;
 import java.util.Random;

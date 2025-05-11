@@ -35,7 +35,7 @@
 			    memberId = memberId.trim();
 				
 				const request = $.ajax({
-					url : '/customer/member/idCheck',
+					url : '/customer/register/idCheck',
 					method : 'post',
 					data : {'memberId' : memberId},
 					dataType : 'json'
@@ -51,8 +51,8 @@
 					
 					alert('사용가능한 아이디 입니다.');
 					// 중복되지 않은 경우 비밀번호 필드 활성화
-					 $('#memberPw, #memberPwConfirm').prop('disabled', false);
-					 $('#memberPw').focus();
+					$('#memberPw, #memberPwConfirm').prop('readonly', false);
+					$('#memberPw').focus();
 				});
 				
 				request.fail((jqXHR, textStatus, error)=>{
@@ -60,35 +60,59 @@
 				});
 				
 			});
-				
+			
 			/**
-			* 비밀번호 일치 여부
+			* 비밀번호 유효성 검증
 			*/
-			$(document).ready(function () {
-			    const $password = $('#memberPw');
-			    const $confirmPassword = $('#memberPwConfirm');
+			$(function () {
+			    const $pw = $('#memberPw'), $cf = $('#memberPwConfirm'), $msg = $('#passwordMatchMessage');
 			    
-			    function checkPasswordMatch() {
-			        const password = $password.val();
-			        const confirmPassword = $confirmPassword.val();
-			        
-			        if (password && confirmPassword) {
-			            if (password !== confirmPassword) {
-			                $('#passwordMatchMessage').text('비밀번호가 일치하지 않습니다.').css('color', 'red');
-			                $confirmPassword.css('border-color', 'red');
-			            } else {
-			                $('#passwordMatchMessage').text('비밀번호가 일치합니다.').css('color', 'green');
-			                $confirmPassword.css('border-color', 'green');
-			            }
+			    function checkPasswordValid() {
+			        const pw = $pw.val();
+			        const valid = /^(?=.*[!@#$%^&*()_+~`{}\[\]:;"'<>,.?\/\\|\-]).{8,}$/;
+
+			        if (!valid.test(pw)) {
+			            $msg.text('8자 이상, 특수문자 포함 필수').css('color', 'red');
+			            $pw.css('border-color', 'red');
+			            return false;
 			        } else {
-			            $('#passwordMatchMessage').text('');
-			            $confirmPassword.css('border-color', '');
+			            $msg.text('').css('color', 'green');
+			            $pw.css('border-color', 'green');
+			            return true;
+			        }
+			    }
+			
+			    
+			    /**
+				* 비밀번호 일치 여부
+				*/
+			    function checkPasswordMatch() {
+			        const pw = $pw.val();
+			        const cf = $cf.val();
+			        
+			        if (cf && pw !== cf) {
+			            $msg.text('비밀번호가 일치하지 않습니다.').css('color', 'red');
+			            $cf.css('border-color', 'red');
+			            $cf.focus();
+			        } else if (cf && pw === cf) {
+			            $msg.text('비밀번호가 유효하며 일치합니다.').css('color', 'green');
+			            $cf.css('border-color', 'green');
+			        } else {
+			            $msg.text('');
+			            $cf.css('border-color', '');
 			        }
 			    }
 			    
-			    // 비밀번호 입력 필드에 값이 변경될 때마다 즉시 비교
-			    $password.on('input', checkPasswordMatch);
-			    $confirmPassword.on('input', checkPasswordMatch);
+			 	// 비밀번호 입력 시 유효성 검사
+			    $pw.on('input', function() {
+			        checkPasswordValid();
+			    });
+
+			    // 비밀번호 확인 입력 시 일치 여부 체크
+			    $cf.on('input', function() {
+			        checkPasswordMatch();
+			    });
+
 			});
 
 			
@@ -152,7 +176,7 @@
                                             <h1 class="mb-5" th:text="${title}"></h1>
                                             <p class="mb-30">이미 회원이신가요? <a href="page-login.html">로그인</a></p>
                                         </div>
-                                        <form id="memberRegisterForm" th:action="@{/customer/member/memberRegister}" method="post"> 
+                                        <form id="memberRegisterForm" th:action="@{/customer/register/memberRegister}" method="post"> 
                                         	 <!-- 아이디 입력 및 중복 확인 -->                                        
                                             <div class="form-group d-flex">
                                                 <input type="text" id="memberId" name="memberId" placeholder="아이디(6-12자 이내, 영문/숫자 사용 가능)" required />
@@ -160,10 +184,11 @@
                                             </div>     
                                             <!-- 비밀번호 입력 -->      
                                             <div class="form-group">
-	                                        	<input type="password" id="memberPw" name="memberPw" placeholder="비밀번호(8자 이상, 문자/특수문자/숫자 사용 가능)" disabled required />                                            	
+	                                        	<input type="password" id="memberPw" name="memberPw" placeholder="비밀번호(8자 이상, 특수문자 포함)"  readonly required />
+												<small id="pwFeedback" style="color:red;"></small>
                                             </div>
                                             <div class="form-group">
-                                                <input type="password" id="memberPwConfirm" name="memberPwConfirm" placeholder="비밀번호 확인" disabled required />
+                                                <input type="password" id="memberPwConfirm" name="memberPwConfirm" placeholder="비밀번호 확인"  readonly required />
                                                 <span id="passwordMatchMessage"></span>
                                             </div>
                                         	<!-- 회원 유형 선택 -->
