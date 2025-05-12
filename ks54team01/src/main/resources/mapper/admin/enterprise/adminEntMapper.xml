@@ -2,12 +2,9 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="ks54team01.admin.enterprise.mapper.AdminEntMapper">
+	<mapper namespace="ks54team01.admin.enterprise.mapper.AdminEntMapper">
  	
 
- 	
- 	
- 	
 	 <select id="getEntList" parameterType="string">
 		/* 입점업체 목록 조회 */
 		 SELECT 
@@ -22,16 +19,18 @@
 			ON ec.ent_ceo_no = ct.ent_ceo_no; 
 	 </select>
 	 
+	 
 	 <select id="getEntDetail" parameterType="string">
+		 /* 입점업체 상세조회 */ 
 		  SELECT 
 		    ct.ent_contract_no as entContractNo,
-		    ec.ent_ceo_no as entCeoNo,
-		    ec.ent_ceo_id as entCeoId,
-		    ec.ent_ceo_email as entCeoEmail,
+		    ec.ent_ceo_no as CeoNo,
+		    ec.ent_ceo_id as CeoId,
+		    ec.ent_ceo_email as CeoEmail,
 		    ec.ent_ceo_addr as entAddr,
 		    ec.ent_ceo_daddr as entDaddr,
 		    ct.fee_rate_sales as feeRateSales,
-		    ct.fee_rate_rental as teeRateRental,
+		    ct.fee_rate_rental as feeRateRental,
 		    ct.fee_rate_penalty as feeRetePenalty,
 		    ct.entry_fee as entryFee,
 		    ct.contract_date as contractDate,
@@ -43,7 +42,27 @@
 		    LEFT JOIN ent_contract ct ON ec.ent_ceo_no = ct.ent_ceo_no
 		  WHERE ec.ent_ceo_no = #{ceoCode}
 	</select>
-	 
+ 	 
+ 	<select id="getSearchEnt" parameterType="map" resultType="AdminEntList">
+		/* 입점업체 검색 조회 */
+		SELECT 
+			ec.ent_ceo_no AS ceoCode,
+			ec.ent_nm AS entName,
+			ec.ent_ceo_phone AS ceoTelNo,
+			ec.ent_brno AS entBrNo,
+			ct.contract_status AS entContractStatus,
+			ct.contract_expiry_date AS contractEndDate
+		FROM 
+			ent_ceo ec 
+			LEFT JOIN ent_contract ct ON ec.ent_ceo_no = ct.ent_ceo_no
+		<where>
+			<if test="searchValue != null and searchValue != ''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+		</where>
+		ORDER BY CAST(SUBSTRING_INDEX(ec.ent_ceo_no, 'ent', -1) AS UNSIGNED) ASC;
+	</select>
+		 	
  
  
  
