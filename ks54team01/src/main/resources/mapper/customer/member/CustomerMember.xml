@@ -19,6 +19,23 @@
 		<result column="state_transition_date" 	property="memberStateTransitionDate" />
 	</resultMap>
 	
+	<insert id="addEntCeoMember" parameterType="EntMember">
+		/* 입점업체대표정보 등록 */
+	    INSERT INTO ent_ceo 
+	    	(ent_ceo_no, ent_ceo_id, ent_ceo_nm, ent_brno, ent_nm, ent_ceo_addr, ent_ceo_daddr, ent_ceo_email,
+	         ent_bank, ent_bank_num, ent_ceo_phone, register_date, revision_date) 
+	    VALUES 
+	    	(#{entCeoNo}, #{entCeoId}, #{entCeoName}, #{entBrno}, #{entName}, #{entCeoAddr}, #{entCeoDaddr}, #{entCeoEmail},
+	         #{entBank}, #{entBankNum}, #{entCeoPhone}, CURDATE(), CURDATE())
+	</insert>
+	<select id="getLastEntCeoNo" parameterType="string">
+		/* 입점업체대표코드 자동생성 */
+		SELECT 
+			MAX(CAST(SUBSTRING(ent_ceo_no, 9) AS UNSIGNED)) 
+		FROM 
+			ent_ceo;
+	</select>
+	
 	<insert id="addCorpMember" parameterType="CustomerMember">
 		/* 기업정보 등록 */
 		INSERT INTO corp_customer

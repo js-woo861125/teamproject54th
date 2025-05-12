@@ -4,8 +4,9 @@ package ks54team01.customer.register.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ks54team01.customer.register.controller.RegisterController;
+
 import ks54team01.customer.register.domain.CustomerMember;
+import ks54team01.customer.register.domain.EntMember;
 import ks54team01.customer.register.mapper.RegisterMapper;
 import ks54team01.customer.register.service.RegisterService;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +35,8 @@ public class RegisterServiceImpl implements RegisterService{
 	/**
 	 * 입점업체직원정보 등록
 	 */
-	
 	@Override
-	public int addEntEmpMember(CustomerMember member) {
+	public int addEntEmpMember(EntMember member) {
 		log.info("addEntEmpMember 시작");
 		
 		return registerMapper.addEntEmpMember(member);	
@@ -46,17 +46,37 @@ public class RegisterServiceImpl implements RegisterService{
 	 * 입점업체대표정보 등록 
 	 */
 	@Override
-	public int addEntCeoMember(CustomerMember member) {
-		log.info("addEntMember 시작");
-		
-		// members 테이블에 먼저 insert
-	    registerMapper.addBasicMember(member); 
-	    
-	    // ent_ceo, ent_emp 테이블에 insert
-	    registerMapper.addEntMember(member);
-	    registerMapper.addEntEmpMember(member);
-	    
-		return 1;
+	public int addEntCeoMember(EntMember member) {
+	    log.info("addEntCeoMember 시작");
+
+	    // 공통 필드 가져오기
+	    CustomerMember customerMember = new CustomerMember();
+	    customerMember.setMemberId(member.getMemberId());
+	    customerMember.setMemberPw(member.getMemberPw());
+	    customerMember.setMemberType(member.getMemberType());
+
+	    try {
+	        // members 테이블에 먼저 insert
+	        registerMapper.addBasicMember(customerMember);
+
+	        // 입점업체 대표 정보 등록 (ent_ceo, ent_emp 테이블)
+	        registerMapper.addEntCeoMember(member);
+	        
+	        return 1;
+	    } catch (Exception e) {
+	        log.error("회원 등록 중 에러 발생", e);
+	        
+	        throw new RuntimeException("회원 등록 실패", e);
+	    }
+	}
+	
+	/**
+	 * 입점업체대표코드 자동생성
+	 */
+	public String generateEntCeoNo() {
+	    Integer lastNumber = registerMapper.getLastEntCeoNumber();
+	    int nextNumber = (lastNumber != null) ? lastNumber + 1 : 1;
+	    return "ent_ceo_" + nextNumber;
 	}
 	
 	/**

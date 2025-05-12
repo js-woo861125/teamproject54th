@@ -75,6 +75,7 @@
 		     * 이메일 인증코드 전송
 		     */
 		    function sendVerificationCode() {
+		    	
 		        const emailFirst = document.querySelector('input[name="emailFirst"]').value;
 		        const emailLast = document.querySelector('select[name="emailLast"]').value;
 
@@ -159,7 +160,7 @@
 		    
 		    /**
 			* 회원등록 폼 유효성 검증
-			*/
+			*/	
 		    $('#customerRegisterBtn').click( function (e) {
 		        e.preventDefault();
 
@@ -169,6 +170,7 @@
 		        for (let field of requiredFields) {
 		            const input = document.getElementById(field);
 		            if (!input.value.trim()) {
+		            	
 		                alert(`${input.placeholder} 필수 입력항목입니다.`);
 		                input.focus();
 		                isSubmit = false;
@@ -188,7 +190,10 @@
 		        
 		        if(isSubmit){
 		        	alert("회원가입이 완료되었습니다.");
-					const custPhone = `${$('#phoneFixed').val()}-${$('#phone1').val()}-${$('#phone2').val()}`;
+					/* const custPhone = `${$('#phoneFixed').val()}-${$('#phone1').val()}-${$('#phone2').val()}`;
+					const custEmail = `${$('#emailFirst').val()}${$('#emailLast').val()}`; */
+					
+					const custPhone = $('#phoneFixed').val() + "-" + $('#phone1').val() + "-" +$('#phone2').val();
 					const custEmail = `${$('#emailFirst').val()}${$('#emailLast').val()}`;
 					
 					$('#custPhone').val(custPhone);
@@ -230,15 +235,17 @@
                                             <h1 class="mb-30" th:text="${title}"></h1>
                                         </div>
                                         <form id="customerRegisterForm" th:action="@{/customer/register/customerRegister}" method="post">
-                                        	<!-- 기본정보 입력 -->                                         
+                                        	<!-- 이름 -->                                         
                                             <div class="form-group">
                                                 <input type="text" id="custName" name="custName" placeholder="이름" required />                                              
                                             </div>
+                                            <!-- 생년월일 -->
                                             <div class="form-group">
 											    <input type="text" id="custBrdt" name="custBrdt" placeholder="생년월일" 
 											    	   onfocus="this.type='date'; this.max = new Date().toISOString().split('T')[0];" 
 											    	   onblur="if(this.value===''){this.type='text'}" required />
 											</div>
+											<!-- 연락처 -->
 											<div class="form-group">
 												<input type="hidden" id="custPhone" name="custPhone"/>
 		                                            <div class="form-group d-flex">
@@ -266,12 +273,12 @@
 													    </div>
 													</div>
 											</div>
-											<!-- 주소 -->
+											<!-- 주소/상세주소 -->
 											<div class="form-group position-relative d-flex justify-content-end">
                                                 <input type="text" id="memberZip" name="memberZip" placeholder="우편번호를 입력해주세요" readonly disabled />
                                                 <button type="button" id="daumPostBtn" class="btn btn-heading btn-block p-10 mt-10 mr-10 position-absolute">우편번호찾기</button>
                                             </div> 
-                                           <div class="row">
+                                            <div class="row">
 				                        		<div class="col-6">
 						                            <div class="mb-4">
 						                                <input type="text" id="custAddr" name="custAddr" placeholder="기본주소" class="form-control fs-6" readonly />
