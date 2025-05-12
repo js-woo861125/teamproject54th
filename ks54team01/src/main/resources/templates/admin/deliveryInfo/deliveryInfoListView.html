@@ -57,16 +57,11 @@
 					<table class="table align-middle table-nowrap mb-0">
 						<thead class="table-light text-center">
 							<tr>
-								<th scope="col">
-									<div class="form-check align-middle">
-										<input class="form-check-input" type="checkbox" value="" />
-									</div>
-								</th>
+								
 								<th class="align-middle" scope="col">배송정보번호</th>
 								<th class="align-middle" scope="col">상품코드</th>
 								<th class="align-middle" scope="col">수령인명</th>
 								<th class="align-middle" scope="col">택배사</th>
-								<th class="align-middle" scope="col">운송장번호</th>
 								<th class="align-middle" scope="col">요청사항</th>
 								<th class="align-middle" scope="col">배송진행상황</th>
 								<th class="align-middle" scope="col">등록일</th>
@@ -76,16 +71,11 @@
 						</thead>
 						<tbody class="text-center">
 							<tr th:if="${!#lists.isEmpty(DeliveryInfoList)}" th:each="l : ${DeliveryInfoList}">
-								<td>
-									<div class="form-check">
-										<input class="form-check-input" type="checkbox" th:value="${l.delInfoNo}" />
-									</div>
-								</td>
+								
 								<td th:text="${l.delInfoNo}">0901</td>
 								<td th:text="${l.sellProdNo}">상품코드</td>
 								<td th:text="${l.recipientNm}">Marvin McKinney</td>
 								<td th:text="${l.delCompany}">직접배송</td>
-								<td th:text="${l.billNo}">직접배송</td>
 								<td th:text="${l.delRequest}">문앞</td>
 								<td th:text="${l.delProgress}">배송완료</td>
 								<td th:text="${l.regDate}">03.12.2020</td>

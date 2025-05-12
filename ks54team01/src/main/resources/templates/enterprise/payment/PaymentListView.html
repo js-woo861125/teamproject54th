@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{admin/layout/default}">
+	layout:decorate="~{enterprise/layout/default}">
 	
 	<!-- head 삽입공간 -->
 	<head>
-	
 	</head>
 	
 	<th:block layout:fragment="jsFile">
-	
 	</th:block>
 	
 	<th:block layout:fragment="jsScript">
-	
+		<script>
+			
+		</script>
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
@@ -26,12 +26,13 @@
 		</div>
 		<div class="card mb-4">
 			<header class="card-header">
-				<form th:action="@{/admin/payment/searchPaymentList}" method="get">
+				<form th:action="@{/enterprise/payment/searchPaymentList}" method="get">
 					<div class="row gx-3">
 	                   <div class="col-lg-2 col-md-3 col-12">
 	                       <select class="form-select" name="searchKey">
 	                           <option value="custNm" th:selected="${searchKey == 'custNm'}">회원이름</option>
 	                           <option value="payStatus" th:selected="${searchKey == 'payStatus'}">주문상태</option>
+	                           <option value="rentalContractNo" th:selected="${searchKey == 'rentalContractNo'}">계약정보</option>
 	                       </select>
 	                   </div>
 	                   <div class="col-lg-4 col-md-5">
@@ -58,23 +59,23 @@
 							<thead class="table-light text-center">
 								<tr>
 									
-									<th class="align-middle" scope="col">주문번호</th>
 									<th class="align-middle" scope="col">주문자명</th>
 									<th class="align-middle" scope="col">상품코드</th>
-									<th class="align-middle" scope="col">업체명</th>
+									<th class="align-middle" scope="col">주문수량</th>
 									<th class="align-middle" scope="col">금액</th>
-									<th class="align-middle" scope="col">주문상태</th>
-									<th class="align-middle" scope="col">주문날짜</th>
+									<th class="align-middle" scope="col">계약정보</th>
+									<th class="align-middle" scope="col">결제상태</th>
+									<th class="align-middle" scope="col">결제완료일</th>
 								</tr>
 							</thead>
 							<tbody class="text-center">
 								<tr th:if="${!#lists.isEmpty(PaymentList)}" th:each="l : ${PaymentList}">
 									
-									<td th:text="${l.payCompNo}">0901</td>
 									<td th:text="${l.customerInfo.custNm}">Marvin McKinney</td>
 									<td th:text="${l.sellProdNo}">라온 LED 저상형 침대 SS</td>
-									<td th:text="${l.entCeoInfo.entNm}">(주)렌탈</td>
+									<td th:text="${l.payCount}">1</td>
 									<td th:text="|₩${#numbers.formatInteger(l.totalPrice, 3, 'COMMA')}|">$9.00</td>
+									<td th:text="${l.rentalContractNo}">일시불판매</td>
 									<td><span class="badge rounded-pill" th:text="${l.payStatus}"
 												th:classappend="${l.payStatus} == '1.정상결제상태(환불이아닌상태)' ? ' alert-success' : (${l.payStatus} == '3.배송후환불(환불)' ? ' alert-danger' : ' alert-warning')">취소</span></td>
 									<td th:text="${l.payCompDate}">03.12.2020</td>
