@@ -11,7 +11,7 @@ public interface CustomerTransferBoardService {
 	PageInfo<CustomerTransferBoard> getSortTransferBoardList(String sortValue, Pageable pageable);
 	
 	// 양도 게시글 검색 조회
-	PageInfo<CustomerTransferBoard> getSearchTransferBoard(String searchKey, String searchValue, Pageable pageable);
+	PageInfo<CustomerTransferBoard> getSearchTransferBoard(String searchValue, Pageable pageable);
 	
 	// 양도 게시글 정보 조회
 	CustomerTransferBoard getTransferBoardInfoByCode(String transferBoardNum);

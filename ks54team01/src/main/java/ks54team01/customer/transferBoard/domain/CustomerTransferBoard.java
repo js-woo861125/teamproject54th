@@ -1,6 +1,8 @@
 package ks54team01.customer.transferBoard.domain;
 
+import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.customer.delivery.domain.CustomerDeliveryList;
+import ks54team01.customer.member.domain.CustomerMember;
 import ks54team01.customer.product.domain.CustomerProduct;
 import lombok.Data;
 
@@ -26,8 +28,12 @@ public class CustomerTransferBoard {
 	private String registerDate;
 	private String revisionDate;
 
+	private CustomerMember customerMember;
+	
 	private CustomerProduct productInfo;
 	
 	private CustomerDeliveryList customerDeliveryList;
+	
+	private ProductInfoCategory productInfoCategory;
 
 }

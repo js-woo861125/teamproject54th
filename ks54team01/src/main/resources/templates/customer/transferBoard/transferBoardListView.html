@@ -28,18 +28,48 @@
 				urlParams.set('sortValue', sortValue);
 				//console.log(`${url.pathname}?${urlParams.toString()}`);
 				
+				urlParams.set('currentPage', 1);
+				
+				url.hash = '';
+				
 				location.href = `${url.pathname}?${urlParams.toString()}`;
 			});
 			
 			$('button.transfer-search').click(function(e){
 				e.preventDefault();
-				const searchValue = $(this).prev().data('searchValue');
+				const searchValue = $('input[name="searchValue"]').val();
 				console.log(searchValue);
 				const href = location.href; // 현재 url 가져온다.
 				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
 				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
 				urlParams.set('searchValue', searchValue);
+				urlParams.set('currentPage', 1);
 				
+				const sortValue = urlParams.get('sortValue');
+				urlParams.set('sortValue', sortValue);
+				
+				url.hash = '';
+				
+				location.href = `${url.pathname}?${urlParams.toString()}`;
+			});
+			
+			$('.page-item a').click(function(e){
+				e.preventDefault();
+				const currentPage = $(this).data('currentPage');
+				const href = location.href; // 현재 url 가져온다.
+				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
+				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
+				urlParams.set('currentPage', currentPage);
+				
+				const sortValue = urlParams.get('sortValue')
+				if(sortValue == null) sortValue = 'recentReg';
+				urlParams.set('sortValue', sortValue);
+			    
+			    const searchValue = urlParams.get('searchValue');
+			    if(searchValue != null) urlParams.set('searchValue', searchValue);
+				
+			    url.hash = '';
+			    
 				location.href = `${url.pathname}?${urlParams.toString()}`;
 			});
 		</script>
@@ -59,8 +89,8 @@
 					</div>
 					<div class="w-50 widget_search mb-50">
 						<div class="search-form">
-							<form th:action="@{#}" th:data-search-value="${searchValue}" method="get">
-								<input type="text" name="searchValue" th:data-search-value="${searchValue}"
+							<form th:action="@{#}" method="get">
+								<input type="text" name="searchValue" th:value="${searchValue}" th:data-search-value="${searchValue}"
 									placeholder="게시글 검색어를 입력해주세요." />
 								<button class="transfer-search" type="submit">
 									<i class="fi-rs-search"></i>
@@ -123,27 +153,34 @@
 										</div>
 									</div>
 									<div class="product-content-wrap">
-										<div class="product-category">
-											<a href="shop-grid-right.html">TV</a>
+										<div class="product-category d-flex justify-content-between">
+											<a th:text="${l.productInfoCategory.smCategory}" href="shop-grid-right.html">TV</a>
+											<div class="dropdown">
+		                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+		                                        <div class="dropdown-menu">
+		                                            <!-- <a class="dropdown-item" href="#">게시글 삭제</a> -->
+		                                            <button class="dropdown-item" type="submit">게시글 삭제</button>
+		                                        </div>
+	                                    	</div>
 										</div>
 										<h2 th:text="${l.transferTitle}">
 											<a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a>
 										</h2>
 										<div>
-											<span th:text="${l.customerId}" class="font-small text-muted">작성자
+											<span th:text="${l.customerMember.custName}" class="font-small text-muted">작성자
 												<a href="vendor-details-1.html">우에하라 아유무</a>
 											</span>
 										</div>
 										<div class="product-card-bottom">
 											<div class="product-price">
-												<span>💸월렌탈료</span> <span
-													th:text="|₩${#numbers.formatInteger(l.rentalFee, 3, 'COMMA')}">85,000원</span>
+												<span>💸월렌탈료</span> 
+												<span th:text="|₩${#numbers.formatInteger(l.rentalFee, 3, 'COMMA')}">85,000원</span>
 											</div>
 										</div>
 										<div class="product-card-bottom">
 											<div class="product-price">
-												<span>💰지원금</span> <span
-													th:text="|₩${#numbers.formatInteger(l.individualGrants, 3, 'COMMA')}">1,000원</span>
+												<span>💰지원금</span> 
+												<span th:text="|₩${l.individualGrants >= 1000 ? #numbers.formatInteger(l.individualGrants, 3, 'COMMA') : l.individualGrants}">1,000원</span>
 											</div>
 										</div>
 										<div class="product-card-bottom">
@@ -165,26 +202,31 @@
 					<div class="pagination-area mt-30 mb-50">
 						<nav aria-label="Page navigation example">
 							<ul class="pagination justify-content-center">
+								<!-- 첫페이지 이동 -->
 								<li class="page-item">
 									<a class="page-link"
 										th:href="@{/customer/transferBoard/transferBoardList}">
 										<i class="material-icons md-first_page"></i>
 									</a>
 								</li>
+								<!-- 이전페이지 이동 -->
 								<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
 									<a class="page-link"
-									   th:href="@{/customer/transferBoard/transferBoardList(currentPage=${currentPage - 1})}">
+									   th:href="@{#}">
 									   <i class="fi-rs-arrow-small-left"></i>
 									</a>
 								</li>
+								<!-- 페이지 이동  -->
 								<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
 									<li class="page-item"
 										th:classappend="${num eq currentPage} ? 'active disabled'">
 										<a class="page-link"
-										   th:href="@{/customer/transferBoard/transferBoardList(currentPage=${num})}"
-										   th:text="${num < 10 ? '0' + num : num}">01</a>
+										   th:href="@{#}"
+										   th:text="${num < 10 ? '0' + num : num}"
+										   th:data-current-Page="${num}">01</a>
 									</li>
 								</th:block>
+								<!-- 다음 페이지 이동 -->
 								<li class="page-item"
 									th:classappend="${currentPage eq lastPage} ? 'disabled'">
 									<a class="page-link"
@@ -192,6 +234,7 @@
 									   <i class="material-icons md-chevron_right"></i>
 									</a>
 								</li>
+								<!-- 마지막 페이지 이동 -->
 								<li class="page-item">
 									<a class="page-link"
 									   th:href="@{/customer/transferBoard/transferBoardList(currentPage=${lastPage})}">

@@ -20,7 +20,7 @@ public interface CustomerTransferBoardMapper {
 	int getTransferBoardCount();
 	
 	// 양도 게시글 검색 조회
-	List<CustomerTransferBoard> getSearchTransferBoard(String searchKey, String searchValue, Pageable pageable);
+	List<CustomerTransferBoard> getSearchTransferBoard(String searchValue, Pageable pageable);
 	
 	// 양도게시글상세조회
 	CustomerTransferBoard getTransferBoardInfoByCode(String transferBoardNum);

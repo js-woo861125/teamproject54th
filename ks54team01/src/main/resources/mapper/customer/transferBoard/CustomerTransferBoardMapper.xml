@@ -25,6 +25,15 @@
 		<result column="register_date" property="registerDate" />
 		<result column="revision_date" property="revisionDate" />
 
+		<association property="customerMember" javaType="CustomerMember">
+			<id column="cust_id" property="custId" />
+			<result column="cust_nm" property="custName" />
+			<result column="cust_brdt" property="custBrdt" />
+			<result column="cust_addr" property="custAddr" />
+			<result column="cust_daddr" property="custDaddr" />
+			<result column="cust_email" property="custEmail" />
+			<result column="cust_phone" property="custPhone" />		
+		</association>
 
 		<association property="productInfo" javaType="CustomerProduct">
 			<id column="products_no" property="productsNum" />
@@ -52,6 +61,16 @@
 			<result column="register_date" property="regDate" />
 			<result column="revision_date" property="revDate" />
 		</association>
+		
+		<association property="productInfoCategory" javaType="ProductInfoCategory">
+			<id column="product_category_no" property="categoryNo" />
+			<result column="large_category_no" property="lgCategoryNo" />
+			<result column="large_category" property="lgCategory" />
+			<result column="middle_category_no" property="mdCategoryNo" />
+			<result column="middle_category" property="mdCategory" />
+			<result column="small_category" property="smCategory" />
+			<result column="use_status" property="useStatus" />		
+		</association>
   	</resultMap>	
 
 	<select id="getSortTransferBoardList" parameterType="string" resultMap="transferBoardResultMap">
@@ -60,16 +79,23 @@
 	   		tb.transfer_board_no ,
 			p.products_image ,
 			tb.cust_id ,
+			c.cust_nm ,
+			pc.middle_category ,
+			pc.small_category ,
 			tb.transfer_title ,
 			tb.rental_fee ,
 			tb.individual_grants ,
 			tb.transfer_rental_processing_status ,
 			tb.register_date 
 		 FROM 
-			transfer_board tb INNER JOIN sell_products sp 
+			customer c RIGHT JOIN transfer_board tb 
+			USING (cust_id)
+			INNER JOIN sell_products sp 
 			USING (sell_products_no) 
 			INNER JOIN products p 
 			USING (products_no)
+			INNER JOIN products_category pc
+			ON p.product_category_no = pc.product_category_no
 		 ORDER BY
 		 <if test="sortValue != null and sortValue == 'rowPrice'">
 			tb.rental_fee ASC,
@@ -80,7 +106,8 @@
 		 <if test="sortValue != null and sortValue == 'deadline'">
 			DATEDIFF(tb.board_valid_date, NOW()) ASC,
 		 </if>
-		 tb.register_date DESC;
+		 tb.register_date DESC
+		 LIMIT 16 OFFSET #{pageable.offset};
   	</select>
 
 
@@ -95,7 +122,7 @@
 			USING (products_no)
 		<where>
 			<if test="searchValue != null and searchValue != ''">
-				${searchKey} LIKE CONCAT('%', #{searchValue}, '%');
+				p.products_nm LIKE CONCAT('%', #{searchValue}, '%');
 			</if>
 		</where>	
 	</select>
@@ -117,22 +144,30 @@
 	   		tb.transfer_board_no ,
 			p.products_image ,
 			tb.cust_id ,
+			c.cust_nm ,
+			pc.middle_category ,
+			pc.small_category ,
 			tb.transfer_title ,
 			tb.rental_fee ,
 			tb.individual_grants ,
 			tb.transfer_rental_processing_status ,
 			tb.register_date 
 		 FROM 
-			transfer_board tb INNER JOIN sell_products sp 
+			customer c RIGHT JOIN transfer_board tb 
+			USING (cust_id)
+			INNER JOIN sell_products sp 
 			USING (sell_products_no) 
 			INNER JOIN products p 
 			USING (products_no)
+			INNER JOIN products_category pc
+			ON p.product_category_no = pc.product_category_no
 		<where>
 			<if test="searchValue != null and searchValue != ''">
-				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+				p.products_nm LIKE CONCAT('%', #{searchValue}, '%')
 			</if>
 		</where>
-		ORDER BY tb.register_date DESC;
+		ORDER BY tb.register_date DESC
+		LIMIT 16 OFFSET #{pageable.offset};
   	</select>
 
 	<select id="getTransferBoardInfoByCode" parameterType="string" resultMap="transferBoardResultMap">
@@ -156,7 +191,7 @@
 			INNER JOIN delivery_list dl 
 			USING (delivery_location_no)
 			INNER JOIN transfer_board tb 
-			USING (del_info_no) 
+			USING (del_info_no)
 		WHERE
 			tb.transfer_board_no = #{transferBoardNum};
   	</select>
@@ -167,27 +202,24 @@
 	   		tb.transfer_board_no ,
 			p.products_image ,
 			tb.cust_id ,
+			c.cust_nm ,
+			pc.middle_category ,
+			pc.small_category ,
 			tb.transfer_title ,
 			tb.rental_fee ,
 			tb.individual_grants ,
 			tb.transfer_rental_processing_status ,
 			tb.register_date 
 		 FROM 
-			transfer_board tb INNER JOIN sell_products sp 
+			customer c RIGHT JOIN transfer_board tb 
+			USING (cust_id)
+			INNER JOIN sell_products sp 
 			USING (sell_products_no) 
 			INNER JOIN products p 
 			USING (products_no)
-		ORDER BY tb.register_date DESC
-		LIMIT #{rowPerPage} OFFSET #{offset};
-		<!-- <if test="searchValue != null and searchValue != ''">
-			tb.register_date DESC,
-		</if>
-		<if test="searchValue != null and searchValue != ''">
-			tb.register_date DESC,
-		</if>
-		<if test="searchValue != null and searchValue != ''">
-			tb.register_date DESC,
-		</if> -->
-		<!-- tb.register_date DESC -->
+			INNER JOIN products_category pc
+			ON p.product_category_no = pc.product_category_no
+		 ORDER BY tb.register_date DESC
+		 LIMIT 16 OFFSET #{offset};
   	</select>
   </mapper>
