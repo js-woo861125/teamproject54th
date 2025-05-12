@@ -25,8 +25,68 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	// DI 의존성 주입
 	private final AdminProductInfoMapper adminProductInfoMapper;
 	
+	// 상품정보 카테고리 수정
+	@Override
+	public void modifyCategory(ProductInfoCategory productInfoCategory) {
+		
+		adminProductInfoMapper.modifyCategory(productInfoCategory);
+	}
+	
+	// 상품정보 카테고리별/상세스펙 등록
+	@Override
+	public void addCategorySpec(ProductInfoCategorySpec ProductInfoCategorySpec) {
+		log.info("상품등록 전 : {}", ProductInfoCategorySpec);
+		
+		adminProductInfoMapper.addCategorySpec(ProductInfoCategorySpec);
+		
+		log.info("상품등록 후 : {}", ProductInfoCategorySpec);
+	}
+	
+	// 상품정보 전체혜택 등록
+	@Override
+	public void addBenefit(ProductInfoBenefit productInfoBenefit) {
+		
+		log.info("상품등록 전 : {}", productInfoBenefit);
+		
+		adminProductInfoMapper.addBenefit(productInfoBenefit);
+		
+		log.info("상품등록 후 : {}", productInfoBenefit);
+	}
+	
+	// 상품정보 모델 등록
+	@Override
+	public void addModel(ProductInfoModel productInfoModel) {
+		
+		log.info("상품등록 전 : {}", productInfoModel);
+		
+		adminProductInfoMapper.addModel(productInfoModel);
+		
+		log.info("상품등록 후 : {}", productInfoModel);
+	}
+	
+	// 상품정보 품목 등록
+	@Override
+	public void addItem(ProductInfoItem productInfoItem) {
+		
+		log.info("상품등록 전 : {}", productInfoItem);
+		
+		adminProductInfoMapper.addItem(productInfoItem);
+		
+		log.info("상품등록 후 : {}", productInfoItem);
+	}
+	
+	// 상품정보 브랜드 등록
+	@Override
+	public void addBrand(ProductInfoBrand productInfoBrand) {
+		
+		log.info("상품등록 전 : {}", productInfoBrand);
+		
+		adminProductInfoMapper.addBrand(productInfoBrand);
+		
+		log.info("상품등록 후 : {}", productInfoBrand);
+	}
+	
 	// 상품정보 카테고리 등록
-
 	@Override
 	public void addCategory(ProductInfoCategory productInfoCategory) {
 		
@@ -35,7 +95,6 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		adminProductInfoMapper.addCategory(productInfoCategory);
 		
 		log.info("상품등록 후 : {}", productInfoCategory);
-		
 	}
 	
 	// 상품정보 카테고리별/상세스펙 목록 조회
