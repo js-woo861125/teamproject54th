@@ -37,10 +37,13 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr class=text-center>
+                                            	<th>관리자아이디</th>
                                                 <th>품목코드</th>
-                                                <th>카테고리</th>
+                                                <th>카테고리코드</th>
                                                 <th>품목명</th>
                                                 <th>사용유무</th>
+                                                <th>등록일자</th>
+                                                <th>수정일자</th>
                                                 <th>수정/삭제</th>
                                             </tr>
                                         </thead>
@@ -48,14 +51,17 @@
                                             <tr class=text-center
 				                            	th:if="${!#lists.isEmpty(itemList)}"
 				                          	  	th:each="l : ${itemList}">
+				                          	  	<td th:text="${l.managerId}">managerid1</td>
                                                 <td th:text="${l.itemNo}">item_1</td>
-                                                <td th:text="${l.categoryInfo.smCategory}">침대</td>
+                                                <td th:text="${l.categoryInfo.categoryNo}">L1_M1_1</td>
                                                 <td th:text="${l.itemName}">건강돌침대</td>
                                                 <td class="col-lg-1 col-sm-2 col-4 col-status">
 												    <span class="badge rounded-pill"
 												          th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'"
 												          th:text="${l.useStatus}">사용중</span>    
 												</td>
+												<td th:text="${l.itemRegDate}">2023-01-01 10:00:00</td>
+												<td th:text="${l.itemRevDate}">2023-01-01 10:00:00</td>
 												<td>
                                                     <div class="dropdown">
                                                         <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
