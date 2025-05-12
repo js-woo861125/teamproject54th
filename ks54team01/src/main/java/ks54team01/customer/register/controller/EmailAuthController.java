@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import ks54team01.customer.register.service.EmailService;
 import lombok.RequiredArgsConstructor;
@@ -24,24 +25,26 @@ public class EmailAuthController {
 	 
     // 이메일 인증코드 전송
     @PostMapping("/sendCode")
-    public ResponseEntity<Map<String, Object>> sendCode(@RequestParam String emailFirst,
+    @ResponseBody
+    public Map<String, Object> sendCode(@RequestParam String emailFirst,
                                                         @RequestParam String emailLast) {
         String fullEmail = emailFirst + emailLast;
+        Map<String, Object> response = new HashMap<>();
 
         try {
             emailService.sendVerificationEmail(fullEmail);
 
-            Map<String, Object> response = new HashMap<>();
             response.put("status", "success");
             response.put("message", "인증 코드가 전송되었습니다.");
-            return ResponseEntity.ok(response);
-
+            response.put("statusCode", 200);
         } catch (Exception e) {
-            Map<String, Object> response = new HashMap<>();
+        	System.out.println(e.getMessage());
             response.put("status", "fail");
             response.put("message", "이메일 전송에 실패했습니다.");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            response.put("statusCode", 500);            
+            
         }
+        return response;
     }
 
     // 이메일 인증코드 확인
