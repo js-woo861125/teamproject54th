@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
 import ks54team01.customer.register.domain.CustomerMember;
+import ks54team01.customer.register.domain.EntMember;
 import ks54team01.customer.register.service.RegisterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,21 +23,26 @@ public class RegisterController {
 	
 	private final RegisterService registerService;
 	
-	
 	@PostMapping("/entRegister")
-	public String addEntMember(CustomerMember memberInfo, HttpSession session) {
+	public String addEntMember(EntMember memberInfo, HttpSession session) {
 	    // 세션에서 memberId 가져오기
 	    CustomerMember sessionMember = (CustomerMember) session.getAttribute("memberInfo");
 	    if (sessionMember != null) {
 	        memberInfo.setMemberId(sessionMember.getMemberId());
 	        memberInfo.setMemberPw(sessionMember.getMemberPw());
+	        memberInfo.setMemberType(sessionMember.getMemberType());
 	    }
-
+	    
+	    // 자동 생성된 entCeoNo
+	    String entCeoNo = registerService.generateEntCeoNo(); 
+	    memberInfo.setEntCeoNo(entCeoNo);
+	    
+	    // 세션에 entCeoNo 저장
+	    session.setAttribute("memberInfo", memberInfo);
+	    
 	    log.info("회원 등록 시작: {}", memberInfo);
 	    
 	    registerService.addEntCeoMember(memberInfo);
-	    registerService.addEntEmpMember(memberInfo);
-	    
 
 	    log.info("회원 등록 완료");
 
@@ -44,14 +50,14 @@ public class RegisterController {
 	}
 	
 	
+	
 	@GetMapping("/entRegister")
 	public String getEntRegister(HttpSession session, Model model) {
-		
-		model.addAttribute("title", "입점업체");
+		// 세션에서 memberId 가져오기
 		CustomerMember memberInfo = (CustomerMember) session.getAttribute("memberInfo");
-		
 		log.info("전달받은 공통등록 정보: {}", memberInfo);
 		
+		model.addAttribute("title", "입점업체");
 		model.addAttribute("memberInfo", memberInfo);
 		
 		return "customer/register/entRegisterView";

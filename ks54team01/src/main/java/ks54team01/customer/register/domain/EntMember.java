@@ -4,6 +4,11 @@ import lombok.Data;
 
 @Data
 public class EntMember {
+	// 공통
+	private String memberId;
+	private String memberPw;
+	private String memberType;
+	
 	// ent_ceo
 	private String entCeoId;
 	private String entCeoNo;

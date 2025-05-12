@@ -5,6 +5,7 @@ package ks54team01.customer.register.mapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import ks54team01.customer.register.domain.CustomerMember;
+import ks54team01.customer.register.domain.EntMember;
 
 
 
@@ -14,10 +15,13 @@ public interface RegisterMapper {
 	CustomerMember getMemberInfoById(String memberId);
 	
 	// 입점업체직원정보 등록
-	int addEntEmpMember(CustomerMember member);
+	int addEntEmpMember(EntMember member);
 	
-	// 입점업체정보 등록
-	int addEntMember(CustomerMember member);
+	// 입점업체대표정보 등록
+	int addEntCeoMember(EntMember member);
+	
+	// 입점업체대표코드 자동생성
+	Integer getLastEntCeoNumber();
 	
 	// 기업정보 등록
 	int addCorpMember(CustomerMember member);

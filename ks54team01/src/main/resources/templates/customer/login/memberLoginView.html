@@ -34,9 +34,9 @@
                                     <div class="padding_eight_all bg-white">
                                         <div class="heading_s1">
                                             <h1 class="mb-5" th:text="${title}"></h1>
-                                            <p class="mb-30">아직 회원이 아니신가요?<a class="ml-10" th:href="@{/customer/member/memberRegister}">회원가입하기</a></p>
+                                            <p class="mb-30">아직 회원이 아니신가요?<a class="ml-10" th:href="@{/customer/register/memberRegister}">회원가입하기</a></p>
                                         </div>
-                                        <form method="post" th:action="@{/customer/member/memberLogin}">
+                                        <form method="post" th:action="@{/customer/login/memberLogin}">
                                             <div class="form-group">
                                                 <input type="text" name="userid" placeholder="ID" required />
                                             </div>
