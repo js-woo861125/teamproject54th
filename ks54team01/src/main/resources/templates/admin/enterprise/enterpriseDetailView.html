@@ -6,87 +6,67 @@
     </head>
 
        <th:block layout:fragment="content">
-        <div class="screen-overlay"></div>
-               <section class="content-main">
-                <div class="content-header">
-                    <a href="javascript:history.back()"><i class="material-icons md-arrow_back"></i> Go back </a>
-                </div>
-                <div class="card mb-4">
-                    <div class="card-header bg-brand-2" style="height: 150px"></div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl col-lg flex-grow-0" style="flex-basis: 230px">
-                                
-                                </div>
-                            </div>
-                            <div class="col-xl col-lg">
-                                <h3>스마트렌탈</h3>
-                                <p>뭐 대충 회사 소개 하는 줄</p>
-                                 <div class="col-md-12 col-lg-4 col-xl-2">
-                                <article class="box">
-                                    <p class="mb-0 text-muted">달 매출</p>
-                                    <h5 class="text-success">238,000</h5>
-                                    <p class="mb-0 text-muted">총매출</p>
-                                    <h5 class="text-success mb-0">1,580,000</h5>
-                                </article>
-                            </div>
-                            <!--  col.// -->
-                            </div>
-                            <!--  col.// -->
-                            <div class="col-xl-12 text-md-end">
-                                <select class="form-select w-auto d-inline-block">
-                                    <option>등록상품</option>
-                                    <option>렌탈상품</option>
-                                    <option>판매상품</option>                                   
-                                </select>                              
-                            </div>
-                            <!--  col.// -->
-                        </div>
-                        <!-- card-body.// -->
-                        <hr class="my-4" />
-                        <div class="row g-4">
-                            <div class="col-sm-4 col-lg-3 col-xl-3">
-                                <h6>회사소개</h6>
-                                <p>
-                                    대표: 김옥희 <br />
-                                    info@example.com <br />
-                                    063-222-1234
-                                </p>
-                            </div>
-                            <!--  col.// -->
-                            <div class="col-sm-4 col-lg-3 col-xl-3">
-                                <h6>주소</h6>
-                                <p>
-                                    전주시 완산구 하거마1길 <br />
-                                    3층 301호 <br />
-                                    우편번호 : 55500
-                                </p>
-                            </div>
-                            <!--  col.// -->
-                            <div class="col-sm-4 col-xl-3 col-xl-3">
-                            <h6>계약 정보</h6>
-                            <p>
-                                계약시작일 :  <br/>
-                                계약종료일 :  <br/>
-                                계약 상태 : <br/>
-                                수수료율 :
-                            </p>
-                            </div>
-                            <div class="col-sm-4 col-xl-3 col-xl-3">
-                            <h6>계약 정보</h6>
-                            <p>
-                                계약시작일 :  <br/>
-                                계약종료일 :  <br/>
-                                계약 상태 : <br/>
-                                수수료율 :
-                            </p>
-                            </div>
-                            <!--  col.// -->
-                        </div>
-                        <!--  row.// -->
-                    </div>
+    <div class="screen-overlay"></div>
+    <section class="content-main">
+        <div class="content-header">
+           <a href="javascript:history.back()"><i class="material-icons md-arrow_back"></i> Go back</a>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-brand-2" style="height: 150px"></div>
+	
+	         <div class="card-body">	 
+				<div class="row align-items-center mb-4">
+			   	 <div class="col-lg-4">
+			        <h3 class="mb-0">스마트렌탈</h3>
+			     </div>
+			    	<div class="col-lg-5 text-lg-start text-end">
+				        <p class="mb-0">
+				            대표 ID : <span th:text="${entDetail.entCeoId}">ceoId</span> <br/>
+				            이메일 : <span th:text="${entDetail.entCeoEmail}">ceo@example.com</span> <br/>
+				            코드 : <span th:text="${entDetail.entCeoNo}">EC001</span>
+				        </p>
+			  	  </div>
+			      <div class="col-lg-3 text-end">
+			        <a href="javascript:history.back()" class="btn btn-secondary btn-sm">목록으로</a>
+			      </div>
+				</div>
+						<hr class="my-4" />
+						    <div class="row g-4">
+						  
+						        <div class="col-sm-6 col-lg-4">
+						            <h6>주소</h6>
+						            <p>
+						                기본주소 : <span th:text="${entDetail.entAddr}">전주시 기린대로 499 </span><br/>
+						                상세주소 : <span th:text="${entDetail.entDaddr}">3층 301호</span>
+						            </p>
+						        </div>				    
+						        <div class="col-sm-6 col-lg-4">
+						            <h6>계약 정보</h6>
+						            <p>
+						                계약번호 : <span th:text="${entDetail.entContractNo}">ent_ceo_no</span><br />
+						                계약상태 : <span th:text="${entDetail.contractStatus}">계약중</span><br />
+						                계약시작일 : <span th:text="${entDetail.contractDate}">2025-01-01</span><br />
+						                계약종료일 : <span th:text="${entDetail.contractEndDate}">2026-01-01</span><br />
+						                정산일 : <span th:text="${entDetail.entCalDate}">매월 20일</span>
+						            </p>
+						        </div>
+						        <div class="col-sm-6 col-lg-4">
+						            <h6>수수료 정보</h6>
+						            <p>
+						                판매 수수료율 : <span th:text="${entDetail.feeRateSales}">1.0</span> %<br />
+						                렌탈 수수료율 : <span th:text="${entDetail.feeRateRental}">0.5</span> %<br />
+						                위약금 수수료율 : <span th:text="${entDetail.feeRetePenalty}">0.5</span> %<br />
+						                입점비 : <span th:text="${entDetail.entryFee}">3000000</span> 원
+						            </p>
+						        </div>
+						    </div>
+						</div>
+					</div>
+					    </section>
+					</th:block>
                     <!--  card-body.// -->
-                </div>
+          
                 <!--  card.// -->
                 <div class="card mb-4">
                     <div class="card-body">

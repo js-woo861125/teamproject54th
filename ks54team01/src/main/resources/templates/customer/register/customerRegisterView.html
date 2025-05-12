@@ -54,6 +54,7 @@
 		                } else {
 		                    document.getElementById("custAddr").value = '';
 		                }
+		                document.getElementById("memberZip").value = data.zonecode;
 		                document.getElementById("custAddr").value = addr;
 		                $('#custDaddr').prop('disabled', false);
 		                // 커서를 상세주소 필드로 이동한다.
@@ -83,7 +84,7 @@
 		        }
 		        
 		        $.ajax({
-		            url: '/customer/member/sendCode',
+		            url: '/customer/register/sendCode',
 		            method: 'POST',
 		            data: {
 		                emailFirst: $('#emailFirst').val(),
@@ -120,7 +121,7 @@
 		        }
 
 		        $.ajax({
-		            url: '/customer/member/verifyCode',
+		            url: '/customer/register/verifyCode',
 		            method: 'POST',
 		            data: {
 		                email: email,
@@ -160,7 +161,7 @@
 		    document.getElementById('customerRegisterForm').addEventListener('submit', function (e) {
 		        e.preventDefault();
 
-		        const requiredFields = ['custName', 'custBrdt', 'phone1', 'phone2', 'emailFirst', 'emailLast', 'custAddr', 'custDaddr'];
+		        const requiredFields = ['custName', 'custBrdt','phone1', 'phone2', 'emailFirst', 'emailLast', 'custAddr', 'custDaddr'];
 		        let isSubmit = true;
 
 		        // 필수 입력 항목 확인
@@ -171,7 +172,7 @@
 		                input.focus();
 		                isSubmit = false;
 		                break;
-		            }
+		            }  
 		        }
 
 		        // 이메일 인증 여부 확인
@@ -186,10 +187,12 @@
 		        if(isSubmit){
 		        	alert("회원가입이 완료되었습니다.");
 					const custPhone = `${$('#phoneFixed').val()}-${$('#phone1').val()}-${$('#phone2').val()}`;
-					const custEmail = `${$('#emailFirst').val()}@${$('#emailLast').val()}`;
+					const custEmail = `${$('#emailFirst').val()}${$('#emailLast').val()}`;
+					const corpBrno = `${$('#corpBrno1').val()}-${$('#corpBrno2').val()}-${$('#corpBrno3').val()}`;
 					$('#custPhone').val(custPhone);
 					$('#custEmail').val(custEmail);
-					$('#customerRegisterForm').submit();
+					$('#corpBrno').val(corpBrno);
+					this.submit();
 				}
 		    });
 		</script>
@@ -216,18 +219,20 @@
                                         <div class="heading_s1 mb-20">
                                             <h1 class="mb-30" th:text="${title}"></h1>
                                         </div>
-                                        <form id="customerRegisterForm" th:action="@{/customer/member/customerRegister}" method="post">
+                                        <form id="customerRegisterForm" th:action="@{/customer/register/customerRegister}" method="post">
                                         	<!-- 기본정보 입력 -->                                         
                                             <div class="form-group">
                                                 <input type="text" id="custName" name="custName" placeholder="이름" required />                                              
                                             </div>
                                             <div class="form-group">
-											    <input type="text" id="custBrdt" name="custBrdt" placeholder="생년월일" onfocus="this.type='date'" onblur="if(this.value===''){this.type='text'}" required />
+											    <input type="text" id="custBrdt" name="custBrdt" placeholder="생년월일" 
+											    	   onfocus="this.type='date'; this.max = new Date().toISOString().split('T')[0];" 
+											    	   onblur="if(this.value===''){this.type='text'}" required />
 											</div>
 											<div class="form-group">
 												<input type="hidden" id="custPhone" name="custPhone"/>
 		                                            <div class="form-group d-flex">
-													   	<input type="text" class="w-10 form-control fs-6" id="phoneFixed" name="phoneFixed" placeholder="010" readonly disabled />
+													   	<input type="text" class="w-10 form-control fs-6" id="phoneFixed" name="phoneFixed" placeholder="010" value="010" readonly />
 													    <input type="text" class="mr-10 ml-10" id="phone1" name="phone1" placeholder="1234" required />
 													    <input type="text" placeholder="5678" id="phone2" name="phone2" required />
 													</div>
@@ -271,26 +276,31 @@
                                            	<!-- 회원 유형 선택 -->
 											<div class="custome-radio type-radio d-flex justify-content-evenly mb-10">
 											    <div class="custome-radio">
-											        <input class="form-check-input" type="radio" id="memberCust" name="memberType" value="customer" checked required />
+											        <input class="form-check-input" type="radio" id="memberCust" name="memberType" value="개인고객" checked required />
 											        <label class="form-check-label" for="memberCust">개인</label>
 											    </div>
 											    <div class="custome-radio">
-											        <input class="form-check-input" type="radio" id="memberCorp" name="memberType" value="corp" required />
+											        <input class="form-check-input" type="radio" id="memberCorp" name="memberType" value="기업고객" required />
 											        <label class="form-check-label" for="memberCorp" data-bs-toggle="collapse" data-bs-target="#businessInfo" aria-controls="businessInfo">기업</label>
 											    </div>
 											</div>
 											
 											<!-- 기업 정보 입력란 -->
 											<div id="businessInfo" class="collapse mt-10">
-											    <div class="form-group">
-											        <input type="text" id="corpBrno" name="corpBrno" placeholder="사업자번호" />
-											    </div>
+												<div class="form-group">
+												<input type="hidden" id="corpBrno" name="corpBrno"/>
+		                                            <div class="form-group d-flex">
+													   	<input type="text" id="corpBrno1"  name="corpBrno1" placeholder="사업자번호" required />
+													    <input type="text" class="ml-10 mr-10" id="corpBrno2" name="corpBrno2" required />
+													    <input type="text" id="corpBrno3" name="corpBrno3" required />
+													</div>
+												</div>
 											    <div class="form-group">
 											        <input type="text" id="corpName" name="corpName" placeholder="상호명" />
 											    </div>
 											</div>
                                             <div class="form-group">
-                                                <button type="submit" id="customerRegisterBtn" name="customerRegisterBtn" class="btn btn-heading btn-block hover-up" th:href="@{#}">회원가입</button>
+                                                <button type="submit" id="customerRegisterBtn" name="customerRegisterBtn" class="btn btn-heading btn-block hover-up" th:action="@{/customer/login/memberLogin}">회원가입</button>
                                             </div>
                                             <p class="font-xs text-muted"><strong>참고:</strong>귀하의 개인 데이터는 이 웹사이트 전체에서 귀하의 경험을 지원하고, 귀하의 계정에 대한 액세스를 관리하고, 당사의 개인 정보 보호 정책에 설명된 기타 목적을 위해 사용됩니다.</p>
                                         </form>

@@ -22,6 +22,27 @@
 			ON ec.ent_ceo_no = ct.ent_ceo_no; 
 	 </select>
 	 
+	 <select id="getEntDetail" parameterType="string">
+		  SELECT 
+		    ct.ent_contract_no as entContractNo,
+		    ec.ent_ceo_no as entCeoNo,
+		    ec.ent_ceo_id as entCeoId,
+		    ec.ent_ceo_email as entCeoEmail,
+		    ec.ent_ceo_addr as entAddr,
+		    ec.ent_ceo_daddr as entDaddr,
+		    ct.fee_rate_sales as feeRateSales,
+		    ct.fee_rate_rental as teeRateRental,
+		    ct.fee_rate_penalty as feeRetePenalty,
+		    ct.entry_fee as entryFee,
+		    ct.contract_date as contractDate,
+		    ct.contract_expiry_date as contractEndDate,
+		    ct.ent_cal_date as entCalDate,
+		    ct.contract_status as contractStatus
+		  FROM 
+		    ent_ceo ec 
+		    LEFT JOIN ent_contract ct ON ec.ent_ceo_no = ct.ent_ceo_no
+		  WHERE ec.ent_ceo_no = #{ceoCode}
+	</select>
 	 
  
  

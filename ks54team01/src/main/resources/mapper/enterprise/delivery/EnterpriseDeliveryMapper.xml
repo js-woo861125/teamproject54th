@@ -41,15 +41,16 @@
 	<update id="modifyDelivery" parameterType="EnterpriseDelivery">
 		UPDATE delivery_information
 		<trim prefix="SET" suffixOverrides=",">
-			<if test="delInfoNo != null and vendCode != ''">
-				del_info_no= #{delInfoNo},
+			<if test="adminDeliveryInfo.delCompany != null and adminDeliveryInfo.delCompany != ''">
+				delivery_company= #{adminDeliveryInfo.delCompany},
 			</if>
-			<if test="sellProdNo != null and prodName != ''">
-				sell_products_no= #{sellProdNo}, 
-			</if>
+			depart_date= #{adminDeliveryInfo.departDate},
+			billing_number= #{adminDeliveryInfo.billNo},
+			arrive_date= #{adminDeliveryInfo.arriveDate},
+			delivery_progress= #{adminDeliveryInfo.delProgress}
 		</trim>
 		WHERE
-			del_info_no= #{delInfoNo};
+			del_info_no= #{adminDeliveryInfo.delInfoNo};
 	</update>
 	
 	

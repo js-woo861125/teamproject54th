@@ -14,7 +14,7 @@ public class AdminEntDetail {
 	private String entAddr;	
 	private String entDaddr;	
 	private Double feeRateSales;
-	private Double teeRateRental;
+	private Double feeRateRental;
 	private Double feeRetePenalty;
 	private Integer entryFee;
 	private LocalDate  contractDate;
