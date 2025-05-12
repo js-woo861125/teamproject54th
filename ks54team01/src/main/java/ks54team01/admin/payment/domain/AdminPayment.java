@@ -17,9 +17,9 @@ public class AdminPayment {
 	private String paymentType;
 	private String contractDetails;
 	private String payDetails;
-	private int payCount;
-	private int prodUnitPrice;
-	private int totalPrice;
+	private Integer payCount;
+	private Integer prodUnitPrice;
+	private Integer totalPrice;
 	private String payCompDate;
 	private String payStatus;
 	private String revDate;

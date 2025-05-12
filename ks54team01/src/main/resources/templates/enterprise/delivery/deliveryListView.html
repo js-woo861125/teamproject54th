@@ -9,6 +9,49 @@
 	<th:block layout:fragment="jsFile">
 	</th:block>
 	
+	<th:block layout:fragment="jsScript">
+		<script type="text/javascript">
+			$(function () {
+				$('.modifyBtn').click(function (e) {
+				
+					const $btn = $(this);
+					const $row = $btn.closest('tr');
+					const departDate = $row.find('.departDate').text().trim();
+				
+					if (departDate !== "") {
+						alert('이미 배송을 시작했습니다.');
+						e.preventDefault();
+						return ;
+					}
+				
+				});
+			});
+			
+			
+			$(function () {
+				$('.compBtn').click(function (e) {
+					e.preventDefault();
+				
+					const $btn = $(this);
+					const $row = $btn.closest('tr');
+					const departDate = $row.find('.departDate').text().trim();
+					const arriveDate = $row.find('.arriveDate').text().trim();
+				
+					if (departDate === "") {
+						alert('아직 배송을 안했습니다.');
+						return ;
+					}else if(arriveDate !== ""){
+						alert('이미 배송을 완료했습니다.');
+						
+						return ;
+					}
+				
+					$btn.closest('form').submit();
+				});
+			});
+		</script>
+	</th:block>
+	
 	<th:block layout:fragment="content">
 		<div class="content-header">
 			<div>
@@ -51,7 +94,6 @@
 								<th class="align-middle" scope="col">상품코드</th>
 								<th class="align-middle" scope="col">수령인명</th>
 								<th class="align-middle" scope="col">택배사</th>
-								<th class="align-middle" scope="col">운송장번호</th>
 								<th class="align-middle" scope="col">주소</th>
 								<th class="align-middle" scope="col">상세주소</th>
 								<th class="align-middle" scope="col">요청사항</th>
@@ -68,19 +110,18 @@
 								<td th:text="${l.adminDeliveryInfo.sellProdNo}">상품코드</td>
 								<td th:text="${l.adminDeliveryInfo.recipientNm}">Marvin McKinney</td>
 								<td th:text="${l.adminDeliveryInfo.delCompany}">직접배송</td>
-								<td th:text="${l.adminDeliveryInfo.billNo}">직접배송</td>
 								<td th:text="${l.adminDelivery.delAddr}">주소</td>
 								<td th:text="${l.adminDelivery.delDaddr}">상세주소</td>
 								<td th:text="${l.adminDeliveryInfo.delRequest}">문앞</td>
 								<td th:text="${l.adminDeliveryInfo.delProgress}">배송완료</td>
 								<td th:text="${l.adminDeliveryInfo.regDate}">03.12.2020</td>
-								<td th:text="${l.adminDeliveryInfo.departDate}">03.13.2020</td>
-								<td th:text="${l.adminDeliveryInfo.arriveDate}">03.14.2020</td>
-								<td><a th:href="@{/enterprise/delivery/modifyDelivery(delInfoNo=${l.adminDeliveryInfo.delInfoNo})}" class="btn btn-sm font-sm rounded btn-warning text-white">수정 </a></td>
+								<td th:text="${l.adminDeliveryInfo.departDate}" class="departDate">03.13.2020</td>
+								<td th:text="${l.adminDeliveryInfo.arriveDate}" class="arriveDate">03.14.2020</td>
+								<td><a th:href="@{/enterprise/delivery/modifyDelivery(delInfoNo=${l.adminDeliveryInfo.delInfoNo})}" class="modifyBtn btn btn-sm font-sm rounded btn-warning text-white">수정 </a></td>
 								<td>
 									<form th:action="@{/enterprise/delivery/completeDelivery}" method="post">
 										<input type="hidden" name="delInfoNo" th:value="${l.adminDeliveryInfo.delInfoNo}" />
-										<button type="submit" class="btn btn-sm font-sm rounded btn-brand">완료</button>
+										<button type="submit" class="compBtn btn btn-sm font-sm rounded btn-brand">완료</button>
 									</form>
 								</td>
 							</tr>

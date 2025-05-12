@@ -8,9 +8,9 @@ import lombok.Data;
 public class AdminEntDetail {
 	
 	private String entContractNo;
-	private String entCeoNo;
-	private String entCeoId;	
-	private String entCeoEmail;	
+	private String CeoNo;
+	private String CeoId;	
+	private String CeoEmail;	
 	private String entAddr;	
 	private String entDaddr;	
 	private Double feeRateSales;

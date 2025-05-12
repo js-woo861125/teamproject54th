@@ -23,11 +23,36 @@ public class RegisterController {
 	private final RegisterService registerService;
 	
 	
+	@PostMapping("/entRegister")
+	public String addEntMember(CustomerMember memberInfo, HttpSession session) {
+	    // 세션에서 memberId 가져오기
+	    CustomerMember sessionMember = (CustomerMember) session.getAttribute("memberInfo");
+	    if (sessionMember != null) {
+	        memberInfo.setMemberId(sessionMember.getMemberId());
+	        memberInfo.setMemberPw(sessionMember.getMemberPw());
+	    }
+
+	    log.info("회원 등록 시작: {}", memberInfo);
+	    
+	    registerService.addEntCeoMember(memberInfo);
+	    registerService.addEntEmpMember(memberInfo);
+	    
+
+	    log.info("회원 등록 완료");
+
+	    return "redirect:/customer/login/memberLogin";
+	}
+	
 	
 	@GetMapping("/entRegister")
-	public String getEntRegister(Model model) {
+	public String getEntRegister(HttpSession session, Model model) {
 		
 		model.addAttribute("title", "입점업체");
+		CustomerMember memberInfo = (CustomerMember) session.getAttribute("memberInfo");
+		
+		log.info("전달받은 공통등록 정보: {}", memberInfo);
+		
+		model.addAttribute("memberInfo", memberInfo);
 		
 		return "customer/register/entRegisterView";
 		
@@ -76,7 +101,7 @@ public class RegisterController {
 	    // 회원 유형에 따른 페이지 이동
 	    if ("customer".equals(memberInfo.getMemberType())) {
 	        return "redirect:/customer/register/customerRegister";
-	    } else if ("ent".equals(memberInfo.getMemberType())) {
+	    } else if ("입점업체".equals(memberInfo.getMemberType())) {
 	        return "redirect:/customer/register/entRegister";
 	    }
 	    return "redirect:/error";

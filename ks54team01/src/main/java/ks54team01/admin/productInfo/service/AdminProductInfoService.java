@@ -11,6 +11,24 @@ import ks54team01.admin.productInfo.domain.ProductInfoModel;
 
 public interface AdminProductInfoService {
 	
+	// 상품정보 카테고리 수정
+	void modifyCategory(ProductInfoCategory productInfoCategory);
+	
+	// 상품정보 카테고리별/상세스펙 등록
+	void addCategorySpec(ProductInfoCategorySpec ProductInfoCategorySpec);
+	
+	// 상품정보 전체혜택 등록
+	void addBenefit(ProductInfoBenefit productInfoBenefit);
+	
+	// 상품정보 모델 등록
+	void addModel(ProductInfoModel productInfoModel);
+	
+	// 상품정보 품목 등록
+	void addItem(ProductInfoItem productInfoItem);
+	
+	// 상품정보 브랜드 등록
+	void addBrand(ProductInfoBrand productInfoBrand);
+	
 	// 상품정보 카테고리 등록
 	void addCategory(ProductInfoCategory productInfoCategory);
 	

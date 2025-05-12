@@ -19,12 +19,12 @@
 		<result column="state_transition_date" 	property="memberStateTransitionDate" />
 	</resultMap>
 	
-	<insert id="addBasicMember" parameterType="CustomerMember">
-		/* 공통회원정보 등록 */
-		INSERT INTO members
-		(members_id, members_pw, members_type, register_date, revision_date, state_transition_date)
+	<insert id="addCorpMember" parameterType="CustomerMember">
+		/* 기업정보 등록 */
+		INSERT INTO corp_customer
+		(cust_id, corp_brno, corp_nm, register_date, revision_date)
 		VALUES
-		(#{memberId}, #{memberPw}, #{memberType}, CURDATE(), CURDATE(), #{memberStateTransitionDate});
+		(#{memberId}, #{corpBrno}, #{corpName}, CURDATE(), CURDATE());
 	</insert>
 	
 	<insert id="addMember" parameterType="CustomerMember">
@@ -35,12 +35,12 @@
 		(#{memberId}, #{custName}, #{custBrdt}, #{custAddr}, #{custDaddr}, #{custEmail}, #{custPhone}, CURDATE(), CURDATE());
 	</insert>
 	
-	<insert id="addCorpMember" parameterType="CustomerMember">
-		/* 기업정보 등록 */
-		INSERT INTO corp_customer
-		(cust_id, corp_brno, corp_nm, register_date, revision_date)
+	<insert id="addBasicMember" parameterType="CustomerMember">
+		/* 공통회원정보 등록 */
+		INSERT INTO members
+		(members_id, members_pw, members_type, register_date, revision_date, state_transition_date)
 		VALUES
-		(#{memberId}, #{corpBrno}, #{corpName}, CURDATE(), CURDATE());
+		(#{memberId}, #{memberPw}, #{memberType}, CURDATE(), CURDATE(), #{memberStateTransitionDate});
 	</insert>
 	
   	<select id="getMemberInfoById" parameterType="string" resultMap="memberResultMap">
