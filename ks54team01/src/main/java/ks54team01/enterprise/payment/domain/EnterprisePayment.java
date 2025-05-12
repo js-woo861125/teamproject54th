@@ -1,10 +1,11 @@
-package ks54team01.admin.payment.domain;
+package ks54team01.enterprise.payment.domain;
 
 import ks54team01.admin.delivery.domain.AdminCustomer;
+import ks54team01.admin.payment.domain.AdminEntCeo;
 import lombok.Data;
 
 @Data
-public class AdminPayment {
+public class EnterprisePayment {
 
 	private String payCompNo;
 	private String custId;
@@ -25,5 +26,4 @@ public class AdminPayment {
 	private String revDate;
 	
 	private AdminCustomer customerInfo;
-	private AdminEntCeo entCeoInfo;
 }
