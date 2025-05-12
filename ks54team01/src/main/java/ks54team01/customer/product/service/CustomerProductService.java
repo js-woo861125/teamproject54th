@@ -14,7 +14,6 @@ public interface CustomerProductService {
 
 	List<CustomerProduct> getCustomerProductList(String smallCategory);
 	
-
-	
+	  CustomerProduct getProductDetail(String sellProductsNo);
 	
 }

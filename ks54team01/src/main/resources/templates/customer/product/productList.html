@@ -15,7 +15,7 @@
                 <div class="archive-header">
                     <div class="row align-items-center">
                         <div class="col-xl-3">
-                            <h1 class="mb-15" > <span class="text-danger" th:text="${title}"> </span> </h1>
+                            <h1 class="mb-15 mt-40" > <span class="text-black-50" th:text="${title}"> </span> </h1>
                         </div>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
                             <div class="product-cart-wrap mb-30">
                                 <div class="product-img-action-wrap">
                                     <div class="product-img product-img-zoom">
-                                      <a th:href="@{/customer/product/productDetail}">
+                                      <a th:href="@{/customer/product/productDetail(sellProductsNo=${l.customerSellProduct.sellProductsNo})}">
                                             <img class="default-img" th:src="@{/user/assets/imgs/shop/noteBook1.avif}" alt="" />
                                            	<img class="hover-img" th:src="@{/user/assets/imgs/shop/noteBook2.avif}" alt="" />
                                         </a>
@@ -99,16 +99,18 @@
                                     <div class="product-category">
                                         <div th:text="${title}">노트북(소분류)</div>
                                     </div>
-                                    <h2><a th:href="@{/customer/product/productDetail}" th:text="${l.productsName}">LG그램</a></h2>
+                                    <h2><a th:href="@{/customer/product/productDetail(sellProductsNo=${l.customerSellProduct.sellProductsNo})}" th:text="${l.productsName}"> </a></h2>
                                     
-                                    <div>
+                                   <!--  <div>
                                         <a th:href="@{#}" th:text="${l.entCeo.entNm}">입점업체명</a>
-                                    </div>
+                                    </div> -->
                                     <div class="product-card-bottom">
                                         <div class="product-price">
-                                            <span th:text="${l.customerSellProduct.finalPrice}">가격</span>
-                                            
+                                         	<span class ="fs-6">구매최저가 : </span> <span class="fs-6" th:text="${#numbers.formatInteger(l.lumpPrice,3,'COMMA')}">가격</span>                     
+                                        	<br>
+                                          	<span class ="fs-6 text-danger">렌탈최저가 : </span> <span class="fs-6 text-danger" th:text="${#numbers.formatInteger(l.minRentalPrice,3,'COMMA')}">렌탈가</span>
                                         </div>
+                                        
                                         <div class="add-cart">
                                             <a class="add" href="shop-cart.html"><i class="fi-rs-shopping-cart mr-5"></i>Add </a>
                                         </div>
