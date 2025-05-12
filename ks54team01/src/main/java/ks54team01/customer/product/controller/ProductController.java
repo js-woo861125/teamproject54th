@@ -23,7 +23,10 @@ public class ProductController {
 	private final CustomerProductService customerProductService;
 	
 	@GetMapping("/productDetail")
-	public String getProductDetail() {
+	public String getProductDetail(@RequestParam(value = "sellProductsNo") String sellProductsNo, Model model) {
+		
+		CustomerProduct productDetail = customerProductService.getProductDetail(sellProductsNo);
+		model.addAttribute("productDetail", productDetail);
 		
 		return "customer/product/productDetail";
 	}

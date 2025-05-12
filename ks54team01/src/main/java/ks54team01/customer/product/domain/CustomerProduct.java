@@ -15,6 +15,8 @@ import lombok.Data;
 		private String productsImage;
 		private String registerDate;
 		private String revisionDate;
+		private String lumpPrice;
+		private String minRentalPrice;
 		
 		private CustomerSellProduct customerSellProduct;
 		private ProductCate productCate;

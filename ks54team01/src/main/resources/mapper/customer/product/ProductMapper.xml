@@ -16,6 +16,8 @@
 		<result column="products_image" 		property="productsImage"/>
 		<result column="register_date" 			property="registerDate"/>
 		<result column="revision_date" 			property="revisionDate"/>
+		<result column="lump_price" 			property="lumpPrice"/>
+		<result column="min_rental_price" 		property="minRentalPrice"/>
 
 		<association property="customerSellProduct" javaType="CustomerSellProduct">
 			<id column="sell_products_no" 		property="sellProductsNo"/>
@@ -30,6 +32,7 @@
 			<result column="sp_register_date" 	property="registerDate"/> 
 			<result column="sp_revision_date" 	property="revisionDate"/> 
 			<result column="use_status" 		property="useStatus"/>
+		
 		</association>
 
 		<association property="productCate" 	javaType="ProductCate">
@@ -63,27 +66,57 @@
 	</resultMap>
 
 	<select id="getCustomerProductList" parameterType= "String" resultMap="customerProductResultMap">
+		SELECT 
+			pc.product_category_no,
+			sp.sell_products_no ,
+			p.products_nm,
+			min(sp.lump_sum_pay_price) AS lump_price,
+			sp.period,
+			min(sp.final_price) AS min_rental_price,
+			sp.register_date,
+			p.products_nm,
+			pc.middle_category ,
+			pc.small_category ,
+			ec.ent_nm
+		FROM
+			sell_products sp INNER JOIN products p 
+			ON sp.products_no = p.products_no
+			INNER JOIN ent_ceo ec 
+			ON sp.ent_ceo_no = ec.ent_ceo_no
+			INNER JOIN products_category pc 
+			ON p.product_category_no = pc.product_category_no
+		WHERE
+			pc.small_category = #{smallCategory} AND p.products_status ='활'
+		GROUP BY
+			p.products_nm;
+	</select>
+	
+	<select id="getProductDetail" parameterType="String" resultMap="customerProductResultMap">
 		SELECT
-			sp.sell_products_no,
+			pc.product_category_no,
+			sp.sell_products_no ,
 			p.products_nm,
 			sp.lump_sum_pay_price,
 			sp.period,
 			sp.final_price,
 			sp.register_date,
-			p.products_nm,
-			pc.middle_category,
-			pc.small_category,
+			pc.middle_category ,
+			pc.small_category ,
 			ec.ent_nm
 		FROM
-			sell_products sp INNER JOIN products p
+			sell_products sp INNER JOIN products p 
 			ON sp.products_no = p.products_no
-			INNER JOIN ent_ceo ec
+			INNER JOIN ent_ceo ec 
 			ON sp.ent_ceo_no = ec.ent_ceo_no
-			INNER JOIN products_category pc
+			INNER JOIN products_category pc 
 			ON p.product_category_no = pc.product_category_no
 		WHERE
-			pc.small_category = #{smallCategory};
+			sp.sell_products_no = #{sellProductsNo};
 	</select>
+
+	
+	
+	
 
 </mapper>
 
