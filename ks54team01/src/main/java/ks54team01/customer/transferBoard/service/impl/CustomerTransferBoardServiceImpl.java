@@ -42,17 +42,12 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	 * 양도게시글검색조회
 	 */
 	@Override
-	public PageInfo<CustomerTransferBoard> getSearchTransferBoard(String searchKey, String searchValue, Pageable pageable) {
+	public PageInfo<CustomerTransferBoard> getSearchTransferBoard(String searchValue, Pageable pageable) {
 
 		// 마지막 페이지를 구하기 위해 전체 행의 개수 조회
 		int contentRowCount = customerTransferBoardMapper.getSearchTransferBoardCount();
 		
-		switch (searchKey) {
-		case "productsName" -> searchKey = "p.products_nm";
-		case "transferTitle" -> searchKey = "tb.transfer_title";
-		}
-		
-		List<CustomerTransferBoard> transferBoardList = customerTransferBoardMapper.getSearchTransferBoard(searchKey, searchValue, pageable);
+		List<CustomerTransferBoard> transferBoardList = customerTransferBoardMapper.getSearchTransferBoard(searchValue, pageable);
 		
 		return new PageInfo<>(transferBoardList, pageable, contentRowCount);
 	}
