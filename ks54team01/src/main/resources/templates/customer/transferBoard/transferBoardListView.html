@@ -10,7 +10,6 @@
 	
 	</head>
 	
-	
 	<th:block layout:fragment="jsFile">
 	
 	</th:block>
@@ -21,55 +20,23 @@
 			$('.sort-by a').click(function(e){
 				e.preventDefault();
 				const sortValue = $(this).data('sortValue');
-				//console.log(sortValue);
 				const href = location.href;
 				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
 				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
 				urlParams.set('sortValue', sortValue);
-				//console.log(`${url.pathname}?${urlParams.toString()}`);
-				
-				urlParams.set('currentPage', 1);
-				
-				url.hash = '';
+
 				
 				location.href = `${url.pathname}?${urlParams.toString()}`;
 			});
 			
-			$('button.transfer-search').click(function(e){
-				e.preventDefault();
-				const searchValue = $('input[name="searchValue"]').val();
-				console.log(searchValue);
-				const href = location.href; // 현재 url 가져온다.
-				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
-				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
-				urlParams.set('searchValue', searchValue);
-				urlParams.set('currentPage', 1);
-				
-				const sortValue = urlParams.get('sortValue');
-				urlParams.set('sortValue', sortValue);
-				
-				url.hash = '';
-				
-				location.href = `${url.pathname}?${urlParams.toString()}`;
-			});
 			
-			$('.page-item a').click(function(e){
+			$('a.page-num').click(function(e){
 				e.preventDefault();
 				const currentPage = $(this).data('currentPage');
 				const href = location.href; // 현재 url 가져온다.
 				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
 				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
 				urlParams.set('currentPage', currentPage);
-				
-				const sortValue = urlParams.get('sortValue')
-				if(sortValue == null) sortValue = 'recentReg';
-				urlParams.set('sortValue', sortValue);
-			    
-			    const searchValue = urlParams.get('searchValue');
-			    if(searchValue != null) urlParams.set('searchValue', searchValue);
-				
-			    url.hash = '';
-			    
 				location.href = `${url.pathname}?${urlParams.toString()}`;
 			});
 		</script>
@@ -89,8 +56,8 @@
 					</div>
 					<div class="w-50 widget_search mb-50">
 						<div class="search-form">
-							<form th:action="@{#}" method="get">
-								<input type="text" name="searchValue" th:value="${searchValue}" th:data-search-value="${searchValue}"
+							<form th:action="@{/customer/transferBoard/transferBoardList}" method="get">
+								<input type="text" name="searchValue" th:value="${searchValue}"
 									placeholder="게시글 검색어를 입력해주세요." />
 								<button class="transfer-search" type="submit">
 									<i class="fi-rs-search"></i>
@@ -158,7 +125,6 @@
 											<div class="dropdown">
 		                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
 		                                        <div class="dropdown-menu">
-		                                            <!-- <a class="dropdown-item" href="#">게시글 삭제</a> -->
 		                                            <button class="dropdown-item" type="submit">게시글 삭제</button>
 		                                        </div>
 	                                    	</div>
@@ -202,42 +168,29 @@
 					<div class="pagination-area mt-30 mb-50">
 						<nav aria-label="Page navigation example">
 							<ul class="pagination justify-content-center">
-								<!-- 첫페이지 이동 -->
-								<li class="page-item">
-									<a class="page-link"
-										th:href="@{/customer/transferBoard/transferBoardList}">
+								<!-- 이전페이지 이동 -->
+								<li id="prev-page" class="page-item"  th:classappend="${startPageNum < 10} ? 'disabled'">
+									<a class="page-link" th:classappend="${startPageNum < 10} ? 'bg-white'"
+										th:href="@{/customer/transferBoard/transferBoardList(currentPage=${startPageNum - 1})}">
 										<i class="material-icons md-first_page"></i>
 									</a>
 								</li>
-								<!-- 이전페이지 이동 -->
-								<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
-									<a class="page-link"
-									   th:href="@{#}">
-									   <i class="fi-rs-arrow-small-left"></i>
-									</a>
-								</li>
+
 								<!-- 페이지 이동  -->
 								<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
 									<li class="page-item"
 										th:classappend="${num eq currentPage} ? 'active disabled'">
-										<a class="page-link"
-										   th:href="@{#}"
+										<a class="page-link page-num"
+										   href="#"
 										   th:text="${num < 10 ? '0' + num : num}"
 										   th:data-current-Page="${num}">01</a>
 									</li>
 								</th:block>
-								<!-- 다음 페이지 이동 -->
-								<li class="page-item"
-									th:classappend="${currentPage eq lastPage} ? 'disabled'">
-									<a class="page-link"
-									   th:href="@{/customer/transferBoard/transferBoardList(currentPage=${currentPage + 1})}">
-									   <i class="material-icons md-chevron_right"></i>
-									</a>
-								</li>
-								<!-- 마지막 페이지 이동 -->
-								<li class="page-item">
-									<a class="page-link"
-									   th:href="@{/customer/transferBoard/transferBoardList(currentPage=${lastPage})}">
+								
+								<!-- 다음페이지 이동 -->
+								<li id="next-page" class="page-item" th:classappend="${(startPageNum + 10) > lastPage} ? 'disabled'">
+									<a class="page-link" th:classappend="${(startPageNum + 10) > lastPage} ? 'bg-white'"
+									   th:href="@{/customer/transferBoard/transferBoardList(currentPage=${endPageNum + 1})}">
 									   <i class="material-icons md-last_page"></i>
 									</a>
 								</li>
