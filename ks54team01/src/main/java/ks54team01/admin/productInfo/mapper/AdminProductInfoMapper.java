@@ -14,6 +14,24 @@ import ks54team01.admin.productInfo.domain.ProductInfoModel;
 @Mapper
 public interface AdminProductInfoMapper {
 	
+	// 상품정보 카테고리 수정
+	int modifyCategory(ProductInfoCategory productInfoCategory);
+	
+	// 상품정보 카테고리별/상세스펙 등록
+	int addCategorySpec(ProductInfoCategorySpec ProductInfoCategorySpec);
+	
+	// 상품정보 전체혜택 등록
+	int addBenefit(ProductInfoBenefit productInfoBenefit);
+	
+	// 상품정보 모델 등록
+	int addModel(ProductInfoModel productInfoModel);
+	
+	// 상품정보 품목 등록
+	int addItem(ProductInfoItem productInfoItem);
+	
+	// 상품정보 브랜드 등록
+	int addBrand(ProductInfoBrand productInfoBrand);
+	
 	// 상품정보 카테고리 등록
 	int addCategory(ProductInfoCategory productInfoCategory);
 	

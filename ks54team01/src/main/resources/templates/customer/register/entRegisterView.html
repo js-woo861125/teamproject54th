@@ -69,7 +69,7 @@
        <div class="page-header breadcrumb-wrap">
             <div class="container">
                 <div class="breadcrumb">
-                    <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                    <a th:href="@{#}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
                     <span></span> Pages <span></span> My Account
                 </div>
             </div>
@@ -85,11 +85,7 @@
                                         <div class="heading_s1 mb-20">
                                             <h1 class="mb-30" th:text="${title}"></h1>
                                         </div>
-                                        <form  id="entRegisterForm" th:action="@{/customer/member/entRegister}" method="post">
-                                            <div class="form-group position-relative d-flex justify-content-end">
-                                                <input type="text" name="ent-ceo-no" placeholder="대표코드를 입력하세요" required />
-                                                <button type="submit" class="btn btn-heading btn-block p-10 mt-10 mr-10 position-absolute">코드확인</button>
-                                            </div>                                   
+                                        <form  id="entRegisterForm" th:action="@{/customer/register/entRegister}" method="post">
                                             <div class="form-group">
                                                 <input type="text" name="name" placeholder="이름" required />                                              
                                             </div>
@@ -146,7 +142,7 @@
                                                 <input type="text" name="ent-ceo-bank" placeholder="계좌번호" required />                                        
                                             </div>                                                                                                                              
                                             <div class="form-group">
-                                                <button type="submit" class="btn btn-heading btn-block hover-up" name="add-member" th:href="@{#}">회원가입</button>
+                                                <button type="submit" class="btn btn-heading btn-block hover-up" name="add-member">회원가입</button>
                                             </div>
                                             <p class="font-xs text-muted"><strong>참고:</strong>귀하의 개인 데이터는 이 웹사이트 전체에서 귀하의 경험을 지원하고, 귀하의 계정에 대한 액세스를 관리하고, 당사의 개인 정보 보호 정책에 설명된 기타 목적을 위해 사용됩니다.</p>
                                         </form>

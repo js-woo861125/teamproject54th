@@ -19,6 +19,16 @@ public class CustomerProductServiceImpl implements CustomerProductService {
 
 	private final ProductMapper productMapper;
 	
+	
+	// 상품 이름으로 상품 상세 정보 조회 메서드 구현
+		@Override
+		public CustomerProduct getProductDetail(String sellProductsNo) {
+			return productMapper.getProductDetail(sellProductsNo);
+			// ProductMapper의 getProductDetail 메서드를 호출하여 상품 상세 정보 조회 후 반환
+		}
+
+	
+//	상품 목록조회
 	@Override
 	public List<CustomerProduct> getCustomerProductList(String smallCategory) {
 		
@@ -27,4 +37,5 @@ public class CustomerProductServiceImpl implements CustomerProductService {
 		return customerProductList;
 	}
 	
+
 }

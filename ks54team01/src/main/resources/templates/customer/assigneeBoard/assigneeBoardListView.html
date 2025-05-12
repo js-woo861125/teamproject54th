@@ -72,6 +72,13 @@
 	                        <div class="product-cart-wrap border">
 	                            <div class="product-content-wrap mt-50 mb-30 ml-50">
 	                                <h4><a th:text="${l.productName}" th:href="@{/customer/assigneeBoard/assigneeBoardDetail(assigneeBoardNum=${l.assigneeBoardNum})}">그램 프로 노트북 16인치 (옵시디안 블랙)</a></h4>
+                                	<div class="dropdown">
+                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">게시글 삭제</a>
+                                            <button class="dropdown-item" type="submit">게시글 삭제</button>
+                                        </div>
+                                    </div>
 	                                <div class="product-rate-cover">
 	                                    <span th:text="${l.productInfoCategory.smCategory}" class="font-small ml-5 text-muted">TV/디지털</span>
 	                                </div>
