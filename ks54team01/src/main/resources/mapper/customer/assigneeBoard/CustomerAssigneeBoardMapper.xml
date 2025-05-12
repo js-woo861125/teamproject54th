@@ -20,7 +20,7 @@
 		<result column="revision_date" property="revisionDate" />	
 		
 		<association property="customerMember" javaType="CustomerMember">
-			<id column="cust_id" property="custId" />
+			<id column="cust_id" property="memberId" />
 			<result column="cust_nm" property="custName" />
 			<result column="cust_brdt" property="custBrdt" />
 			<result column="cust_addr" property="custAddr" />

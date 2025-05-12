@@ -8,7 +8,7 @@ import lombok.ToString;
 public class Pageable {
 
 	private int currentPage = 1;
-	private int rowPerPage = 5;
+	private int rowPerPage = 1;
 	private int offset = 0;
 	
 	public void setCurrentPage(int currentPage) {
@@ -16,7 +16,7 @@ public class Pageable {
 		setOffset();
 	}
 	public void setRowPerPage(int rowPerPage) {
-		this.rowPerPage = Math.max(rowPerPage, this.rowPerPage);;
+		this.rowPerPage = Math.max(rowPerPage, this.rowPerPage);
 		setOffset();
 	}
 	

@@ -24,21 +24,14 @@ public class PageInfo<T> {
 	private void pageNumProcess() {
 		int currentPage = pageable.getCurrentPage();
 		int rowPerPage = pageable.getRowPerPage();
-		// ex) 121 행 10개씩 13page 
+		// ex) 23 행 10개씩 3page 
 		int lastPage = (int) Math.ceil((double) totalRowCount / rowPerPage);
 		
 		// 1~10 page 동적페이지 구현
-		int startPageNum = 1;
-		int endPageNum = lastPage < 10 ? lastPage : 10;
-		
-		if(currentPage > 6 && lastPage > 9) {
-			startPageNum = currentPage - 5;
-			endPageNum = currentPage + 4;
-			if(endPageNum >= lastPage) {
-				startPageNum = lastPage - 9;
-				endPageNum = lastPage;
-			}
-		}
+		int startPageNum = currentPage < 1 ? 1 : 1 + ((currentPage - 1) / 10) * 10;  // 1, 11, 21 .....
+		//int endPageNum = lastPage < ((currentPage - 1) / 10) * 10 + 10 ? ((currentPage - 1) / 10) * 10 + 10 : lastPage;  // 10, 20
+        int endPageNum = (startPageNum + 9) >= lastPage ? lastPage : (startPageNum + 9);  
+
 		
 		this.lastPage = lastPage;
 		this.startPageNum = startPageNum;
