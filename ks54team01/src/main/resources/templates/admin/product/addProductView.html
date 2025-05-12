@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	</th:block>
+
+    <th:block layout:fragment="content">
+       <div class="row">
+                    <div class="col-9">
+                        <div class="content-header">
+                            <h2 class="content-title">제품 등록</h2>
+                            <div>
+                                <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">임시저장</button>
+                                <button class="btn btn-md rounded font-sm hover-up">저장</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>제품정보</h4>
+                            </div>
+                            <div class="card-body">
+                                <form>
+                                    <div class="mb-4">
+                                        <label for="product_name" class="form-label">제품 이름</label>
+                                        <input type="text" placeholder="제품을 입력해주세요" class="form-control" id="product_name"/>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-10">
+                                            <div class="mb-4">
+                                                <label class="form-label">카테고리</label>
+                                                <select class="form-select">
+                                                    <option>가전 > TV/디지털 > TV</option>
+                                                    <option>가전 > TV/디지털 > 노트북</option>
+                                                    <option>가전 > 주방가전  > 전기레인지 </option>
+                                                    <option>가전 > 냉장가전  > 냉장고 </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <div class="mb-4">
+                                                <label class="form-label">브랜드</label>
+                                                <select class="form-select">
+                                                    <option>삼성</option>
+                                                    <option>LG</option>
+                                                    <option>휘센</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="mb-4">
+                                                <label class="form-label">품목</label>
+                                                <select class="form-select">
+                                                    <option>건강돌침대</option>
+                                                    <option>돌침대</option>
+                                                    <option>흔들리지않는침대</option>
+                                                </select>
+                                            </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-10">
+                                            <label class="form-label">모델</label>
+                                            <select class="form-select">
+                                                <option>라온 LED 저상형 침대 SS</option>
+                                                <option>라온 LED 저상형 침대 Q</option>
+                                                <option>라온 LED 저상형 침대 SS+SS</option>
+                                            </select>
+                                        </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- card end// -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>제품 상세옵션</h4>
+                            </div>
+                            <div class="card-body">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <label class="form-label">상세옵션</label>
+                                            <select class="form-select">
+                                                <option>알아서 들어감</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label class="form-label">상세옵션</label>
+                                            <select class="form-select">
+                                                <option>알아서 들어감</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                     <div class="row">
+                                        <div class="col-lg-6">
+                                            <label class="form-label">상세옵션</label>
+                                            <select class="form-select">
+                                                <option>알아서 들어감</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label class="form-label">상세옵션</label>
+                                            <select class="form-select">
+                                                <option>알아서 들어감</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- card end// -->
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>제품 사진</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="input-upload">
+                                    <img src="manage/assets/imgs/theme/upload.svg" alt="" />
+                                    <input class="form-control" type="file" />
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+   </th:block>    
+        <!-- card end// -->
+        <div class="pagination-area mt-15 mb-50">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-start">
+                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                    <li class="page-item"><a class="page-link" href="#">02</a></li>
+                    <li class="page-item"><a class="page-link" href="#">03</a></li>
+                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#">16</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    <!-- content-main end// -->
+
+        <script src="manage/assets/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="manage/assets/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="manage/assets/js/vendors/select2.min.js"></script>
+        <script src="manage/assets/js/vendors/perfect-scrollbar.js"></script>
+        <script src="manage/assets/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+    </body>
+</html>

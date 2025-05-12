@@ -37,13 +37,16 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr class=text-center>
-                                                <th>상품카테고리코드</th>
+                                            	<th>관리자아이디</th>
+                                                <th>카테고리코드</th>
                                                 <th>대분류코드</th>
                                                 <th>대분류</th>
                                                 <th>중분류코드</th>
                                                 <th>중분류</th>
                                                 <th>소분류</th>
                                                 <th>사용유무</th>
+                                                <th>등록일자</th>
+                                                <th>수정일자</th>
                                                 <th>수정/삭제</th>
                                             </tr>
                                         </thead>
@@ -51,6 +54,7 @@
                                             <tr class=text-center
 				                            	th:if="${!#lists.isEmpty(categoryList)}"
 				                          	  	th:each="l : ${categoryList}">
+				                          	  	<td th:text="${l.managerId}">managerid1</td>
                                                 <td th:text="${l.categoryNo}">L1_M1_1</td>
                                                 <td th:text="${l.lgCategoryNo}">L1</td>
                                                 <td th:text="${l.lgCategory}">가전</td>
@@ -62,6 +66,8 @@
 												          th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'"
 												          th:text="${l.useStatus}">사용중</span>    
 												</td>
+												<td th:text="${l.categoryRegDate}">2023-01-01 10:00:00</td>
+												<td th:text="${l.categoryRevDate}">2023-01-01 10:00:00</td>
 												<td>
                                                     <div class="dropdown">
                                                         <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>

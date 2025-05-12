@@ -148,7 +148,7 @@
 			    });
 						   
 			    if (isSubmit) {
-			        $('#memberRegisterForm').submit(); // 오직 submit만 수행
+			        $('#memberRegisterForm').submit();
 			    }
 			});
 		</script>
@@ -159,7 +159,7 @@
        <div class="page-header breadcrumb-wrap">
             <div class="container">
                 <div class="breadcrumb">
-                    <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                    <a th:href="@{#}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
                     <span></span> Pages <span></span> My Account
                 </div>
             </div>
@@ -198,7 +198,7 @@
 												    <label class="form-check-label" for="memberTypeCustomer">일반/기업회원</label>
 												</div>
 												<div class="custome-radio">
-												    <input class="form-check-input" type="radio" id="memberTypeEnt" name="memberType" value="ent" required />
+												    <input class="form-check-input" type="radio" id="memberTypeEnt" name="memberType" value="입점업체" required />
 												    <label class="form-check-label" for="memberTypeEnt">입점업체</label>
 												</div>
                                             </div>

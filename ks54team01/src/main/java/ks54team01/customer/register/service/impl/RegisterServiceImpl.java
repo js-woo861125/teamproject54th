@@ -4,7 +4,7 @@ package ks54team01.customer.register.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import ks54team01.customer.register.controller.RegisterController;
 import ks54team01.customer.register.domain.CustomerMember;
 import ks54team01.customer.register.mapper.RegisterMapper;
 import ks54team01.customer.register.service.RegisterService;
@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 public class RegisterServiceImpl implements RegisterService{
 	
 	private final RegisterMapper registerMapper;
-	
 
 	/**
 	 * 회원 정보 조회
@@ -29,6 +28,35 @@ public class RegisterServiceImpl implements RegisterService{
 		CustomerMember memberInfo = registerMapper.getMemberInfoById(memberId);
 		
 		return memberInfo;
+	}
+	
+	
+	/**
+	 * 입점업체직원정보 등록
+	 */
+	
+	@Override
+	public int addEntEmpMember(CustomerMember member) {
+		log.info("addEntEmpMember 시작");
+		
+		return registerMapper.addEntEmpMember(member);	
+	}
+	
+	/**
+	 * 입점업체대표정보 등록 
+	 */
+	@Override
+	public int addEntCeoMember(CustomerMember member) {
+		log.info("addEntMember 시작");
+		
+		// members 테이블에 먼저 insert
+	    registerMapper.addBasicMember(member); 
+	    
+	    // ent_ceo, ent_emp 테이블에 insert
+	    registerMapper.addEntMember(member);
+	    registerMapper.addEntEmpMember(member);
+	    
+		return 1;
 	}
 	
 	/**
@@ -45,7 +73,7 @@ public class RegisterServiceImpl implements RegisterService{
 	    registerMapper.addMember(member);
 
 	    // 기업회원인 경우 corp_customer 테이블에도 insert
-	    if (member.getCorpBrno() != null && !member.getCorpBrno().isEmpty()) {
+	    if ("기업고객".equals(member.getMemberType())) {
 	        registerMapper.addCorpMember(member);
 	    }
 

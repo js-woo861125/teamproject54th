@@ -31,5 +31,14 @@ public class AdminEntSeriveiceImpl implements AdminEntListService{
 	    return adminEntMapper.getEntDetail(ceoCode);
 	}
 	
-	
+	@Override
+	public List<AdminEntList> getSearchEnt(String searchKey, String searchValue) {
+		switch (searchKey) {
+	    case "ceoCode" -> searchKey = "ec.ent_ceo_no";
+	    case "entName" -> searchKey = "ec.ent_nm";
+	    case "entContractStatus" -> searchKey = "ct.contract_status";
+	}
+		List<AdminEntList> entList = adminEntMapper.getSearchEnt(searchKey, searchValue);
+		return entList;
+	}
 }

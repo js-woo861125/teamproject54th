@@ -4,27 +4,22 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class EmailService {
 
     private final JavaMailSender mailSender;
     
-
     // 이메일 → 인증코드 저장소 (메모리)
-    private final Map<String, String> verificationCodes = new ConcurrentHashMap<>();
-
-    @Autowired
-    public EmailService(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
+    private static final Map<String, String> verificationCodes = new ConcurrentHashMap<>();
 
     // 인증 코드 생성 및 전송
     public void sendVerificationEmail(String toEmail) {
