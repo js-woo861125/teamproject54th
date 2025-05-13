@@ -61,7 +61,16 @@
 								</div>
 								<div class="product-content-wrap">
 									<div class="product-category">
-										<a href="shop-grid-right.html">TV</a>
+										<div class="product-category d-flex justify-content-between">
+											<a href="shop-grid-right.html">TV</a>
+											<div class="dropdown">
+		                                        <button href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm" aria-expanded="false"> <i class="material-icons md-more_horiz"></i> </button>
+		                                        <div class="dropdown-menu" style="margin: 0px;">
+		                                            <button class="dropdown-item" type="submit">게시글 삭제</button>
+		                                        </div>
+	                                    	</div>
+										</div>
+										
 									</div>
 									<h2>
 										<a th:href="@{/admin/transferBoard/transferBoardDetail}">계약 2년 남은 TV 양도 원합니다.</a>

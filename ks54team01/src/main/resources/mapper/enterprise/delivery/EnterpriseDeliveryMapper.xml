@@ -40,9 +40,7 @@
 	<update id="modifyDelivery" parameterType="EnterpriseDelivery">
 		UPDATE delivery_information
 		<trim prefix="SET" suffixOverrides=",">
-			<if test="adminDeliveryInfo.delCompany != null and adminDeliveryInfo.delCompany != ''">
-				delivery_company= #{adminDeliveryInfo.delCompany},
-			</if>
+			delivery_company= #{adminDeliveryInfo.delCompany},
 			depart_date= #{adminDeliveryInfo.departDate},
 			arrive_date= #{adminDeliveryInfo.arriveDate},
 			delivery_progress= #{adminDeliveryInfo.delProgress}

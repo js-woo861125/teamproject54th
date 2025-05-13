@@ -26,19 +26,22 @@ public class EnterpriseDeliveryController {
 	
 	
 	
-	@PostMapping("/modifyDelivery")
-	public String modifyDelivery(EnterpriseDelivery enterpriseDelivery, RedirectAttributes reAttr) {
+	@PostMapping("/departDelivery")
+	public String departDelivery(@RequestParam("delInfoNo") String deliveryNo, RedirectAttributes reAttr) {
 		
+		EnterpriseDelivery delivery = enterpriseDeliveryService.getDeliveryInfoByCode(deliveryNo);
 		
-		enterpriseDelivery.getAdminDeliveryInfo().setDelProgress("2.배송중");
+		delivery.getAdminDeliveryInfo().setDelCompany("직접배송");
+		
+		delivery.getAdminDeliveryInfo().setDelProgress("2.배송중");
 		
 		String currentDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		
-		enterpriseDelivery.getAdminDeliveryInfo().setDepartDate(currentDateTime);
+		delivery.getAdminDeliveryInfo().setDepartDate(currentDateTime);
 		
-		enterpriseDeliveryService.modifyDelivery(enterpriseDelivery);
+		enterpriseDeliveryService.modifyDelivery(delivery);
 		
-		reAttr.addAttribute("delInfoNo", enterpriseDelivery.getAdminDeliveryInfo().getDelInfoNo());
+		reAttr.addAttribute("delInfoNo", delivery.getAdminDeliveryInfo().getDelInfoNo());
 		
 		return "redirect:/enterprise/delivery/deliveryList";
 	}
@@ -48,7 +51,7 @@ public class EnterpriseDeliveryController {
 	
 	
 	@PostMapping("/completeDelivery")
-	public String modifyDelivery(@RequestParam("delInfoNo") String deliveryNo, RedirectAttributes reAttr) {
+	public String completeDelivery(@RequestParam("delInfoNo") String deliveryNo, RedirectAttributes reAttr) {
 		
 		
 		EnterpriseDelivery delivery = enterpriseDeliveryService.getDeliveryInfoByCode(deliveryNo);
@@ -68,15 +71,6 @@ public class EnterpriseDeliveryController {
 	
 	
 	
-	@GetMapping("/modifyDelivery")
-	public String modifyDelivery(String delInfoNo, Model model) {
-		
-		EnterpriseDelivery deliveryInfo = enterpriseDeliveryService.getDeliveryInfoByCode(delInfoNo);
-		
-		model.addAttribute("deliveryInfo", deliveryInfo);
-		
-		return "enterprise/delivery/modifyDeliveryView";
-	}
 	
 	
 	
