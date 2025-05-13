@@ -2,6 +2,8 @@ package ks54team01.customer.register.service.impl;
 
 
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +39,7 @@ public class RegisterServiceImpl implements RegisterService{
 	 */
 	@Override
 	public int addEntEmpMember(EntMember member) {
-		log.info("addEntEmpMember 시작");
+		log.info("입점업체직원 등록 시작");
 		
 		return registerMapper.addEntEmpMember(member);	
 	}
@@ -47,7 +49,7 @@ public class RegisterServiceImpl implements RegisterService{
 	 */
 	@Override
 	public int addEntCeoMember(EntMember member) {
-	    log.info("addEntCeoMember 시작");
+	    log.info("입점업체대표 등록 시작");
 
 	    // 공통 필드 가져오기
 	    CustomerMember customerMember = new CustomerMember();
@@ -74,17 +76,22 @@ public class RegisterServiceImpl implements RegisterService{
 	 * 입점업체대표코드 자동생성
 	 */
 	public String generateEntCeoNo() {
-	    Integer lastNumber = registerMapper.getLastEntCeoNumber();
-	    int nextNumber = (lastNumber != null) ? lastNumber + 1 : 1;
-	    return "ent_ceo_" + nextNumber;
+		return UUID.randomUUID().toString().replace("-", "").substring(0, 16);
 	}
 	
+	/*
+	 * public String generateEntCeoNo() { Integer lastNumber =
+	 * registerMapper.getLastEntCeoNumber(); int nextNumber = (lastNumber != null) ?
+	 * lastNumber + 1 : 1; return "ent_ceo_" + nextNumber; }
+	 */
+	
+			
 	/**
 	 * 모든회원정보 등록
 	 */
 	@Override
 	public int addBasicMember(CustomerMember member) {
-	    log.info("addBasicMember 시작");
+	    log.info("개인/기업 회원등록 시작");
 
 	    // members 테이블에 먼저 insert
 	    registerMapper.addBasicMember(member); 
