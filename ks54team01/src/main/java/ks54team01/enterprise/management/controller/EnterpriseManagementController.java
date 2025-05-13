@@ -1,6 +1,7 @@
 package ks54team01.enterprise.management.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -15,13 +16,17 @@ public class EnterpriseManagementController {
 	}
 	
 	@GetMapping("/addEmployee")
-	public String addEmployee() {
+	public String addEmployee(Model model) {
+		
+		model.addAttribute("title", "직원등록");
 		
 		return "enterprise/management/addEmployeeView";
 	}
 
 	@GetMapping("/employeeList")
-	public String employeeList() {
+	public String employeeList(Model model) {
+		
+		model.addAttribute("title", "직원목록");
 		
 		return "enterprise/management/employeeListView";
 	}

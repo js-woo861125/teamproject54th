@@ -13,7 +13,7 @@
 	<th:block layout:fragment="content">
 		<div class="content-header">
             <div>
-                <h2 class="content-title card-title" th:text="@{#}"></h2>
+                <h2 class="content-title card-title" th:text="${title}"></h2>
             </div>
         </div>
         <div class="card mb-4">
@@ -27,7 +27,7 @@
                         </select>
                     </div>
 		            <div class="col-lg-2">
-		                <a th:href="@{#}" class="btn btn-primary"><i class="material-icons md-plus"></i>직원 등록</a>
+		                <a th:href="@{/enterprise/management/addEmployee}" class="btn btn-primary"><i class="material-icons md-plus"></i>직원 등록</a>
 		            </div>
                 </div>
             </header>
@@ -36,20 +36,18 @@
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
-                            <tr>
-                                <th>No.</th>
+                            <tr class=text-center>
                                 <th>직원아이디</th>
                                 <th>직원직책</th>
                                 <th>직원이름</th>
                                 <th>직원이메일</th>
                                 <th>직원연락처</th>
                                 <th>재직상태</th>
-                                <th>등록일자</th>
+                                <th>등록일시</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
+                            <tr class=text-center>
                                 <td>entempid1</td>
                                 <td>부장</td>
                                 <td>곽철용</td> 
@@ -65,7 +63,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023-03-01</td>
+                                <td>2023-03-01 16:00:00</td>
                             </tr>
                         </tbody>
                     </table>

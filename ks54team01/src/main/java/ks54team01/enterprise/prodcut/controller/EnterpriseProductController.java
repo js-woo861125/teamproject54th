@@ -12,6 +12,22 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/enterprise")
 public class EnterpriseProductController {
 	
+	@GetMapping("/product/sellProductList")
+	public String sellProductList(Model model) {
+		
+		model.addAttribute("title", "판매 상품목록");
+		
+		return "enterprise/product/enterpriseProductListView";
+	}
+	
+	@GetMapping("/product/productList")
+	public String productList(Model model) {
+		
+		model.addAttribute("title", "플랫폼 상품목록");
+		
+		return "enterprise/product/platformProductListView";
+	}
+	
 	@GetMapping("/product/marginRatio")
 	public String enterpriseMarginRatio(Model model) {
 		
