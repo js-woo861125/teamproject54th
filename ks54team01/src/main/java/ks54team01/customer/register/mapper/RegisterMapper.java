@@ -20,8 +20,9 @@ public interface RegisterMapper {
 	// 입점업체대표정보 등록
 	int addEntCeoMember(EntMember member);
 	
-	// 입점업체대표코드 자동생성
-	Integer getLastEntCeoNumber();
+	/*
+	 * // 입점업체대표코드 자동생성 Integer getLastEntCeoNumber();
+	 */
 	
 	// 기업정보 등록
 	int addCorpMember(CustomerMember member);
