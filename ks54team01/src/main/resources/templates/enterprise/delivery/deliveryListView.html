@@ -12,7 +12,8 @@
 	<th:block layout:fragment="jsScript">
 		<script type="text/javascript">
 			$(function () {
-				$('.modifyBtn').click(function (e) {
+				$('.departBtn').click(function (e) {
+					e.preventDefault();
 				
 					const $btn = $(this);
 					const $row = $btn.closest('tr');
@@ -20,10 +21,10 @@
 				
 					if (departDate !== "") {
 						alert('이미 배송을 시작했습니다.');
-						e.preventDefault();
 						return ;
 					}
 				
+					$btn.closest('form').submit();
 				});
 			});
 			
@@ -101,7 +102,7 @@
 								<th class="align-middle" scope="col">등록일</th>
 								<th class="align-middle" scope="col">출발일</th>
 								<th class="align-middle" scope="col">배송완료일</th>
-								<th class="align-middle" scope="col">정보수정</th>
+								<th class="align-middle" scope="col">배송시작</th>
 								<th class="align-middle" scope="col">배송완료</th>
 							</tr>
 						</thead>
@@ -117,7 +118,12 @@
 								<td th:text="${l.adminDeliveryInfo.regDate}">03.12.2020</td>
 								<td th:text="${l.adminDeliveryInfo.departDate}" class="departDate">03.13.2020</td>
 								<td th:text="${l.adminDeliveryInfo.arriveDate}" class="arriveDate">03.14.2020</td>
-								<td><a th:href="@{/enterprise/delivery/modifyDelivery(delInfoNo=${l.adminDeliveryInfo.delInfoNo})}" class="modifyBtn btn btn-sm font-sm rounded btn-warning text-white">수정 </a></td>
+								<td>
+									<form th:action="@{/enterprise/delivery/departDelivery}" method="post">
+										<input type="hidden" name="delInfoNo" th:value="${l.adminDeliveryInfo.delInfoNo}" />
+										<button type="submit" class="departBtn btn btn-sm font-sm btn-light rounded">출발</button>
+									</form>
+								</td>
 								<td>
 									<form th:action="@{/enterprise/delivery/completeDelivery}" method="post">
 										<input type="hidden" name="delInfoNo" th:value="${l.adminDeliveryInfo.delInfoNo}" />
