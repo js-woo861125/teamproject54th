@@ -44,11 +44,10 @@ public class RegisterController {
 	    
 	    registerService.addEntCeoMember(memberInfo);
 
-	    log.info("회원 등록 완료");
+	    log.info("회원 등록 완료: {}", memberInfo);
 
 	    return "redirect:/customer/login/memberLogin";
 	}
-	
 	
 	
 	@GetMapping("/entRegister")
@@ -64,6 +63,7 @@ public class RegisterController {
 		
 	}
 	
+	
 	@PostMapping("/customerRegister")
 	public String addCustomerMember(CustomerMember memberInfo, HttpSession session) {
 	    // 세션에서 memberId 가져오기
@@ -77,7 +77,7 @@ public class RegisterController {
 
 	    registerService.addBasicMember(memberInfo);
 
-	    log.info("회원 등록 완료");
+	    log.info("회원 등록 완료: {}", memberInfo);
 
 	    return "redirect:/customer/login/memberLogin";
 	}
@@ -85,12 +85,12 @@ public class RegisterController {
 	
 	@GetMapping("/customerRegister")
 	public String getCustomerRegister(HttpSession session, Model model) {
-		
-		model.addAttribute("title", "일반/기업회원");
+		// 세션에서 memberId 가져오기
 		CustomerMember memberInfo = (CustomerMember) session.getAttribute("memberInfo");
 		
 		log.info("전달받은 공통등록 정보: {}", memberInfo);
 		
+		model.addAttribute("title", "일반/기업회원");
 	    model.addAttribute("memberInfo", memberInfo);
 	    
 		return "customer/register/customerRegisterView";
