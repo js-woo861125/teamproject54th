@@ -54,9 +54,15 @@
 	    <!--/* header end */-->
 	    
 	    <main class="main">
-	    	<!--/* contents start */-->
-	    	<th:block layout:fragment="customContents"></th:block>
-	    	<!--/* contents end */-->
+	    	<!--/* mypageAside start */-->
+		    	<th:block th:if="${isMypage}">
+			    	<div th:replace="~{customer/fragments/myPageAside :: myPageAsideFragment}"></div>
+		    	</th:block>
+		    	<!--/* mypageAside end */-->
+		    	
+		    	<!--/* contents start */-->
+		    	<th:block layout:fragment="customContents"></th:block>
+		    	<!--/* contents end */-->
 	    </main>
 	    
 	    <!--/* footer start */-->

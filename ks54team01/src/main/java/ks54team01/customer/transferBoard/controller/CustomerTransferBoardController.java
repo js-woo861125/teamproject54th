@@ -25,6 +25,13 @@ public class CustomerTransferBoardController {
 	private final CustomerTransferBoardService customerTransferBoardService;
 	
 	
+	@GetMapping("/myTransferBoardList")
+	public String getMyTransferBoardList(Model model) {
+		
+		model.addAttribute("isMypage", true);
+		return "customer/myPage/myTransferBoardListView";
+	}
+	
 	@GetMapping("/transferBoardDetail")
 	public String getTransferBoardDetail(@RequestParam(name="transferBoardNum", required = false) String transferBoardNum
 										, Model model) {
