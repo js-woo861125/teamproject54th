@@ -177,7 +177,7 @@
 		        if(isSubmit){
 		        	alert("회원가입이 완료되었습니다.");
 					const entCeoPhone = `${$('#phoneFixed').val()}-${$('#phone1').val()}-${$('#phone2').val()}`;
-					const entCeoEmail = `${$('#emailFirst').val()}${$('#emailLast').val()}`;
+					const entCeoEmail = `${$('#emailFirst').val()}@${$('#emailLast').val()}`;
 					
 					$('#entCeoPhone').val(entCeoPhone);
 					$('#entCeoEmail').val(entCeoEmail);
@@ -226,9 +226,9 @@
 	                                            	<div class="form-group d-flex">
 		                                                <input type="text" class="w-60" id="emailFirst" name="emailFirst" placeholder="Email" required />
 		                                                <select class="w-auto border-1 border-radius-10 ml-10" id="emailLast" name="emailLast">
-		                                                    <option value="@naver.com">@naver.com</option>
-		                                                    <option value="@daum.net">@daum.net</option>
-		                                                    <option value="@google.com">@google.com</option>                                                    
+		                                                    <option value="naver.com">@naver.com</option>
+		                                                    <option value="daum.net">@daum.net</option>
+		                                                    <option value="google.com">@google.com</option>                                                    
 		                                                </select> 
 		                                                <button type="button" class="btn btn-heading btn-block p-10 ml-10" onclick="sendVerificationCode()">인증요청</button>                                               
 		                                            </div>
@@ -272,9 +272,9 @@
 											<!-- 계좌 -->
                                             <div class="form-group d-flex">
                                                 <select class="w-auto border-1 border-radius-10 mr-10" id="entBank" name="entBank">
-                                                    <option>농협</option>
-                                                    <option>기업은행</option>
-                                                    <option>국민은행</option>
+                                                    <option value="농협">농협</option>
+                                                    <option value="기업은행">기업은행</option>
+                                                    <option value="국민은행">국민은행</option>
                                                 </select>                          
                                                 <input type="text" id="entBankNum" name="entBankNum" placeholder="계좌번호" required />                                        
                                             </div>                                                                                                                              

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{admin/layout/default}">
+	  layout:decorate="~{enterprise/layout/default}">
 	<!-- head 삽입공간 -->
 	<head>
 	</head>
@@ -13,10 +13,10 @@
     <th:block layout:fragment="content">
         <div class="content-header">
             <div>
-                <h2 class="content-title card-title" th:text="@{#}"></h2>
+                <h2 class="content-title card-title" th:text="${title}"></h2>
             </div>
             <div>
-                <a th:href="@{#}" class="btn btn-primary btn-sm rounded">등록하기</a>
+                <a th:href="@{/enterprise/product/productList}" class="btn btn-primary btn-sm rounded">등록하기</a>
             </div>
          </div>
         <div class="card mb-4">
@@ -24,7 +24,8 @@
                 <div class="row align-items-center">
 					   <div class="col-lg-1 col-md-3 col-12">
 	                       <select class="form-select" name="searchKey">
-	                           <option>상품명</option>
+	                           <option>브랜드</option>
+	                           <option>상품</option>
 	                       </select>
 	                   </div>
 	                   <div class="col-lg-3 col-md-5">
@@ -45,14 +46,6 @@
                             <option>침대</option>
                         </select>
                     </div>
-                    <div class="col-lg-2">
-                        <select class="form-select">
-                            <option>판매상태</option>
-                            <option>활성화</option>
-                            <option>비활성화</option>
-                            <option>판매중단</option>
-                        </select>
-                    </div>
                 </div>
             </header>
             <!-- card-header end// -->
@@ -61,20 +54,23 @@
                     <table class="table table-hover">
                         <thead>
                             <tr class=text-center>
-                                <th>상품코드</th>
                                 <th>카테고리</th>
+                                <th>브랜드</th>
+                                <th>모델</th>
                                 <th>상품이미지</th>                            
-                                <th>상품명</th>
-                                <th>판매상태</th>
-                                <th>등록일자</th>
-                                <th>수정일자</th>
+                                <th>상품</th>
+                                <th>기간(개월)</th>
+                                <th>판매금액</th>
+                                <th>혜택</th>
+                                <th>사용유무</th>
                                 <th>수정/삭제</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr class=text-center>
-                                <td>prod_1</td>
-                                <td>침대</td>
+                             	<td>침대</td>
+                                <td>인홈</td>
+                                <td>27LX5QKNA</td>
                                 <td>
                                     <a class="item" href="#">
                                         <div class="img">
@@ -87,19 +83,19 @@
                                         <h6 class="mb-0">라온 LED 저상형 침대 SS</h6>
                                     </div>
                                 </td>
+                                <td>60</td>
+                                <td>28,000</td>
+                                <td>배송비 무료</td>
                                 <td class="col-lg-2 col-sm-2 col-4 col-status">
-                                    <span class="badge rounded-pill alert-success">활성화</span>
+                                    <span class="badge rounded-pill alert-success">사용중</span>
                                     <div class="dropdown">
                                         <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="#">활성화</a>
-                                            <a class="dropdown-item" href="#">비활성화</a>
-                                            <a class="dropdown-item text-danger" href="#">판매중단</a>
+                                            <a class="dropdown-item" href="#">사용중</a>
+                                            <a class="dropdown-item text-danger" href="#">사용불가</a>
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023-01-01 13:00:00</td>
-                                <td>2023-01-01 13:00:00</td>
                                 <td class="col-lg-2 col-sm-2 col-4 col-action">
                                     <a href="#" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
                                     <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
