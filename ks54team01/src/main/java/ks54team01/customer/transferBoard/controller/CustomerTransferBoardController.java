@@ -45,7 +45,7 @@ public class CustomerTransferBoardController {
 									  , @RequestParam(name="searchValue", required = false) String searchValue
 									  , Pageable pageable, Model model) {
 		
-		
+		// 한 페이지에 4X4 총 16개 노출
 		pageable.setRowPerPage(16);
 		
 		Map<String, Object> searchParamMap  = new HashMap<String, Object>();
