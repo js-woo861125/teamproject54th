@@ -1,6 +1,7 @@
 package ks54team01.customer.transferBoard.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,9 @@ public class CustomerTransferBoardController {
 	@GetMapping("/myTransferBoardList")
 	public String getMyTransferBoardList(Model model) {
 		
-		model.addAttribute("isMypage", true);
+		List<CustomerTransferBoard> myTransferBoardList = customerTransferBoardService.getMyTransferBoardList();
+		model.addAttribute("title", "내 양도 게시글 목록 조회");
+		model.addAttribute("myTransferBoardList", myTransferBoardList);
 		return "customer/myPage/myTransferBoardListView";
 	}
 	

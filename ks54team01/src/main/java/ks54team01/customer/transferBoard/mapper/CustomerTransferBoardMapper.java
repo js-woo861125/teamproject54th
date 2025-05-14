@@ -10,6 +10,8 @@ import ks54team01.customer.transferBoard.domain.CustomerTransferBoard;
 @Mapper
 public interface CustomerTransferBoardMapper {
 	
+	//
+	List<CustomerTransferBoard> getMyTransferBoardList();
 	
 	// 양도 게시글 총 row 개수 조회
 	int getTransferBoardCount(Map<String, Object> searchParamMap);

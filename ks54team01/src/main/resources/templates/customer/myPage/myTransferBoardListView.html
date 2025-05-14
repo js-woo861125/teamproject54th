@@ -21,6 +21,119 @@
 	
 	<!-- 페이지 삽입공간 -->
 	<th:block layout:fragment="customContents">
-		<h1>멋지네요</h1>
+		<div class="container mb-30">
+			<div class="row">
+				<div class="col-12">
+					<div class="section-title">
+						<h1 class="heading-2 mb-40">내 양도 게시글</h1>
+					</div>
+					<div class="shop-product-fillter">
+						<div class="totall-product">
+							<h5 class="text-body">
+								내가 쓴 글
+								<span class="text-brand">5</span> 
+								<span>개</span>
+							</h5>
+						</div>
+					</div>
+					<div class="row product-grid">
+						<th:block th:if="${!#lists.isEmpty(myTransferBoardList)}"
+								  th:each="l : ${myTransferBoardList}">
+							<div class="col-lg-6 col-md-4 col-12 col-sm-6">
+								<div class="product-cart-wrap mb-30">
+									<div class="product-img-action-wrap">
+										<div class="product-img product-img-zoom">
+											<a th:href="@{/customer/transferBoard/transferBoardDetail(transferBoardNum=${l.transferBoardNum})}">
+												<img class="default-img"
+												th:src="@{'/user/assets/imgs/shop/' + ${l.productInfo.productsImage}}"
+												alt="" />
+											</a>
+										</div>
+									</div>
+									<div class="product-content-wrap">
+										<div class="product-category d-flex justify-content-between">
+											<a th:text="${l.productInfoCategory.smCategory}" href="shop-grid-right.html">TV</a>
+											<div class="dropdown">
+		                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+		                                        <div class="dropdown-menu">
+		                                            <button class="dropdown-item" type="submit">게시글 삭제</button>
+		                                        </div>
+	                                    	</div>
+										</div>
+										<h2 th:text="${l.transferTitle}">
+											<a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a>
+										</h2>
+										<div>
+											<span th:text="${l.customerMember.custName}" class="font-small text-muted">작성자
+												<a href="vendor-details-1.html">우에하라 아유무</a>
+											</span>
+										</div>
+										<div class="product-card-bottom">
+											<div class="product-price">
+												<span>💸월렌탈료</span> 
+												<span th:text="|₩${#numbers.formatInteger(l.rentalFee, 3, 'COMMA')}">85,000원</span>
+											</div>
+										</div>
+										<div class="product-card-bottom">
+											<div class="product-price">
+												<span>💰지원금</span> 
+												<span th:text="|₩${l.individualGrants >= 1000 ? #numbers.formatInteger(l.individualGrants, 3, 'COMMA') : l.individualGrants}">1,000원</span>
+											</div>
+										</div>
+										<div class="product-card-bottom">
+											<p>등록일</p>
+											<p th:text="${l.registerDate}">2025-04-09</p>
+											<div></div>
+											<th:block th:switch="${l.transferRentalProcsssingStatus}">
+												<span th:case="${'2.양도계약진행'}" class="stock-status in-stock">
+													진행중 </span>
+												<span th:case="${'3.양도계약완료'}" class="stock-status out-stock">
+													마감 </span>
+											</th:block>
+										</div>
+									</div>
+								</div>
+							</div>
+						</th:block>
+						<!-- <div th:if="${contentRowCount < 1}"
+							 class="mt-100" style="text-align: center;">
+							<p>게시글이 없습니다.</p>	
+						</div> -->
+					</div>
+					<!-- <div class="pagination-area mt-30 mb-50">
+						<nav aria-label="Page navigation example">
+							<ul class="pagination justify-content-center">
+								이전페이지 이동
+								<li id="prev-page" class="page-item" th:classappend="${startPageNum < 10} ? 'disabled'">
+									<a class="page-link" th:classappend="${startPageNum < 10} ? 'bg-white'"
+										th:href="@{/customer/transferBoard/transferBoardList(currentPage=${startPageNum - 1})}">
+										<i class="material-icons md-first_page"></i>
+									</a>
+								</li>
+								페이지 이동 
+								<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}"
+										  th:if="${contentRowCount > 0}">
+									<li class="page-item"
+										th:classappend="${num eq currentPage} ? 'active disabled'">
+										<a class="page-link page-num"
+										   href="#"
+										   th:text="${num < 10 ? '0' + num : num}"
+										   th:data-current-Page="${num}">01</a>
+									</li>
+								</th:block>
+								
+								다음페이지 이동
+								<li id="next-page" class="page-item" th:classappend="${(startPageNum + 10) > lastPage} ? 'disabled'">
+									<a class="page-link" th:classappend="${(startPageNum + 10) > lastPage} ? 'bg-white'"
+									   th:href="@{/customer/transferBoard/transferBoardList(currentPage=${endPageNum + 1})}">
+									   <i class="material-icons md-last_page"></i>
+									</a>
+								</li>
+							</ul>
+						</nav>
+					</div> -->
+				</div>
+			</div>
+		</div>
 	</th:block> 
 </html>
