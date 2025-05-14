@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<div class="page-content pt-150 pb-150" th:fragment="myPageAsideFragment">
+    	<div class="container" th:fragment="myPageAsideFragment">
+	        <div class="row">
+	            <div class="col-lg-10 m-auto">
+	                <div class="row">
+	                    <div class="col-md-3">
+	                        <div class="dashboard-menu">
+	                            <ul class="nav flex-column" role="tablist">
+	                                <li class="nav-item">
+	                                    <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="dashboard" aria-selected="false"><i class="fi-rs-settings-sliders mr-10"></i>내 프로필</a>
+	                                </li>
+	                                <li class="nav-item">
+	                                    <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>주문내역</a>
+	                                </li>
+	                                <li class="nav-item">
+	                                    <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rs-shopping-cart-check mr-10"></i>결제/배송지관리</a>
+	                                </li>
+	                                <li class="nav-item">
+									    <a class="nav-link" data-bs-toggle="collapse" href="#postSubmenu" role="button" aria-expanded="false" aria-controls="postSubmenu">
+									        <i class="fi-rs-marker mr-10"></i>게시글관리
+									    </a>
+	                             		<div class="collapse" id="postSubmenu">
+										    <ul class="nav flex-column ms-4">
+										        <li class="nav-item">
+										            <a class="nav-link" th:href="@{/customer/transferBoard/myTransferBoardList}">양도</a>
+										        </li>
+										        <li class="nav-item">
+										            <a class="nav-link" th:href="@{#}">>양수</a>
+										        </li>
+										    </ul>
+										</div>
+									</li>
+	                                <li class="nav-item">
+	                                    <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="fi-rs-user mr-10"></i>계약</a>
+	                                </li>
+	                                <li class="nav-item">
+	                                    <a class="nav-link" th:href="@{/customer/login/memberLogin}"><i class="fi-rs-sign-out mr-10"></i>Logout</a>
+	                                </li>
+	                            </ul>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+   		</div>
+	</div>
+</html>

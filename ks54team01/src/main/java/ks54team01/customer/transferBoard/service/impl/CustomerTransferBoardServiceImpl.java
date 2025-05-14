@@ -39,7 +39,8 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	 */
 	@Override
 	public PageInfo<CustomerTransferBoard> getTransferBoardList(Map<String, Object> searchParamMap) {
-		// 마지막 페이지를 구하기 위해 전체 행의 개수 조회
+		
+		// 전체 행 개수 조회
 		int contentRowCount = customerTransferBoardMapper.getTransferBoardCount(searchParamMap);
 		
 		List<CustomerTransferBoard> transferBoardList = customerTransferBoardMapper.getTransferBoardList(searchParamMap);
