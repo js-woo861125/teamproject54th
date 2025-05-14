@@ -20,6 +20,10 @@
 		<result column="rental_end_date" 				property="rentEndDate" />
 		<result column="rental_cancel_date" 			property="rentCancelDate" />
 		<result column="contract_date" 					property="contDate" />
+		
+		
+		
+		
 	</resultMap>
 
 

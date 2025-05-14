@@ -2,9 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 	<!-- 관리자페이지 aside 메뉴 : 2단메뉴 -->
 	<aside class="navbar-aside" id="offcanvas_aside" th:fragment="asideFragment">
-		<div class="aside-top">
-		    <a th:href="@{/admin/}" class="brand-wrap">
-		        <img th:src="@{/manage/assets/imgs/theme/logo.svg}" class="logo" alt="Nest Dashboard" />
+		<div class="aside-top justify-content-center">
+		    <a th:href="@{/admin}" class="brand-wrap ">
+		        <img th:src="@{/manage/assets/imgs/theme/logo.png}" class="logo" alt="Nest Dashboard" />
 		    </a>
 		</div>
 		<nav>
@@ -62,7 +62,7 @@
 		                <span class="text">렌탈계약 관리</span>
 		            </a>
 		            <div class="submenu">
-		                <a th:href="@{#}">렌탈계약 목록</a>
+		                <a th:href="@{/admin/contract/contractList }">렌탈계약 목록</a>
 		                <a th:href="@{#}">위약금 조회</a>
 		                <a th:href="@{#}">납입상태 조회</a>
 		            </div>
