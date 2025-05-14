@@ -1,6 +1,5 @@
 package ks54team01.enterprise.payment.domain;
 
-import ks54team01.admin.delivery.domain.AdminCustomer;
 import ks54team01.admin.payment.domain.AdminEntCeo;
 import lombok.Data;
 
@@ -25,5 +24,9 @@ public class EnterprisePayment {
 	private String payStatus;
 	private String revDate;
 	
-	private AdminCustomer customerInfo;
+	private String custNm;
+	
+
+	
+	private String prodNm;
 }
