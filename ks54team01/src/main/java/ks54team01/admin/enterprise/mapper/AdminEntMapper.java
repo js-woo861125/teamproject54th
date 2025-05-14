@@ -13,6 +13,9 @@ public interface AdminEntMapper {
 	// 거래처 목록 조회
 	List<AdminEntList> getEntList();
 	
+	void updateContractStatusToExpired(String ceoCode);
+	void updateContractStatusToActive(String ceoCode);
+	
 	// 입점업체 상세 조회
 	AdminEntDetail getEntDetail(String ceoCode);
 	
