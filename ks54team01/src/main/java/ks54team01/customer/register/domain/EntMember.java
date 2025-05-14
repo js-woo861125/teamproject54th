@@ -1,15 +1,26 @@
 package ks54team01.customer.register.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class EntMember {
-	// 공통
+@NoArgsConstructor
+@AllArgsConstructor 
+public class EntMember{
+	
+	public EntMember(CommonMember common) {
+        this.memberId = common.getMemberId();
+        this.memberPw = common.getMemberPw();
+        this.memberType = common.getMemberType();
+    }
+	
+	// 공통등록정보
 	private String memberId;
 	private String memberPw;
 	private String memberType;
 	
-	// ent_ceo
+	// 대표 (ent_ceo 테이블)
 	private String entCeoId;
 	private String entCeoNo;
 	private String entCeoName;
@@ -21,16 +32,11 @@ public class EntMember {
 	private String entBank;
 	private String entBankNum;
 	private String entCeoPhone;
-	private String entCeoregisterDate;
-	private String entCeorevisionDate;
-
-	// ent_emp
+	
+	// 직원 (ent_emp 테이블)
 	private String entEmpId;
 	private String entPosition;
 	private String entEmpName;
 	private String entEmpEmail;
 	private String entEmpPhone;
-	private String entEmpregisterDate;
-	private String entEmprevisionDate;
-	
 }
