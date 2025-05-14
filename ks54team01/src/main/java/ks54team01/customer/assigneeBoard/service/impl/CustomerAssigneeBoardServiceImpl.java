@@ -22,6 +22,16 @@ public class CustomerAssigneeBoardServiceImpl implements CustomerAssigneeBoardSe
 	private final CustomerAssigneeBoardMapper customerAssigneeBoardMapper;
 	
 	/**
+	 * 내 양수 게시글 목록 조회
+	 */
+	@Override
+	public List<CustomerAssigneeBoard> getMyAssigneeBoardList() {
+		List<CustomerAssigneeBoard> myAssigneeBoardList = customerAssigneeBoardMapper.getMyAssigneeBoardList();
+		return myAssigneeBoardList;
+	}
+	
+	
+	/**
 	 * 양수게시글상세조회
 	 */
 	@Override
