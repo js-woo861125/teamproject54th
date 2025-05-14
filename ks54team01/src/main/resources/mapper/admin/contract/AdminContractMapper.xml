@@ -20,7 +20,8 @@
 		<result column="rental_end_date" 				property="rentEndDate" />
 		<result column="rental_cancel_date" 			property="rentCancelDate" />
 		<result column="contract_date" 					property="contDate" />
-		
+		<result column="ent_nm"							property="entName" />
+		<result column="products_nm"					property="productName" />
 		
 		
 		
@@ -30,18 +31,25 @@
 	<select id="getSearchContractList" parameterType="string" resultMap="contractResultMap">
 		/* 입점업체과 고객 렌탈 계약정보 조회 */
 		select
-			cust_id,
-			ent_ceo_no,
-			sell_products_no,
-			rental_contract_status,
-			contract_quantity,
-			contract_period,
-			rental_start_date,
-			rental_end_date,
-			rental_cancel_date,
-			contract_date
+			rc.cust_id,
+			rc.ent_ceo_no,
+			ec.ent_nm ,
+			rc.sell_products_no,
+			p.products_nm ,
+			rc.rental_contract_status,
+			rc.contract_quantity,
+			rc.contract_period,
+			rc.rental_start_date,
+			rc.rental_end_date,
+			rc.rental_cancel_date,
+			rc.contract_date
 		from
-			rental_contract
+			rental_contract rc LEFT JOIN  ent_ceo ec 
+			ON rc.ent_ceo_no = ec.ent_ceo_no
+			INNER JOIN sell_products sp 
+			ON rc.sell_products_no = sp.sell_products_no
+			INNER JOIN products p 
+			ON sp.products_no = p.products_no
 		<where>
 			<if test="searchValue != null and searchValue !=''">
 				${searchKey} LIKE CONCAT('%', #{searchValue}, '%');
@@ -54,21 +62,27 @@
 	<select id="getContractList" parameterType="string" resultMap="contractResultMap">
 		/* 입점업체과 고객 렌탈 계약정보 조회 */
 		select
-			cust_id,
-			ent_ceo_no,
-			sell_products_no,
-			rental_contract_status,
-			contract_quantity,
-			contract_period,
-			rental_start_date,
-			rental_end_date,
-			rental_cancel_date,
-			contract_date
+			rc.cust_id,
+			rc.ent_ceo_no,
+			ec.ent_nm ,
+			rc.sell_products_no,
+			p.products_nm ,
+			rc.rental_contract_status,
+			rc.contract_quantity,
+			rc.contract_period,
+			rc.rental_start_date,
+			rc.rental_end_date,
+			rc.rental_cancel_date,
+			rc.contract_date
 		from
-			rental_contract;
+			rental_contract rc LEFT JOIN  ent_ceo ec 
+			ON rc.ent_ceo_no = ec.ent_ceo_no
+			INNER JOIN sell_products sp 
+			ON rc.sell_products_no = sp.sell_products_no
+			INNER JOIN products p 
+			ON sp.products_no = p.products_no;
+	
 	</select>
-	
-	
 	
 	
 </mapper>

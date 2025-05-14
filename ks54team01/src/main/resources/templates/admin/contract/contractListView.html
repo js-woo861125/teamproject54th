@@ -64,6 +64,7 @@
 									<th class="align-middle" scope="col">상호</th>
 									<th class="align-middle" scope="col">주문자아이디</th>
 									<th class="align-middle" scope="col">상품코드</th>
+									<th class="align-middle" scope="col">상품명</th>	
 									<th class="align-middle" scope="col">계약상태</th>
 									<th class="align-middle" scope="col">수량</th>
 									<th class="align-middle" scope="col">렌탈기간</th>
@@ -77,9 +78,10 @@
 								<tr th:if="${!#lists.isEmpty(ContractList)}" th:each="l : ${ContractList}">
 									
 									<td th:text="${l.entCeoNo}">입점업체코드 </td>
-									<td th:text="${l.entNm}">상호 </td>
+									<td th:text="${l.entName}">상호 </td>
 									<td th:text="${l.custId}">주문자아이디</td>
 									<td th:text="${l.sellProdNo}">상품코드</td>
+									<td th:text="${l.productName}">상품코드</td>
 									<td th:text="${l.rentContStatus}">계약상태</td>
 									<td th:text="${l.contQuantity}">수량</td>
 									<td th:text="${l.contPeriod}">렌탈기간</td>
