@@ -23,11 +23,10 @@
 		<result column="payment_completed_date" 	property="payCompDate" />
 		<result column="payment_status" 			property="payStatus" />
 		<result column="revision_date" 				property="revDate" />
+		<result column="products_nm" 				property="prodNm" />
 		
-		<association property="customerInfo" 	javaType="AdminCustomer">
-			<id 	column="cust_id"			property="custId"/>
-			<result column="cust_nm"			property="custNm"/>
-		</association>
+		<result column="cust_nm"					property="custNm"/>
+	
 			
 	</resultMap>
 	
@@ -35,7 +34,7 @@
 	<select id="getSearchPaymentList" parameterType="string" resultMap="paymentResultMap">
 		SELECT
 			c.cust_nm,
-			p.sell_products_no,
+			pd.products_nm,
 			p.payment_count,
 			p.total_price,
 			p.rental_contract_no,
@@ -44,6 +43,10 @@
 		FROM
 			payment p
 		INNER JOIN customer c USING(cust_id)
+		inner join sell_products sp
+		on sp.sell_products_no = p.sell_products_no
+		inner join products pd
+		on pd.products_no = sp.products_no
 		<where>
 			p.rental_contract_no != '일시불판매'
 			<if test="searchValue != null and searchValue != ''">
@@ -55,7 +58,7 @@
 		UNION ALL
 		SELECT
 			c.cust_nm,
-			p.sell_products_no,
+			pd.products_nm,
 			p.payment_count,
 			p.total_price,
 			p.rental_contract_no,
@@ -64,6 +67,10 @@
 		FROM
 			payment p
 		INNER JOIN customer c USING(cust_id)
+		inner join sell_products sp
+		on sp.sell_products_no = p.sell_products_no
+		inner join products pd
+		on pd.products_no = sp.products_no
 		<where>
 			p.rental_contract_no = '일시불판매'
 			<if test="searchValue != null and searchValue != ''">
@@ -79,7 +86,7 @@
 	<select id="getPaymentList" resultMap="paymentResultMap">
 		SELECT
 			c.cust_nm,
-			p.sell_products_no,
+			pd.products_nm,
 			p.payment_count,
 			p.total_price,
 			p.rental_contract_no,
@@ -88,6 +95,10 @@
 		FROM
 			payment p
 		INNER JOIN customer c USING(cust_id)
+		inner join sell_products sp
+		on sp.sell_products_no = p.sell_products_no
+		inner join products pd
+		on pd.products_no = sp.products_no
 		WHERE
 			p.rental_contract_no != '일시불판매'
 		GROUP BY
@@ -95,7 +106,7 @@
 		UNION ALL
 		SELECT
 			c.cust_nm,
-			p.sell_products_no,
+			pd.products_nm,
 			p.payment_count,
 			p.total_price,
 			p.rental_contract_no,
@@ -104,6 +115,10 @@
 		FROM
 			payment p
 		INNER JOIN customer c USING(cust_id)
+		inner join sell_products sp
+		on sp.sell_products_no = p.sell_products_no
+		inner join products pd
+		on pd.products_no = sp.products_no
 		WHERE
 			p.rental_contract_no = '일시불판매'
 		ORDER BY

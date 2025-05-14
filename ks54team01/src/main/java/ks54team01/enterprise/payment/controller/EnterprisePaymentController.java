@@ -21,6 +21,14 @@ public class EnterprisePaymentController {
 	private final EnterprisePaymentService enterprisePaymentService;
 	
 	
+	
+	@GetMapping("/paymentListDetail")
+	public String getPaymentListDetail(Model model) {
+		
+		return "enterprise/payment/paymentListDetailView";
+	}
+	
+	
 	@GetMapping("/searchPaymentList")
 	public String getSearchPaymentList(String searchKey, String searchValue, Model model) {
 		
