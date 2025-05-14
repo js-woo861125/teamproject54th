@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="content">
+		<div class="content-header">
+            <div>
+                <h2 class="content-title card-title" th:text="${title}"></h2>
+            </div>
+        </div>
+        <div class="card mb-4 col-8">
+        	<form id="modifyProductInfoForm" th:action="@{/admin/productInfo/modifyBrand}" method="post">	
+                 <div class="card-body">
+	           		 <div class="col-12">
+                        <div class="row gx-4">
+                            <aside class="col-lg-3 border-end">
+                                <nav class="nav nav-pills flex-column mb-4">
+                                    <a class="nav-link" th:href="@{/admin/productInfo/addCategory}">카테고리</a>
+                                    <a class="nav-link active" aria-current="page" th:href="@{/admin/productInfo/addBrand}">브랜드</a>
+                                    <a class="nav-link" th:href="@{/admin/productInfo/addItem}">품목</a>
+                                    <a class="nav-link" th:href="@{/admin/productInfo/addModel}">모델</a>
+                                    <a class="nav-link" th:href="@{/admin/productInfo/addBenefit}">전체혜택</a>
+                                    <a class="nav-link" th:href="@{/admin/productInfo/addCategorySpec}">카테고리별/상세스펙</a>
+                                    <a class="nav-link" th:href="@{/admin/productInfo/addModelSpec}">모델별/상세스펙</a>
+                                </nav>
+                            </aside>
+                            <div class="col-lg-9">
+                                <section class="content-body p-xl-4">
+                                    <form id="modifyProductInfoForm" th:action="@{/admin/productInfo/modifyBrand}" method="post">
+                                        <div class="col-12">
+                                        	<div class="mb-4">
+	                                           <label class="form-label fs-6" for="managerId">관리자아이디</label>
+	                                           <div class="col-lg-12">
+	                                               <input type="text" id="managerId" name="managerId" 
+	                                               		  class="form-control" placeholder="아이디를 입력해주세요" />
+	                                           </div>
+	                                           <!-- col.// -->
+	                                        </div>
+	                                        <div class="mb-4">
+	                                           <label class="form-label fs-6" for="brandName">브랜드명</label>
+	                                           <div class="col-lg-12">
+	                                               <input type="text" id="brandName" name="brandName" 
+	                                               		  class="form-control" placeholder="브랜드명을 입력해주세요" />
+	                                           </div>
+	                                           <!-- col.// -->
+	                                        </div>																		
+                                        </div>
+                                        <!-- row.// -->                      
+                                        <br/>
+                                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+						                    <div class="col-md-2 col-2 ms-auto">
+						                        <button type="submit" id="modifyBrandBtn" 
+						                        		class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >수정</button>
+						                    </div>
+						                    <div class="col-md-2 col-2">
+						                        <button type="reset" onclick="location.href='/admin/productInfo/brandList'"
+						                        		class="btn btn-warning w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >수정취소</button>
+						                    </div>
+						                </div>
+                                    </form>
+                                </section>
+                                <!-- content-body .// -->
+                            </div>
+                            <!-- col.// -->
+                        </div>
+                        <!-- row.// -->
+                    </div>
+                    <!-- card body end// -->
+                 </div>
+        	</form>
+        </div>
+	</th:block>
+</html>

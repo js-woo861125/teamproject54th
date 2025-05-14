@@ -25,14 +25,81 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	// DI 의존성 주입
 	private final AdminProductInfoMapper adminProductInfoMapper;
 	
-	// 상품정보 카테고리 수정
+	// 상품정보 수정
+	@Override
+	public void modifyCategorySpec(ProductInfoCategorySpec productInfoCategorySpec) {
+		
+		adminProductInfoMapper.modifyCategorySpec(productInfoCategorySpec);
+	}
+	
+	@Override
+	public void modifyBenefit(ProductInfoBenefit productInfoBenefit) {
+		
+		adminProductInfoMapper.modifyBenefit(productInfoBenefit);
+	}
+	
+	@Override
+	public void modifyModel(ProductInfoModel productInfoModel) {
+		
+		adminProductInfoMapper.modifyModel(productInfoModel);
+	}
+	
+	@Override
+	public void modifyItem(ProductInfoItem productInfoItem) {
+		
+		adminProductInfoMapper.modifyItem(productInfoItem);
+	}
+	
+	@Override
+	public void modifyBrand(ProductInfoBrand productInfoBrand) {
+		
+		adminProductInfoMapper.modifyBrand(productInfoBrand);
+	}
+	
 	@Override
 	public void modifyCategory(ProductInfoCategory productInfoCategory) {
 		
 		adminProductInfoMapper.modifyCategory(productInfoCategory);
 	}
 	
-	// 상품정보 카테고리별/상세스펙 등록
+	// 상품정보 조회
+	@Override
+	public ProductInfoCategorySpec getCategorySpecInfoByNo(String categorySpecyNo) {
+		
+		return adminProductInfoMapper.getCategorySpecInfoByNo(categorySpecyNo);
+	}
+	
+	@Override
+	public ProductInfoBenefit getBenefitInfoByNo(String benefitNo) {
+		
+		return adminProductInfoMapper.getBenefitInfoByNo(benefitNo);
+	}
+	
+	@Override
+	public ProductInfoModel getModelInfoByNo(String modelNo) {
+		
+		return adminProductInfoMapper.getModelInfoByNo(modelNo);
+	}
+	
+	@Override
+	public ProductInfoItem getItemInfoByNo(String itemNo) {
+		
+		return adminProductInfoMapper.getItemInfoByNo(itemNo);
+	}
+	
+	@Override
+	public ProductInfoBrand getBrandInfoByNo(String brandNo) {
+		
+		return adminProductInfoMapper.getBrandInfoByNo(brandNo);
+	}
+	
+	@Override
+	public ProductInfoCategory getCategoryInfoByNo(String categoryNo) {
+		
+		return adminProductInfoMapper.getCategoryInfoByNo(categoryNo);
+	}
+	
+	// 상품정보 등록
 	@Override
 	public void addCategorySpec(ProductInfoCategorySpec ProductInfoCategorySpec) {
 		log.info("상품등록 전 : {}", ProductInfoCategorySpec);
@@ -41,8 +108,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		log.info("상품등록 후 : {}", ProductInfoCategorySpec);
 	}
-	
-	// 상품정보 전체혜택 등록
+
 	@Override
 	public void addBenefit(ProductInfoBenefit productInfoBenefit) {
 		
@@ -52,8 +118,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		log.info("상품등록 후 : {}", productInfoBenefit);
 	}
-	
-	// 상품정보 모델 등록
+
 	@Override
 	public void addModel(ProductInfoModel productInfoModel) {
 		
@@ -63,8 +128,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		log.info("상품등록 후 : {}", productInfoModel);
 	}
-	
-	// 상품정보 품목 등록
+
 	@Override
 	public void addItem(ProductInfoItem productInfoItem) {
 		
@@ -74,8 +138,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		log.info("상품등록 후 : {}", productInfoItem);
 	}
-	
-	// 상품정보 브랜드 등록
+
 	@Override
 	public void addBrand(ProductInfoBrand productInfoBrand) {
 		
@@ -86,7 +149,6 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		log.info("상품등록 후 : {}", productInfoBrand);
 	}
 	
-	// 상품정보 카테고리 등록
 	@Override
 	public void addCategory(ProductInfoCategory productInfoCategory) {
 		
@@ -97,7 +159,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		log.info("상품등록 후 : {}", productInfoCategory);
 	}
 	
-	// 상품정보 카테고리별/상세스펙 목록 조회
+	// 상품정보 목록 조회
 	@Override
 	public List<ProductInfoCategorySpec> getCategorySpecList() {
 		
@@ -105,8 +167,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		return categorySpecList;
 	}
-	
-	// 상품정보 전체혜택 목록 조회
+
 	@Override
 	public List<ProductInfoBenefit> getBenefitList() {
 		
@@ -114,8 +175,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		return benefitList;
 	}
-	
-	// 상품정보 모델 목록 조회
+
 	@Override
 	public List<ProductInfoModel> getModelList() {
 		
@@ -123,8 +183,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		return modelList;
 	}
-	
-	// 상품정보 품목 목록 조회
+
 	@Override
 	public List<ProductInfoItem> getItemList() {
 		
@@ -132,8 +191,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		return itemList;
 	}
-	
-	// 상품정보 브랜드 목록 조회
+
 	@Override
 	public List<ProductInfoBrand> getBrandList() {
 		
@@ -141,8 +199,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		return brandList;
 	}
-	
-	// 상품정보 카테고리 목록 조회
+
 	@Override
 	public List<ProductInfoCategory> getCategoryList() {
 		
