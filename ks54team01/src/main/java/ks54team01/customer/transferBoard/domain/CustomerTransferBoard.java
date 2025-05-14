@@ -2,8 +2,8 @@ package ks54team01.customer.transferBoard.domain;
 
 import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.customer.delivery.domain.CustomerDeliveryList;
-import ks54team01.customer.register.domain.CustomerMember;
 import ks54team01.customer.product.domain.CustomerProduct;
+import ks54team01.customer.register.domain.CustomerMember;
 import lombok.Data;
 
 @Data

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <meta charset="utf-8" />
+        <title th:text="${title}">렌탈</title>
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" th:href="@{/user/assets/imgs/theme/favicon.svg}" />
+        <!-- Template CSS -->
+        <link th:href="@{/user/assets/css/plugins/slider-range.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/user/assets/css/main.css?v=5.6}" rel="stylesheet" type="text/css" />        
+    </head>
+
+    <body>
+    	<!--/* header start */-->
+	    <header class="header-area header-style-1 header-height-2">
+	        <div class="mobile-promotion">
+	            <span>Grand opening, <strong>up to 15%</strong> off all items. Only <strong>3 days</strong> left</span>
+	        </div>
+	        <div class="header-top header-top-ptb-1 d-none d-lg-block">
+	            <div class="container">
+	                <div class="row justify-content-end align-items-center">
+	                    <div class="col-xl-3 col-lg-4">
+	                        <div class="header-info">
+	                            <ul class="justify-content-end">
+	                                <li><a th:href="@{/customer/register/memberRegister}">회원가입</a></li>
+	                                <li><a th:href="@{/customer/login/memberLogin}">로그인</a></li>
+	                                <!-- <li>
+	                                    <a class="language-dropdown-active" href="#"><i class="fi-rs-angle-small-down"></i> USD</a>
+	                                    <ul class="language-dropdown">
+	                                        <li>
+	                                            <a href="#"><img src="assets/imgs/theme/flag-fr.png" alt="" />INR</a>
+	                                        </li>
+	                                        <li>
+	                                            <a href="#"><img src="assets/imgs/theme/flag-dt.png" alt="" />MBP</a>
+	                                        </li>
+	                                        <li>
+	                                            <a href="#"><img src="assets/imgs/theme/flag-ru.png" alt="" />EU</a>
+	                                        </li>
+	                                    </ul>
+	                                </li> -->
+	                            </ul>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	        <div th:replace="~{customer/fragments/header_main :: headerMainFragment}"></div>
+	        <div th:replace="~{customer/fragments/header_menu :: headerMenuFragment}"></div>
+	    </header>
+        <div th:replace="~{customer/fragments/header_menu_mobile :: headerMenuMobileFragment}"></div>
+	    <!--/* header end */-->
+	    
+	    <main class="main pages">
+			<div class="page-content pt-150 pb-150">
+	            <div class="container">
+	                <div class="row">
+	                    <div class="col-lg-10 m-auto">
+	                        <div class="row">
+	                            <div class="col-md-3">
+								    <div th:replace="~{customer/fragments/myPageAside :: myPageAsideFragment}"></div>
+	                            </div>
+	                            <div class="col-md-9">
+							    	<!--/* contents start */-->
+							    	<th:block layout:fragment="customContents"></th:block>
+							    	<!--/* contents end */-->
+	                            </div>
+                            </div>
+                         </div>
+                     </div>
+                </div>
+           </div>
+		    	
+		    	
+		    	
+	    </main>
+	    
+	    <!--/* footer start */-->
+	    <footer th:replace="~{customer/fragments/footer :: footerFragment}"></footer>
+	    <!--/* footer end */-->
+	    
+	    <!-- Preloader Start -->
+	    <!-- <div id="preloader-active">
+	        <div class="preloader d-flex align-items-center justify-content-center">
+	            <div class="preloader-inner position-relative">
+	                <div class="text-center">
+	                    <img th:src="@{/user/assets/imgs/theme/loading.gif}" alt="" />
+	                </div>
+	            </div>
+	        </div>
+	    </div>  -->  
+        <!-- Vendor JS-->
+		<script th:src="@{/user/assets/js/vendor/modernizr-3.6.0.min.js}"></script>
+		<script th:src="@{/user/assets/js/vendor/jquery-3.6.0.min.js}"></script>
+		<script th:src="@{/user/assets/js/vendor/jquery-migrate-3.3.0.min.js}"></script>
+		<script th:src="@{/user/assets/js/vendor/bootstrap.bundle.min.js}"></script>
+		<script th:src="@{/user/assets/js/plugins/slick.js}"></script>
+		<script th:src="@{/user/assets/js/plugins/jquery.syotimer.min.js}"></script>
+		<script th:src="@{/user/assets/js/plugins/wow.js}"></script>
+		<script th:src="@{/user/assets/js/plugins/slider-range.js}"></script>
+		<script th:src="@{/user/assets/js/plugins/perfect-scrollbar.js}"></script>
+		<script th:src="@{/user/assets/js/plugins/magnific-popup.js}"></script>
+		<script th:src="@{/user/assets/js/plugins/select2.min.js}"></script>
+		<script th:src="@{/user/assets/js/plugins/waypoints.js}"></script>
+		<script th:src="@{/user/assets/js/plugins/counterup.js}"></script>
+		<script th:src="@{/user/assets/js/plugins/jquery.countdown.min.js}"></script>
+		<script th:src="@{/user/assets/js/plugins/images-loaded.js}"></script>
+		<script th:src="@{/user/assets/js/plugins/isotope.js}"></script>
+		<script th:src="@{/user/assets/js/plugins/scrollup.js}"></script>
+		<script th:src="@{/user/assets/js/plugins/jquery.vticker-min.js}"></script>
+		<script th:src="@{/user/assets/js/plugins/jquery.theia.sticky.js}"></script>
+		<script th:src="@{/user/assets/js/plugins/jquery.elevatezoom.js}"></script>
+		
+		<!-- Template  JS -->
+		<script th:src="@{/user/assets/js/main.js?v=5.6}"></script>
+		<script th:src="@{/user/assets/js/shop.js?v=5.6}"></script>
+        
+        <!--/* js 파일 삽입 공간 */-->
+       	<th:block layout:fragment="jsFile"></th:block>
+       	<!--/* 스크립트 작성 공간 */-->
+       	<th:block layout:fragment="jsScript"></th:block>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

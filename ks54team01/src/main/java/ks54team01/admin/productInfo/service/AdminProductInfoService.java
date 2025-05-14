@@ -11,9 +11,51 @@ import ks54team01.admin.productInfo.domain.ProductInfoModel;
 
 public interface AdminProductInfoService {
 	
+	/**
+	 * 상품정보 수정
+	 */
+	// 상품정보 카테고리별/상세스펙 수정
+	void modifyCategorySpec(ProductInfoCategorySpec productInfoCategorySpec);
+	
+	// 상품정보 전체혜택 수정
+	void modifyBenefit(ProductInfoBenefit productInfoBenefit);
+	
+	// 상품정보 모델 수정
+	void modifyModel(ProductInfoModel productInfoModel);
+	
+	// 상품정보 품목 수정
+	void modifyItem(ProductInfoItem productInfoItem);
+	
+	// 상품정보 브랜드 수정
+	void modifyBrand(ProductInfoBrand productInfoBrand);
+	
 	// 상품정보 카테고리 수정
 	void modifyCategory(ProductInfoCategory productInfoCategory);
 	
+	/**
+	 * 상품정보 조회
+	 */
+	// 상품정보 카테고리별/상세스펙 조회
+	ProductInfoCategorySpec getCategorySpecInfoByNo(String categorySpecyNo);
+	
+	// 상품정보 전체혜택 조회
+	ProductInfoBenefit getBenefitInfoByNo(String benefitNo);
+	
+	// 상품정보 모델 조회
+	ProductInfoModel getModelInfoByNo(String modelNo);
+	
+	// 상품정보 품목 조회
+	ProductInfoItem getItemInfoByNo(String itemNo);
+	
+	// 상품정보 브랜드 조회
+	ProductInfoBrand getBrandInfoByNo(String brandNo);
+	
+	// 상품정보 카테고리 조회
+	ProductInfoCategory getCategoryInfoByNo(String categoryNo);
+	
+	/**
+	 * 상품정보 등록
+	 */
 	// 상품정보 카테고리별/상세스펙 등록
 	void addCategorySpec(ProductInfoCategorySpec ProductInfoCategorySpec);
 	
@@ -32,6 +74,9 @@ public interface AdminProductInfoService {
 	// 상품정보 카테고리 등록
 	void addCategory(ProductInfoCategory productInfoCategory);
 	
+	/**
+	 * 상품정보 목록 조회
+	 */
 	// 상품정보 카테고리별/상세스펙 목록 조회
 	List<ProductInfoCategorySpec> getCategorySpecList();
 	
