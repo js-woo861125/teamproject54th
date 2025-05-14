@@ -21,16 +21,14 @@ public class AdminEntController {
 	private final AdminEntListService adminEntListService;
 	
 	@GetMapping("/List")
-	// 입점업체 조회
+	// 입점업체 목록 조회 + 계약 상태 자동 갱신
 	public String getEntList(Model model) {
-		
-		List<AdminEntList> entList = adminEntListService.getEntList();
-	    
-		model.addAttribute("title", "입점업체 목록");
-		model.addAttribute("entList", entList);
-	    
+	    List<AdminEntList> entList = adminEntListService.getEntList();
+
+	    model.addAttribute("title", "입점업체 목록");
+	    model.addAttribute("entList", entList);
+
 	    return "admin/enterprise/enterpriseListView";
-	    
 	}
 	
 	@GetMapping("/searchEnterprise")
