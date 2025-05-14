@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
+import ks54team01.customer.register.domain.CommonMember;
 import ks54team01.customer.register.domain.CustomerMember;
 import ks54team01.customer.register.domain.EntMember;
 import ks54team01.customer.register.service.RegisterService;
@@ -25,12 +26,13 @@ public class RegisterController {
 	
 	@PostMapping("/entRegister")
 	public String addEntMember(EntMember memberInfo, HttpSession session) {
-	    // 세션에서 memberId 가져오기
-	    CustomerMember sessionMember = (CustomerMember) session.getAttribute("memberInfo");
-	    if (sessionMember != null) {
-	        memberInfo.setMemberId(sessionMember.getMemberId());
-	        memberInfo.setMemberPw(sessionMember.getMemberPw());
-	        memberInfo.setMemberType(sessionMember.getMemberType());
+		// 세션에서 공통등록정보 가져온 후 memberInfo로 저장
+		CommonMember common = (CommonMember) session.getAttribute("memberInfo");
+		
+	    if (common != null) {
+	        memberInfo.setMemberId(common.getMemberId());
+	        memberInfo.setMemberPw(common.getMemberPw());
+	        memberInfo.setMemberType(common.getMemberType());
 	    }
 	    
 	    // 자동 생성된 entCeoNo
@@ -50,14 +52,22 @@ public class RegisterController {
 	}
 	
 	
-	@GetMapping("/entRegister")
+	@GetMapping("/entRegister") 
 	public String getEntRegister(HttpSession session, Model model) {
-		// 세션에서 memberId 가져오기
-		CustomerMember memberInfo = (CustomerMember) session.getAttribute("memberInfo");
-		log.info("전달받은 공통등록 정보: {}", memberInfo);
+		// 세션에서 공통등록정보 가져온 후 CustomerMember로 복사
+		CommonMember common = (CommonMember) session.getAttribute("memberInfo");
+		EntMember ent = new EntMember(common);
+		
+		if (common != null) {
+			ent.setMemberId(common.getMemberId());
+			ent.setMemberPw(common.getMemberPw());
+			ent.setMemberType(common.getMemberType());
+	    }
+		
+		log.info("전달받은 공통등록 정보: {}", ent);
 		
 		model.addAttribute("title", "입점업체");
-		model.addAttribute("memberInfo", memberInfo);
+		model.addAttribute("memberInfo", ent);
 		
 		return "customer/register/entRegisterView";
 		
@@ -66,16 +76,17 @@ public class RegisterController {
 	
 	@PostMapping("/customerRegister")
 	public String addCustomerMember(CustomerMember memberInfo, HttpSession session) {
-	    // 세션에서 memberId 가져오기
-	    CustomerMember sessionMember = (CustomerMember) session.getAttribute("memberInfo");
-	    if (sessionMember != null) {
-	        memberInfo.setMemberId(sessionMember.getMemberId());
-	        memberInfo.setMemberPw(sessionMember.getMemberPw());
+	    // 세션에서 공통등록정보 가져온 후 memberInfo로 저장
+		CommonMember common = (CommonMember) session.getAttribute("memberInfo");
+		
+		if (common != null) {
+			memberInfo.setMemberId(common.getMemberId());
+			memberInfo.setMemberPw(common.getMemberPw());
 	    }
 
 	    log.info("회원 등록 시작: {}", memberInfo);
 
-	    registerService.addBasicMember(memberInfo);
+	    registerService.addCustomerMember(memberInfo);
 
 	    log.info("회원 등록 완료: {}", memberInfo);
 
@@ -85,32 +96,37 @@ public class RegisterController {
 	
 	@GetMapping("/customerRegister")
 	public String getCustomerRegister(HttpSession session, Model model) {
-		// 세션에서 memberId 가져오기
-		CustomerMember memberInfo = (CustomerMember) session.getAttribute("memberInfo");
+		// 세션에서 공통등록정보 가져온 후 CustomerMember로 복사
+		CommonMember common = (CommonMember) session.getAttribute("memberInfo");
 		
-		log.info("전달받은 공통등록 정보: {}", memberInfo);
+		if (common == null) {
+	        return "redirect:/customer/register/memberRegister";
+	    }
+		
+		CustomerMember customer = new CustomerMember(common);
+		
+		log.info("전달받은 공통등록 정보: {}", customer);
 		
 		model.addAttribute("title", "일반/기업회원");
-	    model.addAttribute("memberInfo", memberInfo);
+	    model.addAttribute("customerMemberInfo", customer);
 	    
 		return "customer/register/customerRegisterView";
 	}
 	
 	
 	@PostMapping("/memberRegister")
-	public String submitBasicMemberInfo(@ModelAttribute CustomerMember memberInfo, HttpSession session) {
-		 
-		log.info("전달한 공통등록 정보: {}", memberInfo);
+	public String submitMemberInfo(@ModelAttribute CommonMember commonMember, HttpSession session) {
+		// 세션으로 공통등록정보 전달
+		session.setAttribute("memberInfo", commonMember);
+		log.info("전달한 공통등록 정보: {}", commonMember);
 		
-	    session.setAttribute("memberInfo", memberInfo);
 	    
 	    // 회원 유형에 따른 페이지 이동
-	    if ("customer".equals(memberInfo.getMemberType())) {
-	        return "redirect:/customer/register/customerRegister";
-	    } else if ("입점업체".equals(memberInfo.getMemberType())) {
-	        return "redirect:/customer/register/entRegister";
+		switch (commonMember.getMemberType()) {
+	        case "customer": return "redirect:/customer/register/customerRegister";
+	        case "입점업체대표": return "redirect:/customer/register/entRegister";
+	        default: return "redirect:/error";
 	    }
-	    return "redirect:/error";
 	}
 	
 	
