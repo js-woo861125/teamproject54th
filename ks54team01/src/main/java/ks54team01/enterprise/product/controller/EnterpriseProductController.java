@@ -1,16 +1,22 @@
-package ks54team01.enterprise.prodcut.controller;
+package ks54team01.enterprise.product.controller;
+
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import ks54team01.enterprise.product.domain.EnterpriseProductQuantity;
+import ks54team01.enterprise.product.service.EnterpriseProductService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/enterprise")
 public class EnterpriseProductController {
+	
+	private final EnterpriseProductService enterpriseProductService;
 	
 	@GetMapping("/product/sellProductList")
 	public String sellProductList(Model model) {
@@ -36,4 +42,14 @@ public class EnterpriseProductController {
 		return "enterprise/product/enterpriseMarginRatioView";
 	}
 	
+	@GetMapping("/product/quantityList")
+	public String quantityList(Model model) {
+		
+		List<EnterpriseProductQuantity> quantityList = enterpriseProductService.getQuantityList();
+		
+		model.addAttribute("title", "재고관리");
+		model.addAttribute("quantityList", quantityList);
+		
+		return "enterprise/product/enterpriseQuantityView";
+	}
 }
