@@ -60,12 +60,15 @@
                                 <div class="detail-info pr-30 pl-30">
          	
                                     <span class="stock-status out-stock"> Sale Off </span>
-                                    <h2 class="title-detail" th:text="${productDetail.productsName}">   LG 그램 Pro </h2>
+                                    <h2 class="title-detail" th:text="${productDetail.productsName}"> LG 그램 Pro </h2>
                                     
                                     <div class="clearfix product-price-cover">
-                                        <div class="product-price primary-color float-left">
+                                        <div class="product-price primary-color float-left" 
+                                        th:if="${!#lists.isEmpty(CustomerProduct)}"
+                               			th:each="l : ${CustomerProduct}">
                                         
-                                            <span class="current-price text-brand">2,455,200원</span> | <span> </span>
+                                            <span class="current-price text-brand" th:text="${productDetail.lumpPrice}">2,455,200원</span> <br>
+                                            <span></span>
                                           
                                         </div>
                                     </div>
