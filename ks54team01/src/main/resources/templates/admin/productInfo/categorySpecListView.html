@@ -37,7 +37,7 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr class=text-center>
-                                           		<th>관리자아이디</th>
+                                           		<th>No.</th>
                                                 <th>카테고리별 상세스펙코드</th>
                                                 <th>카테고리</th>
                                                 <th>스펙명</th>
@@ -50,8 +50,8 @@
                                         <tbody>
                                             <tr class=text-center
 				                            	th:if="${!#lists.isEmpty(categorySpecList)}"
-				                          	  	th:each="l : ${categorySpecList}">
-				                          	  	<td th:text="${l.managerId}">managerid1</td>
+				                          	  	th:each="l, index : ${categorySpecList}">
+				                          	  	<td th:text="${index.count}"></td>
                                                 <td th:text="${l.specNo}">spec_1</td>
                                                 <td th:text="${l.categoryInfo.smCategory}">냉장고</td>
                                                 <td th:text="${l.specName}">냉각방식</td>
@@ -66,7 +66,7 @@
                                                     <div class="dropdown">
                                                         <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
                                                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">수정</a>
+                                                            <a class="dropdown-item" th:href="@{/admin/productInfo/modifyCategorySpec(specNo=${l.specNo})}">수정</a>
                                                             <a class="dropdown-item text-danger" href="#">삭제</a>
                                                         </div>
                                                     </div>
