@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{customer/layout/default}">
+
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+	
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+        <div class="container mb-30 mt-50">
+            <div class="row">
+                <div class="col-xl-10 col-lg-12 m-auto">
+                    <div class="mb-50">
+                        <h1 class="heading-2 mb-10">관심 상품</h1>
+                    </div>
+                    <div class="mb-20">
+                        <h5 class="text-body">전체 <span class="text-brand">5</span></h5>
+                    </div>
+                    <div class = "KeepProductAutoCategory_auto_category_wrap__I5_hp mb-20 justify-content-end">
+                        <div class = "KeepProductAutoCategory_list_category__2WYqD">
+                            <div class = "flicking-viewport" style = "user-select: none; -webkit-user-drag: none; touch-action: pan-y;">
+                                <div class="col-lg-2 col-md-3 col-12">
+                                    <select class="form-select">
+                                        <option>전체</option>
+                                        <option>디지털 / 가전</option>
+                                        <option>세탁가전</option>
+                                        <option>냉장가전</option>
+                                        <option>주방가전</option>
+                                        <option>생활가전</option>
+                                        <option>계절/환경</option>
+                                        <option>건강/뷰티</option>
+                                        <option>가구/침대</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive shopping-summery">
+                        <table class="table table-wishlist">
+                            <thead>
+                                <tr class="main-heading">
+                                    <th class="custome-checkbox start pl-30" colspan = "5">
+                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox11" value="" />
+                                        <label class="form-check-label" for="exampleCheckbox11"></label>
+                                        <span>전체 선택</span>
+                                        <!-- 체크박스 선택 시 노출 -->
+                                        <button type="button" class="ml-45">선택삭제</button>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- !상품1 -->
+                                <tr class="pt-30">
+                                    <td class="custome-checkbox pl-30">
+                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="" />
+                                        <label class="form-check-label" for="exampleCheckbox1"></label>
+                                    </td>
+                                    <td class="image product-thumbnail pt-40"><img th:src="@{/user/assets/imgs/shop/product-1-1.jpg}" alt="#"/></td>
+                                    <td class="product-des product-name">
+                                        <h4><a class="product-name" href="shop-product-right.html">삼성크리스탈 UHDTV 85인치</a></h4>
+                                        <span class="font-small ml-5 text-muted">TV / 디지털</span>
+                                        <div class="text-brand price fs-6 mt-10 mb-10" data-title="Price"><span>판매최저가: </span>₩ 1,000,000</div>
+                                        <div class="text-brand price fs-6 mt-10 mb-10" data-title="Price"><span>렌탈최저가: </span>₩ 56,000</div>
+                                    </td>
+                                    <td class="action text-center" data-title="Remove">
+                                        <a href="#" class="text-body"><i class="fi-rs-trash"></i></a>
+                                    </td>
+                                </tr>
+                               <tr class="pt-30">
+                                    <td class="custome-checkbox pl-30">
+                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="" />
+                                        <label class="form-check-label" for="exampleCheckbox1"></label>
+                                    </td>
+                                    <td class="image product-thumbnail pt-40"><img th:src="@{/user/assets/imgs/shop/product-1-1.jpg}" alt="#"/></td>
+                                    <td class="product-des product-name">
+                                        <h4><a class="product-name" href="shop-product-right.html">삼성크리스탈 UHDTV 85인치</a></h4>
+                                        <span class="font-small ml-5 text-muted">TV / 디지털</span>
+                                        <div class="text-brand price fs-6 mt-10 mb-10" data-title="Price"><span>판매최저가: </span>₩ 1,000,000</div>
+                                        <div class="text-brand price fs-6 mt-10 mb-10" data-title="Price"><span>렌탈최저가: </span>₩ 56,000</div>
+                                    </td>
+                                    <td class="action text-center" data-title="Remove">
+                                        <a href="#" class="text-body"><i class="fi-rs-trash"></i></a>
+                                    </td>
+                                </tr>
+                                 <tr class="pt-30">
+                                    <td class="custome-checkbox pl-30">
+                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="" />
+                                        <label class="form-check-label" for="exampleCheckbox1"></label>
+                                    </td>
+                                    <td class="image product-thumbnail pt-40"><img th:src="@{/user/assets/imgs/shop/product-1-1.jpg}" alt="#"/></td>
+                                    <td class="product-des product-name">
+                                        <h4><a class="product-name" href="shop-product-right.html">삼성크리스탈 UHDTV 85인치</a></h4>
+                                        <span class="font-small ml-5 text-muted">TV / 디지털</span>
+                                        <div class="text-brand price fs-6 mt-10 mb-10" data-title="Price"><span>판매최저가: </span>₩ 1,000,000</div>
+                                        <div class="text-brand price fs-6 mt-10 mb-10" data-title="Price"><span>렌탈최저가: </span>₩ 56,000</div>
+                                    </td>
+                                    <td class="action text-center" data-title="Remove">
+                                        <a href="#" class="text-body"><i class="fi-rs-trash"></i></a>
+                                    </td>
+                                </tr>
+                                 <tr class="pt-30">
+                                    <td class="custome-checkbox pl-30">
+                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="" />
+                                        <label class="form-check-label" for="exampleCheckbox1"></label>
+                                    </td>
+                                    <td class="image product-thumbnail pt-40"><img th:src="@{/user/assets/imgs/shop/product-1-1.jpg}" alt="#"/></td>
+                                    <td class="product-des product-name">
+                                        <h4><a class="product-name" href="shop-product-right.html">삼성크리스탈 UHDTV 85인치</a></h4>
+                                        <span class="font-small ml-5 text-muted">TV / 디지털</span>
+                                        <div class="text-brand price fs-6 mt-10 mb-10" data-title="Price"><span>판매최저가: </span>₩ 1,000,000</div>
+                                        <div class="text-brand price fs-6 mt-10 mb-10" data-title="Price"><span>렌탈최저가: </span>₩ 56,000</div>
+                                    </td>
+                                    <td class="action text-center" data-title="Remove">
+                                        <a href="#" class="text-body"><i class="fi-rs-trash"></i></a>
+                                    </td>
+                                </tr>
+                                 <tr class="pt-30">
+                                    <td class="custome-checkbox pl-30">
+                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="" />
+                                        <label class="form-check-label" for="exampleCheckbox1"></label>
+                                    </td>
+                                    <td class="image product-thumbnail pt-40"><img th:src="@{/user/assets/imgs/shop/product-1-1.jpg}" alt="#"/></td>
+                                    <td class="product-des product-name">
+                                        <h4><a class="product-name" href="shop-product-right.html">삼성크리스탈 UHDTV 85인치</a></h4>
+                                        <span class="font-small ml-5 text-muted">TV / 디지털</span>
+                                        <div class="text-brand price fs-6 mt-10 mb-10" data-title="Price"><span>판매최저가: </span>₩ 1,000,000</div>
+                                        <div class="text-brand price fs-6 mt-10 mb-10" data-title="Price"><span>렌탈최저가: </span>₩ 56,000</div>
+                                    </td>
+                                    <td class="action text-center" data-title="Remove">
+                                        <a href="#" class="text-body"><i class="fi-rs-trash"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</th:block>
+	
+</html>

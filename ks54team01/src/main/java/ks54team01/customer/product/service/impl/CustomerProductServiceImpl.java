@@ -24,13 +24,13 @@ public class CustomerProductServiceImpl implements CustomerProductService {
 		@Override
 		public CustomerProduct getProductDetail(String sellProductsNo) {
 			return productMapper.getProductDetail(sellProductsNo);
-			// ProductMapper의 getProductDetail 메서드를 호출하여 상품 상세 정보 조회 후 반환
+	// ProductMapper의 getProductDetail 메서드를 호출하여 상품 상세 정보 조회 후 반환
 		}
 
 	
-//	상품 목록조회
-	@Override
-	public List<CustomerProduct> getCustomerProductList(String smallCategory) {
+	//	상품 목록조회
+		@Override
+		public List<CustomerProduct> getCustomerProductList(String smallCategory) {
 		
 		List<CustomerProduct> customerProductList = productMapper.getCustomerProductList(smallCategory);
 		

@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="card mb-4 col-8">
-        	<form id="addProductInfoForm" th:action="@{/admin/productInfo/addCategory}" method="post">	
+        	<form id="modifyProductInfoForm" th:action="@{/admin/productInfo/modifyCategory}" method="post">	
                  <div class="card-body">
 	           		 <div class="col-12">
                         <div class="row gx-4">
@@ -92,12 +92,12 @@
                                         <br/>
                                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
 						                    <div class="col-md-2 col-2 ms-auto">
-						                        <button type="submit" id="addCategoryBtn" 
-						                        		class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >등록</button>
+						                        <button type="submit" id="modifyCategoryBtn" 
+						                        		class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >수정</button>
 						                    </div>
 						                    <div class="col-md-2 col-2">
 						                        <button type="reset" onclick="location.href='/admin/productInfo/categoryList'"
-						                        		class="btn btn-warning w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >등록취소</button>
+						                        		class="btn btn-warning w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >수정취소</button>
 						                    </div>
 						                </div>
                                     </form>

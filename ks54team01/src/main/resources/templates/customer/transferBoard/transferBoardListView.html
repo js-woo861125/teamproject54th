@@ -50,8 +50,11 @@
 					<div class="section-title">
 						<h1 class="heading-2 mb-40">양도 하기!</h1>
 						<div class="col-md-2 col-2 ms-auto mt-50">
-							<button type="submit"
-								class="btn btn-success w-50 rounded font-lg hover-up text-white justify-content-center fs-6 mb-50">글쓰기</button>
+							<!-- 양도 글 쓰기 버튼 클릭하면 계약 중인 렌탈 상품이 있는 지 체크하고 있으면 등록 페이지로 이동 -->
+							<form action="#" method="get">
+								<button type="submit"
+									class="btn btn-success w-30 rounded font-lg hover-up text-white justify-content-center fs-6 mb-50">글쓰기</button>			
+							</form>
 						</div>
 					</div>
 					<div class="w-50 widget_search mb-50">
@@ -73,37 +76,39 @@
 								<span>건</span>
 							</h5>
 						</div>
-						<div class="sort-by-product-area">
-							<div class="sort-by-cover mr-10">
-								<div class="sort-by">
-									<!--/* <a th:href="@{/customer/transferBoard/sortTransferBoardList(sortValue=recentReg)}"> */-->
-									<a th:href="@{#}" th:data-sort-value="recentReg">
-										<span>최신등록순</span>
-									</a>
+						<th:block th:if="${contentRowCount > 0}">
+							<div class="sort-by-product-area">
+								<div class="sort-by-cover mr-10">
+									<div class="sort-by">
+										<!--/* <a th:href="@{/customer/transferBoard/sortTransferBoardList(sortValue=recentReg)}"> */-->
+										<a th:href="@{#}" th:data-sort-value="recentReg">
+											<span>최신등록순</span>
+										</a>
+									</div>
+								</div>
+								<div class="sort-by-cover mr-10">
+									<div class="sort-by">
+										<a th:href="@{#}" th:data-sort-value="highPrice">
+											<span>높은가격순</span>
+										</a>
+									</div>
+								</div>
+								<div class="sort-by-cover mr-10">
+									<div class="sort-by">
+										<a th:href="@{#}" th:data-sort-value="rowPrice">
+											<span>낮은가격순</span>
+										</a>
+									</div>
+								</div>
+								<div class="sort-by-cover mr-10">
+									<div class="sort-by">
+										<a th:href="@{#}" th:data-sort-value="deadline">
+											<span>마감임박순</span>
+										</a>
+									</div>
 								</div>
 							</div>
-							<div class="sort-by-cover mr-10">
-								<div class="sort-by">
-									<a th:href="@{#}" th:data-sort-value="highPrice">
-										<span>높은가격순</span>
-									</a>
-								</div>
-							</div>
-							<div class="sort-by-cover mr-10">
-								<div class="sort-by">
-									<a th:href="@{#}" th:data-sort-value="rowPrice">
-										<span>낮은가격순</span>
-									</a>
-								</div>
-							</div>
-							<div class="sort-by-cover mr-10">
-								<div class="sort-by">
-									<a th:href="@{#}" th:data-sort-value="deadline">
-										<span>마감임박순</span>
-									</a>
-								</div>
-							</div>
-						</div>
+						</th:block>
 					</div>
 					<div class="row product-grid">
 						<th:block th:if="${!#lists.isEmpty(transferBoardList)}"
@@ -164,20 +169,24 @@
 								</div>
 							</div>
 						</th:block>
+						<div th:if="${contentRowCount < 1}"
+							 class="mt-100" style="text-align: center;">
+							<p>게시글이 없습니다.</p>	    
+						</div>
 					</div>
 					<div class="pagination-area mt-30 mb-50">
 						<nav aria-label="Page navigation example">
 							<ul class="pagination justify-content-center">
 								<!-- 이전페이지 이동 -->
-								<li id="prev-page" class="page-item"  th:classappend="${startPageNum < 10} ? 'disabled'">
+								<li id="prev-page" class="page-item" th:classappend="${startPageNum < 10} ? 'disabled'">
 									<a class="page-link" th:classappend="${startPageNum < 10} ? 'bg-white'"
 										th:href="@{/customer/transferBoard/transferBoardList(currentPage=${startPageNum - 1})}">
 										<i class="material-icons md-first_page"></i>
 									</a>
 								</li>
-
 								<!-- 페이지 이동  -->
-								<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
+								<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}"
+										  th:if="${contentRowCount > 0}">
 									<li class="page-item"
 										th:classappend="${num eq currentPage} ? 'active disabled'">
 										<a class="page-link page-num"

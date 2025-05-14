@@ -70,10 +70,16 @@
 	                                       </div>																		
                                         </div>
                                         <!-- row.// -->
-                                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                            <button class="btn btn-outline-success" type="submit">중복체크</button>
-                                            <button class="btn btn-primary" type="submit">등록하기</button>
-                                        </div>  
+									   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+						                    <div class="col-md-2 col-2 ms-auto">
+						                        <button type="submit" id="addModelSpecBtn" 
+						                        		class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >등록</button>
+						                    </div>
+						                    <div class="col-md-2 col-2">
+						                        <button type="reset" onclick="location.href='/admin/productInfo/modelSpecList'"
+						                        		class="btn btn-warning w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >등록취소</button>
+						                    </div>
+						                </div> 
                                     </form>
                                 </section>
                                 <!-- content-body .// -->

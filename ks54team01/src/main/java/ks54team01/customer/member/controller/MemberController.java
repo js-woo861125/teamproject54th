@@ -15,6 +15,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MemberController {
 	
+	@GetMapping("/myAccount")
+	public String getAccount(Model model) {
+		
+		model.addAttribute("title", "마이페이지");
+		
+		return "customer/member/myAccountView";
+	}
+
 
 	@GetMapping("/forgotId")
 	public String getforgotId(Model model) {
