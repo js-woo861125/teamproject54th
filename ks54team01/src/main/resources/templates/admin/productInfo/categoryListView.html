@@ -38,8 +38,7 @@
                                         <thead>
                                             <tr class=text-center>
                                             	<th>No.</th>
-                                            	<th>관리자아이디</th>
-                                                <th>카테고리코드</th>
+                                            	<th>카테고리코드</th>
                                                 <th>대분류코드</th>
                                                 <th>대분류</th>
                                                 <th>중분류코드</th>
@@ -56,7 +55,6 @@
 				                            	th:if="${!#lists.isEmpty(categoryList)}"
 				                          	  	th:each="l, index : ${categoryList}">
 				                          	  	<td th:text="${index.count}"></td>
-				                          	  	<td th:text="${l.managerId}">managerid1</td>
                                                 <td th:text="${l.categoryNo}">L1_M1_1</td>
                                                 <td th:text="${l.lgCategoryNo}">L1</td>
                                                 <td th:text="${l.lgCategory}">가전</td>
@@ -74,7 +72,7 @@
                                                     <div class="dropdown">
                                                         <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
                                                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">수정</a>
+                                                            <a class="dropdown-item" th:href="@{/admin/productInfo/modifyCategory(categoryNo=${l.categoryNo})}">수정</a>
                                                             <a class="dropdown-item text-danger" href="#">삭제</a>
                                                         </div>
                                                     </div>
