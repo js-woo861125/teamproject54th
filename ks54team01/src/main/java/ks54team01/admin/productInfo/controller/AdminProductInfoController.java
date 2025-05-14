@@ -30,6 +30,109 @@ public class AdminProductInfoController {
 	// DI 의존성 주입
 	private final AdminProductInfoService adminProductInfoService;
 	
+	/**
+	 * 상품정보 수정
+	 */
+	@PostMapping("/modifyCategorySpec")
+	public String modifyCategorySpec(ProductInfoCategorySpec productInfoCategorySpec, RedirectAttributes reAttr) {
+		
+		adminProductInfoService.modifyCategorySpec(productInfoCategorySpec);
+		
+		reAttr.addAttribute("specNo", productInfoCategorySpec.getSpecNo());
+		
+		return "redirect:/admin/productInfo/modifyCategorySpec";
+	}
+	
+	@GetMapping("/modifyCategorySpec")
+	public String modifyCategorySpec(String specNo, Model model) {		
+		
+		ProductInfoCategorySpec specInfo = adminProductInfoService.getCategorySpecInfoByNo(specNo);
+		
+		model.addAttribute("title", "스펙 수정");
+		
+		return "admin/productInfo/modifyCategorySpecView";
+	}
+	
+	@PostMapping("/modifyBenefit")
+	public String modifyBenefit(ProductInfoBenefit productInfoBenefit, RedirectAttributes reAttr) {
+		
+		adminProductInfoService.modifyBenefit(productInfoBenefit);
+		
+		reAttr.addAttribute("benefitNo", productInfoBenefit.getBenefitNo());
+		
+		return "redirect:/admin/productInfo/modifyBenefit";
+	}
+	
+	@GetMapping("/modifyBenefit")
+	public String modifyBenefit(String benefitNo, Model model) {		
+		
+		ProductInfoBenefit benefitInfo = adminProductInfoService.getBenefitInfoByNo(benefitNo);
+		
+		model.addAttribute("title", "혜택 수정");
+		
+		return "admin/productInfo/modifyBenefitView";
+	}
+	
+	@PostMapping("/modifyModel")
+	public String modifyModel(ProductInfoModel productInfoModel, RedirectAttributes reAttr) {
+		
+		adminProductInfoService.modifyModel(productInfoModel);
+		
+		reAttr.addAttribute("modelNo", productInfoModel.getModelNo());
+		
+		return "redirect:/admin/productInfo/modifyModel";
+	}
+	
+	@GetMapping("/modifyModel")
+	public String modifyModel(String modelNo, Model model) {		
+		
+		ProductInfoModel modelInfo = adminProductInfoService.getModelInfoByNo(modelNo);
+		
+		model.addAttribute("title", "모델 수정");
+		
+		return "admin/productInfo/modifyModelView";
+	}
+	
+	@PostMapping("/modifyItem")
+	public String modifyItem(ProductInfoItem productInfoItem, RedirectAttributes reAttr) {
+		
+		adminProductInfoService.modifyItem(productInfoItem);
+		
+		reAttr.addAttribute("itemNo", productInfoItem.getItemNo());
+		
+		return "redirect:/admin/productInfo/modifyItem";
+	}
+	
+	@GetMapping("/modifyItem")
+	public String modifyItem(String itemNo, Model model) {		
+		
+		ProductInfoItem itemInfo = adminProductInfoService.getItemInfoByNo(itemNo);
+		
+		model.addAttribute("title", "품목 수정");
+		
+		return "admin/productInfo/modifyItemView";
+	}
+	
+	@PostMapping("/modifyBrand")
+	public String modifyBrand(ProductInfoBrand productInfoBrand, RedirectAttributes reAttr) {
+		
+		adminProductInfoService.modifyBrand(productInfoBrand);
+		
+		reAttr.addAttribute("brandNo", productInfoBrand.getBrandNo());
+		
+		return "redirect:/admin/productInfo/modifyBrand";
+	}
+	
+	@GetMapping("/modifyBrand")
+	public String modifyBrand(String brandNo, Model model) {		
+		
+		ProductInfoBrand brandInfo = adminProductInfoService.getBrandInfoByNo(brandNo);
+		
+		model.addAttribute("title", "브랜드 수정");
+		
+		return "admin/productInfo/modifyBrandView";
+	}
+	
 	@PostMapping("/modifyCategory")
 	public String modifyCategory(ProductInfoCategory productInfoCategory, RedirectAttributes reAttr) {
 		
@@ -43,11 +146,16 @@ public class AdminProductInfoController {
 	@GetMapping("/modifyCategory")
 	public String modifyCategory(String categoryNo, Model model) {		
 		
+		ProductInfoCategory categoryInfo = adminProductInfoService.getCategoryInfoByNo(categoryNo);
+		
 		model.addAttribute("title", "카테고리 수정");
 		
 		return "admin/productInfo/modifyCategoryView";
 	}
 	
+	/**
+	 * 상품정보 목록
+	 */
 	@GetMapping("/benefitList")
 	public String getBenefitList(Model model) {
 		
@@ -120,6 +228,9 @@ public class AdminProductInfoController {
 		return "admin/productInfo/categoryListView";
 	}	
 	
+	/**
+	 * 상품정보 등록
+	 */
 	@PostMapping("/addBenefit")
 	public String addBenefit(ProductInfoBenefit productInfoBenefit) {
 		
@@ -140,6 +251,14 @@ public class AdminProductInfoController {
 	public String addModelSpec() {
 		
 		return "admin/productInfo/addModelSpecView";
+	}
+	
+	@PostMapping("/addCategorySpec")
+	public String addCategorySpec(ProductInfoCategorySpec productInfoCategorySpec) {
+		
+		adminProductInfoService.addCategorySpec(productInfoCategorySpec);
+		
+		return "redirect:/admin/productInfo/categorySpecList";
 	}
 	
 	@GetMapping("/addCategorySpec")

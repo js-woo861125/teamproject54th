@@ -87,11 +87,177 @@
 			<result column="small_category"			property="smCategory"/>
 		</association>
 	</resultMap>
+		
+	<update id="modifyCategorySpec" parameterType="ProductInfoCategorySpec">
+		/* 상품정보 카테고리별/상세스펙 수정 */
+		UPDATE products_spec
+		<trim prefix="SET" suffixOverrides=",">
+		<if test="specName != null and specName != ''">
+		    spec_nm=#{specName}
+		</if>
+		</trim>
+		WHERE
+			spec_no = #{specNo};
+	</update>	
+		
+	<update id="modifyBenefit" parameterType="ProductInfoBenefit">
+		/* 상품정보 전체혜택 수정 */
+		UPDATE benefit
+		<trim prefix="SET" suffixOverrides=",">
+		<if test="benefitName != null and benefitName != ''">
+		    benefit_nm=#{benefitName}
+		</if>
+		</trim>
+		WHERE
+			benefit_no = #{benefitNo};
+	</update>
+	
+	<update id="modifyModel" parameterType="ProductInfoModel">
+		/* 상품정보 모델 수정 */
+		UPDATE model
+		<trim prefix="SET" suffixOverrides=",">
+		<if test="modelNo != null and modelNo != ''">
+		    model_nm=#{modelName}
+		</if>
+		</trim>
+		WHERE
+			model_no = #{modelNo};
+	</update>
+	
+	<update id="modifyItem" parameterType="ProductInfoItem">
+		/* 상품정보 품목 수정 */
+		UPDATE item
+		<trim prefix="SET" suffixOverrides=",">
+		<if test="itemNo != null and itemNo != ''">
+		    item_nm=#{itemName}
+		</if>
+		</trim>
+		WHERE
+			item_no = #{itemNo};
+	</update>
+	
+	<update id="modifyBrand" parameterType="ProductInfoBrand">
+		/* 상품정보 브랜드 수정 */
+		UPDATE brand
+		<trim prefix="SET" suffixOverrides=",">
+		<if test="brandNo != null and brandNo != ''">
+		    brand_nm=#{brandName}
+		</if>
+		</trim>
+		WHERE
+			brand_no = #{brandNo};
+	</update>
 	
 	<update id="modifyCategory" parameterType="ProductInfoCategory">
 		/* 상품정보 카테고리 수정 */
 		UPDATE products_category
+		<trim prefix="SET" suffixOverrides=",">
+		<if test="smCategory != null and smCategory != ''">
+		    small_category=#{smCategory}
+		</if>
+		</trim>
+		WHERE
+			product_category_no = #{categoryNo};
 	</update>
+	
+	<select id="getCategorySpecInfoByNo" parameterType="String" resultMap="categorySpecResultMap">
+		/* 상품정보 카테고리별/상세스펙 조회 */
+		SELECT 
+			spec_no, 
+			manager_id, 
+			product_category_no, 
+			spec_nm, 
+			register_date, 
+			revision_date, 
+			use_status
+		FROM 
+			products_spec
+		WHERE
+			spec_no = #{specNo};
+	</select>
+	
+	<select id="getBenefitInfoByNo" parameterType="String" resultMap="benefitResultMap">
+		/* 상품정보 전체혜택 조회 */
+		SELECT 
+			benefit_no, 
+			manager_id, 
+			benefit_nm, 
+			register_date, 
+			revision_date, 
+			use_status
+		FROM 
+			benefit
+		WHERE
+			benefit_no = #{benefitNo};	
+	</select>
+	
+	<select id="getModelInfoByNo" parameterType="String" resultMap="modelResultMap"> 
+		/* 상품정보 모델 조회 */
+		SELECT 
+			model_no, 
+			manager_id, 
+			brand_no, 
+			item_no, 
+			product_category_no, 
+			model_nm, 
+			register_date, 
+			revision_date, 
+			use_status
+		FROM 
+			model
+		WHERE
+			model_no = #{modelNo};	
+	</select>
+	
+	<select id="getItemInfoByNo" parameterType="String" resultMap="itemResultMap"> 
+		/* 상품정보 품목 조회 */
+		SELECT 
+			item_no, 
+			manager_id, 
+			product_category_no, 
+			item_nm, 
+			register_date, 
+			revision_date, 
+			use_status
+		FROM 
+			item
+		WHERE
+			item_no = #{itemNo};	
+	</select>
+	
+	<select id="getBrandInfoByNo" parameterType="String" resultMap="brandResultMap"> 
+		/* 상품정보 브랜드 조회 */
+		SELECT 
+			brand_no, 
+			manager_id, 
+			brand_nm, 
+			register_date, 
+			revision_date, 
+			use_status
+		FROM 
+			brand
+		WHERE
+			brand_no = #{brandNo};
+	</select>
+	
+	<select id="getCategoryInfoByNo" parameterType="String" resultMap="categoryResultMap">
+		/* 상품정보 카테고리 조회 */
+		SELECT 
+			product_category_no, 
+			manager_id, 
+			large_category_no, 
+			large_category, 
+			middle_category_no, 
+			middle_category, 
+			small_category, 
+			register_date, 
+			revision_date, 
+			use_status
+		FROM 
+			products_category
+		WHERE
+			product_category_no = #{categoryNo};
+	</select>
 	
 	<insert id="addCategorySpec" parameterType="ProductInfoCategorySpec">
 		<selectKey keyProperty="specNo" resultType="string" order="BEFORE">
