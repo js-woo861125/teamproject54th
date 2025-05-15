@@ -38,10 +38,10 @@
                                         </div>
                                         <form method="post" th:action="@{/customer/login/memberLogin}">
                                             <div class="form-group">
-                                                <input type="text" name="userid" placeholder="ID" required />
+                                                <input type="text" id="memberId" name="memberId" placeholder="ID" required />
                                             </div>
                                             <div class="form-group">
-                                                <input type="password" name="password" placeholder="Password" required />
+                                                <input type="password" id="memberPw" name="memberPw" placeholder="Password" required />
                                             </div>
                                          
                                             <div class="login_footer form-group mb-50 d-flex justify-content-end">                                              
@@ -49,7 +49,7 @@
                                                 <a class="text-muted" th:href="@{/customer/member/forgotPw}">비밀번호 찾기</a>
                                             </div>
                                             <div class="form-group">
-                                                <button type="submit" class="btn btn-heading btn-block hover-up" name="login" th:action="@{/main}">Log in</button>
+                                                <button type="submit" id="loginBtn" name="loginBtn" class="btn btn-heading btn-block hover-up"  >Log in</button>
                                             </div>
                                         </form>
                                     </div>

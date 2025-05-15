@@ -12,11 +12,17 @@ import ks54team01.customer.register.domain.EntMember;
 
 @Mapper
 public interface RegisterMapper {
+	// 입점업체회원 조회
+	EntMember getEntMemberInfoById(String memberId);
+	
 	// 회원조회
 	CustomerMember getMemberInfoById(String memberId);
 	
 	// 입점업체직원정보 등록
 	int addEntEmpMember(EntMember member);
+	
+	// 입점업체대표 직원테이블에 등록
+	int addEntMember(EntMember member);
 	
 	// 입점업체대표정보 등록
 	int addEntCeoMember(EntMember member);
