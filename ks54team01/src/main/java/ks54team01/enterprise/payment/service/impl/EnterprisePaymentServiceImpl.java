@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ks54team01.enterprise.payment.domain.EnterprisePayment;
+import ks54team01.enterprise.payment.domain.EnterprisePaymentDetail;
 import ks54team01.enterprise.payment.mapper.EnterprisePaymentMapper;
 import ks54team01.enterprise.payment.service.EnterprisePaymentService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,27 @@ import lombok.RequiredArgsConstructor;
 public class EnterprisePaymentServiceImpl implements EnterprisePaymentService{
 
 	private final EnterprisePaymentMapper enterprisePaymentMapper;
+	
+	
+	
+	
+	@Override
+	public List<EnterprisePaymentDetail> getPaymentDetailListByContractNoAndStatus(String rentalContractNo, String unpaidStatus) {
+	    
+		List<EnterprisePaymentDetail> getPaymentListByContNoAndStatus = enterprisePaymentMapper.getPaymentDetailListByContractNoAndStatus(rentalContractNo, unpaidStatus);
+		
+		return getPaymentListByContNoAndStatus;
+	}
+
+	@Override
+	public List<EnterprisePaymentDetail> getPaymentDetailListByContractNo(String rentalContractNo) {
+
+		List<EnterprisePaymentDetail> getPaymentListByContNo = enterprisePaymentMapper.getPaymentDetailListByContractNo(rentalContractNo);
+		
+		return getPaymentListByContNo;
+	}
+	
+	
 	
 	@Override
 	public List<EnterprisePayment> getSearchPaymentList(String searchKey, String searchValue) {

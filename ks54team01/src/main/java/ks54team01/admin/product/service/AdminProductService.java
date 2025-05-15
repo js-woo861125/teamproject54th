@@ -8,4 +8,8 @@ public interface AdminProductService {
 
 	// 상품 목록 조회
 	List<AdminProduct> getProductList();
+	
+	// 상품 등록
+//	void addProduct(Product product);
+	
 }

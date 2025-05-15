@@ -61,10 +61,11 @@
 								<td th:text="${l.entName}">(주)홍홍상사></td>
 								<td th:text="${l.ceoTelNo}">010-0001-0001</td>
 								<td th:text="${l.entBrno}">402-00-00000</td>
-								<td >  <span class="badge rounded-pill"
-							             th:classappend="${l.contractEndDate < T(java.time.LocalDate).now()} ? ' alert-danger' : ' alert-success'"
-							             th:text="${l.contractEndDate < T(java.time.LocalDate).now()} ? '계약만료' : '계약중'">
-							        	</span>
+								<td >
+									<span class="badge rounded-pill"
+											  th:classappend="${l.entContractStatus == '계약만료'} ? ' alert-danger' : ' alert-success'"
+											  th:text="${l.entContractStatus}">
+									</span>
 							    </td>
 								<td th:text="${l.contractEndDate}">2026-02-22</td>
 								<td> 

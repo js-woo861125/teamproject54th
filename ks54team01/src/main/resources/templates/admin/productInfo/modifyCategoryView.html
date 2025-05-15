@@ -35,19 +35,17 @@
                             </aside>
                             <div class="col-lg-9">
                                 <section class="content-body p-xl-4">
-                                    <form id="addProductInfoForm" th:action="@{/admin/productInfo/addCategory}" method="post">
+                                    <form id="addProductInfoForm" th:action="@{/admin/productInfo/modifyCategory}" method="post" th:object="${categoryInfo}">
                                     	<div class="mb-4">
-                                           <label class="form-label fs-6" for="managerId">관리자아이디</label>
-                                           <div class="col-lg-12">
-                                               <input type="text" id="managerId" name="managerId" 
-                                               		  class="form-control" placeholder="아이디를 입력해주세요" />
-                                           </div>
+                                    		<input type="hidden" id="categoryNo" name="categoryNo" th:value="*{categoryNo}"/>
+	                                            <div class="col-lg-12">
+	                                            	<input type="hidden" id="managerId" name="managerId" th:value="*{managerId}"/>
+                                           		</div>
                                            <!-- col.// -->
                                         </div>                                    
                                         <div class="row mb-4">
-                                            <label class="form-label fs-6" for="lgCategoryNo">대분류코드</label>
                                             <div class="col-lg-12">
-                                                <input type="text" id="lgCategoryNo" name="lgCategoryNo"
+                                                <input type="hidden" id="lgCategoryNo" name="lgCategoryNo" th:value="*{lgCategoryNo}"
                                                 	   class="form-control" placeholder="대분류코드를 입력해주세요" />
                                             </div>
                                             <!-- col.// -->
@@ -56,16 +54,15 @@
                                         <div class="row mb-4">
                                             <label class="form-label fs-6" for="lgCategory">대분류</label>
                                             <div class="col-lg-12">
-                                                <input type="text" id="lgCategory" name="lgCategory"
+                                                <input type="text" id="lgCategory" name="lgCategory" th:value="*{lgCategory}"
                                                  	   class="form-control" placeholder="대분류를 입력해주세요" />
                                             </div>
                                             <!-- col.// -->
                                         </div>
                                         <!-- row.// -->
                                         <div class="row mb-4">
-                                            <label class="form-label fs-6" for="mdCategoryNo">중분류코드</label>
                                             <div class="col-lg-12">
-                                                <input type="text" id="mdCategoryNo" name="mdCategoryNo"
+                                                <input type="hidden" id="mdCategoryNo" name="mdCategoryNo" th:value="*{mdCategoryNo}"
                                                 	   class="form-control" placeholder="중분류코드를 입력해주세요" />
                                             </div>
                                             <!-- col.// -->
@@ -74,7 +71,7 @@
                                         <div class="row mb-4">
                                             <label class="form-label fs-6" for="mdCategory">중분류</label>
                                             <div class="col-lg-12">
-                                                <input type="text" id="mdCategory" name="mdCategory"
+                                                <input type="text" id="mdCategory" name="mdCategory" th:value="*{mdCategory}"
                                                 	   class="form-control" placeholder="중분류를 입력해주세요" />
                                             </div>
                                             <!-- col.// -->
@@ -83,7 +80,7 @@
                                         <div class="row mb-4">
                                             <label class="form-label fs-6" for="smCategory">소분류</label>
                                             <div class="col-lg-12">
-                                                <input type="text" id="smCategory" name="smCategory"
+                                                <input type="text" id="smCategory" name="smCategory" th:value="*{smCategory}"
                                                 	   class="form-control" placeholder="소분류를 입력해주세요" />
                                             </div>
                                             <!-- col.// -->

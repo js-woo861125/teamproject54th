@@ -20,17 +20,22 @@ public class AdminEntController {
 	
 	private final AdminEntListService adminEntListService;
 	
-	@GetMapping("/List")
-	// 입점업체 조회
-	public String getEntList(Model model) {
+	@GetMapping("/addContract")
+	// 입점업체 계약 등록
+	public String addContract() {
 		
-		List<AdminEntList> entList = adminEntListService.getEntList();
-	    
-		model.addAttribute("title", "입점업체 목록");
-		model.addAttribute("entList", entList);
-	    
+		return "admin/enterprise/enterpriseAddContractView";
+	}
+	
+	@GetMapping("/List")
+	// 입점업체 목록 조회 + 계약 상태 자동 갱신
+	public String getEntList(Model model) {
+	    List<AdminEntList> entList = adminEntListService.getEntList();
+
+	    model.addAttribute("title", "입점업체 목록");
+	    model.addAttribute("entList", entList);
+
 	    return "admin/enterprise/enterpriseListView";
-	    
 	}
 	
 	@GetMapping("/searchEnterprise")

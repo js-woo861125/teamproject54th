@@ -1,5 +1,7 @@
 package ks54team01.customer.assigneeBoard.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,22 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomerAssigneeBoardController {
 
 	private final CustomerAssigneeBoardService customerAssigneeBoardService;
+	
+	@GetMapping("/addAssigneeBoard")
+	public String addAssigneeBoard() {
+		
+		return "customer/assigneeBoard/addAssigneeBoardView";
+	}
+	
+	@GetMapping("/myAssigneeBoardList")
+	public String getMyAssigneeBoardList(Model model) {
+		
+		List<CustomerAssigneeBoard> myAssigneeBoardList = customerAssigneeBoardService.getMyAssigneeBoardList();
+		
+		model.addAttribute("title", "내 양수 게시글 목록 조회");
+		model.addAttribute("myAssigneeBoardList", myAssigneeBoardList);
+		return "customer/myPage/myAssigneeBoardListView";
+	}
 	
 	@GetMapping("/assigneeBoardDetail")
 	public String getAssigneeBoardDetail(@RequestParam(name="assigneeBoardNum", required = false) String assigneeBoardNum
