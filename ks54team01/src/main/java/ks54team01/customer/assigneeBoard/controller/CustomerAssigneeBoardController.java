@@ -23,6 +23,12 @@ public class CustomerAssigneeBoardController {
 
 	private final CustomerAssigneeBoardService customerAssigneeBoardService;
 	
+	@GetMapping("/addAssigneeBoard")
+	public String addAssigneeBoard() {
+		
+		return "customer/assigneeBoard/addAssigneeBoardView";
+	}
+	
 	@GetMapping("/myAssigneeBoardList")
 	public String getMyAssigneeBoardList(Model model) {
 		
