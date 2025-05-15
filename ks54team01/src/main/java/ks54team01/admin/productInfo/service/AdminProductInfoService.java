@@ -13,6 +13,18 @@ import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
 public interface AdminProductInfoService {
 	
 	/**
+	 * 상품정보 삭제
+	 */
+	// 상품정보 브랜드 삭제
+	boolean removeBrandInfoByNo(String brandNo);
+	
+	/**
+	 * 상품정보 중복체크
+	 */
+	// 상품정보 브랜드명 중복체크
+	boolean isBrandNameCheck (String brandName);
+	
+	/**
 	 * 상품정보 수정
 	 */
 	// 상품정보 카테고리별/상세스펙 수정

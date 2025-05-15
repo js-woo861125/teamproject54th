@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
@@ -32,6 +33,34 @@ public class AdminProductInfoController {
 	private final AdminProductInfoService adminProductInfoService;
 	
 	/**
+	 * 상품정보 삭제
+	 */
+	@PostMapping("/removeBrand")
+	@ResponseBody
+	public boolean removeBrand(String brandNo) {
+		log.info("삭제 할 브랜드코드: {}", brandNo);
+		
+		boolean isDel = adminProductInfoService.removeBrandInfoByNo(brandNo);
+		
+		return isDel;
+	}
+	
+	/**
+	 * 상품정보 중복체크
+	 */
+	@PostMapping("/brandNameCheck")
+	@ResponseBody
+	public boolean brandNameCheck(String brandName) {
+		boolean isDuplicate =  false;
+		
+		log.info("체크브랜드명 : {}", brandName);
+		
+		isDuplicate = adminProductInfoService.isBrandNameCheck(brandName);
+		
+		return isDuplicate;
+	}
+	
+	/**
 	 * 상품정보 수정
 	 */
 	@PostMapping("/modifyCategorySpec")
@@ -41,7 +70,7 @@ public class AdminProductInfoController {
 		
 		reAttr.addAttribute("specNo", productInfoCategorySpec.getSpecNo());
 		
-		return "redirect:/admin/productInfo/modifyCategorySpec";
+		return "redirect:/admin/productInfo/categorySpecList";
 	}
 	
 	@GetMapping("/modifyCategorySpec")
@@ -61,7 +90,7 @@ public class AdminProductInfoController {
 		
 		reAttr.addAttribute("benefitNo", productInfoBenefit.getBenefitNo());
 		
-		return "redirect:/admin/productInfo/modifyBenefit";
+		return "redirect:/admin/productInfo/benefitList";
 	}
 	
 	@GetMapping("/modifyBenefit")
@@ -81,7 +110,7 @@ public class AdminProductInfoController {
 		
 		reAttr.addAttribute("modelNo", productInfoModel.getModelNo());
 		
-		return "redirect:/admin/productInfo/modifyModel";
+		return "redirect:/admin/productInfo/modelList";
 	}
 	
 	@GetMapping("/modifyModel")
@@ -101,15 +130,18 @@ public class AdminProductInfoController {
 		
 		reAttr.addAttribute("itemNo", productInfoItem.getItemNo());
 		
-		return "redirect:/admin/productInfo/modifyItem";
+		return "redirect:/admin/productInfo/itemList";
 	}
 	
 	@GetMapping("/modifyItem")
 	public String modifyItem(String itemNo, Model model) {		
 		
 		ProductInfoItem itemInfo = adminProductInfoService.getItemInfoByNo(itemNo);
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
 		
 		model.addAttribute("title", "품목 수정");
+		model.addAttribute("itemInfo", itemInfo);
+		model.addAttribute("categoryList", categoryList);
 		
 		return "admin/productInfo/modifyItemView";
 	}
@@ -121,7 +153,7 @@ public class AdminProductInfoController {
 		
 		reAttr.addAttribute("brandNo", productInfoBrand.getBrandNo());
 		
-		return "redirect:/admin/productInfo/modifyBrand";
+		return "redirect:/admin/productInfo/brandList";
 	}
 	
 	@GetMapping("/modifyBrand")
@@ -130,6 +162,7 @@ public class AdminProductInfoController {
 		ProductInfoBrand brandInfo = adminProductInfoService.getBrandInfoByNo(brandNo);
 		
 		model.addAttribute("title", "브랜드 수정");
+		model.addAttribute("brandInfo", brandInfo);
 		
 		return "admin/productInfo/modifyBrandView";
 	}
@@ -141,7 +174,7 @@ public class AdminProductInfoController {
 		
 		reAttr.addAttribute("categoryNo", productInfoCategory.getCategoryNo());
 		
-		return "redirect:/admin/productInfo/modifyCategory";
+		return "redirect:/admin/productInfo/categoryList";
 	}
 	
 	@GetMapping("/modifyCategory")
@@ -150,6 +183,7 @@ public class AdminProductInfoController {
 		ProductInfoCategory categoryInfo = adminProductInfoService.getCategoryInfoByNo(categoryNo);
 		
 		model.addAttribute("title", "카테고리 수정");
+		model.addAttribute("categoryInfo", categoryInfo);
 		
 		return "admin/productInfo/modifyCategoryView";
 	}

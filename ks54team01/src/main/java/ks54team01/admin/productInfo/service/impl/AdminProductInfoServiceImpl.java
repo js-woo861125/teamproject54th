@@ -26,6 +26,27 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	// DI 의존성 주입
 	private final AdminProductInfoMapper adminProductInfoMapper;
 	
+	// 상품정보 삭제
+	@Override
+	public boolean removeBrandInfoByNo(String brandNo) {
+		
+		int delCount = 0;
+		
+		// 상품정보 브랜드
+		delCount += adminProductInfoMapper.removeBrandInfoByNo(brandNo);
+		
+		boolean isDel = delCount > 0 ? true : false;
+		
+		return isDel;
+	}
+	
+	// 상품정보 중복체크
+	@Override
+	public boolean isBrandNameCheck(String brandName) {
+		
+		return adminProductInfoMapper.isBrandNameCheck(brandName);
+	}
+	
 	// 상품정보 수정
 	@Override
 	public void modifyCategorySpec(ProductInfoCategorySpec productInfoCategorySpec) {
