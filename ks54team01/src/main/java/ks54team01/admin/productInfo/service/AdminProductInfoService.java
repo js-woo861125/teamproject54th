@@ -8,6 +8,7 @@ import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.admin.productInfo.domain.ProductInfoCategorySpec;
 import ks54team01.admin.productInfo.domain.ProductInfoItem;
 import ks54team01.admin.productInfo.domain.ProductInfoModel;
+import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
 
 public interface AdminProductInfoService {
 	
@@ -77,6 +78,9 @@ public interface AdminProductInfoService {
 	/**
 	 * 상품정보 목록 조회
 	 */
+	// 상품정보 모델별/상세스펙 목록 조회
+	List<ProductInfoModelSpec> getModelSpecList();
+	
 	// 상품정보 카테고리별/상세스펙 목록 조회
 	List<ProductInfoCategorySpec> getCategorySpecList();
 	

@@ -17,6 +17,7 @@ import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.admin.productInfo.domain.ProductInfoCategorySpec;
 import ks54team01.admin.productInfo.domain.ProductInfoItem;
 import ks54team01.admin.productInfo.domain.ProductInfoModel;
+import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
 import ks54team01.admin.productInfo.service.AdminProductInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -168,7 +169,12 @@ public class AdminProductInfoController {
 	}	
 	
 	@GetMapping("/modelSpecList")
-	public String modelSpecList() {
+	public String modelSpecList(Model model) {
+		
+		List<ProductInfoModelSpec> modelSpecList = adminProductInfoService.getModelSpecList();
+		
+		model.addAttribute("title", "모델별/상세스펙");
+		model.addAttribute("modelSpecList", modelSpecList);
 		
 		return "admin/productInfo/modelSpecListView";
 	}

@@ -11,6 +11,7 @@ import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.admin.productInfo.domain.ProductInfoCategorySpec;
 import ks54team01.admin.productInfo.domain.ProductInfoItem;
 import ks54team01.admin.productInfo.domain.ProductInfoModel;
+import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
 import ks54team01.admin.productInfo.mapper.AdminProductInfoMapper;
 import ks54team01.admin.productInfo.service.AdminProductInfoService;
 import lombok.RequiredArgsConstructor;
@@ -160,6 +161,14 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	}
 	
 	// 상품정보 목록 조회
+	@Override
+	public List<ProductInfoModelSpec> getModelSpecList() {
+		
+		List<ProductInfoModelSpec> modelSpecList = adminProductInfoMapper.getModelSpecList();
+		
+		return modelSpecList;
+	}
+	
 	@Override
 	public List<ProductInfoCategorySpec> getCategorySpecList() {
 		

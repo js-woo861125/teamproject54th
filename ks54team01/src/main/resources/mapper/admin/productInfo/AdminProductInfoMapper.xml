@@ -87,7 +87,7 @@
 			<result column="small_category"			property="smCategory"/>
 		</association>
 	</resultMap>
-		
+
 	<update id="modifyCategorySpec" parameterType="ProductInfoCategorySpec">
 		/* 상품정보 카테고리별/상세스펙 수정 */
 		UPDATE products_spec
@@ -376,19 +376,19 @@
 		VALUES
 		(#{categoryNo}, #{managerId}, #{lgCategoryNo}, #{lgCategory}, #{mdCategoryNo}, #{mdCategory}, #{smCategory}, NOW(), NOW(), '사용중');
 	</insert>
-	
+
 	<select id="getCategorySpecList" resultMap="categorySpecResultMap">
 		/* 상품정보 카테고리별/상세스펙 목록 조회 */
 		SELECT
-			psc.spec_no,
-			psc.manager_id,
+			ps.spec_no,
+			ps.manager_id,
 			pc.small_category,
-			psc.SPEC_NM,
-			psc.register_date,
-			psc.revision_date,
-			psc.use_status
+			ps.spec_nm,
+			ps.register_date,
+			ps.revision_date,
+			ps.use_status
 		FROM
-			products_spec psc inner join products_category pc 
+			products_spec ps inner join products_category pc 
 			using(product_category_no);
 	</select>
 	
