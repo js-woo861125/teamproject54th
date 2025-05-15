@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{enterprise/layout/default}">
+	
+	<!-- head 삽입공간 -->
+	<head>
+	
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+	
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+	
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="content">
+		<div class="content-header">
+			<div>
+				<h2 class="content-title card-title">배송정보(관리자)</h2>
+			</div>
+	
+		</div>
+		<div class="card mb-4">
+			<header class="card-header">
+				<form th:action="@{/admin/delivery/searchDeliveryInfoList}"
+					method="get">
+					<div class="row gx-3">
+						<div class="col-lg-2 col-md-3 col-12">
+							<select class="form-select" name="searchKey">
+								<option value="delCompany"
+									th:selected="${searchKey == 'delCompany'}">택배사</option>
+								<option value="delProgress"
+									th:selected="${searchKey == 'delProgress'}">배송진행상황</option>
+								<option value="recipientNm"
+									th:selected="${searchKey == 'recipientNm'}">수령인명</option>
+							</select>
+						</div>
+						<div class="col-lg-4 col-md-5">
+							<input type="text" name="searchValue" th:value="${searchValue}"
+								placeholder="검색어를 입력해주세요" class="form-control" />
+						</div>
+						<div class="col-lg-1 col-md-1 me-auto">
+							<button type="submit"
+								class="form-control btn btn-primary p-0 justify-content-center">검색</button>
+						</div>
+						<div class="col-lg-2 col-md-3 col-12">
+							<select class="form-select">
+								<option>Show 20</option>
+								<option>Show 30</option>
+								<option>Show 40</option>
+							</select>
+						</div>
+					</div>
+				</form>
+			</header>
+			<!-- card-header end// -->
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>#ID</th>
+								<th>Product</th>
+								<th>계약시작</th>
+								<th>계약종료</th>
+								<th>Name</th>
+								<th>처리상태</th>
+								<th>Date</th>
+								<th class="text-end">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>23</td>
+								<td><b>Organic Quinoa, Brown, & Red Rice</b></td>
+								<td>2023-04-23</td>
+								<td>2025-04-22</td>
+								<td>Devon Lane</td>
+								<td>
+									<ul>
+										<li><span class="badge rounded-pill alert-warning">처리</span>
+										</li>
+									</ul>
+								</td>
+								<td>10.03.2020</td>
+								<td class="text-end"><a href="#"
+									class="btn btn-md rounded font-sm">Detail</a></td>
+							</tr>
+							<tr>
+								<td>24</td>
+								<td><b>All Natural Italian-Style</b></td>
+								<td>2023-04-23</td>
+								<td>2025-04-22</td>
+								<td>Guy Hawkins</td>
+								<td>
+									<ul>
+										<li><span class="badge rounded-pill alert-warning">처리</span>
+										</li>
+									</ul>
+								</td>
+								<td>04.12.2019</td>
+								<td class="text-end"><a href="#"
+									class="btn btn-md rounded font-sm">Detail</a></td>
+							</tr>
+							<tr>
+								<td>25</td>
+								<td><b>Angie’s Boomchickapop Sweet</b></td>
+								<td>2023-04-23</td>
+								<td>2025-04-22</td>
+								<td>Steven John</td>
+								<td>
+									<ul>
+										<li><span class="badge rounded-pill alert-warning">처리</span>
+										</li>
+									</ul>
+								</td>
+								<td>25.05.2020</td>
+								<td class="text-end"><a href="#"
+									class="btn btn-md rounded font-sm">Detail</a></td>
+							</tr>
+							<tr>
+								<td>26</td>
+								<td><b>Foster Farms Takeout Crispy Classic</b></td>
+								<td>2023-04-23</td>
+								<td>2025-04-22</td>
+								<td>Kristin Watson</td>
+								<td>
+									<ul>
+										<li><span class="badge rounded-pill alert-success">해지</span>
+										</li>
+									</ul>
+								</td>
+								<td>01.06.2020</td>
+								<td class="text-end"><a href="#"
+									class="btn btn-md rounded font-sm">Detail</a></td>
+							</tr>
+							
+						</tbody>
+					</table>
+				</div>
+				<!-- table-responsive//end -->
+			</div>
+		</div>
+	</th:block>
+
+</html>

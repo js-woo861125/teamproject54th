@@ -1,6 +1,7 @@
 package ks54team01.customer.transferBoard.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,15 @@ public class CustomerTransferBoardController {
 	private final CustomerTransferBoardService customerTransferBoardService;
 	
 	
+	@GetMapping("/myTransferBoardList")
+	public String getMyTransferBoardList(Model model) {
+		
+		List<CustomerTransferBoard> myTransferBoardList = customerTransferBoardService.getMyTransferBoardList();
+		model.addAttribute("title", "내 양도 게시글 목록 조회");
+		model.addAttribute("myTransferBoardList", myTransferBoardList);
+		return "customer/myPage/myTransferBoardListView";
+	}
+	
 	@GetMapping("/transferBoardDetail")
 	public String getTransferBoardDetail(@RequestParam(name="transferBoardNum", required = false) String transferBoardNum
 										, Model model) {
@@ -45,7 +55,7 @@ public class CustomerTransferBoardController {
 									  , @RequestParam(name="searchValue", required = false) String searchValue
 									  , Pageable pageable, Model model) {
 		
-		// 한 페이지에 4X4 총 16개 노출
+		// 한 페이지에 4 X 4 총 16개 노출
 		pageable.setRowPerPage(16);
 		
 		Map<String, Object> searchParamMap  = new HashMap<String, Object>();
@@ -66,7 +76,8 @@ public class CustomerTransferBoardController {
 		int rowPerPage = pageable.getRowPerPage();
 		int contentRowCount = transferBoard.getTotalRowCount();	
 		
-		model.addAttribute("titel", "양도 게시글 목록");
+		
+		model.addAttribute("title", "양도 게시글 목록");
 		model.addAttribute("transferBoardList", transferBoardList);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("lastPage", lastPage);

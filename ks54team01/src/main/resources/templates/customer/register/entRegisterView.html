@@ -11,6 +11,113 @@
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	</th:block>
 	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+       <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a th:href="@{#}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                    <span></span> Pages <span></span> My Account
+                </div>
+            </div>
+        </div>
+        <div class="page-content pt-150 pb-150">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-10 col-md-12 m-auto">
+                       <div class="row d-flex justify-content-center">
+                            <div class="col-lg-6 col-md-8">
+                                <div class="login_wrap widget-taber-content background-white">
+                                    <div class="padding_eight_all bg-white">
+                                        <div class="heading_s1 mb-20">
+                                            <h1 class="mb-30" th:text="${title}"></h1>
+                                        </div>
+                                        <form  id="entRegisterForm" th:action="@{/customer/register/entRegister}" method="post">
+                                        	<!-- 이름 -->
+                                            <div class="form-group">
+                                                <input type="text" id="entCeoName" name="entCeoName" placeholder="이름" required />                                              
+                                            </div>
+                                            <!-- 연락처 -->
+                                          <div class="form-group">
+												<input type="hidden" id="entCeoPhone" name="entCeoPhone"/>
+		                                            <div class="form-group d-flex">
+													   	<input type="text" class="w-10 form-control fs-6" id="phoneFixed" name="phoneFixed" placeholder="010" value="010" readonly />
+													    <input type="text" class="mr-10 ml-10" id="phone1" name="phone1" placeholder="1234" required />
+													    <input type="text" placeholder="5678" id="phone2" name="phone2" required />
+													</div>
+											</div>
+				                        	<!-- 이메일 본인인증 --> 
+                                            <div class="form-group">
+                                            	<input type="hidden" id="entCeoEmail" name="entCeoEmail"/>
+	                                            	<div class="form-group d-flex">
+		                                                <input type="text" class="w-60" id="emailFirst" name="emailFirst" placeholder="Email" required />
+		                                                <select class="w-auto border-1 border-radius-10 ml-10" id="emailLast" name="emailLast">
+		                                                    <option value="@naver.com">@naver.com</option>
+		                                                    <option value="@daum.net">@daum.net</option>
+		                                                    <option value="@google.com">@google.com</option>                                                    
+		                                                </select> 
+		                                                <button type="button" class="btn btn-heading btn-block p-10 ml-10" onclick="sendVerificationCode()">인증요청</button>                                               
+		                                            </div>
+													<div class="form-group" id="verify-section" style="display:none;">
+														<div class="form-group d-flex">
+														    <input type="text" id="verifyCode" name="verifyCode" placeholder="인증코드 입력">
+														    <button type="button" class="btn btn-heading btn-block p-10 ml-10"  onclick="verifyCodeSubmit()">확인</button>
+													    </div>
+													</div>
+											</div>
+											<!-- 주소/상세주소 -->
+											<div class="form-group position-relative d-flex justify-content-end">
+                                                <input type="text" id="memberZip" name="memberZip" placeholder="우편번호를 입력해주세요" readonly disabled />
+                                                <button type="button" id="daumPostBtn" class="btn btn-heading btn-block p-10 mt-10 mr-10 position-absolute">우편번호찾기</button>
+                                            </div> 
+                                            <div class="row">
+				                        		<div class="col-6">
+						                            <div class="mb-4">
+						                                <input type="text" id="entCeoAddr" name="entCeoAddr" placeholder="기본주소" class="form-control fs-6" readonly />
+						                            </div>
+				                        		</div>
+				                        		<div class="col-6">
+						                            <div class="mb-4">
+						                                <input type="text" id="entCeoDaddr" name="entCeoDaddr" placeholder="상세주소를 입력하세요" class="form-control fs-6" disabled/>
+						                            </div>
+				                        		</div>
+				                        	</div>
+				                        	<!-- 업체명 -->
+                                            <div class="form-group">
+                                                <input type="text" id="entName" name="entName" placeholder="업체명" required />
+                                            </div>
+				                        	<!-- 사업자번호 -->
+                                            <div class="form-group">
+												<input type="hidden" id="entBrno" name="entBrno" />
+		                                            <div class="form-group d-flex">
+													   	<input type="text" id="entBrno1"  name="entBrno1" placeholder="사업자번호" required/>
+													    <input type="text" class="ml-10 mr-10" id="entBrno2" name="entBrno2" required/>
+													    <input type="text" id="entBrno3" name="entBrno3" required/>
+													</div>
+												</div>
+											<!-- 계좌 -->
+                                            <div class="form-group d-flex">
+                                                <select class="w-auto border-1 border-radius-10 mr-10" id="entBank" name="entBank">
+                                                    <option value="농협">농협</option>
+                                                    <option value="기업은행">기업은행</option>
+                                                    <option value="국민은행">국민은행</option>
+                                                </select>                          
+                                                <input type="text" id="entBankNum" name="entBankNum" placeholder="계좌번호" required />                                        
+                                            </div>                                                                                                                              
+                                            <div class="form-group">
+                                                <button type="submit" id="entRegisterBtn" name="entRegisterBtn" class="btn btn-heading btn-block hover-up">회원가입</button>
+                                            </div>
+                                            <p class="font-xs text-muted"><strong>참고:</strong>귀하의 개인 데이터는 이 웹사이트 전체에서 귀하의 경험을 지원하고, 귀하의 계정에 대한 액세스를 관리하고, 당사의 개인 정보 보호 정책에 설명된 기타 목적을 위해 사용됩니다.</p>
+                                        </form>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>                     
+                      </div>
+                  </div>
+              </div>
+          </div>
+	</th:block>
 	<th:block layout:fragment="jsScript">
 		<script>
 		/**
@@ -149,19 +256,24 @@
 		    $('#entRegisterBtn').click( function (e) {
 		        e.preventDefault();
 
-		        const requiredFields = ['entCeoName', 'entBrno', 'entName', 'phone1', 'phone2', 
+		        const requiredFields = ['entCeoName', 'entBrno1', 'entBrno2', 'entBrno3', 'entName', 'phone1', 'phone2', 
 		        						'emailFirst', 'emailLast', 'entCeoAddr', 'entCeoDaddr', 'entBank', 'entBankNum'];
 		        let isSubmit = true;
 		        
 		        for (let field of requiredFields) {
 		            const input = document.getElementById(field);
-		            if (!input.value.trim()) {
-		            	
-		                alert(`${input.placeholder} 필수 입력항목입니다.`);
-		                input.focus();
+		            if(input){
+			            if (!input.value.trim()) {
+			                alert(`${input.placeholder} 필수 입력항목입니다.`);
+			                input.focus();
+			                isSubmit = false;
+			                break;
+			            }  
+		            } else {
+		                console.error(`${field} 요소를 찾을 수 없습니다.`);
 		                isSubmit = false;
 		                break;
-		            }  
+		            }
 		        }
 				
 				
@@ -177,120 +289,17 @@
 		        if(isSubmit){
 		        	alert("회원가입이 완료되었습니다.");
 					const entCeoPhone = `${$('#phoneFixed').val()}-${$('#phone1').val()}-${$('#phone2').val()}`;
-					const entCeoEmail = `${$('#emailFirst').val()}@${$('#emailLast').val()}`;
+					const entCeoEmail = `${$('#emailFirst').val()}${$('#emailLast').val()}`;
+					const entBrno = `${$('#entBrno1').val()}-${$('#entBrno2').val()}-${$('#entBrno3').val()}`;
 					
 					$('#entCeoPhone').val(entCeoPhone);
 					$('#entCeoEmail').val(entCeoEmail);
+					$('#entBrno').val(entBrno);
 				    $('#entRegisterForm').submit();
 				}
 		    });
 		</script>
 	
-	</th:block>
-	
-	<!-- 페이지 삽입공간 -->
-	<th:block layout:fragment="customContents">
-       <div class="page-header breadcrumb-wrap">
-            <div class="container">
-                <div class="breadcrumb">
-                    <a th:href="@{#}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
-                    <span></span> Pages <span></span> My Account
-                </div>
-            </div>
-        </div>
-        <div class="page-content pt-150 pb-150">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-8 col-lg-10 col-md-12 m-auto">
-                       <div class="row d-flex justify-content-center">
-                            <div class="col-lg-6 col-md-8">
-                                <div class="login_wrap widget-taber-content background-white">
-                                    <div class="padding_eight_all bg-white">
-                                        <div class="heading_s1 mb-20">
-                                            <h1 class="mb-30" th:text="${title}"></h1>
-                                        </div>
-                                        <form  id="entRegisterForm" th:action="@{/customer/register/entRegister}" method="post">
-                                        	<!-- 이름 -->
-                                            <div class="form-group">
-                                                <input type="text" name="entCeoName" placeholder="이름" required />                                              
-                                            </div>
-                                            <!-- 연락처 -->
-                                           <div class="form-group d-flex">
-											   	<input type="text" class="w-10" id="phoneFixed" name="phoneFixed" placeholder="010" disabled />
-											    <input type="text" class="mr-10 ml-10" id="phone1" name="phone1" placeholder="1234" required />
-											    <input type="text" placeholder="5678" id="phone2" name="phone2" required />
-											</div>
-				                        	<!-- 이메일 본인인증 --> 
-                                            <div class="form-group">
-                                            	<input type="hidden" id="entCeoEmail" name="entCeoEmail"/>
-	                                            	<div class="form-group d-flex">
-		                                                <input type="text" class="w-60" id="emailFirst" name="emailFirst" placeholder="Email" required />
-		                                                <select class="w-auto border-1 border-radius-10 ml-10" id="emailLast" name="emailLast">
-		                                                    <option value="naver.com">@naver.com</option>
-		                                                    <option value="daum.net">@daum.net</option>
-		                                                    <option value="google.com">@google.com</option>                                                    
-		                                                </select> 
-		                                                <button type="button" class="btn btn-heading btn-block p-10 ml-10" onclick="sendVerificationCode()">인증요청</button>                                               
-		                                            </div>
-													<div class="form-group" id="verify-section" style="display:none;">
-														<div class="form-group d-flex">
-														    <input type="text" id="verifyCode" name="verifyCode" placeholder="인증코드 입력">
-														    <button type="button" class="btn btn-heading btn-block p-10 ml-10"  onclick="verifyCodeSubmit()">확인</button>
-													    </div>
-													</div>
-											</div>
-											<!-- 주소/상세주소 -->
-											<div class="form-group position-relative d-flex justify-content-end">
-                                                <input type="text" id="memberZip" name="memberZip" placeholder="우편번호를 입력해주세요" readonly disabled />
-                                                <button type="button" id="daumPostBtn" class="btn btn-heading btn-block p-10 mt-10 mr-10 position-absolute">우편번호찾기</button>
-                                            </div> 
-                                            <div class="row">
-				                        		<div class="col-6">
-						                            <div class="mb-4">
-						                                <input type="text" id="entCeoAddr" name="entCeoAddr" placeholder="기본주소" class="form-control fs-6" readonly />
-						                            </div>
-				                        		</div>
-				                        		<div class="col-6">
-						                            <div class="mb-4">
-						                                <input type="text" id="entCeoDaddr" name="entCeoDaddr" placeholder="상세주소를 입력하세요" class="form-control fs-6" disabled/>
-						                            </div>
-				                        		</div>
-				                        	</div>
-				                        	<!-- 업체명 -->
-                                            <div class="form-group">
-                                                <input type="text" name="entName" placeholder="업체명" required />
-                                            </div>
-				                        	<!-- 사업자번호 -->
-                                            <div class="form-group">
-												<input type="hidden" id="entBrno" name="entBrno" />
-		                                            <div class="form-group d-flex">
-													   	<input type="text" id="entBrno1"  name="entBrno1" placeholder="사업자번호" required/>
-													    <input type="text" class="ml-10 mr-10" id="entBrno2" name="corpBrno2" required/>
-													    <input type="text" id="entBrno3" name="entBrno3" required/>
-													</div>
-												</div>
-											<!-- 계좌 -->
-                                            <div class="form-group d-flex">
-                                                <select class="w-auto border-1 border-radius-10 mr-10" id="entBank" name="entBank">
-                                                    <option value="농협">농협</option>
-                                                    <option value="기업은행">기업은행</option>
-                                                    <option value="국민은행">국민은행</option>
-                                                </select>                          
-                                                <input type="text" id="entBankNum" name="entBankNum" placeholder="계좌번호" required />                                        
-                                            </div>                                                                                                                              
-                                            <div class="form-group">
-                                                <button type="submit" id="entRegisterBtn" name="entRegisterBtn" class="btn btn-heading btn-block hover-up">회원가입</button>
-                                            </div>
-                                            <p class="font-xs text-muted"><strong>참고:</strong>귀하의 개인 데이터는 이 웹사이트 전체에서 귀하의 경험을 지원하고, 귀하의 계정에 대한 액세스를 관리하고, 당사의 개인 정보 보호 정책에 설명된 기타 목적을 위해 사용됩니다.</p>
-                                        </form>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>                     
-                      </div>
-                  </div>
-              </div>
-          </div>
 	</th:block>
 	
 </html>

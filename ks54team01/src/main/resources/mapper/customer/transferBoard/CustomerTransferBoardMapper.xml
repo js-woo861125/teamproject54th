@@ -73,6 +73,33 @@
 		</association>
   	</resultMap>	
 
+	<select id="getMyTransferBoardList" parameterType="string" resultMap="transferBoardResultMap">
+  		/* 내 양도 게시글 목록 조회 (제목, 작성자, 상품명, 이미지)*/
+	   SELECT 
+	   		tb.transfer_board_no ,
+			p.products_image ,
+			tb.cust_id ,
+			c.cust_nm ,
+			pc.middle_category ,
+			pc.small_category ,
+			tb.transfer_title ,
+			tb.rental_fee ,
+			tb.individual_grants ,
+			tb.transfer_rental_processing_status ,
+			tb.register_date 
+		 FROM 
+			customer c RIGHT JOIN transfer_board tb 
+			USING (cust_id)
+			INNER JOIN sell_products sp
+			USING (sell_products_no)
+			INNER JOIN products p
+			USING (products_no)
+			INNER JOIN products_category pc
+			ON p.product_category_no = pc.product_category_no
+		 WHERE
+		 	tb.cust_id = 'personalcustid4'
+		 ORDER BY tb.register_date DESC;
+  	</select>
 
 	<select id="getTransferBoardCount" resultType="int">
 		/* 전체 행 수 */
