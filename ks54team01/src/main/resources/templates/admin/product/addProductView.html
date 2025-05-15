@@ -1,161 +1,344 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{admin/layout/default}">
-	<!-- head 삽입공간 -->
-	<head>
-	</head>
-	
-	<th:block layout:fragment="jsFile">
-		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-	</th:block>
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/layout/default}">
+<!-- head 삽입공간 -->
+<head>
+</head>
 
-    <th:block layout:fragment="content">
-       <div class="row">
-                    <div class="col-9">
-                        <div class="content-header">
-                            <h2 class="content-title">제품 등록</h2>
-                            <div>
-                                <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">임시저장</button>
-                                <button class="btn btn-md rounded font-sm hover-up">저장</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h4>제품정보</h4>
-                            </div>
-                            <div class="card-body">
-                                <form>
-                                    <div class="mb-4">
-                                        <label for="product_name" class="form-label">제품 이름</label>
-                                        <input type="text" placeholder="제품을 입력해주세요" class="form-control" id="product_name"/>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-10">
-                                            <div class="mb-4">
-                                                <label class="form-label">카테고리</label>
-                                                <select class="form-select">
-                                                    <option>가전 > TV/디지털 > TV</option>
-                                                    <option>가전 > TV/디지털 > 노트북</option>
-                                                    <option>가전 > 주방가전  > 전기레인지 </option>
-                                                    <option>가전 > 냉장가전  > 냉장고 </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-4">
-                                            <div class="mb-4">
-                                                <label class="form-label">브랜드</label>
-                                                <select class="form-select">
-                                                    <option>삼성</option>
-                                                    <option>LG</option>
-                                                    <option>휘센</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <div class="mb-4">
-                                                <label class="form-label">품목</label>
-                                                <select class="form-select">
-                                                    <option>건강돌침대</option>
-                                                    <option>돌침대</option>
-                                                    <option>흔들리지않는침대</option>
-                                                </select>
-                                            </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-10">
-                                            <label class="form-label">모델</label>
-                                            <select class="form-select">
-                                                <option>라온 LED 저상형 침대 SS</option>
-                                                <option>라온 LED 저상형 침대 Q</option>
-                                                <option>라온 LED 저상형 침대 SS+SS</option>
-                                            </select>
-                                        </div>
-                                </form>
-                            </div>
-                        </div>
-                        <!-- card end// -->
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h4>제품 상세옵션</h4>
-                            </div>
-                            <div class="card-body">
-                                <form>
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <label class="form-label">상세옵션</label>
-                                            <select class="form-select">
-                                                <option>알아서 들어감</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <label class="form-label">상세옵션</label>
-                                            <select class="form-select">
-                                                <option>알아서 들어감</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                     <div class="row">
-                                        <div class="col-lg-6">
-                                            <label class="form-label">상세옵션</label>
-                                            <select class="form-select">
-                                                <option>알아서 들어감</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <label class="form-label">상세옵션</label>
-                                            <select class="form-select">
-                                                <option>알아서 들어감</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <!-- card end// -->
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h4>제품 사진</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="input-upload">
-                                    <img src="manage/assets/imgs/theme/upload.svg" alt="" />
-                                    <input class="form-control" type="file" />
-                                </div>
-                            </div>
-                        </div> 
-                    </div>
-                </div>
-   </th:block>    
-        <!-- card end// -->
-        <div class="pagination-area mt-15 mb-50">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-start">
-                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                    <li class="page-item"><a class="page-link" href="#">02</a></li>
-                    <li class="page-item"><a class="page-link" href="#">03</a></li>
-                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                    <li class="page-item"><a class="page-link" href="#">16</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    <!-- content-main end// -->
+<th:block layout:fragment="jsFile">
+	<script
+		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</th:block>
 
-        <script src="manage/assets/js/vendors/jquery-3.6.0.min.js"></script>
-        <script src="manage/assets/js/vendors/bootstrap.bundle.min.js"></script>
-        <script src="manage/assets/js/vendors/select2.min.js"></script>
-        <script src="manage/assets/js/vendors/perfect-scrollbar.js"></script>
-        <script src="manage/assets/js/vendors/jquery.fullscreen.min.js"></script>
-        <!-- Main Script -->
-        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-    </body>
+<th:block layout:fragment="content">
+	<div class="row">
+		<div class="col-9">
+			<div class="content-header">
+				<h2 class="content-title">제품 등록</h2>
+				<div>
+					<button class="btn btn-light rounded font-sm mr-5 text-body hover-up">임시저장</button>
+					<button class="btn btn-md rounded font-sm hover-up">저장</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6">
+			<form class="user" th:action="@{/admin/product/addProduct}" method="post" enctype="multipart/form-data">
+				<div class="card mb-4">
+					<div class="card-header">
+						<h4>제품정보</h4>
+					</div>
+					<div class="card-body">
+						<div class="mb-4">
+							<label for="product_name" class="form-label">제품 이름</label> 
+							<input type="text" placeholder="제품을 입력해주세요" class="form-control" id="product_name"/>
+						</div>
+						<div class="row">
+							<div class="col-lg-10">
+								<div class="mb-4">
+									<label class="form-label">카테고리</label> 
+									<select	class="form-select">
+										<option>가전 > TV/디지털 > TV</option>
+										<option>가전 > TV/디지털 > 노트북</option>
+										<option>가전 > 주방가전 > 전기레인지</option>
+										<option>가전 > 냉장가전 > 냉장고</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-4">
+								<div class="mb-4">
+									<label class="form-label">브랜드</label> <select
+										class="form-select">
+										<option>삼성</option>
+										<option>LG</option>
+										<option>휘센</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="mb-4">
+									<label class="form-label">품목</label> <select
+										class="form-select">
+										<option>건강돌침대</option>
+										<option>돌침대</option>
+										<option>흔들리지않는침대</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-10">
+							<label class="form-label">모델</label> <select class="form-select">
+								<option>라온 LED 저상형 침대 SS</option>
+								<option>라온 LED 저상형 침대 Q</option>
+								<option>라온 LED 저상형 침대 SS+SS</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<!-- card end// -->
+				<div class="card mb-4">
+					<div class="card-header">
+						<h4>제품 상세옵션</h4>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<div class="col-lg-6">
+								<label class="form-label">상세옵션</label> <select
+									class="form-select">
+									<option>알아서 들어감</option>
+								</select>
+							</div>
+							<div class="col-lg-6">
+								<label class="form-label">상세옵션</label> <select
+									class="form-select">
+									<option>알아서 들어감</option>
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-6">
+								<label class="form-label">상세옵션</label> <select
+									class="form-select">
+									<option>알아서 들어감</option>
+								</select>
+							</div>
+							<div class="col-lg-6">
+								<label class="form-label">상세옵션</label> <select
+									class="form-select">
+									<option>알아서 들어감</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- card end// -->
+				<!-- card end// -->
+				<div class="card mb-4">
+					<div class="card-header">
+						<h4>제품 썸네일</h4>
+					</div>
+					<div class="card-body">
+						<div class="col-md-9">
+							<label for="files" class="form-label">단일파일 / 다중파일</label>
+							<div class="input-group">
+								<input type="file" id="files1" name="files1" class="form-control bg-light border-0 small" multiple>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card mb-4">
+					<div class="card-header">
+						<h4>제품 사진</h4>
+					</div>
+					<div class="card-body">
+						<div class="col-md-9">
+							<label for="files" class="form-label">단일파일 / 다중파일</label>
+							<div class="input-group">
+								<input type="file" id="files2" name="files2" class="form-control bg-light border-0 small" multiple>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- card end// -->
+				<button class="btn btn-primary" type="submit">상품등록</button>
+			</form>
+		</div>
+		
+		<!-- <form class="user" th:action="@{/admin/file/fileupload}" method="post" enctype="multipart/form-data">			
+			
+		</form> -->
+		<div class="row col-lg-6">
+			<div class="card">
+				<div class="card-header">
+					<h4>상품 썸네일 미리보기</h4>
+				</div>
+				<div class="card-body">
+					<div class="row" id="previewThumnail">					
+						
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h4>상품 이미지 미리보기</h4>
+				</div>
+				<div class="card-body">
+					<div class="row" id="previewThumnailProduct">					
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- <div class="col-lg-3">
+			<div class="card mb-4">
+				<div class="card-header">
+					<h4>제품 사진</h4>
+				</div>
+				<div class="card-body">
+					<div class="input-upload">
+						<img src="manage/assets/imgs/theme/upload.svg" alt="" /> <input
+							type="file" name="multipartFilesThumbnail"
+							id="multipartFilesThumbnail" class="form-control" multiple
+							required>
+						<input type="file" name="file1" class="form-control"   />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3">
+			<div class="card mb-4">
+				<div class="card-header">
+					<h4>상품 사진</h4>
+				</div>
+				<div class="card-body">
+					<div class="input-upload">
+						<img src="manage/assets/imgs/theme/upload.svg" alt="" /> <input
+							type="file" name="multipartFilesProducts"
+							id="multipartFilesProducts" class="form-control" multiple
+							required>
+						<input type="file" name="file1" class="form-control"   />
+					</div>
+				</div>
+			</div>
+		</div> -->
+	</div>
+</th:block>
+<!-- card end// -->
+<div class="pagination-area mt-15 mb-50">
+	<nav aria-label="Page navigation example">
+		<ul class="pagination justify-content-start">
+			<li class="page-item active"><a class="page-link" href="#">01</a></li>
+			<li class="page-item"><a class="page-link" href="#">02</a></li>
+			<li class="page-item"><a class="page-link" href="#">03</a></li>
+			<li class="page-item"><a class="page-link dot" href="#">...</a></li>
+			<li class="page-item"><a class="page-link" href="#">16</a></li>
+			<li class="page-item"><a class="page-link" href="#"><i
+					class="material-icons md-chevron_right"></i></a></li>
+		</ul>
+	</nav>
+</div>
+<!-- content-main end// -->
+<th:block layout:fragment="jsScript">
+   	<script>
+   		$('#files1').change(function(){
+   			$('#previewThumnail').empty();
+   			const files = this.files;
+   			const fileList = [...files];
+   			fileList.forEach(function(file, idx){
+  	              
+  	              //div에 이미지 추가
+  	              const imgDiv = $('<div class="col-md-3 img-box1" style="position:relative"></div>');
+  	              const lastModified = files[idx].lastModified;
+  	              
+  	           	  const fileFullName = files[idx].name;
+			  const dotIdx = fileFullName.lastIndexOf('.');
+			  const fileName = (dotIdx != -1 &&  dotIdx < fileFullName.length - 1) 
+			  				   ? fileFullName.substring(0, dotIdx) 
+			  				   : fileFullName;
+  	              
+			  //이미지 파일 미리보기
+  	              if(file.type.match('image.*')){
+  	                  //파일을 읽기 위한 FileReader객체 생성
+  	                  const reader = new FileReader(); 
+  	                  reader.onload = function (e) { 
+  	                      //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
+  	                      const img = $('<img />', {src: e.target.result, id : lastModified, alt: fileName });
+  	                      const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
+  	                      imgDiv.append(img,span);
+  	                      imgDiv.appendTo('#previewThumnail');
+  	                  } 
+  	                  reader.readAsDataURL(file);
+  	              }else{
+  	                  //이미지 파일 아닐 경우 대체 이미지
+  	                  const noImage = $('<img />', { src : '/manage/assets/imgs/theme/upload.svg', id : lastModified, alt : fileName});
+  	               	  const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
+  	                  imgDiv.append(noImage, span);
+  	                  imgDiv.appendTo('#previewThumnail');
+  	                  
+  	              }
+  	          })
+   		});
+   		
+   		$(document).on('click', '.delete-img1',function(){
+   			const files = $("#files1").prop('files1');
+   			
+   	        const dataTranster = new DataTransfer();
+   	        const removeTargetId = $(this).attr('data-remove-key');
+   	        
+   	        Array.from(files)
+   	        	 .filter(file => file.lastModified != removeTargetId)
+    	         .forEach(file => dataTranster.items.add(file));
+   	 
+   	        $('#files1')[0].files = dataTranster.files;
+   	 
+   	        $(this).closest('.img-box1').remove();
+   	 
+   		});
+   		
+   		$('#files2').change(function(){
+   			$('#previewThumnailProduct').empty();
+   			const files = this.files;
+   			const fileList = [...files];
+   			fileList.forEach(function(file, idx){
+  	              
+  	              //div에 이미지 추가
+  	              const imgDiv = $('<div class="col-md-3 img-box2" style="position:relative"></div>');
+  	              const lastModified = files[idx].lastModified;
+  	              
+  	           	  const fileFullName = files[idx].name;
+			  const dotIdx = fileFullName.lastIndexOf('.');
+			  const fileName = (dotIdx != -1 &&  dotIdx < fileFullName.length - 1) 
+			  				   ? fileFullName.substring(0, dotIdx) 
+			  				   : fileFullName;
+  	              
+			  //이미지 파일 미리보기
+  	              if(file.type.match('image.*')){
+  	                  //파일을 읽기 위한 FileReader객체 생성
+  	                  const reader = new FileReader(); 
+  	                  reader.onload = function (e) { 
+  	                      //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
+  	                      const img = $('<img />', {src: e.target.result, id : lastModified, alt: fileName });
+  	                      const span = $('<span />', {'class': 'delete-img2', 'data-remove-key' : lastModified}).text('X');
+  	                      imgDiv.append(img,span);
+  	                      imgDiv.appendTo('#previewThumnailProduct');
+  	                  } 
+  	                  reader.readAsDataURL(file);
+  	              }else{
+  	                  //이미지 파일 아닐 경우 대체 이미지
+  	                  const noImage = $('<img />', { src : '/manage/assets/imgs/theme/upload.svg', id : lastModified, alt : fileName});
+  	               	  const span = $('<span />', {'class': 'delete-img2', 'data-remove-key' : lastModified}).text('X');
+  	                  imgDiv.append(noImage, span);
+  	                  imgDiv.appendTo('#previewThumnail');
+  	                  
+  	              }
+  	          })
+   		});
+   		
+   		$(document).on('click', '.delete-img2',function(){
+   			const files = $("#files2").prop('files2');
+   			
+   	        const dataTranster = new DataTransfer();
+   	        const removeTargetId = $(this).attr('data-remove-key');
+   	        
+   	        Array.from(files)
+   	        	 .filter(file => file.lastModified != removeTargetId)
+    	         .forEach(file => dataTranster.items.add(file));
+   	 
+   	        $('#files2')[0].files = dataTranster.files;
+   	 
+   	        $(this).closest('.img-box2').remove();
+   	 
+   		});
+   	</script>
+   </th:block>
+<script src="manage/assets/js/vendors/jquery-3.6.0.min.js"></script>
+<script src="manage/assets/js/vendors/bootstrap.bundle.min.js"></script>
+<script src="manage/assets/js/vendors/select2.min.js"></script>
+<script src="manage/assets/js/vendors/perfect-scrollbar.js"></script>
+<script src="manage/assets/js/vendors/jquery.fullscreen.min.js"></script>
+<!-- Main Script -->
+<script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+</body>
 </html>
