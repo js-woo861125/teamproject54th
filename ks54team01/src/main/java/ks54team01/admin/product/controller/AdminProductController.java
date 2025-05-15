@@ -1,7 +1,5 @@
 package ks54team01.admin.product.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import ch.qos.logback.core.model.Model;
 import ks54team01.common.file.mapper.FileMapper;
 import ks54team01.common.file.service.FileService;
-import ks54team01.common.file.util.FilesUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
