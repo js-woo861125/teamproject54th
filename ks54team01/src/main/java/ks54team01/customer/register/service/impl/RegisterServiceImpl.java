@@ -61,7 +61,7 @@ public class RegisterServiceImpl implements RegisterService{
 
 	    // 입점업체 대표 등록 (ceo, emp 테이블)
 	    registerMapper.addEntCeoMember(member);
-		registerMapper.addEntEmpMember(member);
+		registerMapper.addEntMember(member);
 	    
 	    return 1;
 	}

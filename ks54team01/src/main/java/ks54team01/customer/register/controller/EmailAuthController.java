@@ -40,7 +40,7 @@ public class EmailAuthController {
         } catch (Exception e) {
         	System.out.println(e.getMessage());
             response.put("status", "fail");
-            response.put("message", "이메일 전송에 실패했습니다.");
+			response.put("message", "이메일 전송에 실패했습니다."); 
             response.put("statusCode", 500);            
             
         }
