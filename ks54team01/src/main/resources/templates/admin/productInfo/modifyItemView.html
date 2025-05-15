@@ -1,96 +1,85 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{admin/layout/default}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/default}">
 	<!-- head 삽입공간 -->
 	<head>
 	</head>
 	
 	<th:block layout:fragment="jsFile">
-		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
 	<th:block layout:fragment="content">
-		<div class="content-header">
-            <div>
-                <h2 class="content-title card-title" th:text="${title}"></h2>
-            </div>
-        </div>
-        <div class="card mb-4 col-8">
-        	<form id="addProductInfoForm" th:action="@{/admin/productInfo/addItem}" method="post">	
-                 <div class="card-body">
-	           		 <div class="col-12">
-                        <div class="row gx-5">
-                            <aside class="col-lg-3 border-end">
-                                <nav class="nav nav-pills flex-column mb-4">
-                                    <a class="nav-link" th:href="@{/admin/productInfo/addCategory}">카테고리</a>
-									<a class="nav-link" th:href="@{/admin/productInfo/addBrand}">브랜드</a>
-                                    <a class="nav-link active" aria-current="page" th:href="@{/admin/productInfo/addItem}">품목</a>
-                                    <a class="nav-link" th:href="@{/admin/productInfo/addModel}">모델</a>
-                                    <a class="nav-link" th:href="@{/admin/productInfo/addBenefit}">전체혜택</a>
-                                    <a class="nav-link" th:href="@{/admin/productInfo/addCategorySpec}">카테고리별/상세스펙</a>
-                                    <a class="nav-link" th:href="@{/admin/productInfo/addModelSpec}">모델별/상세스펙</a>
-                                </nav>
-                            </aside>
-                            <div class="col-lg-9">
-                                <section class="content-body p-xl-4">
-                                    <form id="addProductInfoForm" th:action="@{/admin/productInfo/addItem}" method="post">
-                                        <div class="col-12">
-                                        	<div class="mb-4">
-	                                           <label class="form-label fs-6" for="managerId">관리자아이디</label>
-	                                           <div class="col-lg-12">
-	                                               <input type="text" id="managerId" name="managerId" 
-	                                               		  class="form-control" placeholder="아이디를 입력해주세요" />
-	                                           </div>
-	                                           <!-- col.// -->
-	                                        </div>
-			                            	<div class="mb-4">
-				                                <label class="form-label fs-6" for="categoryNo">카테고리</label>
-				                                <select class="form-select text-center fs-7" id="categoryNo" name="categoryNo">
-				                                    <option value=""> 카테고리를 선택해주세요 </option>
-				                                    <th:block th:if="${not #lists.isEmpty(categoryList)}"
-			                                    		  th:each="l : ${categoryList}">
-			                                    	<option th:value="${l.categoryNo}" 
-			                                    			th:text="${l.smCategory}"></option>
-			                                    </th:block>
-				                                </select>
-				                            </div>
-		                        		</div>
-	                        			<div class="col-12">
-	                                       <div class="mb-4">
-	                                           <label class="form-label fs-6" for="itemName">품목명</label>
-	                                           <div class="col-lg-12">
-	                                               <input type="text" id="itemName" name="itemName"
-	                                               		  class="form-control" placeholder="품목명을 입력해주세요" />
-	                                           </div>
-	                                           <!-- col.// -->
-	                                       </div>																		
-                                        </div>
-                                        <!-- row.// -->                       
-                                        <br/>
-                                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-						                    <div class="col-md-2 col-2 ms-auto">
-						                        <button type="submit" id="addItemBtn" 
-						                        		class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >등록</button>
-						                    </div>
-						                    <div class="col-md-2 col-2">
-						                        <button type="reset" onclick="location.href='/admin/productInfo/itemList'"
-						                        		class="btn btn-warning w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >등록취소</button>
-						                    </div>
-						                </div>
-                                    </form>
-                                </section>
-                                <!-- content-body .// -->
-                            </div>
-                            <!-- col.// -->
-                        </div>
-                        <!-- row.// -->
-                    </div>
-                    <!-- card body end// -->
-                 </div>
-        	</form>
-        </div>
+	    <div class="content-header">
+	        <div>
+	            <h2 class="content-title card-title" th:text="${title}"></h2>
+	        </div>
+	    </div>
+	    <div class="card mb-4 col-8">
+	        <div class="card-body">
+	            <div class="row gx-5">
+	                <!-- 사이드 메뉴 -->
+	                <aside class="col-lg-3 border-end">
+	                    <nav class="nav nav-pills flex-column mb-4">
+	                        <a class="nav-link" th:href="@{/admin/productInfo/addCategory}">카테고리</a>
+	                        <a class="nav-link" th:href="@{/admin/productInfo/addBrand}">브랜드</a>
+	                        <a class="nav-link active" th:href="@{/admin/productInfo/addItem}">품목</a>
+	                        <a class="nav-link" th:href="@{/admin/productInfo/addModel}">모델</a>
+	                        <a class="nav-link" th:href="@{/admin/productInfo/addBenefit}">전체혜택</a>
+	                        <a class="nav-link" th:href="@{/admin/productInfo/addCategorySpec}">카테고리별/상세스펙</a>
+	                        <a class="nav-link" th:href="@{/admin/productInfo/addModelSpec}">모델별/상세스펙</a>
+	                    </nav>
+	                </aside>
+	
+	                <!-- 본문 영역 -->
+	                <div class="col-lg-9">
+	                    <form id="modifyProductInfoForm"
+	                          th:action="@{/admin/productInfo/modifyItem}"
+	                          method="post"
+	                          th:object="${itemInfo}">
+	                        <section class="content-body p-xl-4">
+	
+	                            <!-- hidden 필드 -->
+	                            <input type="hidden" th:field="*{itemNo}" />
+	                            <input type="hidden" th:field="*{managerId}" />
+	
+	                            <!-- 카테고리 선택 -->
+	                            <div class="mb-4">
+	                                <label class="form-label fs-6" for="categoryNo">카테고리</label>
+	                                <select th:field="*{categoryNo}" class="form-select text-center fs-7">
+	                                    <option value="">카테고리를 선택해주세요</option>
+	                                    <th:block th:each="l : ${categoryList}">
+	                                        <option th:value="${l.categoryNo}" th:text="${l.smCategory}"></option>
+	                                    </th:block>
+	                                </select>
+	                            </div>
+	
+	                            <!-- 품목명 -->
+	                            <div class="mb-4">
+	                                <label class="form-label fs-6" for="itemName">품목명</label>
+	                                <input type="text" th:field="*{itemName}" class="form-control" placeholder="품목명을 입력해주세요" />
+	                            </div>
+	
+	                            <!-- 버튼 -->
+	                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+	                                <div class="col-md-2 col-2 ms-auto">
+	                                    <button type="submit" class="btn btn-success w-100 rounded font-lg hover-up text-white fs-6 justify-content-center">수정</button>
+	                                </div>
+	                                <div class="col-md-2 col-2">
+	                                    <button type="reset"
+	                                            onclick="location.href='/admin/productInfo/itemList'"
+	                                            class="btn btn-warning w-100 rounded font-lg hover-up text-white fs-6 justify-content-center">수정취소</button>
+	                                </div>
+	                            </div>
+	
+	                        </section>
+	                    </form>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
 	</th:block>
 
 </html>

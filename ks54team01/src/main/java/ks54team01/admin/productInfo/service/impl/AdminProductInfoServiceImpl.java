@@ -11,6 +11,7 @@ import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.admin.productInfo.domain.ProductInfoCategorySpec;
 import ks54team01.admin.productInfo.domain.ProductInfoItem;
 import ks54team01.admin.productInfo.domain.ProductInfoModel;
+import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
 import ks54team01.admin.productInfo.mapper.AdminProductInfoMapper;
 import ks54team01.admin.productInfo.service.AdminProductInfoService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,27 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 
 	// DI 의존성 주입
 	private final AdminProductInfoMapper adminProductInfoMapper;
+	
+	// 상품정보 삭제
+	@Override
+	public boolean removeBrandInfoByNo(String brandNo) {
+		
+		int delCount = 0;
+		
+		// 상품정보 브랜드
+		delCount += adminProductInfoMapper.removeBrandInfoByNo(brandNo);
+		
+		boolean isDel = delCount > 0 ? true : false;
+		
+		return isDel;
+	}
+	
+	// 상품정보 중복체크
+	@Override
+	public boolean isBrandNameCheck(String brandName) {
+		
+		return adminProductInfoMapper.isBrandNameCheck(brandName);
+	}
 	
 	// 상품정보 수정
 	@Override
@@ -160,6 +182,14 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	}
 	
 	// 상품정보 목록 조회
+	@Override
+	public List<ProductInfoModelSpec> getModelSpecList() {
+		
+		List<ProductInfoModelSpec> modelSpecList = adminProductInfoMapper.getModelSpecList();
+		
+		return modelSpecList;
+	}
+	
 	@Override
 	public List<ProductInfoCategorySpec> getCategorySpecList() {
 		
