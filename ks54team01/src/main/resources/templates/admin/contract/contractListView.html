@@ -85,9 +85,11 @@
 									<td th:text="${l.productName}">상품명</td>
 									
 									<td>
-										<a th:text="${l.rentContNo}" th:href="@{/admin/contract/contractDetail(rentalContNo=${l.rentContNo})}">
-											계약번호
-										</a>
+									  <a href="#"
+									     th:text="${l.rentContNo}"
+									     th:onclick="'javascript:openContractDetail(\'' + @{/admin/contract/contractDetail(rentalContNo=${l.rentContNo})} + '\'); return false;'">
+									    계약번호
+									  </a>
 									</td>
 									
 									<td th:text="${l.rentContStatus}">계약상태</td>
@@ -124,6 +126,13 @@
 				</ul>
 			</nav>
 		</div>
+		
+<script th:inline="javascript">
+	function openContractDetail(url) {
+		window.open(url, 'contractDetailPopup', 'width=1024,height=768,scrollbars=yes');
+	}
+</script>
+		
 	</th:block>
 
 </html>
