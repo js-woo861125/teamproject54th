@@ -87,7 +87,26 @@
 			<result column="small_category"			property="smCategory"/>
 		</association>
 	</resultMap>
-		
+
+	<delete id="removeBrandInfoByNo" parameterType="String">
+		/* 상품정보 브랜드 삭제 */
+		DELETE 
+		FROM 
+			brand
+		WHERE 
+			brand_no = #{brandNo};
+	</delete>
+
+	<select id="isBrandNameCheck" parameterType="String" resultType="boolean">
+		/* 브랜드명 중복체크 */
+		SELECT
+			count(*)
+		FROM
+			brand
+		WHERE
+			brand_nm = #{brandName};
+	</select>
+
 	<update id="modifyCategorySpec" parameterType="ProductInfoCategorySpec">
 		/* 상품정보 카테고리별/상세스펙 수정 */
 		UPDATE products_spec
@@ -127,11 +146,10 @@
 	<update id="modifyItem" parameterType="ProductInfoItem">
 		/* 상품정보 품목 수정 */
 		UPDATE item
-		<trim prefix="SET" suffixOverrides=",">
-		<if test="itemNo != null and itemNo != ''">
-		    item_nm=#{itemName}
-		</if>
-		</trim>
+		SET
+		   product_category_no = #{categoryNo},
+		   item_nm = #{itemName},
+		   revision_date = NOW()
 		WHERE
 			item_no = #{itemNo};
 	</update>
@@ -139,25 +157,23 @@
 	<update id="modifyBrand" parameterType="ProductInfoBrand">
 		/* 상품정보 브랜드 수정 */
 		UPDATE brand
-		<trim prefix="SET" suffixOverrides=",">
-		<if test="brandNo != null and brandNo != ''">
-		    brand_nm=#{brandName}
-		</if>
-		</trim>
+		SET
+			brand_nm = #{brandName},
+			revision_date = NOW()
 		WHERE
 			brand_no = #{brandNo};
 	</update>
 	
 	<update id="modifyCategory" parameterType="ProductInfoCategory">
 		/* 상품정보 카테고리 수정 */
-		UPDATE products_category
-		<trim prefix="SET" suffixOverrides=",">
-		<if test="smCategory != null and smCategory != ''">
-		    small_category=#{smCategory}
-		</if>
-		</trim>
-		WHERE
-			product_category_no = #{categoryNo};
+		UPDATE products_category 
+		SET 
+			large_category = #{lgCategory},
+			middle_category = #{mdCategory},
+			small_category = #{smCategory},
+			revision_date = NOW()
+		WHERE 
+		  product_category_no = #{categoryNo};
 	</update>
 	
 	<select id="getCategorySpecInfoByNo" parameterType="String" resultMap="categorySpecResultMap">
@@ -376,19 +392,19 @@
 		VALUES
 		(#{categoryNo}, #{managerId}, #{lgCategoryNo}, #{lgCategory}, #{mdCategoryNo}, #{mdCategory}, #{smCategory}, NOW(), NOW(), '사용중');
 	</insert>
-	
+
 	<select id="getCategorySpecList" resultMap="categorySpecResultMap">
 		/* 상품정보 카테고리별/상세스펙 목록 조회 */
 		SELECT
-			psc.spec_no,
-			psc.manager_id,
+			ps.spec_no,
+			ps.manager_id,
 			pc.small_category,
-			psc.SPEC_NM,
-			psc.register_date,
-			psc.revision_date,
-			psc.use_status
+			ps.spec_nm,
+			ps.register_date,
+			ps.revision_date,
+			ps.use_status
 		FROM
-			products_spec psc inner join products_category pc 
+			products_spec ps inner join products_category pc 
 			using(product_category_no);
 	</select>
 	
@@ -451,7 +467,8 @@
 			revision_date,
 			use_status
 		FROM 
-			brand;
+			brand
+		ORDER BY CAST(SUBSTRING_INDEX(brand_no, '_', -1) AS UNSIGNED);
 	</select>
 	
 	<select id="getCategoryList" resultMap="categoryResultMap">

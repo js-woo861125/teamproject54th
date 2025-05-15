@@ -20,6 +20,13 @@ public class AdminEntController {
 	
 	private final AdminEntListService adminEntListService;
 	
+	@GetMapping("/addContract")
+	// 입점업체 계약 등록
+	public String addContract() {
+		
+		return "admin/enterprise/enterpriseAddContractView";
+	}
+	
 	@GetMapping("/List")
 	// 입점업체 목록 조회 + 계약 상태 자동 갱신
 	public String getEntList(Model model) {
