@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{enterprise/layout/default}">
-	
 	<!-- head 삽입공간 -->
 	<head>
 	</head>
@@ -15,8 +14,17 @@
 		$(document).on('click', '.contractDetailLink', function(e) {
 			e.preventDefault();
 			
-			const paymentNm = $(this).data('custNm');
-			const url = `/enterprise/payment/paymentListDetail`;
+			const rentalContractNo = $(this).data('rentalContractNo')
+			const payStatus = $(this).closest('tr').find('.rounded-pill').text();
+			
+			
+			if (rentalContractNo === '일시불판매' || payStatus.trim() === '2.결제후배송전취소(환불)') {
+        		e.preventDefault();
+        		return;
+    		}
+			
+			let url = `/enterprise/payment/paymentListDetail?rentalContractNo=${rentalContractNo}`;
+			
 			open(url, '_blank', 'width=1500,height=800,left=300,top=100');			
 		});
 		</script>
@@ -81,9 +89,8 @@
 									<td th:text="${l.prodNm}">라온 LED 저상형 침대 SS</td>
 									<td th:text="${l.payCount}">1</td>
 									<td th:text="|₩${#numbers.formatInteger(l.totalPrice, 3, 'COMMA')}|">$9.00</td>
-									<td><a th:text="${#strings.contains(l.rentalContractNo, 'rental') ? '렌탈' : (l.rentalContractNo == '일시불판매' ? '일반판매' : l.rentalContractNo)}" class="contractDetailLink">링크</a></td>
-									<td><span class="badge rounded-pill" th:text="${l.payStatus}"
-												th:classappend="${l.payStatus} == '1.정상결제상태(환불이아닌상태)' ? ' alert-success' : (${l.payStatus} == '3.배송후환불(환불)' ? ' alert-danger' : ' alert-warning')">취소</span></td>
+									<td><a href="#" th:data-rental-contract-no="${l.rentalContractNo}" th:text="${#strings.contains(l.rentalContractNo, 'rental') ? '렌탈' : (l.rentalContractNo == '일시불판매' ? '일반판매' : l.rentalContractNo)}" class="contractDetailLink">링크</a></td>
+									<td><span class="badge rounded-pill" th:text="${l.payStatus}" th:classappend="${l.payStatus} == '1.정상결제상태(환불이아닌상태)' ? ' alert-success' : (${l.payStatus} == '3.배송후환불(환불)' ? ' alert-danger' : ' alert-warning')">취소</span></td>
 									<td th:text="${l.payCompDate}">03.12.2020</td>
 								</tr>
 								

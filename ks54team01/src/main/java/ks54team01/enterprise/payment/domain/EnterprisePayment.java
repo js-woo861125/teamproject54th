@@ -1,6 +1,5 @@
 package ks54team01.enterprise.payment.domain;
 
-import ks54team01.admin.payment.domain.AdminEntCeo;
 import lombok.Data;
 
 @Data

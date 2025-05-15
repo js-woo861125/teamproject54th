@@ -11,7 +11,7 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
-	
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</th:block>
 	
 	
@@ -39,6 +39,47 @@
 				urlParams.set('currentPage', currentPage);
 				location.href = `${url.pathname}?${urlParams.toString()}`;
 			});
+			
+			/*
+			$('.section-title a').click(function(e) {
+				/* 렌탈 계약 있을 때 */
+				/* e.preventDefault();
+				const { value: fruit } = Swal.fire({
+					  title: "등록하고 싶은 상품을 선택해주세요.",
+					  input: "select",
+					  inputOptions: {
+					    Fruits: {
+					      apples: "Apples",
+					      bananas: "Bananas",
+					      grapes: "Grapes",
+					      oranges: "Oranges"
+					    }
+					  },
+					  inputPlaceholder: "렌탈 계약 목록",
+					  showCancelButton: true,
+					  inputValidator: (value) => {
+					    return new Promise((resolve) => {
+					      if (value === "oranges") {
+					        resolve();
+					      } else {
+					        resolve("You need to select oranges :)");
+					      }
+					    });
+					  }
+					});
+					if (fruit) {
+					  Swal.fire(`You selected: ${fruit}`);
+					} */
+					
+				/* 렌탈 계약 없을 때 */
+				/* Swal.fire({
+					  icon: "error",
+					  title: "Oops...",
+					  text: "진행 중인 렌탈 계약이 없습니다.",
+					  confirmButtonText: "확인"
+					}); */
+
+			
 		</script>
 	</th:block>
 	
@@ -51,10 +92,7 @@
 						<h1 class="heading-2 mb-40">양도 하기!</h1>
 						<div class="col-md-2 col-2 ms-auto mt-50">
 							<!-- 양도 글 쓰기 버튼 클릭하면 계약 중인 렌탈 상품이 있는 지 체크하고 있으면 등록 페이지로 이동 -->
-							<form action="#" method="get">
-								<button type="submit"
-									class="btn btn-success w-30 rounded font-lg hover-up text-white justify-content-center fs-6 mb-50">글쓰기</button>			
-							</form>
+							<a th:href="@{/customer/transferBoard/addTransferBoard}" class="btn btn-success w-30 rounded font-lg hover-up text-white justify-content-center fs-6 mb-50">글쓰기</a>
 						</div>
 					</div>
 					<div class="w-50 widget_search mb-50">
