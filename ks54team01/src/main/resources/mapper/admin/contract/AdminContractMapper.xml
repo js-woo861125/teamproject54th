@@ -22,11 +22,37 @@
 		<result column="contract_date" 					property="contDate" />
 		<result column="ent_nm"							property="entName" />
 		<result column="products_nm"					property="productName" />
-		
-		
-		
 	</resultMap>
 
+	<resultMap type="AdminContractDetail" id="contractDetailResultMap">	
+		<id column="rental_contract_detail_no" 		property="rentalContractDetailNum" />
+		<result column="paid_in_rounds" 			property="paidInRound" />
+		<result column="payment_amount" 			property="paymentAmount" />
+		<result column="penalty_fee"				property="penaltyFee" />
+		<result column="monthly_date"				property="monthlyDate"/>
+		<result column="monthly_payment_date"		property="monthlyPaymentDate" />
+		<result column="unpaid_status" 				property="unpaidStatus" />
+		<result column="rental_contract_type" 		property="rentalContType" />
+		<result column="rental_contract_no"			property="rentalContNo"/>
+	</resultMap>
+
+	<select id="getContractDetail" parameterType="string" resultMap="contractDetailResultMap">
+		SELECT 
+			rcd.paid_in_rounds ,
+			rcd.payment_amount,
+			rcd.penalty_fee,
+			rcd.monthly_date,
+			rcd.monthly_payment_date ,
+			rcd.unpaid_status,
+			rcd.rental_contract_type
+		FROM 
+			rental_contract_details rcd
+		WHERE 
+			rcd.rental_contract_no = #{rentalContNo}
+		ORDER BY 
+			rcd.paid_in_rounds DESC ;
+	
+	</select>
 
 	<select id="getSearchContractList" parameterType="string" resultMap="contractResultMap">
 		/* 입점업체과 고객 렌탈 계약정보 조회 */
@@ -42,7 +68,8 @@
 			rc.rental_start_date,
 			rc.rental_end_date,
 			rc.rental_cancel_date,
-			rc.contract_date
+			rc.contract_date,
+			rc.rental_contract_no
 		from
 			rental_contract rc LEFT JOIN  ent_ceo ec 
 			ON rc.ent_ceo_no = ec.ent_ceo_no
@@ -73,7 +100,8 @@
 			rc.rental_start_date,
 			rc.rental_end_date,
 			rc.rental_cancel_date,
-			rc.contract_date
+			rc.contract_date,
+			rc.rental_contract_no
 		from
 			rental_contract rc LEFT JOIN  ent_ceo ec 
 			ON rc.ent_ceo_no = ec.ent_ceo_no
@@ -83,7 +111,6 @@
 			ON sp.products_no = p.products_no;
 	
 	</select>
-	
 	
 </mapper>
 

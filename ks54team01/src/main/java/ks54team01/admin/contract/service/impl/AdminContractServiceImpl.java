@@ -1,11 +1,14 @@
 package ks54team01.admin.contract.service.impl;
 
+
+
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ks54team01.admin.contract.domain.AdminContract;
+import ks54team01.admin.contract.domain.AdminContractDetail;
 import ks54team01.admin.contract.mapper.AdminContractMapper;
 import ks54team01.admin.contract.service.AdminContractService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +19,12 @@ import lombok.RequiredArgsConstructor;
 public class AdminContractServiceImpl implements AdminContractService{
 
 	private final AdminContractMapper adminContractMapper;
+	
+	@Override
+	public List<AdminContractDetail> getContractDetail(String rentalContNo) {
+		List<AdminContractDetail> adminContractDetail = adminContractMapper.getContractDetail(rentalContNo);
+		return adminContractDetail;
+	}
 	
 	
 	@Override

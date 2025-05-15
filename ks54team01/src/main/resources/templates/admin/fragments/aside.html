@@ -9,9 +9,9 @@
 		</div>
 		<nav>
 		    <ul class="menu-aside">
-		        <li class="menu-item">
-		            <div class="menu-link">
-		                <i class="icon material-icons md-home"></i>
+		        <li class="menu-item border-bottom">
+		            <div class="menu-link ">
+		                <img class="img-xs rounded-circle mr-10" th:src="@{/manage/assets/imgs/people/avatar-2.png}" alt="User" />
 		                <span class="text">OOO님</span>
 		            </div>
 		        </li>
@@ -62,9 +62,7 @@
 		                <span class="text">렌탈계약 관리</span>
 		            </a>
 		            <div class="submenu">
-		                <a th:href="@{/admin/contract/contractList}">렌탈계약 목록(해야함)</a>
-		                <a th:href="@{#}">위약금 조회(해야함)</a>
-		                <a th:href="@{#}">납입상태 조회(계약목록에 편입)</a>
+		                <a th:href="@{/admin/contract/contractList}">렌탈계약 목록</a>  
 		            </div>
 		        </li>
 		        <li class="menu-item has-submenu">
