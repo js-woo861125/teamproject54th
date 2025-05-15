@@ -4,8 +4,13 @@ import lombok.Data;
 
 @Data
 public class AdminProduct {
-	
-	// TODO 
-	// fileType 잡고 등록 수정 날짜 잡은뒤 db in 
+		private String productNo;     
+	    private String categoryNo;   
+	    private String brandNo;     
+	    private String modelNo;     
+	    private String productName;  
+	    private String productStatus; 
+	    private String registerDate; 
+	    private String revisionDate; 
+	}
 
-}
