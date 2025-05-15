@@ -31,7 +31,7 @@
 	                   <div class="col-lg-2 col-md-3 col-12">
 	                       <select class="form-select" name="searchKey">
 	                           <option value="entCeoNo" th:selected="${searchKey == 'entCeoNo'}">입점업체코드</option>
-	                            <option value="entCeoNo" th:selected="${searchKey == 'entCeoNo'}">상호</option>
+	                           <option value="entCeoNo" th:selected="${searchKey == 'entCeoNo'}">상호</option>
 	                           <option value="custId" th:selected="${searchKey == 'custId'}">주문자아이디</option>
 	                           <option value="sellProdNo" th:selected="${searchKey == 'sellProdNo'}">상품코드</option>
 	                       </select>
@@ -65,6 +65,7 @@
 									<th class="align-middle" scope="col">주문자아이디</th>
 									<th class="align-middle" scope="col">상품코드</th>
 									<th class="align-middle" scope="col">상품명</th>	
+									<th class="align-middle" scope="col">계약번호</th>	
 									<th class="align-middle" scope="col">계약상태</th>
 									<th class="align-middle" scope="col">수량</th>
 									<th class="align-middle" scope="col">렌탈기간</th>
@@ -81,7 +82,14 @@
 									<td th:text="${l.entName}">상호 </td>
 									<td th:text="${l.custId}">주문자아이디</td>
 									<td th:text="${l.sellProdNo}">상품코드</td>
-									<td th:text="${l.productName}">상품코드</td>
+									<td th:text="${l.productName}">상품명</td>
+									
+									<td>
+										<a th:text="${l.rentContNo}" th:href="@{/admin/contract/contractDetail(rentalContNo=${l.rentContNo})}">
+											계약번호
+										</a>
+									</td>
+									
 									<td th:text="${l.rentContStatus}">계약상태</td>
 									<td th:text="${l.contQuantity}">수량</td>
 									<td th:text="${l.contPeriod}">렌탈기간</td>
