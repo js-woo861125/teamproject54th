@@ -25,6 +25,11 @@ public class CustomerTransferBoardController {
 
 	private final CustomerTransferBoardService customerTransferBoardService;
 	
+	@GetMapping("/addTransferBoard")
+	public String addTransferBoard() {
+		
+		return "customer/transferBoard/addTransferBoardView";
+	}
 	
 	@GetMapping("/myTransferBoardList")
 	public String getMyTransferBoardList(Model model) {

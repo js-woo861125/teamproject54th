@@ -90,9 +90,9 @@
                                             <div class="form-group">
 												<input type="hidden" id="entBrno" name="entBrno" />
 		                                            <div class="form-group d-flex">
-													   	<input type="text" id="entBrno1"  name="entBrno1" placeholder="사업자번호" required/>
-													    <input type="text" class="ml-10 mr-10" id="entBrno2" name="entBrno2" required/>
-													    <input type="text" id="entBrno3" name="entBrno3" required/>
+													   	<input type="text" id="entBrno1"  name="entBrno1" placeholder="사업자번호" maxlength="3" required/>
+													    <input type="text" class="ml-10 mr-10" id="entBrno2" name="entBrno2" maxlength="2" required/>
+													    <input type="text" id="entBrno3" name="entBrno3" maxlength="5" required/>
 													</div>
 												</div>
 											<!-- 계좌 -->
@@ -102,7 +102,7 @@
                                                     <option value="기업은행">기업은행</option>
                                                     <option value="국민은행">국민은행</option>
                                                 </select>                          
-                                                <input type="text" id="entBankNum" name="entBankNum" placeholder="계좌번호" required />                                        
+                                                <input type="text" id="entBankNum" name="entBankNum" maxlength="14" placeholder="계좌번호(숫자만)" required />                                        
                                             </div>                                                                                                                              
                                             <div class="form-group">
                                                 <button type="submit" id="entRegisterBtn" name="entRegisterBtn" class="btn btn-heading btn-block hover-up">회원가입</button>
@@ -169,27 +169,60 @@
 	            }
 	        }).open();
 		});
+		
+		
+			/**
+			 * 전화번호 조합
+			 */
+			function setPhoneValue() {
+			    const phone = `${$('#phoneFixed').val()}-${$('#phone1').val()}-${$('#phone2').val()}`;
+			    $('#entCeoPhone').val(phone);
+			}
 			
-			 /**
-			* 이메일 유효성 체크
+			/**
+			 * email 조합
+			 */
+			function getFullEmail() {
+				const emailFirst = $('#emailFirst').val().trim();
+			    const emailLast = $('#emailLast').val().trim();
+			    if (!emailFirst || !emailLast) return null;
+			    return emailFirst + emailLast;
+			}
+			
+			/**
+			* email 유효성검증
 			*/
-		    function validateEmail(email) {
-		        const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-		        return re.test(email);
+		    function validateEmail() {
+		    	const entCeoEmail = getFullEmail();
+		        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+		        if (!regex.test(entCeoEmail)) {
+		            alert("이메일 형식이 올바르지 않습니다.");
+		            return false;
+		        }
+		        $('#entCeoEmail').val(entCeoEmail);
+		        return true;
 		    }
 		    
 		    /**
-		     * 이메일 인증코드 전송
+		     * email 유효성검증 및 인증코드 전송
 		     */
 		    function sendVerificationCode() {
-		    	
-		        const emailFirst = document.querySelector('input[name="emailFirst"]').value;
-		        const emailLast = document.querySelector('select[name="emailLast"]').value;
+		    	const entCeoEmail = getFullEmail();
 
-		        if (!emailFirst || !emailLast) {
+		        if (!entCeoEmail) {
 		            alert("이메일을 정확히 입력해주세요.");
 		            return;
 		        }
+		        
+		        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+		        
+		        if (!regex.test(entCeoEmail)) {
+		            alert("이메일 형식이 올바르지 않습니다.");
+		            return;
+		        }
+
+		        $('#entCeoEmail').val(entCeoEmail);
 		        
 		        $.ajax({
 		            url: '/customer/register/sendCode',
@@ -203,7 +236,7 @@
 		                if (response.status === 'success') {
 		                    alert(response.message);
 		                    $('#verify-section').show();
-		                    document.getElementById("verify-section").style.display = "block";
+		                    /* document.getElementById("verify-section").style.display = "block"; */
 		                } else {
 		                    alert(response.message);
 		                }
@@ -213,17 +246,15 @@
 		            }
 		        });
 		    }
+	
 		        
 		    /**
-		     * 이메일 인증코드 확인
+		     * email 인증코드 확인
 		     */
 		    function verifyCodeSubmit() {
-		        const emailFirst = document.querySelector('input[name="emailFirst"]').value;
-		        const emailLast = document.querySelector('select[name="emailLast"]').value;
+		        const entCeoEmail = getFullEmail();		       
 		        const code = document.getElementById('verifyCode').value;
-
-		        const email = emailFirst + emailLast;
-
+		        
 		        if (!code) {
 		            alert("인증코드를 입력하세요.");
 		            return;
@@ -233,7 +264,7 @@
 		            url: '/customer/register/verifyCode',
 		            method: 'POST',
 		            data: {
-		                email: email,
+		                email: entCeoEmail,
 		                code: code
 		            },
 		            success: function(response) {
@@ -251,53 +282,111 @@
 	    	}
 		    
 		    /**
-			* 회원등록 폼 유효성 검증
+			* email 인증코드확인 검증
 			*/	
-		    $('#entRegisterBtn').click( function (e) {
-		        e.preventDefault();
-
+		    function validateEmailVerification() {
+		    	 if (document.getElementById('verify-section').style.display === 'block') {
+				        const verifyCode = document.getElementById('verifyCode').value;
+				        if (!verifyCode.trim()) {
+				            alert("인증 코드를 입력해주세요.");
+				            return false;
+				        }
+		        }
+		        return true;
+		    }
+		    
+		    /**
+			* input 유효성검증
+			*/
+		    function validateRequiredFields() {
 		        const requiredFields = ['entCeoName', 'entBrno1', 'entBrno2', 'entBrno3', 'entName', 'phone1', 'phone2', 
 		        						'emailFirst', 'emailLast', 'entCeoAddr', 'entCeoDaddr', 'entBank', 'entBankNum'];
-		        let isSubmit = true;
-		        
+
 		        for (let field of requiredFields) {
 		            const input = document.getElementById(field);
-		            if(input){
-			            if (!input.value.trim()) {
-			                alert(`${input.placeholder} 필수 입력항목입니다.`);
-			                input.focus();
-			                isSubmit = false;
-			                break;
-			            }  
-		            } else {
-		                console.error(`${field} 요소를 찾을 수 없습니다.`);
-		                isSubmit = false;
-		                break;
+		            if (!input || !input.value.trim()) {
+		                alert(`${input.placeholder || field} 필수 입력항목입니다.`);
+		                input.focus();
+		                return false;
 		            }
 		        }
-				
-				
-		        // 이메일 인증 여부 확인
-		        if (document.getElementById('verify-section').style.display === 'block') {
-		            const verifyCode = document.getElementById('verifyCode').value;
-		            if (!verifyCode) {
-		                alert("인증 코드를 입력해주세요.");
-		                isSubmit = false;
-		            }
+		        return true;
+		    }
+		    
+		    /**
+		     * 사업자등록번호 조합 및 형식 검증
+		     */
+		    function validateBrno() {
+		        const brno = `${$('#entBrno1').val()}-${$('#entBrno2').val()}-${$('#entBrno3').val()}`;
+		        const pattern = /^\d{3}-\d{2}-\d{5}$/;
+
+		        if (!pattern.test(brno)) {
+		            alert("사업자등록번호 형식이 올바르지 않습니다. (예: 123-45-67890)");
+		            return false;
 		        }
-		        
-		        if(isSubmit){
-		        	alert("회원가입이 완료되었습니다.");
-					const entCeoPhone = `${$('#phoneFixed').val()}-${$('#phone1').val()}-${$('#phone2').val()}`;
-					const entCeoEmail = `${$('#emailFirst').val()}${$('#emailLast').val()}`;
-					const entBrno = `${$('#entBrno1').val()}-${$('#entBrno2').val()}-${$('#entBrno3').val()}`;
-					
-					$('#entCeoPhone').val(entCeoPhone);
-					$('#entCeoEmail').val(entCeoEmail);
-					$('#entBrno').val(entBrno);
-				    $('#entRegisterForm').submit();
-				}
+		        $('#entBrno').val(brno);
+		        return true;
+		    }
+		    
+		    /**
+		     * 계좌번호 유효성검증 및 하이픈 삽입
+		     */
+		    function validateBank() {
+		        const bankName = $('#entBank').val();
+		        const rawBankNum = $('#entBankNum').val().replace(/[^0-9]/g, '');
+		        const formatted = formatBankNumber(bankName, rawBankNum);
+
+		        if (!formatted) {
+		            alert(`${bankName} 계좌번호 형식이 올바르지 않습니다. 숫자만 입력하며 정확한 자리수를 확인해주세요.`);
+		            return false;
+		        }
+		        $('#entBankNum').val(formatted);
+		        return true;
+		    }
+		    
+		    /**
+		     * 은행별 계좌번호 하이픈 삽입
+		     */
+		    function formatBankNumber(bank, num) {
+		        switch (bank) {
+		            case '농협':
+		                return /^\d{11}$/.test(num) ? `${num.slice(0,3)}-${num.slice(3,5)}-${num.slice(5)}` : null;
+		            case '기업은행':
+		                return /^\d{11}$/.test(num) ? `${num.slice(0,3)}-${num.slice(3,9)}-${num.slice(9)}` : null;
+		            case '국민은행':
+		                return /^\d{12}$/.test(num) ? `${num.slice(0,3)}-${num.slice(3,5)}-${num.slice(5)}` : null;
+		            default:
+		                return /^\d{10,14}$/.test(num) ? `${num.slice(0,3)}-${num.slice(3,5)}-${num.slice(5)}` : null;
+		        }
+		    }
+		    
+		    /**
+			* 검증유형별 함수 실행
+			*/	
+		    function validateForm() {
+		        if (!validateRequiredFields()) return false;
+		        if (!validateEmailVerification()) return false;
+		        if (!validateEmail()) return false;
+		        if (!validateBrno()) return false;
+		        if (!validateBank()) return false;
+
+		        setPhoneValue(); // 전화번호 조합
+		        return true;
+		    }
+		    
+		    /**
+			* 폼 제출
+			*/
+		    $('#entRegisterBtn').click(function (e) {
+		        e.preventDefault();
+
+		        if (validateForm()) {
+		            alert("회원가입이 완료되었습니다.");
+		            $('#entRegisterForm').submit();
+		        }
 		    });
+		    
+		    
 		</script>
 	
 	</th:block>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="content">
+	    <div class="row">
+	        <div class="col-6">
+	            <div class="content-header">
+	                <h2 class="content-title">입점업체 계약 등록</h2>
+	                <div>
+	                    <button class="btn btn-md rounded font-sm hover-up">등록</button>
+	                    <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">등록취소</button>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	    <div class="row">
+	        <div class="col-lg-6">
+	            <div class="card mb-4">
+	                <div class="card-body">
+	                    <div class="row">
+	                        <div class="col-md-3">
+	                            <h6>1. 입점업체 정보</h6>
+	                        </div>
+	                        <div class="col-md-9">
+								<div class="mb-4">
+									<label class="form-label">입점업체 대표코드</label>
+									<select class="form-select">
+									</select>
+								</div><div class="mb-4">
+									<label class="form-label">입점업체 대표아이디</label>
+									<select class="form-select">
+									</select>
+								</div>
+	                        </div> <!-- col.// -->
+	                    </div> <!-- row.// -->
+	                    <hr class="mb-4 mt-0">
+	                    <div class="row">
+	                        <div class="col-md-3">
+	                            <h6>2. 계약 정보</h6>
+	                        </div>
+	                        <div class="col-md-9">
+	                       		<div class="mb-4">
+                                    <label class="form-label">플랫폼 수수료율(일반판매)</label>
+                                    <div class="col-lg-12">
+                                        <input type="text" class="form-control" placeholder="일반판매 수수료율을 입력해주세요" />
+                                    </div>
+                               	</div>
+                               	<div class="mb-4">
+                                    <label class="form-label">플랫폼 수수료율(렌탈)</label>
+                                    <div class="col-lg-12">
+                                        <input type="text" class="form-control" placeholder="렌탈 수수료율을 입력해주세요" />
+                                    </div>
+                               	</div>
+                                <div class="mb-4">
+                                    <label class="form-label">플랫폼 수수료율(위약금)</label>
+                                    <div class="col-lg-12">
+                                        <input type="text" class="form-control" placeholder="위약금 수수료율을 입력해주세요" />
+                                    </div>
+                               	</div>
+                               	<div class="mb-4">
+                                    <label class="form-label">입점비</label>
+                                    <div class="col-lg-12">
+                                        <input type="text" class="form-control" placeholder="입점비를 입력해주세요" />
+                                    </div>
+                               	</div>
+                               	<div class="mb-4">
+                                    <label class="form-label">계약일자</label>
+                                    <div class="col-lg-12">
+                                        <input type="text" class="form-control" placeholder="계약일자를 입력해주세요" />
+                                    </div>
+                               	</div>
+                               	<div class="mb-4">
+                                    <label class="form-label">계약만료일자</label>
+                                    <div class="col-lg-12">
+                                        <input type="text" class="form-control" placeholder="계약만료일자를 입력해주세요" />
+                                    </div>
+                               	</div>
+                               	<div class="mb-4">
+                                    <label class="form-label">월정산일자</label>
+                                    <div class="col-lg-12">
+                                        <input type="text" class="form-control" placeholder="월정산일자를 입력해주세요" />
+                                    </div>
+                               	</div>
+	                        </div> <!-- col.// -->
+	                    </div> <!-- row.// -->
+	                    <hr class="mb-4 mt-0">
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	    </div>
+   </th:block>    
+        <!-- card end// -->
+        <div class="pagination-area mt-15 mb-50">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-start">
+                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                    <li class="page-item"><a class="page-link" href="#">02</a></li>
+                    <li class="page-item"><a class="page-link" href="#">03</a></li>
+                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#">16</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    <!-- content-main end// -->
+
+        <script src="manage/assets/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="manage/assets/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="manage/assets/js/vendors/select2.min.js"></script>
+        <script src="manage/assets/js/vendors/perfect-scrollbar.js"></script>
+        <script src="manage/assets/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+    </body>
+</html>

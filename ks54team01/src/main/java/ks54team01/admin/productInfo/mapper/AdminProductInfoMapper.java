@@ -10,9 +10,22 @@ import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.admin.productInfo.domain.ProductInfoCategorySpec;
 import ks54team01.admin.productInfo.domain.ProductInfoItem;
 import ks54team01.admin.productInfo.domain.ProductInfoModel;
+import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
 
 @Mapper
 public interface AdminProductInfoMapper {
+	
+	/**
+	 * 상품정보 삭제
+	 */
+	// 상품정보 브랜드 삭제
+	int removeBrandInfoByNo(String brandNo);
+	
+	/**
+	 * 상품정보 중복체크
+	 */
+	// 상품정보 브랜드명 중복체크
+	boolean isBrandNameCheck (String brandName);
 	
 	/**
 	 * 상품정보 수정
@@ -80,6 +93,9 @@ public interface AdminProductInfoMapper {
 	/**
 	 * 상품정보 목록 조회
 	 */
+	// 상품정보 모델별/상세스펙 목록 조회
+	List<ProductInfoModelSpec> getModelSpecList();
+	
 	// 상품정보 카테고리별/상세스펙 목록 조회
 	List<ProductInfoCategorySpec> getCategorySpecList();
 	

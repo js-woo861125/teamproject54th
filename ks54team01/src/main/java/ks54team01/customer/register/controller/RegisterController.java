@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
+import ks54team01.customer.assigneeBoard.controller.CustomerAssigneeBoardController;
 import ks54team01.customer.register.domain.CommonMember;
 import ks54team01.customer.register.domain.CustomerMember;
 import ks54team01.customer.register.domain.EntMember;
@@ -21,9 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/customer/register")
 @Slf4j
 public class RegisterController {
-	
+
 	private final RegisterService registerService;
-	
+
 	@PostMapping("/entRegister")
 	public String addEntMember(EntMember memberInfo, HttpSession session) {
 		// 세션에서 공통등록정보 가져온 후 memberInfo로 저장
@@ -139,7 +140,7 @@ public class RegisterController {
 		log.info("체크아이디: {}", memberId);
 		
 		isDuplicate = registerService.isIdCheck(memberId);
-		
+		System.out.println(isDuplicate);
 		return isDuplicate;
 	}
 	

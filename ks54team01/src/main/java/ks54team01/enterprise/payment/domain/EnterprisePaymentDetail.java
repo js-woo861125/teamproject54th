@@ -15,4 +15,6 @@ public class EnterprisePaymentDetail {
 	private String monthlyPayDate;
 	private String payStatus;
 	private String unpaidStatus;
+	
+	private String custNm;
 }

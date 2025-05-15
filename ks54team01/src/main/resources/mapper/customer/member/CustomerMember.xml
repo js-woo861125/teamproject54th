@@ -4,6 +4,43 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="ks54team01.customer.register.mapper.RegisterMapper">
+  	<!-- <select id="getMemberInfoById" parameterType="string" resultMap="memberResultMap">
+		/* 기업회원 정보 조회 */
+		SELECT
+			member_id,
+			member_pw,
+			member_type,
+			corp_name,
+			corp_brno,
+			cust_name,
+			cust_phone,
+			cust_brdt,
+			cust_addr,
+			cust_daddr,
+			cust_email
+		FROM 
+			customer_info
+		WHERE 
+			member_id = #{memberId};		
+	</select>
+	
+  	<select id="getMemberInfoById" parameterType="string" resultMap="memberResultMap">
+		/* 개인회원 정보 조회 */
+		SELECT
+			member_id,
+			member_pw,
+			member_type,
+			cust_name,
+			cust_phone,
+			cust_brdt,
+			cust_addr,
+			cust_daddr,
+			cust_email
+		FROM 
+			customer_info
+		WHERE 
+			member_id = #{memberId};		
+	</select> -->
   
 	<insert id="addEntEmpMember" parameterType="EntMember">
 		/* 입점업체직원정보 등록 */
@@ -11,6 +48,14 @@
 		(ent_emp_id, ent_ceo_no, ent_brno, ent_nm, ent_position, ent_emp_nm, ent_emp_email, ent_emp_phone, register_date, revision_date)
 		VALUES
 		(#{memberId}, #{entCeoNo}, #{entBrno}, #{entName}, #{entPosition}, #{entEmpName}, #{entEmpEmail}, #{entEmpPhone}, CURDATE(), CURDATE());
+	</insert>
+	
+	<insert id="addEntMember" parameterType="EntMember">
+		/* 입점업체대표 직원테이블에 등록 */
+		INSERT INTO ent_emp
+		(ent_emp_id, ent_ceo_no, ent_brno, ent_nm, ent_position, ent_emp_nm, ent_emp_email, ent_emp_phone, register_date, revision_date)
+		VALUES
+		(#{memberId}, #{entCeoNo}, #{entBrno}, #{entName}, '대표', #{entCeoName}, #{entCeoEmail}, #{entCeoPhone}, CURDATE(), CURDATE());
 	</insert>
 	
 	<insert id="addEntCeoMember" parameterType="EntMember">
