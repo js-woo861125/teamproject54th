@@ -6,8 +6,39 @@
 	<head>
 	</head>
 	
-	<th:block layout:fragment="jsFile">
-		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<th:block layout:fragment="jsScript">
+		<script>
+			/**
+			* 혜택명 중복체크
+			*/
+			$('#modifyBenefitBtn').click(function(){
+				const benefitName = $('#benefitName').val();
+				
+				if(!benefitName){
+					alert('혜택명을 입력해주세요');
+					$('#benefitName').focus();
+					return ;
+				}
+				
+				$.ajax({
+					url : '/admin/productInfo/benefitNameCheck',
+					method : 'post',
+					data : {'benefitName': benefitName},
+					dataType : 'json'
+				}).done(function(isDuplicate) {
+					if(isDuplicate){
+						alert('이미 등록된 혜택명 입니다.');
+						$('#benefitName').focus();
+						return ;
+					}
+				
+					$('#addProductInfoForm').submit();
+			    }).fail(function(jqXHR, textStatus, error) {
+			        console.log("에러 발생:", textStatus, error);
+			        alert('혜택명 확인 중 오류가 발생했습니다.');
+			    });
+			});
+		</script>
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
@@ -58,7 +89,7 @@
                                         <br/>
 									   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
 						                    <div class="col-md-2 col-2 ms-auto">
-						                        <button type="submit" id="modifyBenefitBtn" 
+						                        <button type="button" id="modifyBenefitBtn" 
 						                        		class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >수정</button>
 						                    </div>
 						                    <div class="col-md-2 col-2">

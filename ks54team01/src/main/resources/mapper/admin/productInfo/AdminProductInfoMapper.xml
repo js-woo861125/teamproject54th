@@ -39,7 +39,7 @@
 		
 		<association property="categoryInfo" javaType="ProductInfoCategory">
 			<id 	column="product_category_no"	property="categoryNo"/>
-			<result column="product_category_no"	property="categoryNo"/>
+			<result column="small_category"			property="smCategory"/>
 		</association>
 	</resultMap>
 	
@@ -53,15 +53,15 @@
 		
 		<association property="categoryInfo" javaType="ProductInfoCategory">
 			<id 	column="product_category_no"	property="categoryNo"/>
-			<result column="product_category_no"	property="categoryNo"/>
+			<result column="small_category"			property="smCategory"/>
 		</association>
 		<association property="brandInfo" javaType="ProductInfoBrand">
 			<id 	column="brand_no"	property="brandNo"/>
-			<result column="brand_no"	property="brandNo"/>
+			<result column="brand_nm"	property="brandName"/>
 		</association>
 		<association property="itemInfo" javaType="ProductInfoItem">
 			<id 	column="item_no"	property="itemNo"/>
-			<result column="item_no"	property="itemNo"/>
+			<result column="item_nm"	property="itemName"/>
 		</association>
 	</resultMap>
 	
@@ -88,6 +88,86 @@
 		</association>
 	</resultMap>
 
+	<select id="getSearchBenefit" parameterType="String" resultMap="benefitResultMap">
+		/* 전체혜택 검색 */
+		SELECT 
+			benefit_no,
+			manager_id,
+			benefit_nm,
+			register_date,
+			revision_date,
+			use_status
+		FROM 
+			benefit
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+		</where>
+		ORDER BY CAST(SUBSTRING_INDEX(benefit_no, '_', -1) AS UNSIGNED);	
+	</select>
+
+	<select id="getSearchItem" parameterType="String" resultMap="itemResultMap">
+		/* 품목 검색 */
+		SELECT 
+			i.item_no,
+			i.manager_id,
+			pc.small_category,
+			i.item_nm,
+			i.register_date,
+			i.revision_date,
+			i.use_status
+		FROM 
+			item i inner join products_category pc
+			using(product_category_no)
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+		</where>
+		ORDER BY CAST(SUBSTRING_INDEX(item_no, '_', -1) AS UNSIGNED);	
+	</select>
+
+	<select id="getSearchBrand" parameterType="String" resultMap="brandResultMap">
+		/* 브랜드 검색 */
+		SELECT 
+			brand_no,
+			manager_id,
+			brand_nm, 
+			register_date,
+			revision_date,
+			use_status
+		FROM 
+			brand
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+		</where>
+		ORDER BY CAST(SUBSTRING_INDEX(brand_no, '_', -1) AS UNSIGNED);
+	</select>
+	<select id="getSearchCategory" parameterType="String" resultMap="categoryResultMap">
+		/* 카테고리 검색 */
+		SELECT 
+			product_category_no,
+			manager_id,
+			large_category_no, 
+			large_category, 
+			middle_category_no, 
+			middle_category, 
+			small_category,			
+			register_date,
+			revision_date,
+			use_status
+		FROM 
+			products_category
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%');
+			</if>
+		</where>				
+	</select>
+
 	<delete id="removeBrandInfoByNo" parameterType="String">
 		/* 상품정보 브랜드 삭제 */
 		DELETE 
@@ -96,6 +176,27 @@
 		WHERE 
 			brand_no = #{brandNo};
 	</delete>
+
+	<select id="isBenefitNameCheck" parameterType="String" resultType="boolean">
+		/* 혜택명 중복체크 */
+		SELECT
+			count(*)
+		FROM
+			benefit
+		WHERE
+			benefit_nm = #{benefitName};
+	</select>
+
+	<select id="isItemNameCheck" parameterType="String" resultType="boolean">
+		/* 품목명 + 카테고리 중복체크 */
+		SELECT
+			CASE WHEN COUNT(*) > 0 THEN true ELSE false END
+		FROM
+			item
+		WHERE
+			item_nm = #{itemName}
+			AND product_category_no = #{categoryNo};
+	</select>
 
 	<select id="isBrandNameCheck" parameterType="String" resultType="boolean">
 		/* 브랜드명 중복체크 */
@@ -405,7 +506,8 @@
 			ps.use_status
 		FROM
 			products_spec ps inner join products_category pc 
-			using(product_category_no);
+			using(product_category_no)
+		ORDER BY CAST(SUBSTRING_INDEX(spec_no, '_', -1) AS UNSIGNED);	
 	</select>
 	
 	<select id="getBenefitList" resultMap="benefitResultMap">
@@ -418,7 +520,8 @@
 			revision_date,
 			use_status
 		FROM 
-			benefit;	
+			benefit
+		ORDER BY CAST(SUBSTRING_INDEX(benefit_no, '_', -1) AS UNSIGNED);		
 	</select>
 	
 	<select id="getModelList" resultMap="modelResultMap">
@@ -426,9 +529,9 @@
 		SELECT 
 			m.model_no,
 			m.manager_id,
-			b.brand_no,
-			i.item_no,
-			pc.product_category_no,
+			b.brand_nm,
+			i.item_nm,
+			pc.small_category,
 			m.model_nm,
 			m.register_date,
 			m.revision_date,
@@ -439,7 +542,8 @@
 			inner join item i
 			using(item_no)
 			left join brand b
-			using(brand_no);
+			using(brand_no)
+		ORDER BY CAST(SUBSTRING_INDEX(model_no, '_', -1) AS UNSIGNED);	
 	</select>
 	
 	<select id="getItemList" resultMap="itemResultMap">
@@ -447,14 +551,15 @@
 		SELECT 
 			i.item_no,
 			i.manager_id,
-			pc.product_category_no,
+			pc.small_category,
 			i.item_nm,
 			i.register_date,
 			i.revision_date,
 			i.use_status
 		FROM 
 			item i inner join products_category pc
-			using(product_category_no);
+			using(product_category_no)
+		ORDER BY CAST(SUBSTRING_INDEX(item_no, '_', -1) AS UNSIGNED);	
 	</select>
 	
 	<select id="getBrandList" resultMap="brandResultMap">
@@ -485,7 +590,7 @@
 			revision_date,
 			use_status
 		FROM 
-			products_category;	 
+			products_category;		 
 	</select>
 	<insert id="insertProduct" parameterType="ks54team01.admin.product.domain.AdminAddProduct">
 	    INSERT INTO products (

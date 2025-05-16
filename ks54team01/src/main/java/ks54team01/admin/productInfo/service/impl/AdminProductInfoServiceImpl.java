@@ -1,6 +1,8 @@
 package ks54team01.admin.productInfo.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,50 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	// DI 의존성 주입
 	private final AdminProductInfoMapper adminProductInfoMapper;
 	
+	// 상품정보 검색
+	@Override
+	public List<ProductInfoBenefit> getSearchBenefit(String searchKey, String searchValue) {
+		
+		switch (searchKey) {
+		case "benefitName" -> searchKey = "benefit_nm";
+		}
+		List<ProductInfoBenefit> benefitList = adminProductInfoMapper.getSearchBenefit(searchKey, searchValue);
+		
+		return benefitList;	
+	}
+	@Override
+	public List<ProductInfoItem> getSearchItem(String searchKey, String searchValue) {
+		
+		switch (searchKey) {
+		case "itemName" -> searchKey = "item_nm";
+		}
+		List<ProductInfoItem> itemList = adminProductInfoMapper.getSearchItem(searchKey, searchValue);
+				
+		return itemList;
+	}
+	@Override
+	public List<ProductInfoBrand> getSearchBrand(String searchKey, String searchValue) {
+		
+		switch (searchKey) {
+		case "brandName" -> searchKey = "brand_nm";	
+		}
+		List<ProductInfoBrand> brandList = adminProductInfoMapper.getSearchBrand(searchKey, searchValue);
+		
+		return brandList;
+	}
+	@Override
+	public List<ProductInfoCategory> getSearchCategory(String searchKey, String searchValue) {
+		
+		switch (searchKey) {
+		case "lgCategory" 	-> searchKey = "large_category";
+		case "mdCategory" 	-> searchKey = "middle_category";
+		case "smCategory" 	-> searchKey = "small_category";	
+		}
+		List<ProductInfoCategory> categoryList = adminProductInfoMapper.getSearchCategory(searchKey, searchValue);
+		
+		return categoryList;
+	}
+	
 	// 상품정보 삭제
 	@Override
 	public boolean removeBrandInfoByNo(String brandNo) {
@@ -41,6 +87,21 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	}
 	
 	// 상품정보 중복체크
+	@Override
+	public boolean isBenefitNameCheck(String benefitName) {
+		
+		return adminProductInfoMapper.isBenefitNameCheck(benefitName);
+	}
+	
+	@Override
+	public boolean isItemNameCheck(String itemName, String categoryNo) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("itemName", itemName);
+		params.put("categoryNo", categoryNo);
+		
+		return adminProductInfoMapper.isItemNameCheck(params);
+	}
+	
 	@Override
 	public boolean isBrandNameCheck(String brandName) {
 		
