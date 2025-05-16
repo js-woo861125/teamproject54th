@@ -17,7 +17,29 @@
 	
 	
 	<th:block layout:fragment="jsScript">
-		
+		<script>
+			$('.sort-by a').click(function(e){
+				e.preventDefault();
+				const sortValue = $(this).data('sortValue');
+				const href = location.href;
+				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
+				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
+				urlParams.set('sortValue', sortValue);
+
+				location.href = `${url.pathname}?${urlParams.toString()}`;
+			});
+			
+			
+			$('a.page-num').click(function(e){
+				e.preventDefault();
+				const currentPage = $(this).data('currentPage');
+				const href = location.href; // 현재 url 가져온다.
+				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
+				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
+				urlParams.set('currentPage', currentPage);
+				location.href = `${url.pathname}?${urlParams.toString()}`;
+			});
+		</script>
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
@@ -33,8 +55,9 @@
                     </div>
                     <div class="w-50 widget_search mb-50">
                         <div class="search-form">
-                            <form action="#">
-                                <input type="text" placeholder="게시글 검색어를 입력해주세요." />
+                            <form th:action="@{/customer/assigneeBoard/assigneeBoardList}" method="get">
+                                <input type="text" name="searchValue" th:value="${searchValue}" 
+                                	   placeholder="게시글 검색어를 입력해주세요." />
                                 <button type="submit"><i class="fi-rs-search"></i></button>
                             </form>
                         </div>
@@ -42,8 +65,10 @@
                     <div class="shop-product-fillter">
 						<div class="totall-product">
 							<h5 class="text-body">
-								양수 상품<span th:text="${'&emsp;' + contentRowCount}"
-								class="text-brand">5</span> 
+								양수 상품
+								<span th:text="${'&emsp;' + assigneeBoardList.size()}"
+									  class="text-brand">5
+								</span> 
 								<span>건</span>
 							</h5>
 						</div>
@@ -110,40 +135,37 @@
 	                            </div>
 	                        </div>
                         </th:block>
+                        <div th:if="${#lists.isEmpty(assigneeBoardList)}"
+							 class="mt-100" style="text-align: center;">
+							<p>게시글이 없습니다.</p>	
+						</div>
                     </div>
                     <div class="pagination-area mt-30 mb-50">
 						<nav aria-label="Page navigation example">
 							<ul class="pagination justify-content-center">
-								<li class="page-item">
-									<a class="page-link"
-										th:href="@{/customer/assigneeBoard/assigneeBoardList}">
+								<!-- 이전페이지 이동 -->
+								<li id="prev-page" class="page-item" th:classappend="${startPageNum < 10} ? 'disabled'">
+									<a class="page-link" th:classappend="${startPageNum < 10} ? 'bg-white'"
+										th:href="@{/customer/transferBoard/transferBoardList(currentPage=${startPageNum - 1})}">
 										<i class="material-icons md-first_page"></i>
 									</a>
 								</li>
-								<li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
-									<a class="page-link"
-									   th:href="@{/customer/assigneeBoard/assigneeBoardList(currentPage=${currentPage - 1})}">
-									   <i class="fi-rs-arrow-small-left"></i>
-									</a>
-								</li>
-								<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
+								<!-- 페이지 이동  -->
+								<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}"
+										  th:if="${contentRowCount > 0}">
 									<li class="page-item"
 										th:classappend="${num eq currentPage} ? 'active disabled'">
-										<a class="page-link"
-										   th:href="@{/customer/assigneeBoard/assigneeBoardList(currentPage=${num})}"
-										   th:text="${num < 10 ? '0' + num : num}">01</a>
+										<a class="page-link page-num"
+										   href="#"
+										   th:text="${num < 10 ? '0' + num : num}"
+										   th:data-current-Page="${num}">01</a>
 									</li>
 								</th:block>
-								<li class="page-item"
-									th:classappend="${currentPage eq lastPage} ? 'disabled'">
-									<a class="page-link"
-									   th:href="@{/customer/assigneeBoard/assigneeBoardList(currentPage=${currentPage + 1})}">
-									   <i class="material-icons md-chevron_right"></i>
-									</a>
-								</li>
-								<li class="page-item">
-									<a class="page-link"
-									   th:href="@{/customer/assigneeBoard/assigneeBoardList(currentPage=${lastPage})}">
+								
+								<!-- 다음페이지 이동 -->
+								<li id="next-page" class="page-item" th:classappend="${(startPageNum + 10) > lastPage} ? 'disabled'">
+									<a class="page-link" th:classappend="${(startPageNum + 10) > lastPage} ? 'bg-white'"
+									   th:href="@{/customer/transferBoard/transferBoardList(currentPage=${endPageNum + 1})}">
 									   <i class="material-icons md-last_page"></i>
 									</a>
 								</li>

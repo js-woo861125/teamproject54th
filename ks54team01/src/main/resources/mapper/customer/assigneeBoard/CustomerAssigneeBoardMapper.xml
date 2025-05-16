@@ -105,7 +105,7 @@
 			assignee_board; 
   	</select>
   	
-  	<select id="getAssigneeBoardList" parameterType="Pageable" resultMap="assigneeBoardResultMap">
+  	<select id="getAssigneeBoardList" parameterType="map" resultMap="assigneeBoardResultMap">
   		/* 양수 게시글 목록 조회 */
 		SELECT 
 			ab.assignee_no, 
@@ -128,7 +128,18 @@
 			USING (cust_id)
 			INNER JOIN products_category pc
 			USING (product_category_no)
-		ORDER BY ab.register_date DESC;
+  		<where>
+			<if test="searchValue != null and searchValue != ''">
+				ab.products_nm LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+		</where>
+		ORDER BY 
+		<if test="sortValue != null and sortValue == 'deadline'">
+			DATEDIFF(ab.board_valid_date, NOW()) ASC,
+		</if>
+		ab.register_date DESC
+		LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
   	</select>
+
 
   </mapper>
