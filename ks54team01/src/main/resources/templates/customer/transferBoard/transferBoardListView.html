@@ -99,7 +99,7 @@
 						<div class="search-form">
 							<form th:action="@{/customer/transferBoard/transferBoardList}" method="get">
 								<input type="text" name="searchValue" th:value="${searchValue}"
-									placeholder="게시글 검색어를 입력해주세요." />
+									   placeholder="게시글 검색어를 입력해주세요." />
 								<button class="transfer-search" type="submit">
 									<i class="fi-rs-search"></i>
 								</button>
@@ -109,8 +109,10 @@
 					<div class="shop-product-fillter">
 						<div class="totall-product">
 							<h5 class="text-body">
-								양도 상품<span th:text="${'&emsp;' + contentRowCount}"
-								class="text-brand">5</span> 
+								양도 상품
+								<span th:text="${'&emsp;' + contentRowCount}"
+									  class="text-brand">5
+								</span> 
 								<span>건</span>
 							</h5>
 						</div>

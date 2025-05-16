@@ -1,6 +1,7 @@
 package ks54team01.admin.productInfo.service;
 
 import java.util.List;
+import java.util.Map;
 
 import ks54team01.admin.productInfo.domain.ProductInfoBenefit;
 import ks54team01.admin.productInfo.domain.ProductInfoBrand;
@@ -13,6 +14,18 @@ import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
 public interface AdminProductInfoService {
 	
 	/**
+	 * 상품정보 검색 
+	 */
+	// 상품정보 전체혜택 검색
+	List<ProductInfoBenefit> getSearchBenefit(String searchKey, String searchValue);
+	// 상품정보 품목 검색
+	List<ProductInfoItem> getSearchItem(String searchKey, String searchValue);	
+	// 상품정보 브랜드 검색 
+	List<ProductInfoBrand> getSearchBrand(String searchKey, String searchValue);
+	// 상품정보 카테고리 검색
+	List<ProductInfoCategory> getSearchCategory(String searchKey, String searchValue);
+	
+	/**
 	 * 상품정보 삭제
 	 */
 	// 상품정보 브랜드 삭제
@@ -21,6 +34,10 @@ public interface AdminProductInfoService {
 	/**
 	 * 상품정보 중복체크
 	 */
+	// 상품정보 품목명+카테고리 중복체크
+	boolean isItemNameCheck(String itemName, String categoryNo);
+	// 상품정보 혜택명 중복체크
+	boolean isBenefitNameCheck (String benefitName);
 	// 상품정보 브랜드명 중복체크
 	boolean isBrandNameCheck (String brandName);
 	
@@ -110,5 +127,7 @@ public interface AdminProductInfoService {
 	
 	// 상품정보 카테고리 목록 조회
 	List<ProductInfoCategory> getCategoryList();
+
+
 
 }

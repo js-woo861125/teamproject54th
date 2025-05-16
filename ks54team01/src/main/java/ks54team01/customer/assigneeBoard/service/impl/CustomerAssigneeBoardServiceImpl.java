@@ -1,6 +1,7 @@
 package ks54team01.customer.assigneeBoard.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,11 +47,14 @@ public class CustomerAssigneeBoardServiceImpl implements CustomerAssigneeBoardSe
 	 * 양수게시글목록조회
 	 */
 	@Override
-	public PageInfo<CustomerAssigneeBoard> getAssigneeBoardList(Pageable pageable) {	
-		// 마지막 페이지를 구하기 위해 전체 행의 개수 조회
-		int contentRowCount = customerAssigneeBoardMapper.getAssigneeBoardCount();
+	public PageInfo<CustomerAssigneeBoard> getAssigneeBoardList(Map<String, Object> searchParamMap) {	
 		
-		List<CustomerAssigneeBoard> assigneeBoardList = customerAssigneeBoardMapper.getAssigneeBoardList(pageable);
+		// 전체 행의 개수 조회
+		int contentRowCount = customerAssigneeBoardMapper.getAssigneeBoardCount(searchParamMap);
+		
+		List<CustomerAssigneeBoard> assigneeBoardList = customerAssigneeBoardMapper.getAssigneeBoardList(searchParamMap);
+		
+		Pageable pageable = (Pageable) searchParamMap.get("pageable");
 		
 		log.info("contentRowCount: {}", contentRowCount);
 		log.info("assigneeBoardList: {}", assigneeBoardList);

@@ -2,97 +2,105 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:decorate="~{admin/layout/default}">
-	<!-- head 삽입공간 -->
-	<head>
-	</head>
-	
+<!-- head 삽입공간 -->
+<head>
+</head>
+
 	<th:block layout:fragment="jsFile">
-		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	</th:block>
-
-    <th:block layout:fragment="content">
+	
+	<th:block layout:fragment="content">
 		<div class="content-header">
-            <div>
-                <h2 class="content-title card-title" th:text="${title}"></h2>
-            </div>
-        </div>
-        <div class="card mb-4 col-12">
-        	<form id="productInfoListForm" th:action="@{/admin/productInfo/itemList}" method="post">	
-	              <div class="card-body">
-	           		 <div class="col-12">
-                        <div class="row gx-4">
-                            <aside class="col-lg-2 border-end">
-                                <nav class="nav nav-pills flex-column mb-4">
-                                    <a class="nav-link" th:href="@{/admin/productInfo/categoryList}">카테고리</a>
-                                    <a class="nav-link" th:href="@{/admin/productInfo/brandList}">브랜드</a>
-                                    <a class="nav-link active" aria-current="page" th:href="@{/admin/productInfo/itemList}">품목</a>
-                                    <a class="nav-link" th:href="@{/admin/productInfo/modelList}">모델</a>
-                                    <a class="nav-link" th:href="@{/admin/productInfo/benefitList}">전체혜택</a>
-                                    <a class="nav-link" th:href="@{/admin/productInfo/categorySpecList}">카테고리별/상세스펙</a>
-                                    <a class="nav-link" th:href="@{/admin/productInfo/modelSpecList}">모델별/상세스펙</a>
-                                </nav>
-                            </aside>
-                            <div class="col-lg-10">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr class=text-center>
-                                            	<th>No.</th>
-                                                <th>품목코드</th>
-                                                <th>카테고리코드</th>
-                                                <th>품목명</th>
-                                                <th>사용유무</th>
-                                                <th>등록일자</th>
-                                                <th>수정일자</th>
-                                                <th>수정/삭제</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr class=text-center
-				                            	th:if="${!#lists.isEmpty(itemList)}"
-				                          	  	th:each="l, index : ${itemList}">
-				                          	  	<td th:text="${index.count}"></td>
-                                                <td th:text="${l.itemNo}">item_1</td>
-                                                <td th:text="${l.categoryInfo.categoryNo}">L1_M1_1</td>
-                                                <td th:text="${l.itemName}">건강돌침대</td>
-                                                <td class="col-lg-1 col-sm-2 col-4 col-status">
-												    <span class="badge rounded-pill"
-												          th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'"
-												          th:text="${l.useStatus}">사용중</span>    
-												</td>
-												<td th:text="${l.itemRegDate}">2023-01-01 10:00:00</td>
-												<td th:text="${l.itemRevDate}">2023-01-01 10:00:00</td>
-												<td>
-                                                    <div class="dropdown">
-                                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" th:href="@{/admin/productInfo/modifyItem(itemNo=${l.itemNo})}">수정</a>
-                                                            <a class="dropdown-item text-danger" href="#">삭제</a>
-                                                        </div>
-                                                    </div>
-                                                    <!-- dropdown //end -->
-                                                </td>
-                                            </tr>
-                                            	<tr th:unless="${not #lists.isEmpty(itemList)}">
-	              					  				<td colspan="7">등록없음</td>
-              					 	 			</tr>	
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                       </div>
-                       <!-- row.// -->
-
-                   </div>
-                   <!-- card body end// -->
-               </div>
-           </div>
-        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-        <script src="assets/js/vendors/select2.min.js"></script>
-        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
-        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-        <!-- Main Script -->
-        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-    </body>
+			<div>
+				<h2 class="content-title card-title" th:text="${title}"></h2>
+			</div>
+		</div>
+		<div class="card mb-4 col-12">
+			<header class="card-header">
+				<form th:action="@{/admin/productInfo/searchItem}" method="get">
+					<div class="row gx-3">
+	                   <div class="col-lg-2 col-md-3 col-12">
+	                       <select class="form-select" name="searchKey">
+	                           <option value="itemName" th:selected="${searchKey == 'itemName'}">품목명</option>
+	                       </select>
+	                   </div>
+	                   <div class="col-lg-4 col-md-5">
+	                       <input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
+	                   </div>
+	                   <div class="col-lg-1 col-md-1 me-auto">
+						   <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
+	                   </div>
+	               </div>
+				</form>
+			</header>
+			<div class="card-body">
+				<div class="row gx-4">
+					<!-- 사이드 메뉴 -->
+					<aside class="col-lg-2 border-end">
+						<nav class="nav nav-pills flex-column mb-4">
+							<a class="nav-link" th:href="@{/admin/productInfo/categoryList}">카테고리</a>
+							<a class="nav-link" th:href="@{/admin/productInfo/brandList}">브랜드</a>
+							<a class="nav-link active" aria-current="page" th:href="@{/admin/productInfo/itemList}">품목</a> 
+							<a class="nav-link" th:href="@{/admin/productInfo/modelList}">모델</a>
+							<a class="nav-link" th:href="@{/admin/productInfo/benefitList}">전체혜택</a>
+							<a class="nav-link" th:href="@{/admin/productInfo/categorySpecList}">카테고리별/상세스펙</a>
+							<a class="nav-link" th:href="@{/admin/productInfo/modelSpecList}">모델별/상세스펙</a>
+						</nav>
+					</aside>
+					
+					<!-- 품목 목록 -->
+					<div class="col-lg-10">
+						<form id="productInfoListForm" th:action="@{/admin/productInfo/itemList}" method="post">
+							<div class="table-responsive">
+								<table class="table table-hover text-center">
+									<thead>
+										<tr>
+											<th>No.</th>
+											<th>품목코드</th>
+											<th>카테고리</th>
+											<th>품목명</th>
+											<th>사용유무</th>
+											<th>등록일자</th>
+											<th>수정일자</th>
+											<th>수정/삭제</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:if="${!#lists.isEmpty(itemList)}"
+											th:each="l, index : ${itemList}">
+											<td th:text="${index.count}">1</td>
+											<td th:text="${l.itemNo}">item_1</td>
+											<td th:text="${l.categoryInfo.smCategory}">침대</td>
+											<td th:text="${l.itemName}">건강돌침대</td>
+											<td>
+												<span class="badge rounded-pill"
+													  th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'"
+													  th:text="${l.useStatus}">사용중</span>
+											</td>
+											<td th:text="${l.itemRegDate}">2023-01-01 10:00:00</td>
+											<td th:text="${l.itemRevDate}">2023-01-01 10:00:00</td>
+											<td>
+												<div class="dropdown">
+													<a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> 
+														<i class="material-icons md-more_horiz"></i>
+													</a>
+													<div class="dropdown-menu">
+														<a class="dropdown-item" th:href="@{/admin/productInfo/modifyItem(itemNo=${l.itemNo})}">수정</a>
+														<a class="dropdown-item text-danger" href="#">삭제</a>
+													</div>
+												</div> 
+											</td>
+										</tr>
+										<tr th:unless="${not #lists.isEmpty(itemList)}">
+											<td colspan="12">등록된 품목이 없습니다.</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</form>		
+					</div>
+				</div>
+			</div>
+		</div>
+	</th:block>
 </html>

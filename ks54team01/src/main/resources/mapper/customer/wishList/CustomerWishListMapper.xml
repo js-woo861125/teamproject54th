@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="ks54team01.customer.wishList.mapper.CustomerWishListMapper">
+
+  	<!-- resultMap : 조회 결과를 자바 클래스(domain, dto)와 명시적으로 매핑 설정-->
+  	<resultMap type="CustomerWishList" id="wishListResultMap">
+		<id column="wishlist_no" property="wishListNum" />
+		<result column="cust_id" property="customerId" />
+		<result column="ent_ceo_no" property="enterpriseCeoNum" />
+		<result column="ent_emp_id" property="enterpriseEmployeeId" />
+		<result column="products_no" property="productsNum" />
+		<result column="sell_products_no" property="sellProductsNum" />
+		<result column="register_date" property="registerDate" />
+		<result column="(SELECT IFNULL(MIN(sp.final_price), 0) FROM sell_products sp WHERE sp.products_no = w.products_no)" property="minimumRentalFee" />
+		<result column="(SELECT IFNULL(MIN(sp.final_price), 0) FROM sell_products sp WHERE sp.products_no = w.products_no AND sp.period = 0)" property="minimumPrice" />
+
+		<association property="customerMember" javaType="CustomerMember">
+			<id column="cust_id" property="memberId" />
+			<result column="cust_nm" property="custName" />
+			<result column="cust_brdt" property="custBrdt" />
+			<result column="cust_addr" property="custAddr" />
+			<result column="cust_daddr" property="custDaddr" />
+			<result column="cust_email" property="custEmail" />
+			<result column="cust_phone" property="custPhone" />		
+		</association>
+
+		<association property="productInfo" javaType="CustomerProduct">
+			<id column="products_no" property="productsNum" />
+			<result column="manager_id" property="managerId" />
+			<result column="model_no" property="modelNum" />
+			<result column="item_no" property="itemNum" />
+			<result column="product_category_no" property="productCategoryNum" />
+			<result column="products_nm" property="productsName" />
+			<result column="products_status" property="productsStatus" />		
+			<result column="products_image" property="productsImage" />
+			<result column="register_date" property="registerDate" />
+			<result column="revision_date" property="revisionDate" />
+		</association>
+		
+		<association property="productInfoCategory" javaType="ProductInfoCategory">
+			<id column="product_category_no" property="categoryNo" />
+			<result column="large_category_no" property="lgCategoryNo" />
+			<result column="large_category" property="lgCategory" />
+			<result column="middle_category_no" property="mdCategoryNo" />
+			<result column="middle_category" property="mdCategory" />
+			<result column="small_category" property="smCategory" />
+			<result column="use_status" property="useStatus" />		
+		</association>
+  	</resultMap>	
+
+	<select id="getmyWishList" resultMap="wishListResultMap">
+		/* 내 관심상품 목록 조회 */
+		SELECT 
+			c.cust_id ,
+			w.products_no ,
+			p.products_image ,
+			p.products_nm ,
+			pc.middle_category ,
+			w.register_date ,
+			(
+			SELECT IFNULL(MIN(sp.final_price), 0)
+			 FROM sell_products sp
+			 WHERE sp.products_no = w.products_no
+			) AS minimumRentalFee,
+			(
+			SELECT
+				IFNULL(MIN(sp.final_price), 0)
+			FROM 
+				sell_products sp
+			WHERE sp.products_no = w.products_no AND sp.period = 0
+			) AS minimumPrice
+		FROM 
+			customer c INNER JOIN wishlist w
+			ON c.cust_id = w.cust_id
+			LEFT JOIN products p 
+			ON w.products_no = p.products_no
+			INNER JOIN products_category pc 
+			ON p.product_category_no = pc.product_category_no
+		WHERE
+			w.cust_id = 'personalcustid2';
+	</select>
+	
+  </mapper>

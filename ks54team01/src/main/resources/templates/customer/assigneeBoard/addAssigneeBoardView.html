@@ -63,6 +63,21 @@
 	            }
 	        }).open();
 		});
+		
+        const modal = document.querySelector('.modal');
+        const btnOpenModal=document.querySelector('.openModalBtn');
+
+        btnOpenModal.addEventListener("click", ()=>{
+            modal.style.display="flex";
+        });
+        
+        /* categoryModal_close-icon-wrap__LDSmc.addEventListener("click", e => {
+            modal.style.display = "none"
+        }); */
+        
+        document.querySelector("#modalCloseBtn").addEventListener("click", () => {
+       		document.querySelector(".modal").style.display = "none";
+        });
 		</script>
 	</th:block>
 	
@@ -85,39 +100,83 @@
                                 </div>
                                 <div class="col-2">
 		                            <div class="mb-4">
-		                            	<button type="button"
-		                            			class="btn btn-info w-100 rounded text-white justify-content-center" >모달</button>
-		                            </div>                        		
+		                            	<div class="modal">
+									  		<div class="categoryModal">
+								   				<div class="modalHeader">
+											    	<h3>필요한 제품을 선택해주세요.</h3>
+											      	<button class="modal-close-btn" id="modalCloseBtn">×</button>
+											    </div>
+									   			<div class="modalBody">
+											    	<div class="modalLeft pe-4 border-end">
+											        	<ul id="middlCategoryList list-group list-group-flush">
+											          		<!-- AJAX로 중분류 리스트 나열할거 -->
+											          		<li class="list-group-item py-3">
+											          			<a href="">TV/디지털</a>
+											          		</li>
+											          		<li class="list-group-item py-3">세탁가전</li>
+											          		<li class="list-group-item py-3">냉장가전</li>
+											          		<li class="list-group-item py-3">주방가전</li>
+											          		<li class="list-group-item py-3">생활가전</li>
+											          		<li class="list-group-item py-3">계절/환경</li>
+											          		<li class="list-group-item py-3">건강/뷰티</li>
+											          		<li class="list-group-item py-3">가구/침대</li>
+											        	</ul>
+										      		</div>
+											      	<div class="modalRight ps-4">
+											        	<div id="smallCategoryList" class="row g-3">
+											         		<!-- 선택된 중분류에 따라 AJAX로 소분류 리스트 나열할거 -->
+											         		<div class="col-6">
+														      	<div class="form-check">
+														        	<input class="form-check-input" type="radio" name="product" id="product1" value="TV">
+														        	<label class="form-check-label" for="product1">TV</label>
+														    	</div>
+														    </div>
+														    <div class="col-6">
+														      	<div class="form-check">
+														        	<input class="form-check-input" type="radio" name="product" id="product2" value="냉장고">
+														        	<label class="form-check-label" for="product2">냉장고</label>
+														    	</div>
+															</div>
+											        	</div>
+											      	</div>
+										    	</div>
+									  		</div>
+								  		</div>
+							        </div>
+	                            	<button type="button"
+	                            			class="openModalBtn btn btn-info w-100 rounded text-white justify-content-center" >모달
+	                            	</button>
+	                            </div>                        		
+                        	</div>
+	                        <div class="row">
+	                        	<div class="form-group col-lg-6">
+	                            	<input type="text" name="billing_address" required="" placeholder="상품명 입력" />
 	                        	</div>
-                            </div>
+	                     	</div>
                             <div class="row">
                                 <div class="form-group col-lg-6">
-                                    <input type="text" name="billing_address" required="" placeholder="상품명 입력">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-lg-6">
-                                    <input type="text" id="hopeArea" name="billing_address" required="" placeholder="희망 설치지역 입력">
+                                    <input type="text" id="hopeArea" name="billing_address" required="" placeholder="희망 설치지역 입력" />
                                 </div>
                                 <div class="col-2">
 		                            <div class="mb-4">
 		                            	<button type="button" id="daumPostBtn" 
-		                            			class="btn btn-info w-100 rounded text-white justify-content-center" >주소</button>
+		                            			class="btn btn-info w-100 rounded text-white justify-content-center" >주소
+		                            	</button>
 		                            </div>                        		
 	                        	</div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-lg-6">
-                                    <input required="" type="text" name="zipcode" placeholder="희망 계약기간 입력">
+                                    <input required="" type="text" name="zipcode" placeholder="희망 계약기간 입력" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-lg-6">
-                                    <input required="" type="text" name="cname" placeholder="희망 렌탈료 입력">
+                                    <input required="" type="text" name="cname" placeholder="희망 렌탈료 입력" />
                                 </div>
                             </div>
                             <div class="form-group mb-30">
-                                <textarea rows="5" placeholder="기타 상세 설명을 입력해주세요."></textarea>
+                                <textarea name="detailDescription" rows="5" placeholder="기타 상세 설명을 입력해주세요."></textarea>
                             </div>
                             <div class="row align-items-end">
 			                    <div class="col-md-2 col-2 ms-auto">
@@ -129,10 +188,10 @@
 			                        		class="btn btn-warning w-20 rounded font-lg hover-up text-white justify-content-center fs-6" >취소</button>
 			                    </div>
         					</div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+                		</form>
+                	</div>
+            	</div>
+        	</div>
+    	</div>
 	</th:block> 
 </html>

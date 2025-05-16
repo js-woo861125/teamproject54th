@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ks54team01.admin.product.mapper.AdminProductMapper">
+
+    <insert id="insertProduct" parameterType="ks54team01.admin.product.domain.AdminAddProduct">
+        INSERT INTO products (
+            products_no,
+            manager_id,
+            model_no,
+            item_no,
+            product_category_no,
+            products_nm,
+            products_status,
+            products_image,
+            register_date,
+            revision_date
+        )
+        VALUES (
+            #{productNo},
+            #{managerId},
+            #{modelNo},
+            #{itemNo},
+            #{categoryNo},
+            #{productName},
+            #{productStatus},
+            #{productImage},
+            #{registerDate},
+            #{revisionDate}
+        )
+    </insert>
+		<select id="getItemListByCategory" resultType="ProductInfoItem">
+		  SELECT 
+		 	DISTINCT item_no AS itemNo, 
+		  	item_nm AS itemNm
+		  FROM 
+		  	model
+		  WHERE 
+		  	product_category_no = #{categoryNo}
+		</select>
+		
+		<select id="getBrandListByItem" resultType="ProductInfoBrand">
+		  SELECT 
+			  DISTINCT brand_no AS brandNo, 
+			  brand_nm AS brandNm
+		  FROM 
+		  	model
+		  WHERE 
+		  		product_category_no = #{categoryNo}
+		    AND item_no = #{itemNo}
+		</select>
+		
+		<select id="getModelListByCondition" resultType="ProductInfoModel">
+		  SELECT 
+		  	model_no AS modelNo, 
+		  	model_nm AS modelName
+		  FROM
+		  	 model
+		  WHERE 
+		  	product_category_no = #{categoryNo}
+		    AND item_no = #{itemNo}
+		    AND brand_no = #{brandNo}
+		</select>
+		
+</mapper>

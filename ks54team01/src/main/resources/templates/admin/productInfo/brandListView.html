@@ -8,6 +8,7 @@
 	</th:block>
 	
 	<th:block layout:fragment="jsScript">
+		<!-- 브랜드 삭제 -->
 		<script>
 			$('.remove-btn').click(e => {
 				e.preventDefault();
@@ -49,11 +50,26 @@
 	    <div class="content-header">
 	        <h2 class="content-title card-title" th:text="${title}"></h2>
 	    </div>
-	
-	    <div class="card mb-4 col-12">
+		<div class="card mb-4 col-12">
+			<header class="card-header">
+				<form th:action="@{/admin/productInfo/searchBrand}" method="get">
+					<div class="row gx-3">
+	                   <div class="col-lg-2 col-md-3 col-12">
+	                       <select class="form-select" name="searchKey">
+	                           <option value="brandName" th:selected="${searchKey == 'brandName'}">브랜드명</option>
+	                       </select>
+	                   </div>
+	                   <div class="col-lg-4 col-md-5">
+	                       <input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
+	                   </div>
+	                   <div class="col-lg-1 col-md-1 me-auto">
+						   <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
+	                   </div>
+	               </div>
+				</form>
+			</header>
 	        <div class="card-body">
 	            <div class="row gx-4">
-	
 	                <!-- 사이드 메뉴 -->
 	                <aside class="col-lg-2 border-end">
 	                    <nav class="nav nav-pills flex-column mb-4">
@@ -115,7 +131,6 @@
 	                        </div>
 	                    </form>
 	                </div>
-	
 	            </div>
 	        </div>
 	    </div>

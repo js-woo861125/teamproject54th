@@ -1,5 +1,6 @@
 package ks54team01.common.file.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -19,6 +20,40 @@ import lombok.extern.slf4j.Slf4j;
 public class FileServiceImpl implements FileService {
 	private final FilesUtils filesUtils;
 	private final FileMapper fileMapper;
+	
+	
+	@Override
+	public List<FileMetaData> uploadFiles(MultipartFile[] multipartFiles, String imgType) {
+		
+		return filesUtils.uploadFiles(multipartFiles, imgType);
+		
+	}
+	
+	
+	@Override
+	public int addFiles(MultipartFile[] multipartFiles, String fileType, String refId) {
+	    // 파일 저장 (이미지 타입 고려)
+	    List<FileMetaData> fileList = filesUtils.uploadFiles(multipartFiles, fileType);
+
+	    // refId & fileType 설정 추가
+	    for (FileMetaData file : fileList) {
+	        file.setRefId(refId);
+	        file.setFileType(fileType);
+	        file.setUseStatus("Y");
+	        file.setRegisterDate(LocalDateTime.now());
+	        file.setRevisionDate(LocalDateTime.now());
+	    }
+
+	    if (!fileList.isEmpty()) {
+	        return fileMapper.addFiles(fileList); 
+	    }
+
+	    return 0;
+	}
+	
+	
+	
+	
 	
 	@Override
 	public List<FileMetaData> getFileList() {
