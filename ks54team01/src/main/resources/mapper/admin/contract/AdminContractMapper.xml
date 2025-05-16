@@ -34,6 +34,8 @@
 		<result column="unpaid_status" 				property="unpaidStatus" />
 		<result column="rental_contract_type" 		property="rentalContType" />
 		<result column="rental_contract_no"			property="rentalContNo"/>
+		
+		
 	</resultMap>
 
 	<select id="getContractDetail" parameterType="string" resultMap="contractDetailResultMap">
