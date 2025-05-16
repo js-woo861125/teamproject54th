@@ -48,7 +48,7 @@
 			rcd.unpaid_status,
 			rcd.rental_contract_type
 		FROM 
-			rental_contract_details rcd
+			rental_contract_d etails rcd
 		WHERE 
 			rcd.rental_contract_no = #{rentalContNo}
 		ORDER BY 
