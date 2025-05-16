@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.customer.delivery.mapper.CustomerDeliveryMapper">
+	
+	<resultMap type="CustomerDeliveryList" id="deliveryResultMap">
+		
+			<id 	column="delivery_location_no" 	property="delNo" />
+			<result column="cust_id" 				property="custId" />
+			<result column="delivery_nm" 			property="delNm" />
+			<result column="primary_location" 		property="primaryLocation" />
+			<result column="delivery_addr" 			property="delAddr" />
+			<result column="delivery_daddr" 		property="delDaddr" />
+			<result column="delivery_zip_no" 		property="delZipNo" />
+			<result column="recipient_phone" 		property="recipientPhone" />		
+			<result column="delivery_request" 		property="delRequest" />
+			<result column="register_date" 			property="regDate" />
+			<result column="revision_date" 			property="revDate" />
+			
+	</resultMap>
+	
+	
+	
+	<update id="updatePrimaryLocation" parameterType="String">
+		UPDATE delivery_list
+		SET
+			primary_location = '추가배송지'
+		WHERE
+			cust_id = #{custId} AND primary_location = '기본배송지'
+	</update>
+	
+	
+	
+	
+	
+	<insert id="addDeliveryList" parameterType="CustomerDeliveryList">
+		/* delNo(PK) 값은 랜덤으로 설정 */
+		INSERT INTO delivery_list
+			(delivery_location_no, cust_id, delivery_nm, primary_location, delivery_addr, delivery_daddr, delivery_zip_no, recipient_phone, delivery_request, register_date, revision_date)
+		values
+			(#{delNo}, #{custId}, #{delNm}, #{primaryLocation}, #{delAddr}, #{delDaddr}, #{delZipNo}, #{recipientPhone}, #{delRequest}, now(), now());
+	</insert>
+	
+	
+	
+	
+	
+	
+	<select id="getDeliveryList" resultMap="deliveryResultMap">
+		/* 고객 개인 배송지 목록 조회 */
+		select
+			dl.delivery_location_no,
+			dl.delivery_nm,
+			dl.primary_location,
+			dl.delivery_addr,
+			dl.delivery_daddr,
+			dl.delivery_zip_no,
+			dl.recipient_phone,
+			dl.delivery_request
+		from
+			delivery_list dl
+		where
+			dl.cust_id = 'personalcustid1';
+		
+	</select>
+	
+	
+	
+	
+	
+</mapper>
+
+
+
+
+
+
+
