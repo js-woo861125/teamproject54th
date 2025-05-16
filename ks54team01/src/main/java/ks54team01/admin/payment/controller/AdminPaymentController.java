@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import ks54team01.admin.payment.domain.AdminFee;
 import ks54team01.admin.payment.domain.AdminPayment;
 import ks54team01.admin.payment.service.AdminPaymentService;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,11 @@ public class AdminPaymentController {
 	}
 	
 	@GetMapping("/calculate")
-	public String getadminpayment() {
+	public String getadminpayment(Model model) {
+		
+		List<AdminFee> adminFeeList = adminPaymentService.getAdminPayFee();
+		model.addAttribute("adminFeeList",adminFeeList);
+		
 		
 		return "admin/payment/calculateView";
 	}

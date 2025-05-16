@@ -40,6 +40,54 @@
 	
 	
 	
+	
+	<resultMap type="AdminFee" id="paymentFeeResultMap">
+	<id 	column="fee_no" 					property="feeNo" />
+	<result column="payment_completed_no"		property="paymentCompletedNo" />
+	<result column="ent_ceo_no"					property="entCeoNo" />
+	<result column="ent_emp_id"					property="entEmpId" />
+	<result column="manager_id"					property="managerId" />
+	<result column="payment_details"			property="paymentDetils" />
+	<result column="platform_fee"				property="platFormFee" />
+	<result column="ent_sales"					property="entSales" />
+	<result column="provision_schedule_date"	property="provisionScheduleDate" />
+	<result column="provision_date"				property="provisionDate" />
+	<result column="settlement_month"			property="settlementMonth" />
+	<result column="closing_settlement"			property="closingSttelement" />
+	<result column="payment_status"				property="paymentStatus" />
+	<result column="revision_date"				property="revisionDate" />
+	</resultMap>
+	
+	<select id="getAdminPayment" resultMap="paymentFeeResultMap">
+	/*수수료조회*/
+	SELECT 
+		fee_no, 
+		payment_completed_no, 
+		ent_ceo_no, 
+		ent_emp_id,
+		manager_id, 
+		payment_details, 
+		platform_fee,
+		ent_sales,
+		provision_schedule_date,
+		provision_date, 
+		settlement_month,
+		closing_settlement,
+		payment_status,
+		revision_date
+	FROM 
+		fee f; 
+	
+	
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
 	<select id="getSearchPaymentList" parameterType="string" resultMap="paymentResultMap">
 		/* 회원 검색 결제내역 조회 */
 		SELECT
