@@ -592,5 +592,30 @@
 		FROM 
 			products_category;		 
 	</select>
-	
+	<insert id="insertProduct" parameterType="ks54team01.admin.product.domain.AdminAddProduct">
+	    INSERT INTO products (
+	        products_no,
+	        manager_id,
+	        model_no,
+	        item_no,
+	        product_category_no,
+	        products_nm,
+	        products_status,
+	        products_image,
+	        register_date,
+	        revision_date
+	    )
+	    VALUES (
+	        #{productNo},
+	        #{managerId},
+	        #{modelNo},
+	        #{itemNo},
+	        #{categoryNo},
+	        #{productName},
+	        #{productStatus},
+	        #{productImage},
+	        #{registerDate},
+	        #{revisionDate}
+	    )
+	</insert>
 </mapper>

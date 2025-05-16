@@ -8,7 +8,7 @@ import ks54team01.common.file.domain.FileMetaData;
 
 public interface FileService {
 	
-	// 파일 목록 조회
+		// 파일 목록 조회
 		List<FileMetaData> getFileList();
 		
 		// 단일 파일 업로드
@@ -19,4 +19,8 @@ public interface FileService {
 				
 		// 다중 파일 업로드
 		void addFiles(MultipartFile[] multipartFiles, String imgType);
+		
+		int addFiles(MultipartFile[] multipartFiles, String fileType, String refId);
+		
+		List<FileMetaData> uploadFiles(MultipartFile[] multipartFiles, String imgType);
 }

@@ -23,7 +23,11 @@
 			</div>
 		</div>
 		<div class="col-lg-6">
-			<form class="user" th:action="@{/admin/product/addProduct}" method="post" enctype="multipart/form-data">
+			<form class="user" 
+			      th:action="@{/admin/product/register}" 
+			      method="post" 
+			      enctype="multipart/form-data">
+			      
 				<div class="card mb-4">
 					<div class="card-header">
 						<h4>제품정보</h4>
@@ -31,17 +35,14 @@
 					<div class="card-body">
 						<div class="mb-4">
 							<label for="product_name" class="form-label">제품 이름</label> 
-							<input type="text" placeholder="제품을 입력해주세요" class="form-control" id="product_name"/>
+							<input type="text" name="productName" placeholder="제품을 입력해주세요" class="form-control" id="product_name" required />
 						</div>
 						<div class="row">
 							<div class="col-lg-10">
 								<div class="mb-4">
 									<label class="form-label">카테고리</label> 
-									<select	class="form-select">
-										<option>가전 > TV/디지털 > TV</option>
-										<option>가전 > TV/디지털 > 노트북</option>
-										<option>가전 > 주방가전 > 전기레인지</option>
-										<option>가전 > 냉장가전 > 냉장고</option>
+									<select id="categorySelect" name="categoryNo" class="form-select">
+									  <option value="">카테고리 선택</option>
 									</select>
 								</div>
 							</div>
@@ -49,30 +50,25 @@
 						<div class="row">
 							<div class="col-lg-4">
 								<div class="mb-4">
-									<label class="form-label">브랜드</label> <select
-										class="form-select">
-										<option>삼성</option>
-										<option>LG</option>
-										<option>휘센</option>
+									<label class="form-label">품목</label> 
+									<select id="itemSelect" name="itemNo" class="form-select">
+									  <option value="">품목 선택</option>
 									</select>
 								</div>
 							</div>
 							<div class="col-lg-4">
 								<div class="mb-4">
-									<label class="form-label">품목</label> <select
-										class="form-select">
-										<option>건강돌침대</option>
-										<option>돌침대</option>
-										<option>흔들리지않는침대</option>
+									<label class="form-label">브랜드</label> 
+									<select id="brandSelect" name="brandNo" class="form-select">
+									  <option value="">브랜드 선택</option>
 									</select>
 								</div>
 							</div>
 						</div>
 						<div class="col-lg-10">
-							<label class="form-label">모델</label> <select class="form-select">
-								<option>라온 LED 저상형 침대 SS</option>
-								<option>라온 LED 저상형 침대 Q</option>
-								<option>라온 LED 저상형 침대 SS+SS</option>
+							<label class="form-label">모델</label> 
+							<select id="modelSelect" name="modelNo" class="form-select">
+							  <option value="">모델 선택</option>
 							</select>
 						</div>
 					</div>
@@ -121,9 +117,9 @@
 					</div>
 					<div class="card-body">
 						<div class="col-md-9">
-							<label for="files" class="form-label">단일파일 / 다중파일</label>
+							<label for="files" class="form-label">대표사진</label>
 							<div class="input-group">
-								<input type="file" id="files1" name="files1" class="form-control bg-light border-0 small" multiple>
+								<input type="file" id="files1" name="thumbnails" class="form-control" multiple>
 							</div>
 						</div>
 					</div>
@@ -134,9 +130,9 @@
 					</div>
 					<div class="card-body">
 						<div class="col-md-9">
-							<label for="files" class="form-label">단일파일 / 다중파일</label>
+							<label for="files" class="form-label">제품상세</label>
 							<div class="input-group">
-								<input type="file" id="files2" name="files2" class="form-control bg-light border-0 small" multiple>
+								<input type="file" id="files1" name="thumbnails" class="form-control" multiple>
 							</div>
 						</div>
 					</div>
@@ -331,6 +327,43 @@
    	        $(this).closest('.img-box2').remove();
    	 
    		});
+   		$('#categorySelect').on('change', function () {
+   		  const categoryNo = $(this).val();
+   		  $.get('/admin/product/item-options', { categoryNo }, function (items) {
+   		    $('#itemSelect').empty().append('<option value="">품목 선택</option>');
+   		    items.forEach(i => {
+   		      $('#itemSelect').append(`<option value="${i.itemNo}">${i.itemNm}</option>`);
+   		    });
+   		    $('#brandSelect').html('<option value="">브랜드 선택</option>');
+   		    $('#modelSelect').html('<option value="">모델 선택</option>');
+   		  });
+   		});
+
+   		// 품목 → 브랜드
+   		$('#itemSelect').on('change', function () {
+   		  const categoryNo = $('#categorySelect').val();
+   		  const itemNo = $(this).val();
+   		  $.get('/admin/product/brand-options', { categoryNo, itemNo }, function (brands) {
+   		    $('#brandSelect').empty().append('<option value="">브랜드 선택</option>');
+   		    brands.forEach(b => {
+   		      $('#brandSelect').append(`<option value="${b.brandNo}">${b.brandNm}</option>`);
+   		    });
+   		    $('#modelSelect').html('<option value="">모델 선택</option>');
+   		  });
+   		});
+
+   		// 브랜드 → 모델
+   		$('#brandSelect').on('change', function () {
+   		  const categoryNo = $('#categorySelect').val();
+   		  const itemNo = $('#itemSelect').val();
+   		  const brandNo = $(this).val();
+   		  $.get('/admin/product/model-options', { categoryNo, itemNo, brandNo }, function (models) {
+   		    $('#modelSelect').empty().append('<option value="">모델 선택</option>');
+   		    models.forEach(m => {
+   		      $('#modelSelect').append(`<option value="${m.modelNo}">${m.modelName}</option>`);
+   		    });
+   		  });
+   		});
    	</script>
    </th:block>
 <script src="manage/assets/js/vendors/jquery-3.6.0.min.js"></script>
@@ -340,5 +373,6 @@
 <script src="manage/assets/js/vendors/jquery.fullscreen.min.js"></script>
 <!-- Main Script -->
 <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+
 </body>
 </html>
