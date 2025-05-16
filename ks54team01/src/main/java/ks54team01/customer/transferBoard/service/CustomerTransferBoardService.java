@@ -9,6 +9,7 @@ import ks54team01.system.util.PageInfo;
 
 public interface CustomerTransferBoardService {
 
+	// 내 양도 게시글 목록 조회
 	List<CustomerTransferBoard> getMyTransferBoardList();
 	
 	// 양도 게시글 정보 조회
