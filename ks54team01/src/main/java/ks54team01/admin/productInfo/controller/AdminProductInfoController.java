@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -33,6 +34,61 @@ public class AdminProductInfoController {
 	private final AdminProductInfoService adminProductInfoService;
 	
 	/**
+	 * 상품정보 검색
+	 */
+	@GetMapping("/searchBenefit")
+	public String getSearchBenefit(String searchKey, String searchValue, Model model) {
+
+		List<ProductInfoBenefit> benefitList = adminProductInfoService.getSearchBenefit(searchKey, searchValue);
+		
+		model.addAttribute("title", "전체혜택");
+		model.addAttribute("benefitList", benefitList);
+		model.addAttribute("searchKey", searchKey);
+		model.addAttribute("searchValue", searchValue);
+		
+		return "admin/productInfo/benefitListView";
+		}
+	
+	@GetMapping("/searchItem")
+	public String getSearchItem(String searchKey, String searchValue, Model model) {
+
+		List<ProductInfoItem> itemList = adminProductInfoService.getSearchItem(searchKey, searchValue);
+		
+		model.addAttribute("title", "품목");
+		model.addAttribute("itemList", itemList);
+		model.addAttribute("searchKey", searchKey);
+		model.addAttribute("searchValue", searchValue);
+		
+		return "admin/productInfo/itemListView";
+		}
+	
+	@GetMapping("/searchBrand")
+	public String getSearchBrand(String searchKey, String searchValue, Model model) {
+
+		List<ProductInfoBrand> brandList = adminProductInfoService.getSearchBrand(searchKey, searchValue);
+		
+		model.addAttribute("title", "브랜드");
+		model.addAttribute("brandList", brandList);
+		model.addAttribute("searchKey", searchKey);
+		model.addAttribute("searchValue", searchValue);
+		
+		return "admin/productInfo/brandListView";
+		}
+	
+	@GetMapping("/searchCategory")
+	public String getSearchCategory(String searchKey, String searchValue, Model model) {
+
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getSearchCategory(searchKey, searchValue);
+		
+		model.addAttribute("title", "카테고리");
+		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("searchKey", searchKey);
+		model.addAttribute("searchValue", searchValue);
+		
+		return "admin/productInfo/categoryListView";
+		}
+	
+	/**
 	 * 상품정보 삭제
 	 */
 	@PostMapping("/removeBrand")
@@ -48,6 +104,31 @@ public class AdminProductInfoController {
 	/**
 	 * 상품정보 중복체크
 	 */
+	@PostMapping("/benefitNameCheck")
+	@ResponseBody
+	public boolean benefitNameCheck(String benefitName) {
+		boolean isDuplicate =  false;
+		
+		log.info("체크혜택명 : {}", benefitName);
+		
+		isDuplicate = adminProductInfoService.isBenefitNameCheck(benefitName);
+		
+		return isDuplicate;
+	}
+	
+	@PostMapping("/itemNameCheck")
+	@ResponseBody
+	public boolean itemNameCheck(String itemName, String categoryNo) {
+		boolean isDuplicate =  false;
+		
+		log.info("체크품목명 : {}", itemName);
+		log.info("체크카테고리코드 : {}", categoryNo);
+		
+		isDuplicate = adminProductInfoService.isItemNameCheck(itemName, categoryNo);
+		
+		return isDuplicate;
+	}
+	
 	@PostMapping("/brandNameCheck")
 	@ResponseBody
 	public boolean brandNameCheck(String brandName) {
@@ -59,6 +140,7 @@ public class AdminProductInfoController {
 		
 		return isDuplicate;
 	}
+	
 	
 	/**
 	 * 상품정보 수정

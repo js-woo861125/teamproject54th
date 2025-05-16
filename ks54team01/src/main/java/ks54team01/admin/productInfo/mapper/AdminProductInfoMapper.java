@@ -1,6 +1,7 @@
 package ks54team01.admin.productInfo.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -16,6 +17,23 @@ import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
 public interface AdminProductInfoMapper {
 	
 	/**
+	 * 상품정보 검색 
+	 */
+	
+	// 상품정보 전체혜택 검색
+	List<ProductInfoBenefit> getSearchBenefit(String searchKey, String searchValue);
+	// 상품정보 카테고리별/상세스펙 검색
+	List<ProductInfoCategorySpec> getSearchCategorySpec(String searchKey, String searchValue);
+	// 상품정보 모델 검색
+	List<ProductInfoModel> getSearchModel(String searchKey, String searchValue);
+	// 상품정보 품목 검색
+	List<ProductInfoItem> getSearchItem(String searchKey, String searchValue);
+	// 상품정보 브랜드 검색
+	List<ProductInfoBrand> getSearchBrand(String searchKey, String searchValue);
+	// 상품정보 카테고리 검색
+	List<ProductInfoCategory> getSearchCategory(String searchKey, String searchValue);
+	
+	/**
 	 * 상품정보 삭제
 	 */
 	// 상품정보 브랜드 삭제
@@ -24,6 +42,10 @@ public interface AdminProductInfoMapper {
 	/**
 	 * 상품정보 중복체크
 	 */
+	// 상품정보 품목명+카테고리 중복체크
+	boolean isItemNameCheck(Map<String, Object> params);
+	// 상품정보 혜택명 중복체크
+	boolean isBenefitNameCheck (String benefitName);
 	// 상품정보 브랜드명 중복체크
 	boolean isBrandNameCheck (String brandName);
 	

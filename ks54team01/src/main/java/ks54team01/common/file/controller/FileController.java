@@ -1,12 +1,12 @@
 package ks54team01.common.file.controller;
 
-import org.springframework.stereotype.Controller;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("admin/file")
+@RequestMapping("/admin/file")
 public class FileController {
 	@Value("${file.path}")
 	private String fileRealPath;
