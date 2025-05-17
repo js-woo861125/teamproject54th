@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{customer/layout/default}">
+
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+	
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+        <div class="container mb-80 mt-50">
+            <div class="row">
+                <div class="col-lg-8 mb-40">
+                    <h1 class="heading-2 mb-10">양도 게시글 등록</h1>
+                </div>
+            </div>
+            <form method="post">
+            <div class="row justify-content-between">
+            	<div class="col-lg-5">
+                    <div class="border p-40 cart-totals ml-30 mb-50">
+                        <div class="d-flex align-items-end mb-30">
+                            <h4>이미지 첨부</h4>
+                        </div>
+                        <div class="divider-2 mb-30"></div>
+                        <div class="table-responsive order_table checkout">
+                            <table class="table no-border">
+                                <tbody>
+                                    <tr>
+                                        <td class="image product-thumbnail"><img src="assets/imgs/shop/product-1-1.jpg" alt="#"></td>
+                                        <td>
+                                            <h6 class="w-160 mb-5"><a href="shop-product-full.html" class="text-heading">Yidarton Women Summer Blue</a></h6></span>
+                                            <div class="product-rate-cover">
+                                                <div class="product-rate d-inline-block">
+                                                    <div class="product-rating" style="width:90%">
+                                                    </div>
+                                                </div>
+                                                <span class="font-small ml-5 text-muted"> (4.0)</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <h6 class="text-muted pl-20 pr-20">x 1</h6>
+                                        </td>
+                                        <td>
+                                            <h4 class="text-brand">$13.3</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="image product-thumbnail"><img src="assets/imgs/shop/product-2-1.jpg" alt="#"></td>
+                                        <td>
+                                            <h6 class="w-160 mb-5"><a href="shop-product-full.html" class="text-heading">Seeds of Change Organic Quinoa</a></h6></span>
+                                            <div class="product-rate-cover">
+                                                <div class="product-rate d-inline-block">
+                                                    <div class="product-rating" style="width:90%">
+                                                    </div>
+                                                </div>
+                                                <span class="font-small ml-5 text-muted"> (4.0)</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <h6 class="text-muted pl-20 pr-20">x 1</h6>
+                                        </td>
+                                        <td>
+                                            <h4 class="text-brand">$15.0</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="image product-thumbnail"><img src="assets/imgs/shop/product-3-1.jpg" alt="#"></td>
+                                        <td>
+                                            <h6 class="w-160 mb-5"><a href="shop-product-full.html" class="text-heading">Angie’s Boomchickapop Sweet </a></h6></span>
+                                            <div class="product-rate-cover">
+                                                <div class="product-rate d-inline-block">
+                                                    <div class="product-rating" style="width:90%">
+                                                    </div>
+                                                </div>
+                                                <span class="font-small ml-5 text-muted"> (4.0)</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <h6 class="text-muted pl-20 pr-20">x 1</h6>
+                                        </td>
+                                        <td>
+                                            <h4 class="text-brand">$17.2</h4>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row">
+                        <h4 class="mb-30">계약 정보</h4>
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <input type="text" required="" name="fname" placeholder="First name *">
+                                </div>
+                                <!-- <div class="form-group col-lg-6">
+                                    <input type="text" required="" name="lname" placeholder="Last name *">
+                                </div> -->
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <input type="text" name="billing_address" required="" placeholder="Address *">
+                                </div>
+                                <!-- <div class="form-group col-lg-6">
+                                    <input type="text" name="billing_address2" required="" placeholder="Address line2">
+                                </div> -->
+                            </div>
+                            <div class="row shipping_calculator">
+                                <div class="form-group col-lg-6">
+                                    <div class="custom_select">
+                                        <select class="form-control select-active">
+                                            <option value="">Select an option...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- <div class="form-group col-lg-6">
+                                    <input required="" type="text" name="city" placeholder="City / Town *">
+                                </div> -->
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <input required="" type="text" name="zipcode" placeholder="Postcode / ZIP *">
+                                </div>
+                                <!-- <div class="form-group col-lg-6">
+                                    <input required="" type="text" name="phone" placeholder="Phone *">
+                                </div> -->
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <input required="" type="text" name="cname" placeholder="Company Name">
+                                </div>
+                                <!-- <div class="form-group col-lg-6">
+                                    <input required="" type="text" name="email" placeholder="Email address *">
+                                </div> -->
+                            </div>
+                            <div id="collapsePassword" class="form-group create-account collapse in">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <input required="" type="password" placeholder="Password" name="password">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ship_detail">
+                                <div class="form-group">
+                                    <div class="chek-form">
+                                        <div class="custome-checkbox">
+                                            <input class="form-check-input" type="checkbox" name="checkbox" id="differentaddress">
+                                            <label class="form-check-label label_info" data-bs-toggle="collapse" data-target="#collapseAddress" href="#collapseAddress" aria-controls="collapseAddress" for="differentaddress">
+                                            	<span>등록하려는 상품의 정보와 일치합니까?</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="collapseAddress" class="different_address collapse in">
+                                    <div class="row">
+                                        <div class="form-group col-lg-5 d-flex">
+                                            <input type="text" required="" name="fname" placeholder="지원금">
+                                        </div>
+                                    </div>
+                                    <div class="row shipping_calculator">
+                                        <div class="form-group col-lg-6">
+                                            <input required="" type="text" name="cname" placeholder="게시글 제목을 입력해주세요.">
+                                        </div>
+                                    </div>
+                                     <div class="form-group mb-30">
+                                		<textarea cols="30" rows="3" placeholder="기타 상세 설명을 입력해주세요."></textarea>
+                            		</div>
+                            		<div class="row align-items-end">
+					                    <div class="col-md-2 col-2 ms-auto">
+					                        <button type="submit"
+					                        		class="btn btn-warning w-20 rounded font-lg hover-up text-white justify-content-center fs-6" >등록</button>
+					                    </div>
+					                    <div class="col-md-2 col-2">
+					                        <button type="reset" 
+					                        		class="btn btn-warning w-20 rounded font-lg hover-up text-white justify-content-center fs-6" >취소</button>
+					                    </div>
+               						</div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+	</th:block>
+</html>

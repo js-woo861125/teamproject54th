@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{customer/layout/myPageDefault}">
+
+
+	<!-- head 삽입공간 -->
+	
+	<head>
+	
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	</th:block>
+	
+	
+	<th:block layout:fragment="jsScript">
+		<script type="text/javascript">
+			var myModal = document.getElementById('myModal')
+
+			
+			document.getElementById('addDeliveryForm').addEventListener('submit', function(e) {
+			  // 체크박스 체크 상태 확인
+			  const isChecked = document.getElementById('agreeCheckbox').checked;
+			  console.log(isChecked + 'isChecked');
+			  // hidden input에 값 넣기
+			  document.getElementById('primaryLocationChk').value = isChecked ? '기본배송지' : '추가배송지';
+			  // 폼이 이대로 전송됩니다.
+			});
+			
+			
+			document.addEventListener('DOMContentLoaded', function() {
+				// 모달 닫힐 때 input 값 초기화
+				var modal = document.getElementById('staticBackdrop');
+				if (modal) {
+					modal.addEventListener('hidden.bs.modal', function () {
+						// 폼을 리셋 (input, select, checkbox, hidden 등 전부 초기화)
+						var form = document.getElementById('addDeliveryForm');
+						if (form) {
+							form.reset();
+							
+							// 만약 hidden 값들도 직접 초기화하고 싶으면 아래도 추가
+							document.getElementById('primaryLocationChk').value = "";
+							// 필요시 추가적으로 초기화할 값이 있으면 여기에!
+						}
+					});
+				}
+			});
+
+			
+			
+			
+			$('#daumPostBtn').click(function(e){
+				new daum.Postcode({
+		            oncomplete: function(data) {
+		                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+		                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+		                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+		                var addr = ''; // 주소 변수
+		                var extraAddr = ''; // 참고항목 변수
+
+		                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+		                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+		                    addr = data.roadAddress;
+		                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+		                    addr = data.jibunAddress;
+		                }
+
+		                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+		                if(data.userSelectedType === 'R'){
+		                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+		                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+		                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+		                        extraAddr += data.bname;
+		                    }
+		                    // 건물명이 있고, 공동주택일 경우 추가한다.
+		                    if(data.buildingName !== '' && data.apartment === 'Y'){
+		                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+		                    }
+		                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+		                    if(extraAddr !== ''){
+		                        extraAddr = ' (' + extraAddr + ')';
+		                    }
+		                    // 조합된 참고항목을 해당 필드에 넣는다.
+		                    document.getElementById("delAddr").value = extraAddr;
+		                
+		                } else {
+		                    document.getElementById("delAddr").value = '';
+		                }
+
+		                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+		                document.getElementById('delZipNo').value = data.zonecode;
+		                document.getElementById("delAddr").value = addr;
+		                // 커서를 상세주소 필드로 이동한다.
+		                document.getElementById("delDaddr").focus();
+		            }
+		        }).open();
+			});
+			
+		</script>
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+		<!-- Modal -->
+		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<form id="addDeliveryForm" th:action="@{/customer/delivery/addDeliveryList}" method="post">
+						<div class="modal-header">
+							<h5 class="modal-title" id="staticBackdropLabel" th:text="${modalTitle}">배송지 등록수정</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="form-group col-md-6">
+									<input placeholder="배송지명" class="form-control" id="delNm" name="delNm" type="text">
+								</div>
+								<div class="form-group col-md-6 mt-10">
+						        	<button type="button" id="daumPostBtn" class="btn col-12">주소찾기</button>
+						    	</div>
+								<div class="form-group col-md-12 d-flex">
+									<div class="col-sm-8">
+										<input placeholder="주소" class="form-control" id="delAddr" name="delAddr" type="text">
+									</div>
+									<div class="col-sm-4 pl-10">
+										<input placeholder="우편번호" class="form-control" id="delZipNo" name="delZipNo" type="text">
+									</div>
+								</div>
+								<div class="form-group col-md-12">
+									<input placeholder="상세주소" class="form-control" id="delDaddr" name="delDaddr" type="text">
+								</div>
+								<div class="form-group col-md-12">
+					       			<input placeholder="연락처" class="form-control" id="recipientPhone" name="recipientPhone" type="text">
+					   				</div>
+					   			<div class="form-group col-md-12">
+					      			<input placeholder="요청사항" class="form-control" id="delRequest" name="delRequest" type="text">
+					  			</div>
+					   			<div class="form-group col-md-12">
+									<div class="custome-checkbox">
+	                  					<input class="form-check-input" type="checkbox" id="agreeCheckbox" name="agreeCheckbox" value="agree">
+	                   					<label class="form-check-label mr-10" for="agreeCheckbox"><span>기본배송지로 설정</span></label>
+										<input type="hidden" name="primaryLocation" id="primaryLocationChk">
+									</div>
+									<input type="hidden" name="custId" id="custId" value="personalcustid1">
+									<input type="hidden" name="delNo" id="delNoInput">
+					  			</div>
+							</div>
+						</div>
+		 				<div class="modal-footer">
+			     			<button id="addDeliveryBtn" type="submit" class="btn btn-primary">등록</button>
+			   			</div>
+					</form>
+		  		</div>
+			</div>
+		</div>
+		<div class="tab-content account dashboard-content pl-50">
+			<div class="tab-pane fade active show" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+			    <div class="card">
+			        <div class="card-header d-flex">
+			            <h3 class="mb-0" >배송지 목록</h3>
+			            <button class="btn ms-auto" data-bs-toggle="modal" data-bs-target="#staticBackdrop">배송지 등록</button>
+			        </div>
+			        <div class="card-body">
+			            <div class="table-responsive">
+			                <table class="table text-center">
+			                    <thead>
+			                        <tr >
+			                            <th>배송지명</th>
+			                            <th>주소</th>
+			                            <th>우편번호</th>
+			                            <th>연락처</th>
+			                            <th>요청사항</th>
+			                            <th>수정/삭제</th>
+			                        </tr>
+			                    </thead>
+			                    <tbody>
+			                        <tr th:if="${!#lists.isEmpty(DeliveryList)}" th:each="l : ${DeliveryList}">
+			                            <td>
+			                            	<input type="hidden" th:value="${l.delNo}">
+			                            	
+			                            	<p th:text="${l.delNm}">우리집</p>
+			                            	<div class="product-cart-wrap" th:text="${l.primaryLocation}">기본배송지</div>
+			                            </td>
+			                            <td>
+			                            	<p th:text="${l.delAddr}">전주</p>
+			                            	<p th:text="${l.delDaddr}">3층</p>
+			                            </td>
+			                            <td th:text="${l.delZipNo}">51515</td>
+			                            <td th:text="${l.recipientPhone}">010-1234-4567</td>
+			                            <td  style="width:150px"><div th:text="${l.delRequest}"></div></td>
+			                            <td>
+			                            	<button type="button" class="btn btn-xs" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+			                            			th:attr="data-del-no=${l.delNo}, data-del-nm=${l.delNm},
+			                            					data-del-addr=${l.delAddr}, data-del-daddr=${l.delDaddr},
+			                            					data-del-zip-no=${l.delZipNo}, data-recipient-phone=${l.recipientPhone},
+			                            					data-del-request=${l.delRequest},  data-primary-location=${l.primaryLocation}">수정</button>
+			                            	<a href="#" class="btn btn-xs">삭제</a>
+			                            </td>
+			                        </tr>
+			                        <tr th:unless="${!#lists.isEmpty(DeliveryList)}">
+			                        	<td>등록없음</td>
+			                        </tr>
+			                    </tbody>
+			                </table>
+			            </div>
+			        </div>
+			    </div>
+			</div>	
+		</div>
+	</th:block> 
+</html>

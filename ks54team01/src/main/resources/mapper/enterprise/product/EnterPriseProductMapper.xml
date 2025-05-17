@@ -2,7 +2,28 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="ks54team01.enterprise.product.mapper.EnterPriseProductMapper">
+<mapper namespace="ks54team01.enterprise.product.mapper.EnterpriseProductMapper">
+	
+	<select id="getQuantityList" resultType="EnterpriseProductQuantity">
+	    SELECT
+	        sp.ent_ceo_no AS entCeoNo,
+	        p.products_nm AS productName,
+	        pc.small_category AS cateName,
+	        p.products_status AS productStatus,
+	        q.quantity AS quantity
+	    FROM 
+	    	sell_products sp
+	    JOIN 
+	    	products p ON sp.products_no = p.products_no
+	    JOIN 
+	    	products_category pc ON p.product_category_no = pc.product_category_no
+	    JOIN 
+	    	quantity q ON sp.products_no = q.products_no AND sp.ent_ceo_no = q.ent_ceo_no
+	    GROUP BY 
+	    	sp.ent_ceo_no, p.products_no;
+	</select>
+	
+	
 	
 </mapper>
 

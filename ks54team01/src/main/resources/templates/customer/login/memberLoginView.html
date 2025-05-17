@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{customer/layout/default}">
+
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+	
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                    <span></span> Pages <span></span> My Account
+                </div>
+            </div>
+        </div>
+        <div class="page-content pt-150 pb-150">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-10 col-md-12 m-auto">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-6 col-md-8">
+                                <div class="login_wrap widget-taber-content background-white">
+                                    <div class="padding_eight_all bg-white">
+                                        <div class="heading_s1">
+                                            <h1 class="mb-5" th:text="${title}"></h1>
+                                            <p class="mb-30">아직 회원이 아니신가요?<a class="ml-10" th:href="@{/customer/register/memberRegister}">회원가입하기</a></p>
+                                        </div>
+	                                    <div id="loginError" class="alert alert-danger d-none" role="alert">아이디 또는 비밀번호가 올바르지 않습니다.</div>
+                                        <form method="post" th:action="@{/customer/login/memberLogin}">
+                                            <div class="form-group">
+                                                <input type="text" id="memberId" name="memberId" placeholder="ID" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="password" id="memberPw" name="memberPw" placeholder="Password" required />
+                                            </div>
+                                         
+                                            <div class="login_footer form-group mb-50 d-flex justify-content-end">                                              
+                                                <a class="text-muted mr-20" th:href="@{/customer/member/forgotId}">아이디 찾기</a>
+                                                <a class="text-muted" th:href="@{/customer/member/forgotPw}">비밀번호 찾기</a>
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="submit" id="loginBtn" name="loginBtn" class="btn btn-heading btn-block hover-up">Log in</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</th:block>
+	<script src="/user/assets/js/vendors/bootstrap.bundle.min.js"></script>
+	<script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('error') === 'true') {
+            document.getElementById('loginError').classList.remove('d-none');
+        }
+    </script>
+	
+</html>

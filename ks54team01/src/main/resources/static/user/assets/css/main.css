@@ -5698,7 +5698,7 @@ table.no-border td, table.no-border th, table.no-border thead {
 
 /*BLOG*/
 .archive-header {
-  background: url(../imgs/blog/backgraund_ele1.jpg) no-repeat center center;
+  background: url(../imgs/blog/ele_list3.png) no-repeat center center;
   border-radius: 20px;
   padding: 70px 80px;
   background-size: cover;
@@ -12399,3 +12399,46 @@ footer .hotline img {
   }
 }
 /*# sourceMappingURL=main.css.map */
+
+.categoryModal{
+    position:absolute;
+    top: 50% ; /* 가운데 배치  */
+    left: 25%;
+    width: 800px; 
+    height: 600px; 
+    padding: 40px;  
+    text-align: center;
+    background-color: rgb(245,237,246);
+    border-radius: 10px; 
+    box-shadow: 0 2px 3px 0 rgba(34,36,38,0.15); 
+    transform: translateY(-50%); /* 모듈창열었을때 위치설정 가운데로 */
+}
+.modalHeader {
+  	display: flex;
+  	justify-content: space-between;
+  	align-items: center;
+}
+.modalBody {
+  display: flex;
+  flex: 1;
+  margin-top: 20px;
+  background-color: white;
+}
+
+.modalLeft,.modalRight {
+  padding: 10px;
+  overflow-y: auto;
+}
+.modalLeft {
+  width: 20%;
+  border-right: 2px solid #ccc;
+}
+.modalRight {
+  width: 80%;
+}
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}

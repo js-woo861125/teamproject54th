@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{customer/layout/default}">
+
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+       <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a th:href="@{#}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                    <span></span> Pages <span></span> My Account
+                </div>
+            </div>
+        </div>
+        <div class="page-content pt-150 pb-150">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-10 col-md-12 m-auto">
+                         <div class="row justify-content-center">
+                            <div class="col-lg-6 col-md-8">
+                                <div class="login_wrap widget-taber-content background-white">
+                                    <div class="padding_eight_all bg-white">
+                                        <div class="heading_s1 mb-20">
+                                            <h1 class="mb-30" th:text="${title}"></h1>
+                                        </div>
+                                        <form id="customerRegisterForm" th:action="@{/customer/register/customerRegister}" method="post">
+                                        	<!-- 이름 -->                                         
+                                            <div class="form-group">
+                                                <input type="text" id="custName" name="custName" placeholder="이름" required />                                              
+                                            </div>
+                                            <!-- 생년월일 -->
+                                            <div class="form-group">
+											    <input type="text" id="custBrdt" name="custBrdt" placeholder="생년월일" 
+											    	   onfocus="this.type='date'; this.max = new Date().toISOString().split('T')[0];" 
+											    	   onblur="if(this.value===''){this.type='text'}" required />
+											</div>
+											<!-- 연락처 -->
+											<div class="form-group">
+												<input type="hidden" id="custPhone" name="custPhone"/>
+		                                            <div class="form-group d-flex">
+													   	<input type="text" class="w-10 form-control fs-6" id="phoneFixed" name="phoneFixed" placeholder="010" value="010" readonly />
+													    <input type="text" class="mr-10 ml-10" id="phone1" name="phone1" placeholder="1234" required />
+													    <input type="text" placeholder="5678" id="phone2" name="phone2" required />
+													</div>
+											</div>
+											<!-- 이메일 본인인증 --> 
+                                            <div class="form-group">
+                                            	<input type="hidden" id="custEmail" name="custEmail"/>
+	                                            	<div class="form-group d-flex">
+		                                                <input type="text" class="w-60" id="emailFirst" name="emailFirst" placeholder="Email" required />
+		                                                <select class="w-auto border-1 border-radius-10 ml-10" id="emailLast" name="emailLast">
+		                                                    <option value="@naver.com">@naver.com</option>
+		                                                    <option value="@daum.net">@daum.net</option>
+		                                                    <option value="@google.com">@google.com</option>                                                    
+		                                                </select> 
+		                                                <button type="button" class="btn btn-heading btn-block p-10 ml-10" onclick="sendVerificationCode()">인증요청</button>                                               
+		                                            </div>
+													<div class="form-group" id="verify-section" style="display:none;">
+														<div class="form-group d-flex">
+														    <input type="text" id="verifyCode" name="verifyCode" placeholder="인증코드 입력">
+														    <button type="button" class="btn btn-heading btn-block p-10 ml-10"  onclick="verifyCodeSubmit()">확인</button>
+													    </div>
+													</div>
+											</div>
+											<!-- 주소/상세주소 -->
+											<div class="form-group position-relative d-flex justify-content-end">
+                                                <input type="text" id="memberZip" name="memberZip" placeholder="우편번호를 입력해주세요" readonly disabled />
+                                                <button type="button" id="daumPostBtn" class="btn btn-heading btn-block p-10 mt-10 mr-10 position-absolute">우편번호찾기</button>
+                                            </div> 
+                                            <div class="row">
+				                        		<div class="col-6">
+						                            <div class="mb-4">
+						                                <input type="text" id="custAddr" name="custAddr" placeholder="기본주소" class="form-control fs-6" readonly />
+						                            </div>
+				                        		</div>
+				                        		<div class="col-6">
+						                            <div class="mb-4">
+						                                <input type="text" id="custDaddr" name="custDaddr" placeholder="상세주소를 입력하세요" class="form-control fs-6" disabled/>
+						                            </div>
+				                        		</div>
+				                        	</div>
+                                           	<!-- 회원 유형 선택 -->
+											<div class="custome-radio type-radio d-flex justify-content-evenly mb-10">
+											    <div class="custome-radio">
+											        <input class="form-check-input" type="radio" id="memberCust" name="memberType" value="개인고객" checked required />
+											        <label class="form-check-label" for="memberCust">개인</label>
+											    </div>
+											    <div class="custome-radio">
+											        <input class="form-check-input" type="radio" id="memberCorp" name="memberType" value="기업고객" required />
+											        <label class="form-check-label" for="memberCorp" data-bs-toggle="collapse" data-bs-target="#businessInfo" aria-controls="businessInfo">기업</label>
+											    </div>
+											</div>
+											
+											<!-- 기업 정보 입력란 -->
+											<div id="businessInfo" class="collapse mt-10">
+												<div class="form-group">
+												<input type="hidden" id="corpBrno" name="corpBrno"/>
+		                                            <div class="form-group d-flex">
+													   	<input type="text" id="corpBrno1"  name="corpBrno1" placeholder="사업자번호" />
+													    <input type="text" class="ml-10 mr-10" id="corpBrno2" name="corpBrno2" />
+													    <input type="text" id="corpBrno3" name="corpBrno3" />
+													</div>
+												</div>
+											    <div class="form-group">
+											        <input type="text" id="corpName" name="corpName" placeholder="상호명" />
+											    </div>
+											</div>
+                                            <div class="form-group">
+                                                <button type="submit" id="customerRegisterBtn" name="customerRegisterBtn" class="btn btn-heading btn-block hover-up">회원가입</button>
+                                            </div>
+                                            <p class="font-xs text-muted"><strong>참고:</strong>귀하의 개인 데이터는 이 웹사이트 전체에서 귀하의 경험을 지원하고, 귀하의 계정에 대한 액세스를 관리하고, 당사의 개인 정보 보호 정책에 설명된 기타 목적을 위해 사용됩니다.</p>
+                                        </form>
+                               		 </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </th:block>
+      <th:block layout:fragment="jsScript">
+		<script>
+			/**
+			* 주소입력
+			*/
+			$('#daumPostBtn').click(function(e){
+				new daum.Postcode({
+		            oncomplete: function(data) {
+		                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+	
+		                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+		                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+		                var addr = ''; // 주소 변수
+		                var extraAddr = ''; // 참고항목 변수
+	
+		                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+		                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+		                    addr = data.roadAddress;
+		                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+		                    addr = data.jibunAddress;
+		                }
+	
+		                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+		                if(data.userSelectedType === 'R'){
+		                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+		                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+		                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+		                        extraAddr += data.bname;
+		                    }
+		                    // 건물명이 있고, 공동주택일 경우 추가한다.
+		                    if(data.buildingName !== '' && data.apartment === 'Y'){
+		                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+		                    }
+		                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+		                    if(extraAddr !== ''){
+		                        extraAddr = ' (' + extraAddr + ')';
+		                    }
+		                    // 조합된 참고항목을 해당 필드에 넣는다.
+		                    document.getElementById("custAddr").value = extraAddr;
+		                
+		                } else {
+		                    document.getElementById("custAddr").value = '';
+		                }
+		                document.getElementById("memberZip").value = data.zonecode;
+		                document.getElementById("custAddr").value = addr;
+		                $('#custDaddr').prop('disabled', false);
+		                // 커서를 상세주소 필드로 이동한다.
+		                document.getElementById("custDaddr").focus();
+		            }
+		        }).open();
+			});
+		   
+		    /**
+			* 이메일 유효성 체크
+			*/
+		    function validateEmail(email) {
+		        const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+		        return re.test(email);
+		    }
+		    
+		    /**
+		     * 이메일 인증코드 전송
+		     */
+		    function sendVerificationCode() {
+		    	
+		        const emailFirst = document.querySelector('input[name="emailFirst"]').value;
+		        const emailLast = document.querySelector('select[name="emailLast"]').value;
+
+		        if (!emailFirst || !emailLast) {
+		            alert("이메일을 정확히 입력해주세요.");
+		            return;
+		        }
+		        
+		        $.ajax({
+		            url: '/customer/register/sendCode',
+		            method: 'POST',
+		            data:{
+		                emailFirst: $('#emailFirst').val(),
+		                emailLast: $('#emailLast').val()
+		            },
+		            dataType: 'JSON',
+		            success: function(response) {
+		                if (response.status === 'success') {
+		                    alert(response.message);
+		                    $('#verify-section').show();
+		                    document.getElementById("verify-section").style.display = "block";
+		                } else {
+		                    alert(response.message);
+		                }
+		            },
+		            error: function() {
+		                alert("서버와의 통신 오류입니다.");
+		            }
+		        });
+		    }
+		        
+		    /**
+		     * 이메일 인증코드 확인
+		     */
+		    function verifyCodeSubmit() {
+		        const emailFirst = document.querySelector('input[name="emailFirst"]').value;
+		        const emailLast = document.querySelector('select[name="emailLast"]').value;
+		        const code = document.getElementById('verifyCode').value;
+
+		        const email = emailFirst + emailLast;
+
+		        if (!code) {
+		            alert("인증코드를 입력하세요.");
+		            return;
+		        }
+
+		        $.ajax({
+		            url: '/customer/register/verifyCode',
+		            method: 'POST',
+		            data: {
+		                email: email,
+		                code: code
+		            },
+		            success: function(response) {
+		            	if (response.status === 'success') {
+		            	    alert("이메일 인증에 성공했습니다.");
+		            	    document.getElementById('verifyCode').disabled = true;
+		            	} else {
+		                    alert("인증코드가 일치하지 않습니다.");
+		                }
+		            },
+		            error: function() {
+		                alert("인증 확인 요청 중 오류가 발생했습니다.");
+		            }
+	       	 	});
+	    	}
+     		
+		    /**
+			 * 기업회원 추가정보 입력란 생성
+			 */
+			 document.querySelectorAll('input[name="memberType"]').forEach(function (radio) {
+				    radio.addEventListener('change', function () {
+				        const businessBlock = document.getElementById('businessInfo');
+				        if (this.value === '기업고객') {
+				            businessBlock.classList.add('show');
+				        } else {
+				            businessBlock.classList.remove('show');
+				        }
+				    });
+				});
+		
+			 /**
+		     * 사업자등록번호 조합 및 형식 검증
+		     */
+		    function validateBrno() {
+		        const brno = `${$('#corpBrno1').val()}-${$('#corpBrno2').val()}-${$('#corpBrno3').val()}`;
+		        const pattern = /^\d{3}-\d{2}-\d{5}$/;
+
+		        if (!pattern.test(brno)) {
+		            alert("사업자등록번호 형식이 올바르지 않습니다. (예: 123-45-67890)");
+		            return false;
+		        }
+		        $('#corpBrno').val(brno);
+		        return true;
+		    }
+			 
+		    /**
+			* 회원등록 폼 유효성 검증
+			*/	
+		    $('#customerRegisterBtn').click( function (e) {
+		        e.preventDefault();
+
+		        const requiredFields = ['custName', 'custBrdt','phone1', 'phone2', 'emailFirst', 'emailLast', 'custAddr', 'custDaddr'];
+		        let isSubmit = true;
+		        
+		        for (let field of requiredFields) {
+		            const input = document.getElementById(field);
+		            if (!input.value.trim()) {
+		            	
+		                alert(`${input.placeholder} 필수 입력항목입니다.`);
+		                input.focus();
+		                isSubmit = false;
+		                break;
+		            }  
+		        }
+				
+				
+		        // 이메일 인증 여부 확인
+		        if (document.getElementById('verify-section').style.display === 'block') {
+		            const verifyCode = document.getElementById('verifyCode').value;
+		            if (!verifyCode) {
+		                alert("인증 코드를 입력해주세요.");
+		                isSubmit = false;
+		            }
+		        }
+		        
+		        if(isSubmit){
+		        	alert("회원가입이 완료되었습니다.");
+					const custPhone = `${$('#phoneFixed').val()}-${$('#phone1').val()}-${$('#phone2').val()}`;
+					const custEmail = `${$('#emailFirst').val()}${$('#emailLast').val()}`; 
+					
+					$('#custPhone').val(custPhone);
+					$('#custEmail').val(custEmail);
+					
+					const isCorpMember = $('input[name="memberType"]:checked').val() === '기업고객';
+					 
+				    if (isCorpMember) {
+				        const corpBrno = `${$('#corpBrno1').val()}-${$('#corpBrno2').val()}-${$('#corpBrno3').val()}`;
+				        $('#corpBrno').val(corpBrno);
+				    }
+				    $('#customerRegisterForm').submit();
+				}
+		    });
+		</script>
+	</th:block>
+
+</html>

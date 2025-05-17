@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.enterprise.payment.mapper.EnterprisePaymentMapper">
+
+	<resultMap type="EnterprisePayment" id="paymentResultMap">
+	
+		<id 	column="payment_completed_no" 		property="payCompNo" />
+		<result column="cust_id" 					property="custId" />
+		<result column="sell_products_no" 			property="sellProdNo" />
+		<result column="rental_contract_no" 		property="rentalContractNo" />
+		<result column="pay_info_no" 				property="payInfoNo" />
+		<result column="ent_ceo_no" 				property="entCeoNo" />
+		<result column="ent_emp_id" 				property="entEmpId" />
+		<result column="manager_id" 				property="managerId" />
+		<result column="payment_type" 				property="paymentType" />
+		<result column="contract_details" 			property="contractDetails" />
+		<result column="payment_details" 			property="payDetails" />
+		<result column="payment_count" 				property="payCount" />
+		<result column="product_unit_price" 		property="prodUnitPrice" />
+		<result column="total_price" 				property="totalPrice" />
+		<result column="payment_completed_date" 	property="payCompDate" />
+		<result column="payment_status" 			property="payStatus" />
+		<result column="revision_date" 				property="revDate" />
+		<result column="products_nm" 				property="prodNm" />
+		
+		<result column="cust_nm"					property="custNm"/>
+	
+			
+	</resultMap>
+	
+	
+	
+	<resultMap type="EnterprisePaymentDetail" id="paymentDetailResultMap">
+	
+		<id 	column="rental_contract_details_no" 		property="rentalContractDetailNo" />
+		<result column="paid_in_rounds" 					property="paidInRounds" />
+		<result column="payment_amount" 					property="payAmount" />
+		<result column="penalty_fee" 						property="penaltyFee" />
+		<result column="monthly_payment_date" 				property="monthlyPayDate" />
+		<result column="payment_status" 					property="payStatus" />
+		<result column="unpaid_status" 						property="unpaidStatus" />
+		
+		<result column="cust_nm"							property="custNm"/>
+	</resultMap>
+	
+	
+	<select id="getPaymentDetailListByContractNoAndStatus" resultMap="paymentDetailResultMap">
+	    SELECT
+	    	c.cust_nm,
+			rcd.paid_in_rounds,
+			rcd.payment_amount,
+			rcd.penalty_fee,
+			rcd.monthly_payment_date,
+			rcd.payment_status,
+			rcd.unpaid_status
+	    FROM 
+	    	rental_contract_details rcd inner join payment p 
+			on rcd.rental_contract_no = p.rental_contract_no
+			inner join customer c 
+			on rcd.cust_id = c.cust_id
+	    WHERE 
+	    	rcd.unpaid_status = #{unpaidStatus} and rcd.rental_contract_no = #{rentalContractNo}
+	    group by
+	    	rcd.monthly_payment_date
+	    order by
+	    	rcd.paid_in_rounds
+	</select>
+	
+	<select id="getPaymentDetailListByContractNo" resultMap="paymentDetailResultMap">
+	    SELECT
+	    	c.cust_nm,
+			rcd.paid_in_rounds,
+			rcd.payment_amount,
+			rcd.penalty_fee,
+			rcd.monthly_payment_date,
+			rcd.payment_status,
+			rcd.unpaid_status
+	    FROM 
+	    	rental_contract_details rcd inner join payment p 
+			on rcd.rental_contract_no = p.rental_contract_no
+			inner join customer c 
+			on rcd.cust_id = c.cust_id
+	    WHERE 
+	    	rcd.rental_contract_no = #{rentalContractNo}
+	    group by
+	    	rcd.monthly_payment_date
+	    order by
+	    	rcd.paid_in_rounds
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	<select id="getSearchPaymentList" parameterType="string" resultMap="paymentResultMap">
+		SELECT
+			c.cust_nm,
+			pd.products_nm,
+			p.payment_count,
+			p.total_price,
+			p.rental_contract_no,
+			p.payment_status,
+			p.payment_completed_date
+		FROM
+			payment p
+		INNER JOIN customer c USING(cust_id)
+		inner join sell_products sp
+		on sp.sell_products_no = p.sell_products_no
+		inner join products pd
+		on pd.products_no = sp.products_no
+		<where>
+			p.rental_contract_no != '일시불판매'
+			<if test="searchValue != null and searchValue != ''">
+				AND ${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+		</where>
+		GROUP BY
+			p.rental_contract_no
+		UNION ALL
+		SELECT
+			c.cust_nm,
+			pd.products_nm,
+			p.payment_count,
+			p.total_price,
+			p.rental_contract_no,
+			p.payment_status,
+			p.payment_completed_date
+		FROM
+			payment p
+		INNER JOIN customer c USING(cust_id)
+		inner join sell_products sp
+		on sp.sell_products_no = p.sell_products_no
+		inner join products pd
+		on pd.products_no = sp.products_no
+		<where>
+			p.rental_contract_no = '일시불판매'
+			<if test="searchValue != null and searchValue != ''">
+				AND ${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+		</where>
+		ORDER BY
+			payment_completed_date ASC
+	</select>
+	
+	
+	
+	<select id="getPaymentList" resultMap="paymentResultMap">
+		SELECT
+			c.cust_nm,
+			pd.products_nm,
+			p.payment_count,
+			p.total_price,
+			p.rental_contract_no,
+			p.payment_status,
+			p.payment_completed_date
+		FROM
+			payment p
+		INNER JOIN customer c USING(cust_id)
+		inner join sell_products sp
+		on sp.sell_products_no = p.sell_products_no
+		inner join products pd
+		on pd.products_no = sp.products_no
+		WHERE
+			p.rental_contract_no != '일시불판매'
+		GROUP BY
+			p.rental_contract_no
+		UNION ALL
+		SELECT
+			c.cust_nm,
+			pd.products_nm,
+			p.payment_count,
+			p.total_price,
+			p.rental_contract_no,
+			p.payment_status,
+			p.payment_completed_date
+		FROM
+			payment p
+		INNER JOIN customer c USING(cust_id)
+		inner join sell_products sp
+		on sp.sell_products_no = p.sell_products_no
+		inner join products pd
+		on pd.products_no = sp.products_no
+		WHERE
+			p.rental_contract_no = '일시불판매'
+		ORDER BY
+			payment_completed_date ASC;
+	</select>
+	
+</mapper>
+
+

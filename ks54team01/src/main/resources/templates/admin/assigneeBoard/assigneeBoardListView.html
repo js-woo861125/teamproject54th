@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/layout/default}">
+	
+	<!-- head 삽입공간 -->
+	<head>
+	
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+	
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+	
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="content">
+		<div class="content-header">
+			<div>
+				<h2 class="content-title card-title" th:text="${title}">양수게시글 목록</h2>
+			</div>
+		</div>
+		<div class="card mb-4">
+			<header class="card-header">
+				<div class="row gx-3">
+					<div class="col-lg-2 col-md-3 col-12">
+						<select class="form-select">
+							<option>회원이름</option>
+							<option>주문상태</option>
+						</select>
+					</div>
+					<div class="col-lg-4 col-md-5">
+						<input type="text" placeholder="검색어를 입력해주세요" class="form-control" />
+					</div>
+					<div class="col-lg-1 col-md-1 me-auto">
+						<button type="submit"
+							class="form-control btn btn-primary p-0 justify-content-center">검색</button>
+					</div>
+					<div class="col-lg-2 col-md-3 col-12">
+						<select class="form-select">
+							<option>Show 20</option>
+							<option>Show 30</option>
+							<option>Show 40</option>
+						</select>
+					</div>
+				</div>
+			</header>
+			<div class="card-body">
+				<div class="product-list mb-50">
+                        
+	                        <!-- 상품1 -->
+	                        <div class="product-cart-wrap border">
+	                            <div class="product-content-wrap mt-50 mb-30 ml-50">
+	                                <h4><a th:href="@{/admin/assigneeBoard/assigneeBoardDetail}">그램 프로 노트북 16인치 (옵시디안 블랙)</a></h4>
+	                                <div class="product-rate-cover">
+	                                    <span class="font-small ml-5 text-muted">TV/디지털</span>
+	                                </div>
+	                                <p class="mt-15 mb-15">급구</p>
+	                                <div class="product-price d-flex">
+	                                     <div>
+	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">희망렌탈료</span>
+	                                        <span style="color: black; font-size: 20px;">상관없음</span>
+	                                     </div>
+	                                     <div>
+	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">희망계약기간</span>
+	                                        <span style="color: black; font-size: 20px;">상관없음</span>
+	                                     </div>
+	                                     <div>
+	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">희망설치지역</span>
+	                                        <span style="color: black; font-size: 20px;">전주</span>
+	                                     </div>
+	                                     <div>
+	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">마감일</span>
+	                                        <span style="color: black; font-size: 20px;">2025-04-10</span>
+	                                     </div>
+	                                </div>
+	                                <div class = "board">
+	                                    <p>등록일</p>
+										<p>2025-04-09</p>
+	                                    <div></div>
+	                                    <p>personalcustid3</p>
+	                                </div>
+	                            </div>
+	                        </div>
+                    </div>
+			</div>
+		</div>
+	</th:block>
+
+</html>

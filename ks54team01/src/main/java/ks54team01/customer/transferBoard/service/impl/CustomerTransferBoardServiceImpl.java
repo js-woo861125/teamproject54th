@@ -1,6 +1,7 @@
 package ks54team01.customer.transferBoard.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,38 +24,12 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	private final CustomerTransferBoardMapper customerTransferBoardMapper;
 	
 	/**
-	 * 양도게시글정렬조회
+	 * 내 양도 게시글 목록 조회
 	 */
 	@Override
-	public PageInfo<CustomerTransferBoard> getSortTransferBoardList(String sortValue, Pageable pageable) {
-		
-		// 마지막 페이지를 구하기 위해 전체 행의 개수 조회
-		int contentRowCount = customerTransferBoardMapper.getTransferBoardCount();
-		
-		
-		
-		List<CustomerTransferBoard> transferBoardList = customerTransferBoardMapper.getSortTransferBoardList(sortValue, pageable);
-		
-		return new PageInfo<>(transferBoardList, pageable, contentRowCount);
-	}
-	
-	/**
-	 * 양도게시글검색조회
-	 */
-	@Override
-	public PageInfo<CustomerTransferBoard> getSearchTransferBoard(String searchKey, String searchValue, Pageable pageable) {
-
-		// 마지막 페이지를 구하기 위해 전체 행의 개수 조회
-		int contentRowCount = customerTransferBoardMapper.getSearchTransferBoardCount();
-		
-		switch (searchKey) {
-		case "productsName" -> searchKey = "p.products_nm";
-		case "transferTitle" -> searchKey = "tb.transfer_title";
-		}
-		
-		List<CustomerTransferBoard> transferBoardList = customerTransferBoardMapper.getSearchTransferBoard(searchKey, searchValue, pageable);
-		
-		return new PageInfo<>(transferBoardList, pageable, contentRowCount);
+	public List<CustomerTransferBoard> getMyTransferBoardList() {
+		List<CustomerTransferBoard> myTransferBoardList = customerTransferBoardMapper.getMyTransferBoardList();
+		return myTransferBoardList;
 	}
 	
 	/**
@@ -72,11 +47,14 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	 * 양도게시글목록조회
 	 */
 	@Override
-	public PageInfo<CustomerTransferBoard> getTransferBoardList(Pageable pageable) {
-		// 마지막 페이지를 구하기 위해 전체 행의 개수 조회
-		int contentRowCount = customerTransferBoardMapper.getTransferBoardCount();
+	public PageInfo<CustomerTransferBoard> getTransferBoardList(Map<String, Object> searchParamMap) {
 		
-		List<CustomerTransferBoard> transferBoardList = customerTransferBoardMapper.getTransferBoardList(pageable);
+		// 전체 행 개수 조회
+		int contentRowCount = customerTransferBoardMapper.getTransferBoardCount(searchParamMap);
+		
+		List<CustomerTransferBoard> transferBoardList = customerTransferBoardMapper.getTransferBoardList(searchParamMap);
+	
+		Pageable pageable = (Pageable) searchParamMap.get("pageable");
 		
 		log.info("contentRowCount: {}", contentRowCount);
 		log.info("transferBoardList: {}", transferBoardList);

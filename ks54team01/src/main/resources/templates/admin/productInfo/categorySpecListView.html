@@ -37,17 +37,21 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr class=text-center>
+                                           		<th>No.</th>
                                                 <th>카테고리별 상세스펙코드</th>
                                                 <th>카테고리</th>
                                                 <th>스펙명</th>
                                                 <th>사용유무</th>
+                                                <th>등록일자</th>
+                                                <th>수정일자</th>
                                                 <th>수정/삭제</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr class=text-center
 				                            	th:if="${!#lists.isEmpty(categorySpecList)}"
-				                          	  	th:each="l : ${categorySpecList}">
+				                          	  	th:each="l, index : ${categorySpecList}">
+				                          	  	<td th:text="${index.count}"></td>
                                                 <td th:text="${l.specNo}">spec_1</td>
                                                 <td th:text="${l.categoryInfo.smCategory}">냉장고</td>
                                                 <td th:text="${l.specName}">냉각방식</td>
@@ -56,11 +60,13 @@
 												          th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'"
 												          th:text="${l.useStatus}">사용중</span>    
 												</td>
+												<td th:text="${l.specRegDate}">2023-01-01 10:00:00</td>
+												<td th:text="${l.specRevDate}">2023-01-01 10:00:00</td>
 												<td>
                                                     <div class="dropdown">
                                                         <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
                                                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">수정</a>
+                                                            <a class="dropdown-item" th:href="@{/admin/productInfo/modifyCategorySpec(specNo=${l.specNo})}">수정</a>
                                                             <a class="dropdown-item text-danger" href="#">삭제</a>
                                                         </div>
                                                     </div>

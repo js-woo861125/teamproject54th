@@ -11,24 +11,29 @@
 	</th:block>
 
 	<th:block layout:fragment="content">
+		<div class="content-header">
+	            <div>
+	                <h2 class="content-title card-title" th:text="${title}"></h2>
+	            </div>
+	    </div>
 		<div class="card mx-auto card-login">
 			<div class="card-body">
 				<h4 class="card-title mb-4">직원계정 생성</h4>
 				<form>
 					<div class="mb-3">
 						<input class="form-control" placeholder="아이디(6-12자 이내, 영문/숫자 사용 가능)" type="text" />
-						<button class="authentication check-button">중복확인</button>
+						<button type="button" class="btn btn-primary w-40 justify-content-center">중복확인</button>
 					</div>
 					<!-- form-group// -->
 					<div class="mb-3">
-					    <input class="form-control" placeholder="비밀번호(8자 이상, 문자/특수문자/숫자 사용 가능)" type="password" />
+					    <input class="form-control" placeholder="비밀번호(8자 이상, 특수문자 포함)" type="password" />
 					</div>
 					<div class="mb-3">
 					    <input class="form-control" placeholder="비밀번호 확인" type="password" />
 					</div>
 					<!-- form-group// -->
 					<div class="mb-4">
-					    <button type="submit" class="btn btn-primary w-100">직원등록</button>
+					    <button type="button" class="btn btn-primary w-100 justify-content-center">직원등록</button>
 					</div>
 					<!-- form-group// -->
 				</form>

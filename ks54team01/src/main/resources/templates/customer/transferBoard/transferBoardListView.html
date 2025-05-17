@@ -10,9 +10,8 @@
 	
 	</head>
 	
-	
 	<th:block layout:fragment="jsFile">
-	
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</th:block>
 	
 	
@@ -21,27 +20,66 @@
 			$('.sort-by a').click(function(e){
 				e.preventDefault();
 				const sortValue = $(this).data('sortValue');
-				//console.log(sortValue);
 				const href = location.href;
 				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
 				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
 				urlParams.set('sortValue', sortValue);
-				//console.log(`${url.pathname}?${urlParams.toString()}`);
+
 				
 				location.href = `${url.pathname}?${urlParams.toString()}`;
 			});
 			
-			$('transfer-search').click(function(e){
+			
+			$('a.page-num').click(function(e){
 				e.preventDefault();
-				const searchValue = $(this).data('searchValue');
-				
+				const currentPage = $(this).data('currentPage');
 				const href = location.href; // 현재 url 가져온다.
 				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
 				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
-				urlParams.set('searchValue', searchValue);
-				
+				urlParams.set('currentPage', currentPage);
 				location.href = `${url.pathname}?${urlParams.toString()}`;
 			});
+			
+			/*
+			$('.section-title a').click(function(e) {
+				/* 렌탈 계약 있을 때 */
+				/* e.preventDefault();
+				const { value: fruit } = Swal.fire({
+					  title: "등록하고 싶은 상품을 선택해주세요.",
+					  input: "select",
+					  inputOptions: {
+					    Fruits: {
+					      apples: "Apples",
+					      bananas: "Bananas",
+					      grapes: "Grapes",
+					      oranges: "Oranges"
+					    }
+					  },
+					  inputPlaceholder: "렌탈 계약 목록",
+					  showCancelButton: true,
+					  inputValidator: (value) => {
+					    return new Promise((resolve) => {
+					      if (value === "oranges") {
+					        resolve();
+					      } else {
+					        resolve("You need to select oranges :)");
+					      }
+					    });
+					  }
+					});
+					if (fruit) {
+					  Swal.fire(`You selected: ${fruit}`);
+					} */
+					
+				/* 렌탈 계약 없을 때 */
+				/* Swal.fire({
+					  icon: "error",
+					  title: "Oops...",
+					  text: "진행 중인 렌탈 계약이 없습니다.",
+					  confirmButtonText: "확인"
+					}); */
+
+			
 		</script>
 	</th:block>
 	
@@ -53,16 +91,15 @@
 					<div class="section-title">
 						<h1 class="heading-2 mb-40">양도 하기!</h1>
 						<div class="col-md-2 col-2 ms-auto mt-50">
-							<button type="submit"
-								class="btn btn-success w-50 rounded font-lg hover-up text-white justify-content-center fs-6 mb-50">글쓰기</button>
+							<!-- 양도 글 쓰기 버튼 클릭하면 계약 중인 렌탈 상품이 있는 지 체크하고 있으면 등록 페이지로 이동 -->
+							<a th:href="@{/customer/transferBoard/addTransferBoard}" class="btn btn-success w-30 rounded font-lg hover-up text-white justify-content-center fs-6 mb-50">글쓰기</a>
 						</div>
 					</div>
 					<div class="w-50 widget_search mb-50">
 						<div class="search-form">
-							<form th:action="@{/customer/transferBoard/searchTransferBoard}"
-								method="get">
+							<form th:action="@{/customer/transferBoard/transferBoardList}" method="get">
 								<input type="text" name="searchValue" th:value="${searchValue}"
-									placeholder="게시글 검색어를 입력해주세요." />
+									   placeholder="게시글 검색어를 입력해주세요." />
 								<button class="transfer-search" type="submit">
 									<i class="fi-rs-search"></i>
 								</button>
@@ -72,42 +109,46 @@
 					<div class="shop-product-fillter">
 						<div class="totall-product">
 							<h5 class="text-body">
-								양도 상품<span th:text="${'&emsp;' + contentRowCount}"
-								class="text-brand">5</span> 
+								양도 상품
+								<span th:text="${'&emsp;' + contentRowCount}"
+									  class="text-brand">5
+								</span> 
 								<span>건</span>
 							</h5>
 						</div>
-						<div class="sort-by-product-area">
-							<div class="sort-by-cover mr-10">
-								<div class="sort-by">
-									<!--/* <a th:href="@{/customer/transferBoard/sortTransferBoardList(sortValue=recentReg)}"> */-->
-									<a th:href="@{#}" th:data-sort-value="recentReg">
-										<span>최신등록순</span>
-									</a>
+						<th:block th:if="${contentRowCount > 0}">
+							<div class="sort-by-product-area">
+								<div class="sort-by-cover mr-10">
+									<div class="sort-by">
+										<!--/* <a th:href="@{/customer/transferBoard/sortTransferBoardList(sortValue=recentReg)}"> */-->
+										<a th:href="@{#}" th:data-sort-value="recentReg">
+											<span>최신등록순</span>
+										</a>
+									</div>
+								</div>
+								<div class="sort-by-cover mr-10">
+									<div class="sort-by">
+										<a th:href="@{#}" th:data-sort-value="highPrice">
+											<span>높은가격순</span>
+										</a>
+									</div>
+								</div>
+								<div class="sort-by-cover mr-10">
+									<div class="sort-by">
+										<a th:href="@{#}" th:data-sort-value="rowPrice">
+											<span>낮은가격순</span>
+										</a>
+									</div>
+								</div>
+								<div class="sort-by-cover mr-10">
+									<div class="sort-by">
+										<a th:href="@{#}" th:data-sort-value="deadline">
+											<span>마감임박순</span>
+										</a>
+									</div>
 								</div>
 							</div>
-							<div class="sort-by-cover mr-10">
-								<div class="sort-by">
-									<a th:href="@{#}" th:data-sort-value="highPrice">
-										<span>높은가격순</span>
-									</a>
-								</div>
-							</div>
-							<div class="sort-by-cover mr-10">
-								<div class="sort-by">
-									<a th:href="@{#}" th:data-sort-value="rowPrice">
-										<span>낮은가격순</span>
-									</a>
-								</div>
-							</div>
-							<div class="sort-by-cover mr-10">
-								<div class="sort-by">
-									<a th:href="@{#}" th:data-sort-value="deadline">
-										<span>마감임박순</span>
-									</a>
-								</div>
-							</div>
-						</div>
+						</th:block>
 					</div>
 					<div class="row product-grid">
 						<th:block th:if="${!#lists.isEmpty(transferBoardList)}"
@@ -116,8 +157,7 @@
 								<div class="product-cart-wrap mb-30">
 									<div class="product-img-action-wrap">
 										<div class="product-img product-img-zoom">
-											<a
-												th:href="@{/customer/transferBoard/transferBoardDetail(transferBoardNum=${l.transferBoardNum})}">
+											<a th:href="@{/customer/transferBoard/transferBoardDetail(transferBoardNum=${l.transferBoardNum})}">
 												<img class="default-img"
 												th:src="@{'/user/assets/imgs/shop/' + ${l.productInfo.productsImage}}"
 												alt="" />
@@ -125,27 +165,33 @@
 										</div>
 									</div>
 									<div class="product-content-wrap">
-										<div class="product-category">
-											<a href="shop-grid-right.html">TV</a>
+										<div class="product-category d-flex justify-content-between">
+											<a th:text="${l.productInfoCategory.smCategory}" href="shop-grid-right.html">TV</a>
+											<div class="dropdown">
+		                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+		                                        <div class="dropdown-menu">
+		                                            <button class="dropdown-item" type="submit">게시글 삭제</button>
+		                                        </div>
+	                                    	</div>
 										</div>
 										<h2 th:text="${l.transferTitle}">
 											<a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a>
 										</h2>
 										<div>
-											<span th:text="${l.customerId}" class="font-small text-muted">작성자
+											<span th:text="${l.customerMember.custName}" class="font-small text-muted">작성자
 												<a href="vendor-details-1.html">우에하라 아유무</a>
 											</span>
 										</div>
 										<div class="product-card-bottom">
 											<div class="product-price">
-												<span>💸월렌탈료</span> <span
-													th:text="|₩${#numbers.formatInteger(l.rentalFee, 3, 'COMMA')}">85,000원</span>
+												<span>💸월렌탈료</span> 
+												<span th:text="|₩${#numbers.formatInteger(l.rentalFee, 3, 'COMMA')}">85,000원</span>
 											</div>
 										</div>
 										<div class="product-card-bottom">
 											<div class="product-price">
-												<span>💰지원금</span> <span
-													th:text="|₩${#numbers.formatInteger(l.individualGrants, 3, 'COMMA')}">1,000원</span>
+												<span>💰지원금</span> 
+												<span th:text="|₩${l.individualGrants >= 1000 ? #numbers.formatInteger(l.individualGrants, 3, 'COMMA') : l.individualGrants}">1,000원</span>
 											</div>
 										</div>
 										<div class="product-card-bottom">
@@ -163,37 +209,40 @@
 								</div>
 							</div>
 						</th:block>
+						<div th:if="${contentRowCount < 1}"
+							 class="mt-100" style="text-align: center;">
+							<p>게시글이 없습니다.</p>	
+						</div>
 					</div>
 					<div class="pagination-area mt-30 mb-50">
 						<nav aria-label="Page navigation example">
 							<ul class="pagination justify-content-center">
-								<li class="page-item"><a class="page-link"
-									th:href="@{/customer/transferBoard/transferBoardList}">
-									<i class="material-icons md-first_page"></i></a></li>
-								<li class="page-item"
-									th:classappend="${currentPage < 2} ? 'disabled'"><a
-									class="page-link"
-									th:href="@{/customer/transferBoard/transferBoardList(currentPage=${currentPage - 1})}">
-										<i class="fi-rs-arrow-small-left"></i>
-								</a></li>
-								<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
+								<!-- 이전페이지 이동 -->
+								<li id="prev-page" class="page-item" th:classappend="${startPageNum < 10} ? 'disabled'">
+									<a class="page-link" th:classappend="${startPageNum < 10} ? 'bg-white'"
+										th:href="@{/customer/transferBoard/transferBoardList(currentPage=${startPageNum - 1})}">
+										<i class="material-icons md-first_page"></i>
+									</a>
+								</li>
+								<!-- 페이지 이동  -->
+								<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}"
+										  th:if="${contentRowCount > 0}">
 									<li class="page-item"
 										th:classappend="${num eq currentPage} ? 'active disabled'">
-										<a class="page-link"
-										th:href="@{/customer/transferBoard/transferBoardList(currentPage=${num})}"
-										th:text="${num < 10 ? '0' + num : num}">01</a>
+										<a class="page-link page-num"
+										   href="#"
+										   th:text="${num < 10 ? '0' + num : num}"
+										   th:data-current-Page="${num}">01</a>
 									</li>
 								</th:block>
-								<li class="page-item"
-									th:classappend="${currentPage eq lastPage} ? 'disabled'"><a
-									class="page-link"
-									th:href="@{/customer/transferBoard/transferBoardList(currentPage=${currentPage + 1})}">
-										<i class="material-icons md-chevron_right"></i>
-								</a></li>
-								<li class="page-item"><a class="page-link"
-									th:href="@{/customer/transferBoard/transferBoardList(currentPage=${lastPage})}">
-										<i class="material-icons md-last_page"></i>
-								</a></li>
+								
+								<!-- 다음페이지 이동 -->
+								<li id="next-page" class="page-item" th:classappend="${(startPageNum + 10) > lastPage} ? 'disabled'">
+									<a class="page-link" th:classappend="${(startPageNum + 10) > lastPage} ? 'bg-white'"
+									   th:href="@{/customer/transferBoard/transferBoardList(currentPage=${endPageNum + 1})}">
+									   <i class="material-icons md-last_page"></i>
+									</a>
+								</li>
 							</ul>
 						</nav>
 					</div>

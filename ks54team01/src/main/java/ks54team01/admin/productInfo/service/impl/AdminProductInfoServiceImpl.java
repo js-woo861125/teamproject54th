@@ -1,6 +1,8 @@
 package ks54team01.admin.productInfo.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +13,7 @@ import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.admin.productInfo.domain.ProductInfoCategorySpec;
 import ks54team01.admin.productInfo.domain.ProductInfoItem;
 import ks54team01.admin.productInfo.domain.ProductInfoModel;
+import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
 import ks54team01.admin.productInfo.mapper.AdminProductInfoMapper;
 import ks54team01.admin.productInfo.service.AdminProductInfoService;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +28,210 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	// DI 의존성 주입
 	private final AdminProductInfoMapper adminProductInfoMapper;
 	
-	// 상품정보 카테고리 등록
+	// 상품정보 검색
+	@Override
+	public List<ProductInfoBenefit> getSearchBenefit(String searchKey, String searchValue) {
+		
+		switch (searchKey) {
+		case "benefitName" -> searchKey = "benefit_nm";
+		}
+		List<ProductInfoBenefit> benefitList = adminProductInfoMapper.getSearchBenefit(searchKey, searchValue);
+		
+		return benefitList;	
+	}
+	@Override
+	public List<ProductInfoItem> getSearchItem(String searchKey, String searchValue) {
+		
+		switch (searchKey) {
+		case "itemName" -> searchKey = "item_nm";
+		}
+		List<ProductInfoItem> itemList = adminProductInfoMapper.getSearchItem(searchKey, searchValue);
+				
+		return itemList;
+	}
+	@Override
+	public List<ProductInfoBrand> getSearchBrand(String searchKey, String searchValue) {
+		
+		switch (searchKey) {
+		case "brandName" -> searchKey = "brand_nm";	
+		}
+		List<ProductInfoBrand> brandList = adminProductInfoMapper.getSearchBrand(searchKey, searchValue);
+		
+		return brandList;
+	}
+	@Override
+	public List<ProductInfoCategory> getSearchCategory(String searchKey, String searchValue) {
+		
+		switch (searchKey) {
+		case "lgCategory" 	-> searchKey = "large_category";
+		case "mdCategory" 	-> searchKey = "middle_category";
+		case "smCategory" 	-> searchKey = "small_category";	
+		}
+		List<ProductInfoCategory> categoryList = adminProductInfoMapper.getSearchCategory(searchKey, searchValue);
+		
+		return categoryList;
+	}
+	
+	// 상품정보 삭제
+	@Override
+	public boolean removeBrandInfoByNo(String brandNo) {
+		
+		int delCount = 0;
+		
+		// 상품정보 브랜드
+		delCount += adminProductInfoMapper.removeBrandInfoByNo(brandNo);
+		
+		boolean isDel = delCount > 0 ? true : false;
+		
+		return isDel;
+	}
+	
+	// 상품정보 중복체크
+	@Override
+	public boolean isBenefitNameCheck(String benefitName) {
+		
+		return adminProductInfoMapper.isBenefitNameCheck(benefitName);
+	}
+	
+	@Override
+	public boolean isItemNameCheck(String itemName, String categoryNo) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("itemName", itemName);
+		params.put("categoryNo", categoryNo);
+		
+		return adminProductInfoMapper.isItemNameCheck(params);
+	}
+	
+	@Override
+	public boolean isBrandNameCheck(String brandName) {
+		
+		return adminProductInfoMapper.isBrandNameCheck(brandName);
+	}
+	
+	// 상품정보 수정
+	@Override
+	public void modifyCategorySpec(ProductInfoCategorySpec productInfoCategorySpec) {
+		
+		adminProductInfoMapper.modifyCategorySpec(productInfoCategorySpec);
+	}
+	
+	@Override
+	public void modifyBenefit(ProductInfoBenefit productInfoBenefit) {
+		
+		adminProductInfoMapper.modifyBenefit(productInfoBenefit);
+	}
+	
+	@Override
+	public void modifyModel(ProductInfoModel productInfoModel) {
+		
+		adminProductInfoMapper.modifyModel(productInfoModel);
+	}
+	
+	@Override
+	public void modifyItem(ProductInfoItem productInfoItem) {
+		
+		adminProductInfoMapper.modifyItem(productInfoItem);
+	}
+	
+	@Override
+	public void modifyBrand(ProductInfoBrand productInfoBrand) {
+		
+		adminProductInfoMapper.modifyBrand(productInfoBrand);
+	}
+	
+	@Override
+	public void modifyCategory(ProductInfoCategory productInfoCategory) {
+		
+		adminProductInfoMapper.modifyCategory(productInfoCategory);
+	}
+	
+	// 상품정보 조회
+	@Override
+	public ProductInfoCategorySpec getCategorySpecInfoByNo(String categorySpecyNo) {
+		
+		return adminProductInfoMapper.getCategorySpecInfoByNo(categorySpecyNo);
+	}
+	
+	@Override
+	public ProductInfoBenefit getBenefitInfoByNo(String benefitNo) {
+		
+		return adminProductInfoMapper.getBenefitInfoByNo(benefitNo);
+	}
+	
+	@Override
+	public ProductInfoModel getModelInfoByNo(String modelNo) {
+		
+		return adminProductInfoMapper.getModelInfoByNo(modelNo);
+	}
+	
+	@Override
+	public ProductInfoItem getItemInfoByNo(String itemNo) {
+		
+		return adminProductInfoMapper.getItemInfoByNo(itemNo);
+	}
+	
+	@Override
+	public ProductInfoBrand getBrandInfoByNo(String brandNo) {
+		
+		return adminProductInfoMapper.getBrandInfoByNo(brandNo);
+	}
+	
+	@Override
+	public ProductInfoCategory getCategoryInfoByNo(String categoryNo) {
+		
+		return adminProductInfoMapper.getCategoryInfoByNo(categoryNo);
+	}
+	
+	// 상품정보 등록
+	@Override
+	public void addCategorySpec(ProductInfoCategorySpec ProductInfoCategorySpec) {
+		log.info("상품등록 전 : {}", ProductInfoCategorySpec);
+		
+		adminProductInfoMapper.addCategorySpec(ProductInfoCategorySpec);
+		
+		log.info("상품등록 후 : {}", ProductInfoCategorySpec);
+	}
 
+	@Override
+	public void addBenefit(ProductInfoBenefit productInfoBenefit) {
+		
+		log.info("상품등록 전 : {}", productInfoBenefit);
+		
+		adminProductInfoMapper.addBenefit(productInfoBenefit);
+		
+		log.info("상품등록 후 : {}", productInfoBenefit);
+	}
+
+	@Override
+	public void addModel(ProductInfoModel productInfoModel) {
+		
+		log.info("상품등록 전 : {}", productInfoModel);
+		
+		adminProductInfoMapper.addModel(productInfoModel);
+		
+		log.info("상품등록 후 : {}", productInfoModel);
+	}
+
+	@Override
+	public void addItem(ProductInfoItem productInfoItem) {
+		
+		log.info("상품등록 전 : {}", productInfoItem);
+		
+		adminProductInfoMapper.addItem(productInfoItem);
+		
+		log.info("상품등록 후 : {}", productInfoItem);
+	}
+
+	@Override
+	public void addBrand(ProductInfoBrand productInfoBrand) {
+		
+		log.info("상품등록 전 : {}", productInfoBrand);
+		
+		adminProductInfoMapper.addBrand(productInfoBrand);
+		
+		log.info("상품등록 후 : {}", productInfoBrand);
+	}
+	
 	@Override
 	public void addCategory(ProductInfoCategory productInfoCategory) {
 		
@@ -35,10 +240,17 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		adminProductInfoMapper.addCategory(productInfoCategory);
 		
 		log.info("상품등록 후 : {}", productInfoCategory);
-		
 	}
 	
-	// 상품정보 카테고리별/상세스펙 목록 조회
+	// 상품정보 목록 조회
+	@Override
+	public List<ProductInfoModelSpec> getModelSpecList() {
+		
+		List<ProductInfoModelSpec> modelSpecList = adminProductInfoMapper.getModelSpecList();
+		
+		return modelSpecList;
+	}
+	
 	@Override
 	public List<ProductInfoCategorySpec> getCategorySpecList() {
 		
@@ -46,8 +258,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		return categorySpecList;
 	}
-	
-	// 상품정보 전체혜택 목록 조회
+
 	@Override
 	public List<ProductInfoBenefit> getBenefitList() {
 		
@@ -55,8 +266,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		return benefitList;
 	}
-	
-	// 상품정보 모델 목록 조회
+
 	@Override
 	public List<ProductInfoModel> getModelList() {
 		
@@ -64,8 +274,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		return modelList;
 	}
-	
-	// 상품정보 품목 목록 조회
+
 	@Override
 	public List<ProductInfoItem> getItemList() {
 		
@@ -73,8 +282,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		return itemList;
 	}
-	
-	// 상품정보 브랜드 목록 조회
+
 	@Override
 	public List<ProductInfoBrand> getBrandList() {
 		
@@ -82,8 +290,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		return brandList;
 	}
-	
-	// 상품정보 카테고리 목록 조회
+
 	@Override
 	public List<ProductInfoCategory> getCategoryList() {
 		

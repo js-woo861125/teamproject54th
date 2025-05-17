@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="ks54team01.customer.assigneeBoard.mapper.CustomerAssigneeBoardMapper">
+
+  	<!-- resultMap : 조회 결과를 자바 클래스(domain, dto)와 명시적으로 매핑 설정-->
+  	<resultMap type="CustomerAssigneeBoard" id="assigneeBoardResultMap">
+		<id column="assignee_no" property="assigneeBoardNum" />
+		<result column="cust_id" property="customerId" />
+		<result column="product_category_no" property="productCategoryNum" />
+		<result column="products_nm" property="productName" />
+		<result column="rental_fee" property="rentalFee" />
+		<result column="remaining_months" property="remainingMonths" />
+		<result column="desired_install_area" property="desiredInstallArea" />		
+		<result column="quantity" property="quantity" />
+		<result column="assignee_content" property="assigneeContent" />
+		<result column="board_valid_date" property="boardValidDate" />
+		<result column="register_date" property="registerDate" />
+		<result column="revision_date" property="revisionDate" />	
+		
+		<association property="customerMember" javaType="CustomerMember">
+			<id column="cust_id" property="memberId" />
+			<result column="cust_nm" property="custName" />
+			<result column="cust_brdt" property="custBrdt" />
+			<result column="cust_addr" property="custAddr" />
+			<result column="cust_daddr" property="custDaddr" />
+			<result column="cust_email" property="custEmail" />
+			<result column="cust_phone" property="custPhone" />		
+		</association>
+		
+		<association property="productInfoCategory" javaType="ProductInfoCategory">
+			<id column="product_category_no" property="categoryNo" />
+			<result column="large_category_no" property="lgCategoryNo" />
+			<result column="large_category" property="lgCategory" />
+			<result column="middle_category_no" property="mdCategoryNo" />
+			<result column="middle_category" property="mdCategory" />
+			<result column="small_category" property="smCategory" />
+			<result column="use_status" property="useStatus" />		
+		</association>	
+  	</resultMap>	
+  	
+ 
+  	<select id="getMyAssigneeBoardList" parameterType="string" resultMap="assigneeBoardResultMap">
+  		/* 내 양수 게시글 목록 조회 */
+		SELECT 
+			ab.assignee_no, 
+			ab.cust_id,
+			c.cust_nm ,
+			ab.product_category_no,
+			pc.middle_category ,
+			pc.small_category ,
+			ab.products_nm, 
+			ab.rental_fee, 
+			ab.remaining_months, 
+			ab.desired_install_area, 
+			ab.quantity, 
+			ab.assignee_content, 
+			ab.board_valid_date,
+			ab.register_date,
+			ab.revision_date
+		FROM
+			customer c RIGHT JOIN assignee_board ab 
+			USING (cust_id)
+			INNER JOIN products_category pc
+			USING (product_category_no)
+		WHERE
+			ab.cust_id = 'personalcustid3'
+		ORDER BY ab.register_date DESC;
+  	</select>
+  	
+  	
+  	<select id="getAssigneeBoardInfoByCode" parameterType="string" resultMap="assigneeBoardResultMap">
+  		/* 양수 게시글 정보 조회 */
+  		SELECT 
+			ab.assignee_no, 
+			ab.cust_id,
+			c.cust_nm ,
+			ab.product_category_no,
+			pc.middle_category ,
+			pc.small_category ,
+			ab.products_nm, 
+			ab.rental_fee, 
+			ab.remaining_months, 
+			ab.desired_install_area, 
+			ab.quantity, 
+			ab.assignee_content, 
+			ab.board_valid_date,
+			ab.register_date,
+			ab.revision_date
+		FROM
+			customer c RIGHT JOIN assignee_board ab 
+			USING (cust_id)
+			INNER JOIN products_category pc
+			USING (product_category_no)
+		WHERE
+			ab.assignee_no = #{assigneeBoardNum};
+  	</select>
+  	
+  	<select id="getAssigneeBoardCount" resultType="int">
+  		/* 양수 게시글 전체 행 수 조회 */
+	  	SELECT 
+			COUNT(assignee_no)
+		FROM
+			assignee_board; 
+  	</select>
+  	
+  	<select id="getAssigneeBoardList" parameterType="map" resultMap="assigneeBoardResultMap">
+  		/* 양수 게시글 목록 조회 */
+		SELECT 
+			ab.assignee_no, 
+			ab.cust_id,
+			c.cust_nm ,
+			ab.product_category_no,
+			pc.middle_category ,
+			pc.small_category ,
+			ab.products_nm, 
+			ab.rental_fee, 
+			ab.remaining_months, 
+			ab.desired_install_area, 
+			ab.quantity, 
+			ab.assignee_content, 
+			ab.board_valid_date,
+			ab.register_date,
+			ab.revision_date
+		FROM
+			customer c RIGHT JOIN assignee_board ab 
+			USING (cust_id)
+			INNER JOIN products_category pc
+			USING (product_category_no)
+  		<where>
+			<if test="searchValue != null and searchValue != ''">
+				ab.products_nm LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+		</where>
+		ORDER BY 
+		<if test="sortValue != null and sortValue == 'deadline'">
+			DATEDIFF(ab.board_valid_date, NOW()) ASC,
+		</if>
+		ab.register_date DESC
+		LIMIT #{pageable.rowPerPage} OFFSET #{pageable.offset};
+  	</select>
+
+
+  </mapper>

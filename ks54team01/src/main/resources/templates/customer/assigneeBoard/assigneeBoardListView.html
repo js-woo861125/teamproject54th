@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{customer/layout/default}">
+
+
+	<!-- head 삽입공간 -->
+	
+	<head>
+	
+	</head>
+	
+	
+	<th:block layout:fragment="jsFile">
+	
+	</th:block>
+	
+	
+	<th:block layout:fragment="jsScript">
+		<script>
+			$('.sort-by a').click(function(e){
+				e.preventDefault();
+				const sortValue = $(this).data('sortValue');
+				const href = location.href;
+				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
+				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
+				urlParams.set('sortValue', sortValue);
+
+				location.href = `${url.pathname}?${urlParams.toString()}`;
+			});
+			
+			
+			$('a.page-num').click(function(e){
+				e.preventDefault();
+				const currentPage = $(this).data('currentPage');
+				const href = location.href; // 현재 url 가져온다.
+				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
+				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
+				urlParams.set('currentPage', currentPage);
+				location.href = `${url.pathname}?${urlParams.toString()}`;
+			});
+		</script>
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+		<div class="container mb-30">
+            <div class="row flex-row-reverse">
+                <div class="col-lg-11">
+                    <div class="section-title">
+                        <h1 class="heading-2 mb-50">양도 받기!</h1>
+                        <div class="col-md-2 col-2 ms-auto mt-50">
+							<a th:href="@{/customer/assigneeBoard/addAssigneeBoard}" class="btn btn-success w-30 rounded font-lg hover-up text-white justify-content-center fs-6 mb-50">글쓰기</a>
+						</div>
+                    </div>
+                    <div class="w-50 widget_search mb-50">
+                        <div class="search-form">
+                            <form th:action="@{/customer/assigneeBoard/assigneeBoardList}" method="get">
+                                <input type="text" name="searchValue" th:value="${searchValue}" 
+                                	   placeholder="게시글 검색어를 입력해주세요." />
+                                <button type="submit"><i class="fi-rs-search"></i></button>
+                            </form>
+                        </div>
+                    </div> 
+                    <div class="shop-product-fillter">
+						<div class="totall-product">
+							<h5 class="text-body">
+								양수 상품
+								<span th:text="${'&emsp;' + assigneeBoardList.size()}"
+									  class="text-brand">5
+								</span> 
+								<span>건</span>
+							</h5>
+						</div>
+						<div class="sort-by-product-area">
+							<div class="sort-by-cover mr-10">
+								<div class="sort-by">
+									<a th:href="@{#}" th:data-sort-value="recentReg">
+										<span>최신등록순</span>
+									</a>
+								</div>
+							</div>
+							<div class="sort-by-cover mr-10">
+								<div class="sort-by">
+									<a th:href="@{#}" th:data-sort-value="deadline">
+										<span>마감임박순</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+                    <div class="product-list mb-50">
+                        <th:block th:if="${!#lists.isEmpty(assigneeBoardList)}"
+								  th:each="l : ${assigneeBoardList}">
+	                        <!-- 상품1 -->
+	                        <div class="product-cart-wrap border">
+	                            <div class="product-content-wrap mt-50 mb-30 ml-50">
+	                                <h4><a th:text="${l.productName}" th:href="@{/customer/assigneeBoard/assigneeBoardDetail(assigneeBoardNum=${l.assigneeBoardNum})}">그램 프로 노트북 16인치 (옵시디안 블랙)</a></h4>
+                                	<div class="dropdown">
+                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">게시글 삭제</a>
+                                            <button class="dropdown-item" type="submit">게시글 삭제</button>
+                                        </div>
+                                    </div>
+	                                <div class="product-rate-cover">
+	                                    <span th:text="${l.productInfoCategory.smCategory}" class="font-small ml-5 text-muted">TV/디지털</span>
+	                                </div>
+	                                <p class="mt-15 mb-15">급구</p>
+	                                <div class="product-price d-flex">
+	                                     <div>
+	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">희망렌탈료</span>
+	                                        <span th:text="|₩${#numbers.formatInteger(l.rentalFee, 3, 'COMMA')}" 
+	                                        	  style="color: black; font-size: 20px;">상관없음</span>
+	                                     </div>
+	                                     <div>
+	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">희망계약기간</span>
+	                                        <span th:text="${l.remainingMonths} + '개월'" style="color: black; font-size: 20px;">상관없음</span>
+	                                     </div>
+	                                     <div>
+	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">희망설치지역</span>
+	                                        <span th:text="${l.desiredInstallArea}" style="color: black; font-size: 20px;">전주</span>
+	                                     </div>
+	                                     <div>
+	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">마감일</span>
+	                                        <span th:text="${l.boardValidDate}" style="color: black; font-size: 20px;">2025-04-10</span>
+	                                     </div>
+	                                </div>
+	                                <div class = "board">
+	                                    <p>등록일</p>
+										<p th:text="${l.registerDate}">2025-04-09</p>
+	                                    <div></div>
+	                                    <p th:text="${l.customerMember.custName}">personalcustid3</p>
+	                                </div>
+	                            </div>
+	                        </div>
+                        </th:block>
+                        <div th:if="${#lists.isEmpty(assigneeBoardList)}"
+							 class="mt-100" style="text-align: center;">
+							<p>게시글이 없습니다.</p>	
+						</div>
+                    </div>
+                    <div class="pagination-area mt-30 mb-50">
+						<nav aria-label="Page navigation example">
+							<ul class="pagination justify-content-center">
+								<!-- 이전페이지 이동 -->
+								<li id="prev-page" class="page-item" th:classappend="${startPageNum < 10} ? 'disabled'">
+									<a class="page-link" th:classappend="${startPageNum < 10} ? 'bg-white'"
+										th:href="@{/customer/transferBoard/transferBoardList(currentPage=${startPageNum - 1})}">
+										<i class="material-icons md-first_page"></i>
+									</a>
+								</li>
+								<!-- 페이지 이동  -->
+								<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}"
+										  th:if="${contentRowCount > 0}">
+									<li class="page-item"
+										th:classappend="${num eq currentPage} ? 'active disabled'">
+										<a class="page-link page-num"
+										   href="#"
+										   th:text="${num < 10 ? '0' + num : num}"
+										   th:data-current-Page="${num}">01</a>
+									</li>
+								</th:block>
+								
+								<!-- 다음페이지 이동 -->
+								<li id="next-page" class="page-item" th:classappend="${(startPageNum + 10) > lastPage} ? 'disabled'">
+									<a class="page-link" th:classappend="${(startPageNum + 10) > lastPage} ? 'bg-white'"
+									   th:href="@{/customer/transferBoard/transferBoardList(currentPage=${endPageNum + 1})}">
+									   <i class="material-icons md-last_page"></i>
+									</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
+                </div>
+            </div>
+        </div>
+	</th:block> 
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{customer/layout/myPageDefault}">
+
+	<!-- head 삽입공간 -->
+	<head>
+		<!-- <style>
+			#postSubmenu,
+			#postSubmenu ul,
+			#postSubmenu li,
+			#postSubmenu a {
+			    background: none !important;
+			    border: none !important;
+			    box-shadow: none !important;
+			    outline: none !important;
+			    list-style: none !important;
+			    padding-left: 0 !important;
+			    margin-left: 0 !important;
+			    font-size: 14px;
+			    color: #444;
+			    text-align:right;
+			}
+		</style> -->
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+	
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+		<div class="tab-content account dashboard-content pl-50">
+			<div class="tab-pane fade active show" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+				<div class="card">
+					<div class="card-header d-flex">
+						<h3 class="mb-0" th:text="${title}"></h3>
+					</div>
+					 <form th:action="@{/customer/member/modify}" th:object="${memberInfo}" method="post">
+				        <input type="text" th:field="*{memberId}" readonly />
+				        <div>
+				            <label>비밀번호:</label>
+				            <input type="password" th:field="*{memberPw}" />
+				        </div>
+				        <div th:if="*{memberType} == '기업고객'">
+				            <label>기업명:</label>
+				            <input type="text" th:field="*{corpName}" />
+				        </div>
+				        <div th:if="*{memberType} == '기업고객'">
+				            <label>사업자번호:</label>
+				            <input type="text" th:field="*{corpBrno}" />
+				        </div>
+				        <div>
+				            <label>이름:</label>
+				            <input type="text" th:field="*{custName}" />
+				        </div>
+				        <div>
+				            <label>전화번호:</label>
+				            <input type="text" th:field="*{custPhone}" />
+				        </div>
+				        <div>
+				            <label>생년월일:</label>
+				            <input type="date" th:field="*{custBrdt}" />
+				        </div>
+				        <div>
+				            <label>주소:</label>
+				            <input type="text" th:field="*{custAddr}" />
+				        </div>
+				        <div>
+				            <label>상세 주소:</label>
+				            <input type="text" th:field="*{custDaddr}" />
+				        </div>
+				        <div>
+				            <label>이메일:</label>
+				            <input type="email" th:field="*{custEmail}" />
+				        </div>
+				        <div>
+				            <button type="submit">수정하기</button>
+				        </div>
+				    </form>
+				</div>
+			</div>
+		</div>
+	</th:block>
+
+</html>

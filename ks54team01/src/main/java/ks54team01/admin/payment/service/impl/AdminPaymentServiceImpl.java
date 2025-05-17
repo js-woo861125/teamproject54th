@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ks54team01.admin.delivery.domain.AdminDelivery;
+import ks54team01.admin.payment.domain.AdminFee;
 import ks54team01.admin.payment.domain.AdminPayment;
 import ks54team01.admin.payment.mapper.AdminPaymentMapper;
 import ks54team01.admin.payment.service.AdminPaymentService;
@@ -17,6 +18,13 @@ import lombok.RequiredArgsConstructor;
 public class AdminPaymentServiceImpl implements AdminPaymentService{
 
 	private final AdminPaymentMapper adminPaymentMapper;
+	
+	
+	@Override
+	public List<AdminFee> getAdminPayFee() {
+		List<AdminFee> adminFeeList = adminPaymentMapper.getAdminPayment();
+		return adminFeeList;
+	}
 	
 	
 	@Override

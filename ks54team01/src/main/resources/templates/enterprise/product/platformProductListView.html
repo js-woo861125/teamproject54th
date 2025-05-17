@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{enterprise/layout/default}">
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	</th:block>
+
+    <th:block layout:fragment="content">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title" th:text="${title}"></h2>
+            </div>
+         </div>
+        <div class="card mb-4">
+            <header class="card-header">
+                <div class="row align-items-center">
+					   <div class="col-lg-1 col-md-3 col-12">
+	                       <select class="form-select" name="searchKey">
+	                           <option>브랜드</option>
+	                           <option>상품</option>
+	                       </select>
+	                   </div>
+	                   <div class="col-lg-3 col-md-5">
+	                       <input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
+	                   </div>
+	                   <div class="col-lg-1 col-md-1 me-auto">
+						   <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
+	                   </div>
+                    <div class="col-lg-2">
+                        <select class="form-select">
+                            <option>모든 카테고리</option>
+                            <option>TV</option>
+                            <option>노트북</option>
+                            <option>전기레인지</option>
+                            <option>냉장고</option>
+                            <option>식탁</option>
+                            <option>소파</option>
+                            <option>침대</option>
+                        </select>
+                    </div>
+                </div>
+            </header>
+            <!-- card-header end// -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class=text-center>
+                                <th>카테고리</th>
+                                <th>브랜드</th>
+                                <th>모델</th>
+                                <th>상품이미지</th>                            
+                                <th>상품</th>
+                                <th>상품등록</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class=text-center>
+                                <td>침대</td>
+                                <td>인홈</td>
+                                <td>27LX5QKNA</td>
+                                <td>
+                                    <a class="item" href="#">
+                                        <div class="img">
+                                            <img src="https://storage.bilrigo.com/data/thumbnails/230421/QXWVYba3s51p1vlpZVXnKF3dd8JYAC.jpg" class="img-sm img-thumbnail" alt="Item" />
+                                        </div>
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="info">
+                                        <h6 class="mb-0">라온 LED 저상형 침대 SS</h6>
+                                    </div>
+                                </td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-action">
+                                    <a href="#" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 등록 </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- table-responsive //end -->
+            </div>
+            <!-- card-body end// -->
+        </div>
+   </th:block>    
+        <!-- card end// -->
+        <div class="pagination-area mt-15 mb-50">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-start">
+                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                    <li class="page-item"><a class="page-link" href="#">02</a></li>
+                    <li class="page-item"><a class="page-link" href="#">03</a></li>
+                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#">16</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    <!-- content-main end// -->
+
+        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/vendors/select2.min.js"></script>
+        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+    </body>
+</html>
