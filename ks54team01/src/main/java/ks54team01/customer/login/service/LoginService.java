@@ -2,10 +2,12 @@ package ks54team01.customer.login.service;
 
 import java.util.Map;
 
-public interface LoginService {
-	// 입점업체회원정보 일치여부 조회
-	Map<String, Object> matchEntMember(String memberId, String memberPw);
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-	// 회원정보 일치여부 조회
-	Map<String, Object> matchMember(String memberId, String memberPw);
+@Service
+@Transactional
+public interface LoginService {
+	// 회원정보 조회(로그인)
+	Map<String, Object> login(String memberId, String memberPw);
 }
