@@ -4,43 +4,6 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="ks54team01.customer.register.mapper.RegisterMapper">
-  	<!-- <select id="getMemberInfoById" parameterType="string" resultMap="memberResultMap">
-		/* 기업회원 정보 조회 */
-		SELECT
-			member_id,
-			member_pw,
-			member_type,
-			corp_name,
-			corp_brno,
-			cust_name,
-			cust_phone,
-			cust_brdt,
-			cust_addr,
-			cust_daddr,
-			cust_email
-		FROM 
-			customer_info
-		WHERE 
-			member_id = #{memberId};		
-	</select>
-	
-  	<select id="getMemberInfoById" parameterType="string" resultMap="memberResultMap">
-		/* 개인회원 정보 조회 */
-		SELECT
-			member_id,
-			member_pw,
-			member_type,
-			cust_name,
-			cust_phone,
-			cust_brdt,
-			cust_addr,
-			cust_daddr,
-			cust_email
-		FROM 
-			customer_info
-		WHERE 
-			member_id = #{memberId};		
-	</select> -->
   
 	<insert id="addEntEmpMember" parameterType="EntMember">
 		/* 입점업체직원정보 등록 */
@@ -69,7 +32,7 @@
 	</insert>
 	
 	<insert id="addCorpMember" parameterType="CustomerMember">
-		/* 기업회원 추가정보 등록 */
+		/* 기업고객 추가정보 등록 */
 		INSERT INTO corp_customer
 		(cust_id, corp_brno, corp_nm, register_date, revision_date)
 		VALUES
@@ -77,7 +40,7 @@
 	</insert>
 	
 	<insert id="addCustomerMember" parameterType="CustomerMember">
-		/* 일반회원정보 등록 */
+		/* 일반고객정보 등록 */
 		INSERT INTO customer
 		(cust_id, cust_nm, cust_brdt, cust_addr, cust_daddr, cust_email, cust_phone, register_date, revision_date)
 		VALUES
@@ -85,7 +48,7 @@
 	</insert>
 	
 	<insert id="addCommonMember" parameterType="CommonMember">
-		/* 공통회원정보 등록 */
+		/* 고객공통정보 등록 */
 		INSERT INTO members
 		(members_id, members_pw, members_type, register_date, revision_date, state_transition_date)
 		VALUES

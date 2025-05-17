@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
-import ks54team01.customer.assigneeBoard.controller.CustomerAssigneeBoardController;
-import ks54team01.customer.register.domain.CommonMember;
-import ks54team01.customer.register.domain.CustomerMember;
-import ks54team01.customer.register.domain.EntMember;
+import ks54team01.customer.member.domain.CommonMember;
+import ks54team01.customer.member.domain.CustomerMember;
+import ks54team01.customer.member.domain.EntMember;
 import ks54team01.customer.register.service.RegisterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -125,7 +124,7 @@ public class RegisterController {
 	    // 회원 유형에 따른 페이지 이동
 		switch (commonMember.getMemberType()) {
 	        case "customer": return "redirect:/customer/register/customerRegister";
-	        case "입점업체대표": return "redirect:/customer/register/entRegister";
+	        case "입점업체": return "redirect:/customer/register/entRegister";
 	        default: return "redirect:/error";
 	    }
 	}

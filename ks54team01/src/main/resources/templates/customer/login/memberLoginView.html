@@ -36,6 +36,7 @@
                                             <h1 class="mb-5" th:text="${title}"></h1>
                                             <p class="mb-30">아직 회원이 아니신가요?<a class="ml-10" th:href="@{/customer/register/memberRegister}">회원가입하기</a></p>
                                         </div>
+	                                    <div id="loginError" class="alert alert-danger d-none" role="alert">아이디 또는 비밀번호가 올바르지 않습니다.</div>
                                         <form method="post" th:action="@{/customer/login/memberLogin}">
                                             <div class="form-group">
                                                 <input type="text" id="memberId" name="memberId" placeholder="ID" required />
@@ -49,7 +50,7 @@
                                                 <a class="text-muted" th:href="@{/customer/member/forgotPw}">비밀번호 찾기</a>
                                             </div>
                                             <div class="form-group">
-                                                <button type="submit" id="loginBtn" name="loginBtn" class="btn btn-heading btn-block hover-up"  >Log in</button>
+                                                <button type="submit" id="loginBtn" name="loginBtn" class="btn btn-heading btn-block hover-up">Log in</button>
                                             </div>
                                         </form>
                                     </div>
@@ -61,5 +62,12 @@
             </div>
         </div>
 	</th:block>
+	<script src="/user/assets/js/vendors/bootstrap.bundle.min.js"></script>
+	<script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('error') === 'true') {
+            document.getElementById('loginError').classList.remove('d-none');
+        }
+    </script>
 	
 </html>
