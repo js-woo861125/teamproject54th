@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="ks54team01.customer.login.mapper.LoginMapper">
+  
+	<select id="getEntMemberInfoById" resultType="EntMember">
+		/* 입점업체정보 조회 */
+    	SELECT
+    		memberId,
+    		memberPw,
+    		memberType,
+    		entEmpName,
+    		entEmpEmail,
+    		entEmpPhone,
+    		entCeoNo,
+    		entBrno,
+    		entName,
+    		entCeoAddr,
+    		entCeoDaddr,
+    		entBank,
+    		entBankNum,
+    		entPosition
+    	FROM 
+    		ent_info_view 
+    	WHERE 
+    		memberId = #{memberId};
+	</select>
+	
+	<select id="getCorpMemberInfoById" resultType="CustomerMember">
+		/* 기업고객정보 조회 */
+    	SELECT
+    		memberId, 
+    		memberPw, 
+    		memberType, 
+    		corpName, 
+    		corpBrno, 
+    		custName, 
+    		custPhone, 
+    		custBrdt, 
+    		custAddr, 
+    		custDaddr, 
+    		custEmail
+    	FROM 
+    		corp_customer_info_view 
+    	WHERE 
+    		memberId = #{memberId};
+	</select>
+	
+	
+	<select id="getCustomerMemberInfoById" resultType="CustomerMember">
+		/* 개인고객정보 조회 */
+		SELECT 
+			memberId,
+			memberPw, 
+			memberType, 
+			custName, 
+			custPhone, 
+			custBrdt, 
+			custAddr, 
+			custDaddr, 
+			custEmail
+		FROM 
+			customer_info_view
+		WHERE
+			memberId = #{memberId};
+	</select>
+  
+	<select id="getMemberTypeById" resultType="String">
+		/* 고객유형 조회 */
+	    SELECT 
+	        members_type AS memberType
+	    FROM 
+	    	members
+	    WHERE 
+	    	members_id = #{memberId};
+	</select>
+	
+  </mapper>

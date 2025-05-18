@@ -2,7 +2,7 @@ package ks54team01.customer.wishList.domain;
 
 import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.customer.product.domain.CustomerProduct;
-import ks54team01.customer.register.domain.CustomerMember;
+import ks54team01.customer.member.domain.CustomerMember;
 import lombok.Data;
 
 @Data

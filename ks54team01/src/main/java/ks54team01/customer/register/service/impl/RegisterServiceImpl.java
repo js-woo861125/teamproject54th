@@ -7,9 +7,9 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ks54team01.customer.register.domain.CommonMember;
-import ks54team01.customer.register.domain.CustomerMember;
-import ks54team01.customer.register.domain.EntMember;
+import ks54team01.customer.member.domain.CommonMember;
+import ks54team01.customer.member.domain.CustomerMember;
+import ks54team01.customer.member.domain.EntMember;
 import ks54team01.customer.register.mapper.RegisterMapper;
 import ks54team01.customer.register.service.RegisterService;
 import lombok.RequiredArgsConstructor;
@@ -22,18 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 public class RegisterServiceImpl implements RegisterService{
 	
 	private final RegisterMapper registerMapper;
-
-	/**
-	 * 회원 정보 조회
-	 */
-	@Override
-	public CustomerMember getMemberInfoById(String memberId) {
-		
-		CustomerMember memberInfo = registerMapper.getMemberInfoById(memberId);
-		
-		return memberInfo;
-	}
-	
 	
 	/**
 	 * 입점업체직원정보 등록

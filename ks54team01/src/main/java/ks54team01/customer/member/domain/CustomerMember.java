@@ -1,4 +1,4 @@
-package ks54team01.customer.register.domain;
+package ks54team01.customer.member.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
