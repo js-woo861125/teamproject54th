@@ -30,6 +30,16 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	
 	// 상품정보 검색
 	@Override
+	public List<ProductInfoCategorySpec> getSearchCategorySpec(String searchKey, String searchValue) {
+		
+		switch (searchKey) {
+		case "specName" -> searchKey = "spec_nm";
+		}
+		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoMapper.getSearchCategorySpec(searchKey, searchValue);
+		
+		return categorySpecList;
+	}
+	@Override
 	public List<ProductInfoBenefit> getSearchBenefit(String searchKey, String searchValue) {
 		
 		switch (searchKey) {
@@ -39,6 +49,20 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		return benefitList;	
 	}
+	
+	@Override
+	public List<ProductInfoModel> getSearchModel(String searchKey, String searchValue) {
+		
+		switch (searchKey) {
+		case "modelName" -> searchKey = "model_nm";
+		case "brandInfo.brandName" -> searchKey ="b.brand_nm";
+		case "itemInfo.itemName" -> searchKey ="i.item_nm";
+		}
+		List<ProductInfoModel> modelList = adminProductInfoMapper.getSearchModel(searchKey, searchValue);
+		
+		return modelList;
+	}
+	
 	@Override
 	public List<ProductInfoItem> getSearchItem(String searchKey, String searchValue) {
 		
@@ -78,7 +102,6 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		int delCount = 0;
 		
-		// 상품정보 브랜드
 		delCount += adminProductInfoMapper.removeBrandInfoByNo(brandNo);
 		
 		boolean isDel = delCount > 0 ? true : false;
@@ -87,6 +110,14 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	}
 	
 	// 상품정보 중복체크
+	@Override
+	public boolean isSpecNameCheck(String specName, String categoryNo) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("specName", specName);
+		params.put("categoryNo", categoryNo);
+		
+		return adminProductInfoMapper.isSpecNameCheck(params);
+	}
 	@Override
 	public boolean isBenefitNameCheck(String benefitName) {
 		
