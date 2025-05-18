@@ -44,7 +44,7 @@ public class LoginController {
 
 	     if (loginResult == null || loginResult.get("memberInfo") == null) {
 	         log.warn("로그인 실패: 존재하지 않거나 비밀번호 불일치 - memberId={}", memberId);
-	         return "redirect:/memberLogin?error=true";
+	         return "redirect:/customer/login/memberLogin?error=true";
 	     }
 	     
 	     CommonMember commonMember = new CommonMember();

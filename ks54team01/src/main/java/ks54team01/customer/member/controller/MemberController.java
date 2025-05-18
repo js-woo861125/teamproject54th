@@ -44,13 +44,24 @@ public class MemberController {
 		
 		model.addAttribute("title", "내 프로필");
 		
-	    String loginId = ((CommonMember) session.getAttribute("loginMember")).getMemberId();
-	    if (loginId == null) {
+		Object loginObj = session.getAttribute("loginMember");
+	    if (loginObj == null || !(loginObj instanceof CommonMember)) {
+	        
 	        return "redirect:/customer/login/memberLogin"; 
 	    }
 	    
+	    String loginId = ((CommonMember) loginObj).getMemberId();
+	    
 	    CustomerMember memberInfo = memberService.getCustomerInfoById(loginId);
+	    String custPhone = memberInfo.getCustPhone();
+	    
+	    
+		String[] custPhoneArray = custPhone.split("-");
+	    
 	    model.addAttribute("memberInfo", memberInfo);
+	    model.addAttribute("custPhone1", custPhoneArray[0]);
+		model.addAttribute("custPhone2", custPhoneArray[1]);
+		model.addAttribute("custPhone3", custPhoneArray[2]);
 
 	    if ("기업".equals(memberInfo.getMemberType())) {
 	    	CustomerMember corpInfo = memberService.getCorpInfoById(loginId);

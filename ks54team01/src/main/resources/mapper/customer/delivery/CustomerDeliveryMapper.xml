@@ -21,8 +21,46 @@
 	</resultMap>
 	
 	
+	<delete id="removeDeliveryList" parameterType="string">
+		delete
+		from
+			delivery_list
+		where
+			delivery_location_no = #{delNo}
+	</delete>
 	
-	<update id="updatePrimaryLocation" parameterType="String">
+	
+	<!-- 상품배송정보 테이블에서 배송지 목록 사용중인지 확인 -->
+	<select id="countDelInfoReference" parameterType="string" resultType="int">
+		select
+			count(*)
+		from
+			delivery_information
+		where
+			delivery_location_no = #{delNo}
+	</select>
+	
+	
+	
+	<update id="modifyDeliveryList" parameterType="CustomerDeliveryList">
+		/* 배송지정보 수정 */
+		update delivery_list
+		set
+			delivery_nm = #{delNm},
+			primary_location = #{primaryLocation},
+			delivery_addr = #{delAddr},
+			delivery_daddr = #{delDaddr},
+			delivery_zip_no = #{delZipNo},
+			recipient_phone = #{recipientPhone},
+			delivery_request = #{delRequest},
+			revision_date = NOW()
+		where
+			delivery_location_no = #{delNo}	
+	</update>
+	
+	
+	
+	<update id="modifyPrimaryLocation" parameterType="String">
 		UPDATE delivery_list
 		SET
 			primary_location = '추가배송지'
@@ -61,7 +99,7 @@
 		from
 			delivery_list dl
 		where
-			dl.cust_id = 'personalcustid1';
+			dl.cust_id = #{custId};
 		
 	</select>
 	

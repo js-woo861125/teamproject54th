@@ -5,23 +5,6 @@
 
 	<!-- head 삽입공간 -->
 	<head>
-		<!-- <style>
-			#postSubmenu,
-			#postSubmenu ul,
-			#postSubmenu li,
-			#postSubmenu a {
-			    background: none !important;
-			    border: none !important;
-			    box-shadow: none !important;
-			    outline: none !important;
-			    list-style: none !important;
-			    padding-left: 0 !important;
-			    margin-left: 0 !important;
-			    font-size: 14px;
-			    color: #444;
-			    text-align:right;
-			}
-		</style> -->
 	</head>
 	
 	<th:block layout:fragment="jsFile">
@@ -29,61 +12,106 @@
 	</th:block>
 	
 	<th:block layout:fragment="jsScript">
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	</th:block>
 	
-	<!-- 페이지 삽입공간 -->
+	 <!-- 페이지 삽입 공간 -->
 	<th:block layout:fragment="customContents">
-		<div class="tab-content account dashboard-content pl-50">
-			<div class="tab-pane fade active show" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-				<div class="card">
-					<div class="card-header d-flex">
-						<h3 class="mb-0" th:text="${title}"></h3>
-					</div>
-					 <form th:action="@{/customer/member/modify}" th:object="${memberInfo}" method="post">
-				        <input type="text" th:field="*{memberId}" readonly />
-				        <div>
-				            <label>비밀번호:</label>
-				            <input type="password" th:field="*{memberPw}" />
-				        </div>
-				        <div th:if="*{memberType} == '기업고객'">
-				            <label>기업명:</label>
-				            <input type="text" th:field="*{corpName}" />
-				        </div>
-				        <div th:if="*{memberType} == '기업고객'">
-				            <label>사업자번호:</label>
-				            <input type="text" th:field="*{corpBrno}" />
-				        </div>
-				        <div>
-				            <label>이름:</label>
-				            <input type="text" th:field="*{custName}" />
-				        </div>
-				        <div>
-				            <label>전화번호:</label>
-				            <input type="text" th:field="*{custPhone}" />
-				        </div>
-				        <div>
-				            <label>생년월일:</label>
-				            <input type="date" th:field="*{custBrdt}" />
-				        </div>
-				        <div>
-				            <label>주소:</label>
-				            <input type="text" th:field="*{custAddr}" />
-				        </div>
-				        <div>
-				            <label>상세 주소:</label>
-				            <input type="text" th:field="*{custDaddr}" />
-				        </div>
-				        <div>
-				            <label>이메일:</label>
-				            <input type="email" th:field="*{custEmail}" />
-				        </div>
-				        <div>
-				            <button type="submit">수정하기</button>
-				        </div>
-				    </form>
-				</div>
-			</div>
-		</div>
+		<div class="container">
+    		<div class="row">
+		        <div class="col-xl-10 col-lg-12 col-md-12">
+		            <div>
+	                    <div class="d-flex">
+	                        <h3 class="mb-30" th:text="${title}"></h3>
+	                    </div>
+	                    <div>
+	                        <form th:action="@{/customer/member/modify}" id="customerModifyForm" class="mx-auto" th:object="${memberInfo}" method="post">
+	                        	<div class="row">
+		                            <div class="col-md-6 mb-3">
+		                                <label class="form-label">아이디</label>
+		                                <input type="text" class="form-control" th:field="*{memberId}" readonly />
+		                            </div>
+		                            <div class="col-md-6 mb-3">
+		                                <label class="form-label">이름</label>
+		                                <input type="text" class="form-control" th:field="*{custName}" required />
+		                            </div>
+	                        	</div>
+	                        	<div class="row">
+		                            <div class="col-md-6 mb-3">
+		                                <label class="form-label">생년월일</label>
+		                                <input type="text" class="form-control" th:field="*{custBrdt}" placeholder="생년월일"
+		                                       onfocus="this.type='date'; this.max = new Date().toISOString().split('T')[0];"
+		                                       onblur="if(this.value===''){this.type='text'}" required />
+		                            </div>
+		                            <div class="col-md-6 mb-3">
+		                                <label class="form-label">연락처</label>
+		                                <div class="d-flex gap-2">
+		                                    <input type="text" class="form-control" name="custPhone1" th:value="${custPhone1}" readonly />
+		                                    <input type="text" class="form-control" name="custPhone2" th:value="${custPhone2}" maxlength="4" />
+		                                    <input type="text" class="form-control" name="custPhone3" th:value="${custPhone3}" maxlength="4" />
+		                                </div>
+		                            </div>
+	                            </div>
+	                            <div class="row">
+		                            <div class="col-md-6 mb-3">
+		                                <label class="form-label">주소</label>
+		                                <div class="d-flex align-items-center mb-2">
+		                                    <input type="text" class="form-control me-2" id="memberZip" name="memberZip" placeholder="우편번호" readonly disabled />
+		                                    <button type="button" id="daumPostBtn" class="btn btn-outline-secondary py-1 px-2">우편번호찾기</button>
+		                                </div>
+		                                <input type="text" class="form-control mb-2" th:field="*{custAddr}" placeholder="기본주소" readonly />
+		                                <input type="text" class="form-control" th:field="*{custDaddr}" placeholder="상세주소" />
+		                            </div>
+		                            <div id="businessInfo" class="col-md-6 mb-3 collapse" th:classappend="${memberInfo.memberType} == '기업고객' ? ' show' : ''">
+		                                <label class="form-label">사업자 정보</label>
+		                                <input type="text" class="form-control mb-2" th:field="*{corpBrno}" placeholder="사업자번호" />
+		                                <input type="text" class="form-control" th:field="*{corpName}" placeholder="상호명" />
+		                            </div>
+	                            </div>
+	                            <div class="row">
+		                            <div class="col-md-6 mb-3">
+		                                <label class="form-label">이메일</label>
+		                                <div class="input-group">
+								            <input type="email" class="form-control" th:field="*{custEmail}" id="custEmail" placeholder="example@domain.com" />
+								            <button type="button" class="btn btn-outline-secondary py-1 px-2" onclick="sendVerificationCode()">인증요청</button>
+								        </div>
+							        </div>
+							        <!-- 인증 코드 입력 영역 (초기에는 숨김) -->
+									<div class="row" id="verify-section" style="display:none;">
+									    <div class="col-md-6 mb-3">
+									        <label class="form-label">인증코드 입력</label>
+									        <div class="input-group">
+									            <input type="text" class="form-control" id="verifyCode" name="verifyCode" placeholder="인증코드 입력" />
+									            <button type="button" class="btn btn-outline-secondary py-1 px-2" onclick="verifyCodeSubmit()">확인</button>
+									        </div>
+									    </div>
+									</div>
+	                            </div>
+	                            <div class="row">
+		                            <div class="col-md-6 mb-3">
+		                                <label class="form-label">비밀번호</label>
+		                                <input type="password" class="form-control" th:field="*{memberPw}" placeholder="기존 비밀번호" />
+		                            </div>
+		                      	</div>
+	                            <div class="row">
+		                            <div class="col-md-6 mb-3">
+		                                <input type="password" class="form-control" name="newPw" placeholder="새 비밀번호 (**변경시)" />
+		                            </div>
+		                            <div class="col-md-6 mb-3">
+		                                <input type="password" class="form-control" name="newPwConfirm" placeholder="새 비밀번호 확인 (**변경시)" />
+		                            </div>
+	                            </div>
+                            	<div class="d-flex justify-content-end">
+                                	<button type="submit" class="btn btn-primary w-auto">수정하기</button>
+                                </div>
+	                        </form>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
 	</th:block>
+	
+
 
 </html>
