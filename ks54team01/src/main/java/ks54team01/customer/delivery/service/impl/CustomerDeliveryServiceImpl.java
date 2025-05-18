@@ -18,12 +18,49 @@ public class CustomerDeliveryServiceImpl implements CustomerDeliveryService {
 
 	private final CustomerDeliveryMapper customerDeliveryMapper;
 	
+	
+	@Override
+	public boolean removeDeliveryList(String delNo) {
+		
+		int referCount = customerDeliveryMapper.countDelInfoReference(delNo);
+		
+		if(referCount > 0) {
+			
+			return false;
+		}
+		
+		int deleted = customerDeliveryMapper.removeDeliveryList(delNo);
+		
+		boolean isDel = deleted > 0 ? true : false;
+		return isDel;
+		
+	}
+	
+	
+	@Override
+	public void modifyDeliveryList(CustomerDeliveryList modifyDeliveryList) {
+
+		if("기본배송지".equals(modifyDeliveryList.getPrimaryLocation())) {
+			customerDeliveryMapper.modifyPrimaryLocation(modifyDeliveryList.getCustId());
+		}
+		
+		
+		String formatPhone = formatPhoneNumber(modifyDeliveryList.getRecipientPhone());
+		modifyDeliveryList.setRecipientPhone(formatPhone);
+		
+		customerDeliveryMapper.modifyDeliveryList(modifyDeliveryList);
+		
+	}
+	
+	
+	
+	
 	@Override
 	public void addDeliveryList(CustomerDeliveryList customerDeliveryList) {
 
 		// 기본배송지 선택시 이미 db에 있으면 db에 있는값 추가배송지로 변경
 		if("기본배송지".equals(customerDeliveryList.getPrimaryLocation())) {
-			customerDeliveryMapper.updatePrimaryLocation(customerDeliveryList.getCustId());
+			customerDeliveryMapper.modifyPrimaryLocation(customerDeliveryList.getCustId());
 		}
 
 		// 전화번호 받으면 000-0000-0000 식으로 변경
@@ -54,9 +91,9 @@ public class CustomerDeliveryServiceImpl implements CustomerDeliveryService {
 	
 	
 	@Override
-		public List<CustomerDeliveryList> getDeliveryList() {
+		public List<CustomerDeliveryList> getDeliveryList(String custId) {
 
-			List<CustomerDeliveryList> customerDeliveryList = customerDeliveryMapper.getDeliveryList();
+			List<CustomerDeliveryList> customerDeliveryList = customerDeliveryMapper.getDeliveryList(custId);
 		
 			return customerDeliveryList;
 		}
