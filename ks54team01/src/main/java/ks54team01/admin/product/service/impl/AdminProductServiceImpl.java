@@ -10,10 +10,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ks54team01.admin.product.domain.AdminAddProduct;
 import ks54team01.admin.product.domain.AdminProduct;
+import ks54team01.admin.product.domain.AdminProductSpecContent;
 import ks54team01.admin.product.mapper.AdminProductMapper;
 import ks54team01.admin.product.service.AdminProductService;
+import ks54team01.admin.productInfo.domain.ProductInfoBrand;
+import ks54team01.admin.productInfo.domain.ProductInfoCategory;
+import ks54team01.admin.productInfo.domain.ProductInfoItem;
 import ks54team01.admin.productInfo.domain.ProductInfoModel;
-import ks54team01.admin.productInfo.mapper.AdminProductInfoMapper;
 import ks54team01.common.file.domain.FileMetaData;
 import ks54team01.common.file.service.FileService;
 import lombok.RequiredArgsConstructor;
@@ -26,24 +29,48 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminProductServiceImpl implements AdminProductService{
 		
 		private final AdminProductMapper adminProductMapper;
-		private final AdminProductInfoMapper adminProductInfoMapper;
 		private final FileService fileService;
-
+		
+	
 		@Override
 		public List<AdminProduct> getProductList() {
 			// TODO Auto-generated method stub
 			return null;
 		}
+		@Override
+	    public List<ProductInfoCategory> loadCategoryList() {
+	        return adminProductMapper.loadCategoryList();
+	    }
+
+		public List<ProductInfoItem> loadItemList(String categoryNo) {
+		    return adminProductMapper.loadItemList(categoryNo);
+		}
 
 		@Override
-		public void registerProduct(AdminAddProduct product, MultipartFile[] thumbnails, MultipartFile[] details) {
+		public List<ProductInfoBrand> loadBrandList(String categoryNo, String itemNo) {
+		    return adminProductMapper.loadBrandList(categoryNo, itemNo);
+		}
+
+	    @Override
+	    public List<ProductInfoModel> loadModelList(String categoryNo, String itemNo, String brandNo) {
+	        return adminProductMapper.loadModelList(categoryNo, itemNo, brandNo);
+	    }
+		
+		@Override
+		public List<AdminProductSpecContent> loadSpecContent(String modelNo) {
+	
+			return adminProductMapper.loadSpecContent(modelNo);
+		}
+		
+		@Override
+		public void registerProduct(AdminAddProduct product, MultipartFile[] thumbnails, MultipartFile[] details, List<String> spec, List<String> specContents) {
 			
 			// Pk 랜덤 생성
 			String productNo = "Prod_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
 			product.setProductNo(productNo);
 			
 			// model 브랜드, 스펙, 카테 가져오기
-			ProductInfoModel modelInfo = adminProductInfoMapper.getModelInfoByNo(product.getModelNo());
+			ProductInfoModel modelInfo = adminProductMapper.getModelInfoByNo(product.getModelNo());
 		        product.setItemNo(modelInfo.getItemNo());
 		        product.setCategoryNo(modelInfo.getCategoryNo());
 		        product.setBrandNo(modelInfo.getBrandNo());
@@ -66,5 +93,7 @@ public class AdminProductServiceImpl implements AdminProductService{
         //  파일 메타데이터 DB에 등록
         fileService.addFiles(thumbnails, "thumbnail", productNo);
         fileService.addFiles(details, "detail", productNo);
+        
+ 
     }
 }

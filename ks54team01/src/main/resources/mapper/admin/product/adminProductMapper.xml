@@ -3,65 +3,171 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="ks54team01.admin.product.mapper.AdminProductMapper">
+<mapper
+	namespace="ks54team01.admin.product.mapper.AdminProductMapper">
 
-    <insert id="insertProduct" parameterType="ks54team01.admin.product.domain.AdminAddProduct">
-        INSERT INTO products (
-            products_no,
-            manager_id,
-            model_no,
-            item_no,
-            product_category_no,
-            products_nm,
-            products_status,
-            products_image,
-            register_date,
-            revision_date
-        )
-        VALUES (
-            #{productNo},
-            #{managerId},
-            #{modelNo},
-            #{itemNo},
-            #{categoryNo},
-            #{productName},
-            #{productStatus},
-            #{productImage},
-            #{registerDate},
-            #{revisionDate}
-        )
-    </insert>
-		<select id="getItemListByCategory" resultType="ProductInfoItem">
-		  SELECT 
-		 	DISTINCT item_no AS itemNo, 
-		  	item_nm AS itemNm
-		  FROM 
-		  	model
-		  WHERE 
-		  	product_category_no = #{categoryNo}
-		</select>
-		
-		<select id="getBrandListByItem" resultType="ProductInfoBrand">
-		  SELECT 
-			  DISTINCT brand_no AS brandNo, 
-			  brand_nm AS brandNm
-		  FROM 
-		  	model
-		  WHERE 
-		  		product_category_no = #{categoryNo}
-		    AND item_no = #{itemNo}
-		</select>
-		
-		<select id="getModelListByCondition" resultType="ProductInfoModel">
-		  SELECT 
-		  	model_no AS modelNo, 
-		  	model_nm AS modelName
-		  FROM
-		  	 model
-		  WHERE 
-		  	product_category_no = #{categoryNo}
-		    AND item_no = #{itemNo}
-		    AND brand_no = #{brandNo}
-		</select>
-		
+	<resultMap id="specContentMap"
+		type="ks54team01.admin.product.domain.AdminProductSpecContent">
+		<result property="specNo" column="spec_no" />
+		<result property="specNm" column="spec_nm" />
+		<collection property="detailList" ofType="string">
+			<result column="detail_value" />
+		</collection>
+	</resultMap>
+
+	<select id="loadSpecContent" resultMap="specContentMap">
+		SELECT
+		s.spec_no,
+		s.spec_nm,
+		d.detail_value
+		FROM
+		products_spec s
+		JOIN
+		products_spec_detail d ON s.spec_no = d.spec_no
+		WHERE
+		s.product_category_no = (
+		SELECT product_category_no
+		FROM model
+		WHERE model_no = #{modelNo}
+		)
+		AND s.use_status = '사용중'
+		ORDER BY s.spec_no, d.detail_value
+	</select>
+
+	<insert id="insertProduct" parameterType="string">
+		INSERT INTO products (
+		products_no,
+		manager_id,
+		model_no,
+		item_no,
+		product_category_no,
+		products_nm,
+		products_status,
+		products_image,
+		register_date,
+		revision_date
+		)
+		VALUES (
+		#{productNo},
+		#{managerId},
+		#{modelNo},
+		#{itemNo},
+		#{categoryNo},
+		#{productName},
+		#{productStatus},
+		#{productImage},
+		#{registerDate},
+		#{revisionDate}
+		)
+	</insert>
+	<select id="getItemListByCategory" resultType="ProductInfoItem">
+		SELECT
+		DISTINCT item_no AS itemNo,
+		item_nm AS itemNm
+		FROM
+		model
+		WHERE
+		product_category_no = #{categoryNo}
+	</select>
+
+	<select id="getBrandListByItem" resultType="ProductInfoBrand">
+		SELECT
+		DISTINCT brand_no AS brandNo,
+		brand_nm AS brandNm
+		FROM
+		model
+		WHERE
+		product_category_no = #{categoryNo}
+		AND item_no = #{itemNo}
+	</select>
+
+	<select id="getModelListByCondition"
+		resultType="ProductInfoModel">
+		SELECT
+		model_no AS modelNo,
+		model_nm AS modelName
+		FROM
+		model
+		WHERE
+		product_category_no = #{categoryNo}
+		AND item_no = #{itemNo}
+		AND brand_no = #{brandNo}
+	</select>
+
+	<select id="getModelInfoByNo" resultType="ProductInfoModel">
+		SELECT
+			model_no,
+			manager_id,
+			brand_no,
+			item_no,
+			product_category_no,
+			model_nm,
+			register_date,
+			revision_date
+		FROM
+			model
+		WHERE
+			model_no = #{modelNo}
+	</select>
+	<select id="loadCategoryList"
+		resultType="ks54team01.admin.productInfo.domain.ProductInfoCategory">
+		SELECT 
+			product_category_no AS categoryNo,
+			large_category AS lgCategory,
+			middle_category AS mdCategory,
+			small_category AS smCategory
+		FROM 
+			products_category
+		WHERE
+			use_status = '사용중'
+	</select>
+
+	<select id="loadItemList" parameterType="string" resultType="ks54team01.admin.productInfo.domain.ProductInfoItem">
+	    SELECT 
+	        item_no AS itemNo,
+	        manager_id AS managerId,
+	        product_category_no AS categoryNo,
+	        item_nm AS itemName,
+	        register_date AS itemRegDate,
+	        revision_date AS itemRevDate,
+	        use_status AS useStatus
+	    FROM 
+	    	item
+	    WHERE 
+	    	product_category_no = #{categoryNo}
+	    AND 
+	    	use_status = '사용중'
+	</select>
+
+	
+	<select id="loadBrandList" parameterType="map" resultType="ks54team01.admin.productInfo.domain.ProductInfoBrand">
+	    SELECT
+	        b.brand_no AS brandNo,
+	        b.manager_id AS managerId,
+	        b.brand_nm AS brandName,
+	        b.register_date AS brandRegDate,
+	        b.revision_date AS brandRevDate
+	    FROM
+	        brand b
+	        JOIN model m ON b.brand_no = m.brand_no
+	    WHERE
+	        m.item_no = #{itemNo}
+	        AND m.product_category_no = #{categoryNo}
+	    GROUP BY 
+	        b.brand_no
+	</select>
+	
+	 <select id="loadModelList" resultType="ks54team01.admin.product.domain.AdminProductInfoModel">
+        SELECT
+            model_no AS modelNo,
+            model_nm AS modelNm
+        FROM
+            model
+        WHERE
+            product_category_no = #{categoryNo}
+        AND 
+            item_no = #{itemNo}
+        AND
+            brand_no = #{brandNo}
+    </select>
 </mapper>
