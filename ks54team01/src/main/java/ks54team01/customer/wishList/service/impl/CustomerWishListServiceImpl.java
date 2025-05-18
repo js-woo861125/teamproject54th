@@ -16,9 +16,15 @@ public class CustomerWishListServiceImpl implements CustomerWishListService{
 	private final CustomerWishListMapper customerWishListMapper;
 	
 	@Override
-	public List<CustomerWishList> getmyWishList() {
+	public List<CustomerWishList> getWishListCategory(String custId) {
+		List<CustomerWishList> wishListCategory = customerWishListMapper.getWishListCategory(custId);
+		return wishListCategory;
+	}
+	
+	@Override
+	public List<CustomerWishList> getMyWishList(String viewValue) {
 		
-		List<CustomerWishList> myWishList = customerWishListMapper.getmyWishList();
+		List<CustomerWishList> myWishList = customerWishListMapper.getMyWishList(viewValue);
 		return myWishList;
 	}
 }
