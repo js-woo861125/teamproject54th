@@ -86,23 +86,21 @@
 	                            <input type="hidden" th:field="*{itemNo}" />
 	                            <input type="hidden" th:field="*{managerId}" />
 	
-	                            <!-- 카테고리 선택 -->
+	                            <!-- 수정 영역 -->
 	                            <div class="mb-4">
 	                                <label class="form-label fs-6" for="categoryNo">카테고리</label>
-	                                <select th:field="*{categoryNo}" class="form-select text-center fs-7">
+	                                <select class="form-select text-center fs-7" id="categoryNo" name="categoryNo">
 	                                    <option value="">카테고리를 선택해주세요</option>
 	                                    <th:block th:each="l : ${categoryList}">
-	                                        <option th:value="${l.categoryNo}" th:text="${l.smCategory}"></option>
+	                                        <option th:value="${l.categoryNo}" th:text="${l.smCategory}" th:selected="${l.categoryNo} == *{categoryNo}"></option>
 	                                    </th:block>
 	                                </select>
 	                            </div>
-	
-	                            <!-- 품목명 -->
 	                            <div class="mb-4">
 	                                <label class="form-label fs-6" for="itemName">품목명</label>
 	                                <input type="text" th:field="*{itemName}" class="form-control" placeholder="품목명을 입력해주세요" />
 	                            </div>
-	
+								<br />
 	                            <!-- 버튼 -->
 	                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
 	                                <div class="col-md-2 col-2 ms-auto">
@@ -110,8 +108,7 @@
 	                                    		class="btn btn-success w-100 rounded font-lg hover-up text-white fs-6 justify-content-center">수정</button>
 	                                </div>
 	                                <div class="col-md-2 col-2">
-	                                    <button type="reset"
-	                                            onclick="location.href='/admin/productInfo/itemList'"
+	                                    <button type="reset" onclick="location.href='/admin/productInfo/itemList'"
 	                                            class="btn btn-warning w-100 rounded font-lg hover-up text-white fs-6 justify-content-center">수정취소</button>
 	                                </div>
 	                            </div>
