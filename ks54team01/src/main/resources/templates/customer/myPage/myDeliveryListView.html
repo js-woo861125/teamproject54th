@@ -12,6 +12,7 @@
 	
 	<th:block layout:fragment="jsFile">
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</th:block>
 	
 	
@@ -23,32 +24,137 @@
 			document.getElementById('addDeliveryForm').addEventListener('submit', function(e) {
 			  // 체크박스 체크 상태 확인
 			  const isChecked = document.getElementById('agreeCheckbox').checked;
-			  console.log(isChecked + 'isChecked');
 			  // hidden input에 값 넣기
 			  document.getElementById('primaryLocationChk').value = isChecked ? '기본배송지' : '추가배송지';
 			  // 폼이 이대로 전송됩니다.
 			});
 			
 			
+			
+			
+			
+			// 등록 클릭시 모달폼 등록으로 변경
 			document.addEventListener('DOMContentLoaded', function() {
-				// 모달 닫힐 때 input 값 초기화
-				var modal = document.getElementById('staticBackdrop');
-				if (modal) {
-					modal.addEventListener('hidden.bs.modal', function () {
-						// 폼을 리셋 (input, select, checkbox, hidden 등 전부 초기화)
-						var form = document.getElementById('addDeliveryForm');
-						if (form) {
-							form.reset();
-							
-							// 만약 hidden 값들도 직접 초기화하고 싶으면 아래도 추가
-							document.getElementById('primaryLocationChk').value = "";
-							// 필요시 추가적으로 초기화할 값이 있으면 여기에!
-						}
-					});
-				}
+				// 등록 버튼
+				document.querySelector('.ms-auto[data-bs-target="#staticBackdrop"]').addEventListener('click', function() {
+					resetModalForm();
+					document.getElementById('agreeCheckbox').disabled = false;
+					document.getElementById('addDeliveryForm').setAttribute('action', '/customer/delivery/addDeliveryList');
+					document.getElementById('staticBackdropLabel').textContent = "배송지 등록";
+					document.getElementById('addDeliveryBtn').textContent = "등록";
+				});
 			});
 
 			
+			
+
+			// 수정 버튼
+			document.querySelectorAll('.modifyDeliveryBtn').forEach(function(btn) {
+				btn.addEventListener('click', function() {
+					resetModalForm();
+					// 데이터 세팅
+					document.getElementById('delNo').value = btn.getAttribute('data-del-no');
+					document.getElementById('delNm').value = btn.getAttribute('data-del-nm');
+					document.getElementById('delAddr').value = btn.getAttribute('data-del-addr');
+					document.getElementById('delDaddr').value = btn.getAttribute('data-del-daddr');
+					document.getElementById('delZipNo').value = btn.getAttribute('data-del-zip-no');
+					document.getElementById('recipientPhone').value = btn.getAttribute('data-recipient-phone');
+					document.getElementById('delRequest').value = btn.getAttribute('data-del-request');
+				
+					// 체크박스 처리
+					var isDefault = btn.getAttribute('data-primary-location') === "기본배송지";
+					document.getElementById('agreeCheckbox').checked = isDefault;
+					document.getElementById('agreeCheckbox').disabled = isDefault;
+				
+					// 수정 모드로 변경
+					document.getElementById('addDeliveryForm').setAttribute('action', '/customer/delivery/modifyDeliveryList');
+					document.getElementById('staticBackdropLabel').textContent = "배송지 수정";
+					document.getElementById('addDeliveryBtn').textContent = "수정";
+				});
+			});
+
+			// 폼 리셋 함수
+		    function resetModalForm() {
+		        var form = document.getElementById('addDeliveryForm');
+		        form.reset();
+		        document.getElementById('delNo').value = '';
+		        document.getElementById('primaryLocationChk').value = '';
+		    }
+
+
+		    $('.removeDeliveryBtn').click( e => {
+				e.preventDefault();
+				const delNo = $(e.target).data('delNo');
+				const swalWithBootstrapButtons = Swal.mixin({
+					  customClass: {
+						  	actions: 'w-50 justify-content-around',
+					    	confirmButton: "btn btn-success",
+					    	cancelButton: "btn btn-danger"
+					  },
+					  buttonsStyling: false
+				});
+				swalWithBootstrapButtons.fire({
+					  title: "배송지 삭제",
+					  text: "배송지를 삭제하시겠습니까?",
+					  icon: "warning",
+					  showCancelButton: true,
+					  confirmButtonText: "삭제",
+					  cancelButtonText: "취소",
+					  reverseButtons: true
+				}).then((result) => {
+					 if (result.isConfirmed) {
+						const request = $.ajax({
+							url : '/customer/delivery/removeDeliveryList',
+							method : 'post',
+							data : { 'delNo' : delNo },
+							dataType : 'json',
+							async : false
+						});
+						request.done(isDel => {
+							if(isDel){
+							 	swalWithBootstrapButtons.fire({
+								  title: "배송지 삭제",
+								  text: "삭제되었습니다.",
+								  icon: "success"
+								}).then(result => {
+								 	location.reload();
+								});
+							}else{
+								swalWithBootstrapButtons.fire({
+								  title: "사용중인 배송지여서 삭제 불가합니다.",
+								  icon: "error"
+								});
+							}
+						});
+					} else if (
+						/* Read more about handling dismissals below */
+						result.dismiss === Swal.DismissReason.cancel
+					) {
+						swalWithBootstrapButtons.fire({
+						  title: "삭제취소",
+						  icon: "error"
+						});
+					}
+				});
+			});
+			
+			
+		    
+		    document.getElementById('recipientPhone').addEventListener('input', function(e){
+		    	let number = this.value.replace(/[^0-9]/g, '');
+		    	
+		    	if (number.length <= 3) {
+		    		this.value = number;
+		    	} else if (number.length <= 7) {
+		    		this.value = number.slice(0, 3) + '-' + number.slice(3);
+		    	} else if (number.length <= 11) {
+		    		this.value = number.slice(0, 3) + '-' + number.slice(3,7) + '-' + number.slice(7);
+		    	} else {
+		    		this.value = number.slice(0, 3) + '-' + number.slice(3,7) + '-' + number.slice(7, 11);
+		    	}
+		    });
+		    
+		    
 			
 			
 			$('#daumPostBtn').click(function(e){
@@ -110,7 +216,7 @@
 				<div class="modal-content">
 					<form id="addDeliveryForm" th:action="@{/customer/delivery/addDeliveryList}" method="post">
 						<div class="modal-header">
-							<h5 class="modal-title" id="staticBackdropLabel" th:text="${modalTitle}">배송지 등록수정</h5>
+							<h5 class="modal-title" id="staticBackdropLabel">배송지 등록수정</h5>
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<div class="modal-body">
@@ -123,29 +229,29 @@
 						    	</div>
 								<div class="form-group col-md-12 d-flex">
 									<div class="col-sm-8">
-										<input placeholder="주소" class="form-control" id="delAddr" name="delAddr" type="text">
+										<input placeholder="주소" class="form-control" id="delAddr" name="delAddr" type="text" readonly>
 									</div>
 									<div class="col-sm-4 pl-10">
-										<input placeholder="우편번호" class="form-control" id="delZipNo" name="delZipNo" type="text">
+										<input placeholder="우편번호" class="form-control" id="delZipNo" name="delZipNo" type="text" readonly>
 									</div>
 								</div>
 								<div class="form-group col-md-12">
 									<input placeholder="상세주소" class="form-control" id="delDaddr" name="delDaddr" type="text">
 								</div>
 								<div class="form-group col-md-12">
-					       			<input placeholder="연락처" class="form-control" id="recipientPhone" name="recipientPhone" type="text">
+					       			<input placeholder="연락처" class="form-control" id="recipientPhone" name="recipientPhone" type="text" maxlength="13">
 					   				</div>
 					   			<div class="form-group col-md-12">
 					      			<input placeholder="요청사항" class="form-control" id="delRequest" name="delRequest" type="text">
 					  			</div>
 					   			<div class="form-group col-md-12">
 									<div class="custome-checkbox">
-	                  					<input class="form-check-input" type="checkbox" id="agreeCheckbox" name="agreeCheckbox" value="agree">
+	                  					<input class="form-check-input" type="checkbox" id="agreeCheckbox" name="agreeCheckbox">
 	                   					<label class="form-check-label mr-10" for="agreeCheckbox"><span>기본배송지로 설정</span></label>
 										<input type="hidden" name="primaryLocation" id="primaryLocationChk">
 									</div>
-									<input type="hidden" name="custId" id="custId" value="personalcustid1">
-									<input type="hidden" name="delNo" id="delNoInput">
+									<input type="hidden" name="custId" id="custId" value="personalcustid2">
+									<input type="hidden" name="delNo" id="delNo">
 					  			</div>
 							</div>
 						</div>
@@ -192,12 +298,12 @@
 			                            <td th:text="${l.recipientPhone}">010-1234-4567</td>
 			                            <td  style="width:150px"><div th:text="${l.delRequest}"></div></td>
 			                            <td>
-			                            	<button type="button" class="btn btn-xs" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+			                            	<button type="button" class="btn btn-xs modifyDeliveryBtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" 
 			                            			th:attr="data-del-no=${l.delNo}, data-del-nm=${l.delNm},
 			                            					data-del-addr=${l.delAddr}, data-del-daddr=${l.delDaddr},
 			                            					data-del-zip-no=${l.delZipNo}, data-recipient-phone=${l.recipientPhone},
 			                            					data-del-request=${l.delRequest},  data-primary-location=${l.primaryLocation}">수정</button>
-			                            	<a href="#" class="btn btn-xs">삭제</a>
+			                            	<a href="#" class="btn btn-xs removeDeliveryBtn" th:data-del-no="${l.delNo}">삭제</a>
 			                            </td>
 			                        </tr>
 			                        <tr th:unless="${!#lists.isEmpty(DeliveryList)}">

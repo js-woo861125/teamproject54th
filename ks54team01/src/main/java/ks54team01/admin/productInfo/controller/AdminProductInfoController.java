@@ -36,6 +36,20 @@ public class AdminProductInfoController {
 	/**
 	 * 상품정보 검색
 	 */
+	
+	@GetMapping("/searchCategorySpec")
+	public String getSearchCategorySpec(String searchKey, String searchValue, Model model) {
+
+		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoService.getSearchCategorySpec(searchKey, searchValue);
+		
+		model.addAttribute("title", "카테고리별/상세스펙");
+		model.addAttribute("categorySpecList", categorySpecList);
+		model.addAttribute("searchKey", searchKey);
+		model.addAttribute("searchValue", searchValue);
+		
+		return "admin/productInfo/categorySpecListView";
+		}
+	
 	@GetMapping("/searchBenefit")
 	public String getSearchBenefit(String searchKey, String searchValue, Model model) {
 
@@ -47,6 +61,19 @@ public class AdminProductInfoController {
 		model.addAttribute("searchValue", searchValue);
 		
 		return "admin/productInfo/benefitListView";
+		}
+	
+	@GetMapping("/searchModel")
+	public String getSearchModel(String searchKey, String searchValue, Model model) {
+
+		List<ProductInfoModel> modelList = adminProductInfoService.getSearchModel(searchKey, searchValue);
+		
+		model.addAttribute("title", "모델");
+		model.addAttribute("modelList", modelList);
+		model.addAttribute("searchKey", searchKey);
+		model.addAttribute("searchValue", searchValue);
+		
+		return "admin/productInfo/modelListView";
 		}
 	
 	@GetMapping("/searchItem")
@@ -104,6 +131,20 @@ public class AdminProductInfoController {
 	/**
 	 * 상품정보 중복체크
 	 */
+	
+	@PostMapping("/specNameCheck")
+	@ResponseBody
+	public boolean specNameCheck(String specName, String categoryNo) {
+		boolean isDuplicate =  false;
+		
+		log.info("체크스펙명 : {}", specName);
+		log.info("체크카테고리코드 : {}", categoryNo);
+		
+		isDuplicate = adminProductInfoService.isSpecNameCheck(specName, categoryNo);
+		
+		return isDuplicate;
+	}
+	
 	@PostMapping("/benefitNameCheck")
 	@ResponseBody
 	public boolean benefitNameCheck(String benefitName) {

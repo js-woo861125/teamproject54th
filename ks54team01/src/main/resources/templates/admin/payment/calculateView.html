@@ -6,179 +6,189 @@
     </head>
 	<th:block layout:fragment="content">     
             
-            <section class="content-main">
-                <div class="content-header">
-                    <div>
-                        <h2 class="content-title card-title">매출조회 및 정산</h2>
-                        <p>접속자 ID 표시??</p>
-                    </div>    
-                </div>
-             
-            <header class="card card-header mb-3">
-                <h4 class="card-title">입점업체조회</h4>
-           
-                    <form class="searchform">
-                        <div class="input-group ">
-                            <input list="search_terms" type="text" class="form-control" placeholder="업체코드나 상호(사업자번호)를 입력하세요" />
-                            <button class="btn btn-light bg" type="button"><i class="material-icons md-search"></i></button>
-                        </div>
-                    </form>
-                                    
-            </header>    
+	<section class="content-main">
+		<div class="content-header">
+		    <div>
+		        <h2 class="content-title card-title">매출조회 및 정산</h2>
+		        <p>접속자 ID 표시??</p>
+		    </div>    
+		</div>
+	<header class="card card-header">
+		<form th:action="@{/admin/enterprise/searchEnterprise}" method="get">
+			<div class="row gx-3">
+           		<div class="d-flex">
+           		<div class="col-md-2 col-12">
+	               <select class="form-select" name="searchKey">
+	                   <option>Show all</option>
+	                   <option value="ceoCode" th:selected="${searchKey == 'ceoCode'}" >대표코드</option>
+	                   <option value="entName" th:selected="${searchKey == 'entName'}">입점업체명</option>
+	                   <option value="entContractStatus" th:selected="${searchKey == 'entContractStatus'}">계약상태</option>
+	               </select>
+           		</div>
+				<div class="col-md-5 ml-5">
+				    <input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
+				</div>
+				<div class="col-md-1 ml-5 text-center">
+					<button type="submit" class="form-control btn btn-outline-dark"> 🔎Search</button>                   
+				</div>
+           		</div>
+             </div>
+		</form> 
+	</header>
 
-            <div class="row">
-                <div class="col-xl-12 col-lg-12">
-        
-                    <div class="row">
-                        <div class="col-lg-5">
-                            <div class="card mb-4">
-                                <article class="card-body">
-                                    <h5 class="card-title">(주)스마트렌탈</h5>
-                                    <div class="new-member-list">
-                                        <div class="d-flex align-items-center justify-content-between mb-4">
-                                            <div class="d-flex align-items-center">
-                                                <img th:src="@{/manage/assets/imgs/people/avatar-4.png}" alt="" class="avatar" />
-                                                <div>
-                                                    <h6>Patric Adams</h6>
-                                                    <p class="text-muted font-xs">Sanfrancisco</p>
-                                                </div>
-                                            </div>
-                                            <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Add</a>
-                                        </div>
-                                        <div class="d-flex align-items-center justify-content-between mb-4">
-                                            <div class="d-flex align-items-center">
-                                                <img th:src="@{/manage/assets/imgs/people/avatar-2.png}" alt="" class="avatar" />
-                                                <div>
-                                                    <h6>Dilan Specter</h6>
-                                                    <p class="text-muted font-xs">Sanfrancisco</p>
-                                                </div>
-                                            </div>
-                                            <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Add</a>
-                                        </div>
-                                        <div class="d-flex align-items-center justify-content-between mb-4">
-                                            <div class="d-flex align-items-center">
-                                                <img th:src="@{/manage/assets/imgs/people/avatar-3.png}" alt="" class="avatar" />
-                                                <div>
-                                                    <h6>Tomas Baker</h6>
-                                                    <p class="text-muted font-xs">Sanfrancisco</p>
-                                                </div>
-                                            </div>
-                                            <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Add</a>
-                                        </div>
-                                    </div>
-                                </article>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <div class="card mb-4">
-                                <article class="card-body">
-                                    <h5 class="card-title">정산내역</h5>
-                                    <ul class="verti-timeline list-unstyled font-sm">
-                                        <li class="event-list">
-                                            <div class="event-timeline-dot">
-                                                <i class="material-icons md-play_circle_outline font-xxl"></i>
-                                            </div>
-                                            <div class="media">
-                                                <div class="me-3">
-                                                    <h6><span>20 May</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
-                                                </div>
-                                                <div class="media-body">
-                                                    <div>₩12,345,678</div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <!-- active 녹색 -->
-                                        <li class="event-list">
-                                            <div class="event-timeline-dot">
-                                                <!-- animation-fade-right 애니메이션 효과 -->
-                                                <i class="material-icons md-play_circle_outline font-xxl"></i>
-                                            </div>
-                                            <div class="media">
-                                                <div class="me-3">
-                                                    <h6><span>20 Apr</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
-                                                </div>
-                                                <div class="media-body">
-                                                    <div>₩12,345,678</div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="event-list">
-                                            <div class="event-timeline-dot">
-                                                <i class="material-icons md-play_circle_outline font-xxl"></i>
-                                            </div>
-                                            <div class="media">
-                                                <div class="me-3">
-                                                    <h6><span>20 Mar</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
-                                                </div>
-                                                <div class="media-body">
-                                                    <div>₩12,345,678</div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="event-list">
-                                            <div class="event-timeline-dot">
-                                                <i class="material-icons md-play_circle_outline font-xxl"></i>
-                                            </div>
-                                            <div class="media">
-                                                <div class="me-3">
-                                                    <h6><span>20 Feb</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
-                                                </div>
-                                                <div class="media-body">
-                                                    <div>₩12,345,678</div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="event-list">
-                                            <div class="event-timeline-dot">
-                                                <i class="material-icons md-play_circle_outline font-xxl"></i>
-                                            </div>
-                                            <div class="media">
-                                                <div class="me-3">
-                                                    <h6><span>20 Jan</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
-                                                </div>
-                                                <div class="media-body">
-                                                    <div>₩12,345,678</div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </article>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3">
-                            <div class="card card-body mb-1">
-                                <article class="icontext">
-                                    <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary">💲</i></span>
-                                    <div class="text align-bottom">
-                                        <h3 class="mb-1">4월총 매출</h3>
-                                        <span class="ml-30 text-warning">₩12,345,678</span>
-                                    </div>
-                                </article>
-                            </div>
-
-                            <div class="card card-body">
-                                <article class="icontext">
-                                    <div class="d-flex">
-                                        <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary">📜</i></span>
-                                        <h3>매출구분</h3>
-                                    </div>
-                                </article>
-                                <div class="ml-80">
-                                    <h5 class="mb-1 card-title">1.렌탈 : <span class="text-warning">₩345,678</span></h5>
-                                    <h5 class="mb-1 card-title">2.판매 : <span class="text-warning">₩1,000,000</span></h5>
-                                    <h5 class="mb-1 card-title">3.위약 : <span class="text-warning">₩0</span></h5>
-                                </div>    
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
+	<div class="row">
+	    <div class="col-xl-12 col-lg-12">
+	
+	        <div class="row">
+	            <div class="col-lg-5">
+	                <div class="card mb-4">
+	                    <article class="card-body">
+	                        <h5 class="card-title">(주)스마트렌탈</h5>
+	                        <div class="new-member-list">
+	                            <div class="d-flex align-items-center justify-content-between mb-4">
+	                                <div class="d-flex align-items-center">
+	                                    <img th:src="@{/manage/assets/imgs/people/avatar-4.png}" alt="" class="avatar" />
+	                                    <div>
+	                                        <h6>Patric Adams</h6>
+	                                        <p class="text-muted font-xs">Sanfrancisco</p>
+	                                    </div>
+	                                </div>
+	                                <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Add</a>
+	                            </div>
+	                            <div class="d-flex align-items-center justify-content-between mb-4">
+	                                <div class="d-flex align-items-center">
+	                                    <img th:src="@{/manage/assets/imgs/people/avatar-2.png}" alt="" class="avatar" />
+	                                    <div>
+	                                        <h6>Dilan Specter</h6>
+	                                        <p class="text-muted font-xs">Sanfrancisco</p>
+	                                    </div>
+	                                </div>
+	                                <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Add</a>
+	                            </div>
+	                            <div class="d-flex align-items-center justify-content-between mb-4">
+	                                <div class="d-flex align-items-center">
+	                                    <img th:src="@{/manage/assets/imgs/people/avatar-3.png}" alt="" class="avatar" />
+	                                    <div>
+	                                        <h6>Tomas Baker</h6>
+	                                        <p class="text-muted font-xs">Sanfrancisco</p>
+	                                    </div>
+	                                </div>
+	                                <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Add</a>
+	                            </div>
+	                        </div>
+	                    </article>
+	                </div>
+	            </div>
+	
+	            <div class="col-lg-4">
+	                <div class="card mb-4">
+	                    <article class="card-body">
+	                        <h5 class="card-title">정산내역</h5>
+	                        <ul class="verti-timeline list-unstyled font-sm">
+	                            <li class="event-list">
+	                                <div class="event-timeline-dot">
+	                                    <i class="material-icons md-play_circle_outline font-xxl"></i>
+	                                </div>
+	                                <div class="media">
+	                                    <div class="me-3">
+	                                        <h6><span>20 May</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+	                                    </div>
+	                                    <div class="media-body">
+	                                        <div>₩12,345,678</div>
+	                                    </div>
+	                                </div>
+	                            </li>
+	                            <!-- active 녹색 -->
+	                            <li class="event-list">
+	                                <div class="event-timeline-dot">
+	                                    <!-- animation-fade-right 애니메이션 효과 -->
+	                                    <i class="material-icons md-play_circle_outline font-xxl"></i>
+	                                </div>
+	                                <div class="media">
+	                                    <div class="me-3">
+	                                        <h6><span>20 Apr</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+	                                    </div>
+	                                    <div class="media-body">
+	                                        <div>₩12,345,678</div>
+	                                    </div>
+	                                </div>
+	                            </li>
+	                            <li class="event-list">
+	                                <div class="event-timeline-dot">
+	                                    <i class="material-icons md-play_circle_outline font-xxl"></i>
+	                                </div>
+	                                <div class="media">
+	                                    <div class="me-3">
+	                                        <h6><span>20 Mar</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+	                                    </div>
+	                                    <div class="media-body">
+	                                        <div>₩12,345,678</div>
+	                                    </div>
+	                                </div>
+	                            </li>
+	                            <li class="event-list">
+	                                <div class="event-timeline-dot">
+	                                    <i class="material-icons md-play_circle_outline font-xxl"></i>
+	                                </div>
+	                                <div class="media">
+	                                    <div class="me-3">
+	                                        <h6><span>20 Feb</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+	                                    </div>
+	                                    <div class="media-body">
+	                                        <div>₩12,345,678</div>
+	                                    </div>
+	                                </div>
+	                            </li>
+	                            <li class="event-list">
+	                                <div class="event-timeline-dot">
+	                                    <i class="material-icons md-play_circle_outline font-xxl"></i>
+	                                </div>
+	                                <div class="media">
+	                                    <div class="me-3">
+	                                        <h6><span>20 Jan</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+	                                    </div>
+	                                    <div class="media-body">
+	                                        <div>₩12,345,678</div>
+	                                    </div>
+	                                </div>
+	                            </li>
+	                        </ul>
+	                    </article>
+	                </div>
+	            </div>
+	
+	            <div class="col-lg-3">
+	                <div class="card card-body mb-1">
+	                    <article class="icontext">
+	                        <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary">💲</i></span>
+	                        <div class="text align-bottom">
+	                            <h3 class="mb-1">4월총 매출</h3>
+	                            <span class="ml-30 text-warning">₩12,345,678</span>
+	                        </div>
+	                    </article>
+	                </div>
+	
+	                <div class="card card-body">
+	                    <article class="icontext">
+	                        <div class="d-flex">
+	                            <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary">📜</i></span>
+	                            <h3>매출구분</h3>
+	                        </div>
+	                    </article>
+	                    <div class="ml-80">
+	                        <h5 class="mb-1 card-title">1.렌탈 : <span class="text-warning">₩345,678</span></h5>
+	                        <h5 class="mb-1 card-title">2.판매 : <span class="text-warning">₩1,000,000</span></h5>
+	                        <h5 class="mb-1 card-title">3.위약 : <span class="text-warning">₩0</span></h5>
+	                    </div>    
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	    
+	</div>
                 <div class="card mb-4">
                     <header class="card-header">
-                        <h4 class="card-title">매출조회</h4>
+                        <h4 class="card-title">매출내역</h4>
                         <div class="row align-items-center">
                             <div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
                                 <div class="custom_select">

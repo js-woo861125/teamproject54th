@@ -1,5 +1,7 @@
 package ks54team01.admin.product.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +13,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import ks54team01.admin.product.domain.AdminAddProduct;
+import ks54team01.admin.product.domain.AdminProductSpecContent;
+import ks54team01.admin.product.mapper.AdminProductMapper;
 import ks54team01.admin.product.service.AdminProductService;
+import ks54team01.admin.productInfo.domain.ProductInfoBrand;
+import ks54team01.admin.productInfo.domain.ProductInfoCategory;
+import ks54team01.admin.productInfo.domain.ProductInfoItem;
+import ks54team01.admin.productInfo.domain.ProductInfoModel;
 import ks54team01.admin.productInfo.service.AdminProductInfoService;
 import ks54team01.common.file.mapper.FileMapper;
 import ks54team01.common.file.service.FileService;
@@ -32,6 +40,7 @@ public class AdminProductController {
 	private final FileService fileService;
 	private final AdminProductInfoService adminProductInfoservice;
 	private final AdminProductService adminProductService;
+	private final AdminProductMapper adminProductMapper;
 		
 	
 	@GetMapping("/productList")
@@ -49,32 +58,62 @@ public class AdminProductController {
 		return "admin/product/addProductView";
 	}
 	
-	/*
-	 * @PostMapping("/addProduct") public String
-	 * addProduct(@RequestPart(name="files1", required = false) MultipartFile[]
-	 * files1,
-	 * 
-	 * @RequestPart(name="files2", required = false) MultipartFile[] files2, Model
-	 * model) { if(files1 != null) { fileService.addFiles(files1, "thumnail"); }
-	 * if(files2 != null) { fileService.addFiles(files2, "product"); } return
-	 * "admin/product/addProductView"; }
-	 */
+	@GetMapping("/categoryList")
+	@ResponseBody
+	public List<ProductInfoCategory> loadCategoryList() {
+	    return adminProductService.loadCategoryList();
+	}
+
+	@GetMapping("/itemList")
+	@ResponseBody
+	public List<ProductInfoItem> loadItemList(@RequestParam String categoryNo) {
+	    return adminProductService.loadItemList(categoryNo);
+	}
+
+	@GetMapping("/brandList")
+	@ResponseBody
+	public List<ProductInfoBrand> loadBrandList(@RequestParam String categoryNo, @RequestParam String itemNo) {
+	    return adminProductService.loadBrandList(categoryNo, itemNo);
+	}
+
+	@GetMapping("/modelList")
+	@ResponseBody
+	public List<ProductInfoModel> loadModelList(@RequestParam String categoryNo,
+	                                            @RequestParam String itemNo,
+	                                            @RequestParam String brandNo) 
+	{
+	    return adminProductService.loadModelList(categoryNo, itemNo, brandNo);
+	}
+	
+	@GetMapping("/specContent")
+	@ResponseBody
+	public List<AdminProductSpecContent> loadSpecContent(@RequestParam String modelNo) {
+	    return adminProductMapper.loadSpecContent(modelNo);
+	}
+	
 	
 	@PostMapping("/product/register")
-	@ResponseBody
 	public String registerProduct(
+	    @RequestParam("categoryNo") String categoryNo,
+	    @RequestParam("itemNo") String itemNo,
+	    @RequestParam("brandNo") String brandNo,
 	    @RequestParam("modelNo") String modelNo,
 	    @RequestParam("productName") String productName,
 	    @RequestParam("thumbnails") MultipartFile[] thumbnails,
-	    @RequestParam("details") MultipartFile[] details) 
-	{
+	    @RequestParam("details") MultipartFile[] details,
+	    @RequestParam("specNos") List<String> specNos,
+	    @RequestParam("specContents") List<String> specContents
+	) {
 	    AdminAddProduct addProduct = new AdminAddProduct();
+	    addProduct.setCategoryNo(categoryNo);
+	    addProduct.setItemNo(itemNo);
+	    addProduct.setBrandNo(brandNo);
 	    addProduct.setModelNo(modelNo);
 	    addProduct.setProductName(productName);
 
-	    adminProductService.registerProduct(addProduct, thumbnails, details);
-	    return "success";
+	    adminProductService.registerProduct(addProduct, thumbnails, details, specNos, specContents);
+
+	    return "redirect:/admin/product/productList";
 	}
-	
 	
 }

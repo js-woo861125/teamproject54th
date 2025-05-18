@@ -88,6 +88,27 @@
 		</association>
 	</resultMap>
 
+	<select id="getSearchCategorySpec" parameterType="String" resultMap="categorySpecResultMap">
+		/* 카테고리별/상세스펙 검색 */
+		SELECT
+			ps.spec_no,
+			ps.manager_id,
+			pc.small_category,
+			ps.spec_nm,
+			ps.register_date,
+			ps.revision_date,
+			ps.use_status
+		FROM
+			products_spec ps inner join products_category pc 
+			using(product_category_no)
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+		</where>	
+		ORDER BY CAST(SUBSTRING_INDEX(spec_no, '_', -1) AS UNSIGNED);	
+	</select>
+		
 	<select id="getSearchBenefit" parameterType="String" resultMap="benefitResultMap">
 		/* 전체혜택 검색 */
 		SELECT 
@@ -105,6 +126,33 @@
 			</if>
 		</where>
 		ORDER BY CAST(SUBSTRING_INDEX(benefit_no, '_', -1) AS UNSIGNED);	
+	</select>
+
+	<select id="getSearchModel" parameterType="String" resultMap="modelResultMap">
+		/* 모델 검색 */
+		SELECT 
+			m.model_no,
+			m.manager_id,
+			b.brand_nm,
+			i.item_nm,
+			pc.small_category,
+			m.model_nm,
+			m.register_date,
+			m.revision_date,
+			m.use_status
+		FROM 
+			model m inner join products_category pc
+			using(product_category_no)
+			inner join item i
+			using(item_no)
+			left join brand b
+			using(brand_no)
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+		</where>
+		ORDER BY CAST(SUBSTRING_INDEX(model_no, '_', -1) AS UNSIGNED);	
 	</select>
 
 	<select id="getSearchItem" parameterType="String" resultMap="itemResultMap">
@@ -177,6 +225,17 @@
 			brand_no = #{brandNo};
 	</delete>
 
+	<select id="isSpecNameCheck" parameterType="String" resultType="boolean">
+		/* 카테고리 + 스펙명 중복체크 */
+		SELECT
+			CASE WHEN COUNT(*) > 0 THEN true ELSE false END
+		FROM
+			products_spec
+		WHERE
+			spec_nm = #{specName}
+			AND product_category_no = #{categoryNo};
+	</select>
+
 	<select id="isBenefitNameCheck" parameterType="String" resultType="boolean">
 		/* 혜택명 중복체크 */
 		SELECT
@@ -188,7 +247,7 @@
 	</select>
 
 	<select id="isItemNameCheck" parameterType="String" resultType="boolean">
-		/* 품목명 + 카테고리 중복체크 */
+		/* 카테고리 + 품목명 중복체크 */
 		SELECT
 			CASE WHEN COUNT(*) > 0 THEN true ELSE false END
 		FROM
@@ -260,7 +319,8 @@
 		UPDATE brand
 		SET
 			brand_nm = #{brandName},
-			revision_date = NOW()
+			revision_date = NOW(),
+			use_status = #{useStatus}
 		WHERE
 			brand_no = #{brandNo};
 	</update>
@@ -269,10 +329,13 @@
 		/* 상품정보 카테고리 수정 */
 		UPDATE products_category 
 		SET 
-			large_category = #{lgCategory},
+			large_category_no = #{lgCategoryNo},
+			large_category = #{lgCategory},	
+			middle_category_no = #{mdCategoryNo},
 			middle_category = #{mdCategory},
 			small_category = #{smCategory},
-			revision_date = NOW()
+			revision_date = NOW(),
+			use_status = #{useStatus}
 		WHERE 
 		  product_category_no = #{categoryNo};
 	</update>
@@ -493,7 +556,7 @@
 		VALUES
 		(#{categoryNo}, #{managerId}, #{lgCategoryNo}, #{lgCategory}, #{mdCategoryNo}, #{mdCategory}, #{smCategory}, NOW(), NOW(), '사용중');
 	</insert>
-
+	
 	<select id="getCategorySpecList" resultMap="categorySpecResultMap">
 		/* 상품정보 카테고리별/상세스펙 목록 조회 */
 		SELECT
@@ -592,30 +655,4 @@
 		FROM 
 			products_category;		 
 	</select>
-	<insert id="insertProduct" parameterType="ks54team01.admin.product.domain.AdminAddProduct">
-	    INSERT INTO products (
-	        products_no,
-	        manager_id,
-	        model_no,
-	        item_no,
-	        product_category_no,
-	        products_nm,
-	        products_status,
-	        products_image,
-	        register_date,
-	        revision_date
-	    )
-	    VALUES (
-	        #{productNo},
-	        #{managerId},
-	        #{modelNo},
-	        #{itemNo},
-	        #{categoryNo},
-	        #{productName},
-	        #{productStatus},
-	        #{productImage},
-	        #{registerDate},
-	        #{revisionDate}
-	    )
-	</insert>
 </mapper>

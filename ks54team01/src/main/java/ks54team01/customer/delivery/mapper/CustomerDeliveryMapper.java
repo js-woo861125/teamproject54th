@@ -8,12 +8,18 @@ import ks54team01.customer.delivery.domain.CustomerDeliveryList;
 
 @Mapper
 public interface CustomerDeliveryMapper {
-
-	int updatePrimaryLocation(String custId);
 	
+	
+	int removeDeliveryList(String delNo);
+	
+	int countDelInfoReference(String delNo);
+	
+	int modifyDeliveryList(CustomerDeliveryList modifyDeliveryList);
+
+	int modifyPrimaryLocation(String custId);
 	
 	int addDeliveryList(CustomerDeliveryList customerDeliveryList);
 	
-	List<CustomerDeliveryList> getDeliveryList();
+	List<CustomerDeliveryList> getDeliveryList(String custId);
 	
 }

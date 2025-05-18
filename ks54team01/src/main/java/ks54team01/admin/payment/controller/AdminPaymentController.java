@@ -46,6 +46,7 @@ public class AdminPaymentController {
 	}
 	
 	@GetMapping("/calculate")
+	// 입점업체 정산 조회
 	public String getadminpayment(Model model) {
 		
 		List<AdminFee> adminFeeList = adminPaymentService.getAdminPayFee();
