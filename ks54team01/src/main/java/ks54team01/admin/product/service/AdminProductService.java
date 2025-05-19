@@ -20,7 +20,7 @@ public interface AdminProductService {
 	public List<AdminProduct> getProductList();
 	
 	// 상품 등록
-	public void registerProduct(AdminAddProduct product, MultipartFile[] thumbnails, MultipartFile[] details);
+	public void addProduct(AdminAddProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails, MultipartFile[] details);
 	
 	List<AdminProductSpecContent> loadSpecContent(@Param("modelNo") String modelNo);
 	
