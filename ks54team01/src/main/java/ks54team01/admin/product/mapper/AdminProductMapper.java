@@ -15,7 +15,10 @@ import ks54team01.admin.productInfo.domain.ProductInfoModel;
 @Mapper
 public interface AdminProductMapper {
 	
-	ProductInfoModel getModelInfoByNo(String modelNo);
+	
+	
+	
+	ProductInfoModel getModelInfoByNo(@Param("modelNo") String modelNo);
 	
 	// 상품 등록
 	int insertProduct(AdminAddProduct product);
