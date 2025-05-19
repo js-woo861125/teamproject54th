@@ -14,9 +14,10 @@
             file_original_name,
             file_new_name,
             file_path,
+            file_ext,
             file_size,
             file_type,
-            use_status,
+            file_status,
             register_date,
             revision_date
 			)
@@ -26,6 +27,7 @@
             #{fileOriginalName},
             #{fileNewName},
             #{filePath},
+            #{fileExt},
             #{fileSize},
             #{fileType},
             #{useStatus},
@@ -43,9 +45,10 @@
             file_original_name,
             file_new_name,
             file_path,
+            file_ext, 
             file_size,
             file_type,
-            use_status,
+            file_status,
             register_date,
             revision_date
         )
@@ -57,6 +60,7 @@
                 #{l.fileOriginalName},
                 #{l.fileNewName},
                 #{l.filePath},
+                #{l.fileExt},
                 #{l.fileSize},
                 #{l.fileType},
                 #{l.useStatus},
@@ -64,6 +68,6 @@
                 #{l.revisionDate}
             )
         	</foreach>
-    	</insert>
-    	
+   	</insert>
+   		
 </mapper>

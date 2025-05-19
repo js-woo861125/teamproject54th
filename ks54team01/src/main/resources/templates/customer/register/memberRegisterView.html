@@ -179,16 +179,16 @@
                                         <form id="memberRegisterForm" th:action="@{/customer/register/memberRegister}" method="post"> 
                                         	 <!-- 아이디 입력 및 중복 확인 -->                                        
                                             <div class="form-group d-flex">
-                                                <input type="text" id="memberId" name="memberId" placeholder="아이디(6-12자 이내, 영문/숫자 사용 가능)" required />
+                                                <input type="text" id="memberId" name="memberId" placeholder="아이디(6-12자 이내, 영문/숫자 사용 가능)" value="corpcustid5" required />
                                                 <button type="button" id="idCheckBtn" class="btn btn-heading btn-block p-10 ml-10" style="width:70px;">중복확인</button>
                                             </div>     
                                             <!-- 비밀번호 입력 -->      
                                             <div class="form-group">
-	                                        	<input type="password" id="memberPw" name="memberPw" placeholder="비밀번호(8자 이상, 특수문자 포함)"  readonly required />
+	                                        	<input type="password" id="memberPw" name="memberPw" placeholder="비밀번호(8자 이상, 특수문자 포함)" value="111111!!" readonly required />
 												<small id="pwFeedback" style="color:red;"></small>
                                             </div>
                                             <div class="form-group">
-                                                <input type="password" id="memberPwConfirm" name="memberPwConfirm" placeholder="비밀번호 확인"  readonly required />
+                                                <input type="password" id="memberPwConfirm" name="memberPwConfirm" placeholder="비밀번호 확인"  value="111111!!" readonly required />
                                                 <span id="passwordMatchMessage"></span>
                                             </div>
                                         	<!-- 회원 유형 선택 -->

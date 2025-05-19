@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/layout/default}">
+<!-- head 삽입공간 -->
+<head>
+</head>
+
+<th:block layout:fragment="jsFile">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script
+		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</th:block>
+
+<th:block layout:fragment="content">
+	<div class="row">
+		<div class="col-9">
+			<div class="content-header">
+				<h2 class="content-title">제품 등록</h2>
+				<div>
+					<button class="btn btn-primary" type="submit">상품등록</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6">
+			<form class="user" th:action="@{/admin/product/register}"
+				method="post" enctype="multipart/form-data">
+
+				<div class="card mb-4">
+					<div class="card-header">
+						<h4>제품정보</h4>
+					</div>
+					<div class="card-body">
+						<div class="mb-4">
+							<label for="product_name" class="form-label">제품 이름</label> <input
+								type="text" name="productName" placeholder="제품을 입력해주세요"
+								class="form-control" id="product_name" required />
+						</div>
+						<div class="row">
+							<div class="col-lg-10">
+								<div class="mb-4">
+									<label class="form-label">카테고리</label> <select
+										id="categorySelect" name="categoryNo" class="form-select">
+										<option value="">카테고리 선택</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-4">
+								<div class="mb-4">
+									<label class="form-label">품목</label> <select id="itemSelect"
+										name="itemNo" class="form-select">
+										<option value="">품목 선택</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="mb-4">
+									<label class="form-label">브랜드</label> <select id="brandSelect"
+										name="brandNo" class="form-select">
+										<option value="">브랜드 선택</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-10">
+							<label class="form-label">모델</label> <select id="modelSelect"
+								name="modelNo" class="form-select">
+								<option value="">모델 선택</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<!-- card end// -->
+				<div class="card mb-4">
+					<div class="card-header">
+						<h4>제품 상세옵션</h4>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<div id="specArea" class="mb-3"></div>
+					</div>
+				</div>
+				<!-- card end// -->
+				<!-- card end// -->
+				</div>
+				<div class="card mb-4">
+					<div class="card-header">
+						<h4>제품 썸네일</h4>
+					</div>
+					<div class="card-body">
+						<div class="col-md-9">
+							<label for="files" class="form-label">대표사진</label>
+							<div class="input-group">
+								<input type="file" id="files1" name="thumbnails"
+									class="form-control" multiple>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card mb-4">
+					<div class="card-header">
+						<h4>제품 사진</h4>
+					</div>
+					<div class="card-body">
+						<div class="col-md-9">
+							<label for="files" class="form-label">제품상세</label>
+							<div class="input-group">
+								<input type="file" id="files2" name="details"
+									class="form-control" multiple>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- card end// -->
+				
+			</form>
+		</div>
+		
+			
+		<div class="row col-lg-4">
+			<div class="card">
+				<div class="card-header">
+					<h4>상품 썸네일 미리보기</h4>
+				</div>
+				<div class="card-body">
+					<div class="row" id="previewThumnail"></div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h4>상품 이미지 미리보기</h4>
+				</div>
+				<div class="card-body">
+					<div class="row" id="previewThumnailProduct"></div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</th:block>
+<!-- card end// -->
+<div class="pagination-area mt-15 mb-50">
+	<nav aria-label="Page navigation example">
+		<ul class="pagination justify-content-start">
+			<li class="page-item active"><a class="page-link" href="#">01</a></li>
+			<li class="page-item"><a class="page-link" href="#">02</a></li>
+			<li class="page-item"><a class="page-link" href="#">03</a></li>
+			<li class="page-item"><a class="page-link dot" href="#">...</a></li>
+			<li class="page-item"><a class="page-link" href="#">16</a></li>
+			<li class="page-item"><a class="page-link" href="#"><i
+					class="material-icons md-chevron_right"></i></a></li>
+		</ul>
+	</nav>
+</div>
+<!-- content-main end// -->
+<th:block layout:fragment="jsScript">
+	<script>
+ // 썸네일(대표사진) 미리보기 & 삭제
+   	$('#files1').change(function(){
+   	    $('#previewThumnail').empty();
+   	    const files = this.files;
+   	    const fileList = [...files];
+   	    fileList.forEach(function(file, idx){
+   	        const imgDiv = $('<div class="col-md-3 img-box1" style="position:relative"></div>');
+   	        const lastModified = files[idx].lastModified;
+   	        const fileFullName = files[idx].name;
+   	        const dotIdx = fileFullName.lastIndexOf('.');
+   	        const fileName = (dotIdx != -1 &&  dotIdx < fileFullName.length - 1) 
+   	                            ? fileFullName.substring(0, dotIdx) 
+   	                            : fileFullName;
+   	        if(file.type.match('image.*')){
+   	            const reader = new FileReader(); 
+   	            reader.onload = function (e) { 
+   	                const img = $('<img />', {src: e.target.result, id : lastModified, alt: fileName });
+   	                const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
+   	                imgDiv.append(img,span);
+   	                imgDiv.appendTo('#previewThumnail');
+   	            } 
+   	            reader.readAsDataURL(file);
+   	        }else{
+   	            const noImage = $('<img />', { src : '/manage/assets/imgs/theme/upload.svg', id : lastModified, alt : fileName});
+   	            const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
+   	            imgDiv.append(noImage, span);
+   	            imgDiv.appendTo('#previewThumnail');
+   	        }
+   	    });
+   	});
+
+   	// X버튼 클릭 시 썸네일 파일 삭제
+   	$(document).on('click', '.delete-img1', function(){
+   	    const input = document.getElementById('files1');
+   	    const files = input.files;
+   	    const dataTransfer = new DataTransfer();
+   	    const removeTargetId = $(this).attr('data-remove-key');
+   	    Array.from(files)
+   	        .filter(file => file.lastModified != removeTargetId)
+   	        .forEach(file => dataTransfer.items.add(file));
+   	    input.files = dataTransfer.files;
+   	    $(this).closest('.img-box1').remove();
+   	});
+
+
+   	// 상세 이미지 미리보기 & 삭제
+   	$('#files2').change(function(){
+   	    $('#previewThumnailProduct').empty();
+   	    const files = this.files;
+   	    const fileList = [...files];
+   	    fileList.forEach(function(file, idx){
+   	        const imgDiv = $('<div class="col-md-3 img-box2" style="position:relative"></div>');
+   	        const lastModified = files[idx].lastModified;
+   	        const fileFullName = files[idx].name;
+   	        const dotIdx = fileFullName.lastIndexOf('.');
+   	        const fileName = (dotIdx != -1 &&  dotIdx < fileFullName.length - 1) 
+   	                            ? fileFullName.substring(0, dotIdx) 
+   	                            : fileFullName;
+   	        if(file.type.match('image.*')){
+   	            const reader = new FileReader(); 
+   	            reader.onload = function (e) { 
+   	                const img = $('<img />', {src: e.target.result, id : lastModified, alt: fileName });
+   	                const span = $('<span />', {'class': 'delete-img2', 'data-remove-key' : lastModified}).text('X');
+   	                imgDiv.append(img,span);
+   	                imgDiv.appendTo('#previewThumnailProduct');
+   	            } 
+   	            reader.readAsDataURL(file);
+   	        }else{
+   	            const noImage = $('<img />', { src : '/manage/assets/imgs/theme/upload.svg', id : lastModified, alt : fileName});
+   	            const span = $('<span />', {'class': 'delete-img2', 'data-remove-key' : lastModified}).text('X');
+   	            imgDiv.append(noImage, span);
+   	            imgDiv.appendTo('#previewThumnailProduct');
+   	        }
+   	    });
+   	});
+
+   	// X버튼 클릭 시 상세 이미지 파일 삭제
+   	$(document).on('click', '.delete-img2', function(){
+   	    const input = document.getElementById('files2');
+   	    const files = input.files;
+   	    const dataTransfer = new DataTransfer();
+   	    const removeTargetId = $(this).attr('data-remove-key');
+   	    Array.from(files)
+   	        .filter(file => file.lastModified != removeTargetId)
+   	        .forEach(file => dataTransfer.items.add(file));
+   	    input.files = dataTransfer.files;
+   	    $(this).closest('.img-box2').remove();
+   	});
+   		
+   		$(document).ready(function(){
+   		    // 1. 페이지 로딩 시 카테고리 목록 불러오기
+   		    $.ajax({
+   		        url: '/admin/product/categoryList',
+   		        method: 'GET',
+   		        success: function(data){
+   		            $('#categorySelect').empty().append('<option value="">카테고리 선택</option>');
+   		           
+   		            $.each(data, function(i, v){
+   		                $('#categorySelect').append(
+   		                    '<option value="' + v.categoryNo + '">' + v.lgCategory + ' > ' + v.mdCategory + ' > ' + v.smCategory + '</option>'
+   		                );
+   		            });
+   		        }
+   		    });
+
+   		    // 2. 카테고리 선택 > 품목 불러오기
+   		    $('#categorySelect').change(function(){
+   		        var categoryNo = $(this).val();
+   		        $('#itemSelect').empty().append('<option value="">품목 선택</option>');
+   		        $('#brandSelect').empty().append('<option value="">브랜드 선택</option>');
+   		        $('#modelSelect').empty().append('<option value="">모델 선택</option>');
+
+   		        if(categoryNo){
+   		            $.ajax({
+   		                url: '/admin/product/itemList',
+   		                data: { categoryNo: categoryNo },
+   		                method: 'GET',
+   		                success: function(list){
+   		                    $.each(list, function(idx, item){
+   		                        $('#itemSelect').append('<option value="'+item.itemNo+'">'+item.itemName+'</option>');
+   		                    });
+   		                }
+   		            });
+   		        }
+   		    });
+
+	   		 // 품목 선택 시 브랜드 목록 AJAX
+	   		$('#itemSelect').on('change', function() {
+			    var categoryNo = $('#categorySelect').val();
+			    var itemNo = $(this).val();
+			
+			    $('#brandSelect').empty().append('<option value="">브랜드 선택</option>');
+			    $('#modelSelect').empty().append('<option value="">모델 선택</option>');
+			
+			    if(categoryNo && itemNo){
+			        $.ajax({
+			            url: '/admin/product/brandList',
+			            method: 'GET',
+			            data: {
+			                categoryNo: categoryNo,
+			                itemNo: itemNo
+			            },
+			            success: function(brandList){
+			                brandList.forEach(function(brand){
+			                    $('#brandSelect').append(
+			                        '<option value="' + brand.brandNo + '">' + brand.brandName + '</option>'
+			                    );
+			                });
+			            }
+			        });
+			    }
+			});
+
+   		    // 4. 브랜드 선택 > 모델 불러오기
+   		    $('#brandSelect').change(function(){
+   		        var categoryNo = $('#categorySelect').val();
+   		        var itemNo = $('#itemSelect').val();
+   		        var brandNo = $(this).val();
+   		        $('#modelSelect').empty().append('<option value="">모델 선택</option>');
+
+   		        if(categoryNo && itemNo && brandNo){
+   		            $.ajax({
+   		                url: '/admin/product/modelList',
+   		                data: {
+   		                    categoryNo: categoryNo,
+   		                    itemNo: itemNo,
+   		                    brandNo: brandNo
+   		                },
+   		                method: 'GET',
+   		                success: function(list){
+   		                    $.each(list, function(idx, model){
+   		                        $('#modelSelect').append('<option value="'+model.modelNo+'">'+model.modelNm+'</option>');
+   		                    });
+   		                }
+   		            });
+   		        }
+   		    });
+   		 $('#modelSelect').empty().append('<option value="">모델 선택</option>');
+   		var categoryNo = $('#categorySelect').val();
+   		var itemNo = $('#itemSelect').val();
+   		var brandNo = $('#brandSelect').val();
+
+   		if(categoryNo && itemNo && brandNo){
+   		    $.ajax({
+   		        url: '/admin/product/modelList',
+   		        data: {
+   		            categoryNo: categoryNo,
+   		            itemNo: itemNo,
+   		            brandNo: brandNo
+   		        },
+   		        success: function(data){
+   		            console.log("받은 data: ", data);
+   		            $.each(data, function(idx, model){
+   		                if (!model) {
+   		                    console.log("undefined model! idx=", idx, "data=", data);
+   		                }
+   		                $('#modelSelect').append(
+   		                    '<option value="' + model.modelNo + '">' + model.modelNm + '</option>'
+   		                );
+   		            });
+   		        }
+   		    });
+   		}
+	   		
+   		});
+   		$('#modelSelect').change(function() {
+   		  var modelNo = $(this).val();
+   		  $('#specArea').empty();
+   		  if(modelNo){
+   		    $.ajax({
+   		      url: '/admin/product/specContent',
+   		      data: { modelNo: modelNo },
+   		      success: function(specList) {
+   		        if(specList.length === 0){
+   		          $('#specArea').html('<span>등록된 상세옵션이 없습니다.</span>');
+   		        } else {
+   		          $.each(specList, function(i, spec){
+   		            var html = '<div class="mb-2">';
+   		            html += '<label>' + spec.specNm + '</label>: ';
+   		            html += '<span>' + (spec.specContent ? spec.specContent : '-') + '</span>';
+   		            html += '</div>';
+   		            $('#specArea').append(html);
+   		          });
+   		        }
+   		      }
+   		    });
+   		  }
+   		});
+
+   	</script>
+</th:block>
+
+<script src="manage/assets/js/vendors/bootstrap.bundle.min.js"></script>
+<script src="manage/assets/js/vendors/select2.min.js"></script>
+<script src="manage/assets/js/vendors/perfect-scrollbar.js"></script>
+<script src="manage/assets/js/vendors/jquery.fullscreen.min.js"></script>
+<!-- Main Script -->
+<script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+
+</body>
+</html>

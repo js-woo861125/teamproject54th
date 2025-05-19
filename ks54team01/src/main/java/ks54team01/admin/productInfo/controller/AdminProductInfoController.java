@@ -37,12 +37,26 @@ public class AdminProductInfoController {
 	 * 상품정보 검색
 	 */
 	
+	@GetMapping("/searchModelSpec")
+	public String getSearchModelSpec(String searchKey, String searchValue, Model model) {
+
+		List<ProductInfoModelSpec> modelSpecList = adminProductInfoService.getSearchModelSpec(searchKey, searchValue);
+		
+		model.addAttribute("title", "모델별/상세스펙 검색결과");
+		model.addAttribute("modelSpecList", modelSpecList);
+		model.addAttribute("searchKey", searchKey);
+		model.addAttribute("searchValue", searchValue);
+		
+		return "admin/productInfo/modelSpecListView";
+		}
+		
+	
 	@GetMapping("/searchCategorySpec")
 	public String getSearchCategorySpec(String searchKey, String searchValue, Model model) {
 
 		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoService.getSearchCategorySpec(searchKey, searchValue);
 		
-		model.addAttribute("title", "카테고리별/상세스펙");
+		model.addAttribute("title", "카테고리별/상세스펙 검색결과");
 		model.addAttribute("categorySpecList", categorySpecList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
@@ -55,7 +69,7 @@ public class AdminProductInfoController {
 
 		List<ProductInfoBenefit> benefitList = adminProductInfoService.getSearchBenefit(searchKey, searchValue);
 		
-		model.addAttribute("title", "전체혜택");
+		model.addAttribute("title", "혜택 검색결과");
 		model.addAttribute("benefitList", benefitList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
@@ -68,7 +82,7 @@ public class AdminProductInfoController {
 
 		List<ProductInfoModel> modelList = adminProductInfoService.getSearchModel(searchKey, searchValue);
 		
-		model.addAttribute("title", "모델");
+		model.addAttribute("title", "모델 검색결과");
 		model.addAttribute("modelList", modelList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
@@ -81,7 +95,7 @@ public class AdminProductInfoController {
 
 		List<ProductInfoItem> itemList = adminProductInfoService.getSearchItem(searchKey, searchValue);
 		
-		model.addAttribute("title", "품목");
+		model.addAttribute("title", "품목 검색결과");
 		model.addAttribute("itemList", itemList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
@@ -94,7 +108,7 @@ public class AdminProductInfoController {
 
 		List<ProductInfoBrand> brandList = adminProductInfoService.getSearchBrand(searchKey, searchValue);
 		
-		model.addAttribute("title", "브랜드");
+		model.addAttribute("title", "브랜드 검색결과");
 		model.addAttribute("brandList", brandList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
@@ -107,7 +121,7 @@ public class AdminProductInfoController {
 
 		List<ProductInfoCategory> categoryList = adminProductInfoService.getSearchCategory(searchKey, searchValue);
 		
-		model.addAttribute("title", "카테고리");
+		model.addAttribute("title", "카테고리 검색결과");
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
@@ -131,6 +145,20 @@ public class AdminProductInfoController {
 	/**
 	 * 상품정보 중복체크
 	 */
+	
+	@PostMapping("/specContentCheck")
+	@ResponseBody
+	public boolean specContentCheck(String modelSpecName, String modelNo, String specNo) {
+		boolean isDuplicate =  false;
+		
+		log.info("체크상세스펙내용 : {}", modelSpecName);
+		log.info("체크모델코드 : {}", modelNo);
+		log.info("체크스펙코드 : {}", specNo);
+		
+		isDuplicate = adminProductInfoService.isSpecContentCheck(modelSpecName, modelNo, specNo);
+		
+		return isDuplicate;
+	}
 	
 	@PostMapping("/specNameCheck")
 	@ResponseBody
@@ -173,6 +201,7 @@ public class AdminProductInfoController {
 	@PostMapping("/brandNameCheck")
 	@ResponseBody
 	public boolean brandNameCheck(String brandName) {
+		
 		boolean isDuplicate =  false;
 		
 		log.info("체크브랜드명 : {}", brandName);
@@ -182,10 +211,50 @@ public class AdminProductInfoController {
 		return isDuplicate;
 	}
 	
+	@PostMapping("/categoryCheck")
+	@ResponseBody
+	public boolean categoryCheck(String lgCategory, String mdCategory, String smCategory) {
+		
+		boolean isDuplicate =  false;
+		
+		log.info("체크대분류 : {}", lgCategory);
+		log.info("체크중분류 : {}", mdCategory);
+		log.info("체크소분류 : {}", smCategory);
+		
+		isDuplicate = adminProductInfoService.isCategoryCheck(lgCategory, mdCategory, smCategory);
+		
+		return isDuplicate;
+	}
+	
 	
 	/**
 	 * 상품정보 수정
 	 */
+	@PostMapping("/modifyModelSpec")
+	public String modifyModelSpec(ProductInfoModelSpec productInfoModelSpec, RedirectAttributes reAttr) {
+		
+		adminProductInfoService.modifyModelSpec(productInfoModelSpec);
+		
+		reAttr.addAttribute("modelSpecNo", productInfoModelSpec.getModelSpecNo());
+		
+		return "redirect:/admin/productInfo/modelSpecList";
+	}
+	
+	@GetMapping("/modifyModelSpec")
+	public String modifyModelSpec(String modelSpecNo, Model model) {		
+		
+		ProductInfoModelSpec modelSpecInfo = adminProductInfoService.getModelSpecInfoByNo(modelSpecNo);
+		List<ProductInfoModel> modelList = adminProductInfoService.getModelList();
+		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoService.getCategorySpecList();
+		
+		model.addAttribute("title", "모델별/상세스펙 수정");
+		model.addAttribute("modelSpecInfo", modelSpecInfo);
+		model.addAttribute("modelList", modelList);
+		model.addAttribute("categorySpecList", categorySpecList);
+		
+		return "admin/productInfo/modifyModelSpecView";
+	}
+	
 	@PostMapping("/modifyCategorySpec")
 	public String modifyCategorySpec(ProductInfoCategorySpec productInfoCategorySpec, RedirectAttributes reAttr) {
 		
@@ -200,8 +269,11 @@ public class AdminProductInfoController {
 	public String modifyCategorySpec(String specNo, Model model) {		
 		
 		ProductInfoCategorySpec specInfo = adminProductInfoService.getCategorySpecInfoByNo(specNo);
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
 		
-		model.addAttribute("title", "스펙 수정");
+		model.addAttribute("title", "카테고리별/상세스펙 수정");
+		model.addAttribute("specInfo", specInfo);
+		model.addAttribute("categoryList", categoryList);
 		
 		return "admin/productInfo/modifyCategorySpecView";
 	}
@@ -222,6 +294,7 @@ public class AdminProductInfoController {
 		ProductInfoBenefit benefitInfo = adminProductInfoService.getBenefitInfoByNo(benefitNo);
 		
 		model.addAttribute("title", "혜택 수정");
+		model.addAttribute("benefitInfo", benefitInfo);
 		
 		return "admin/productInfo/modifyBenefitView";
 	}
@@ -240,8 +313,15 @@ public class AdminProductInfoController {
 	public String modifyModel(String modelNo, Model model) {		
 		
 		ProductInfoModel modelInfo = adminProductInfoService.getModelInfoByNo(modelNo);
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
+		List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
+		List<ProductInfoItem> itemList = adminProductInfoService.getItemList();
 		
 		model.addAttribute("title", "모델 수정");
+		model.addAttribute("modelInfo", modelInfo);
+		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("brandList", brandList);
+		model.addAttribute("itemList", itemList);
 		
 		return "admin/productInfo/modifyModelView";
 	}
@@ -314,23 +394,12 @@ public class AdminProductInfoController {
 	/**
 	 * 상품정보 목록
 	 */
-	@GetMapping("/benefitList")
-	public String getBenefitList(Model model) {
-		
-		List<ProductInfoBenefit> benefitList = adminProductInfoService.getBenefitList();
-		
-		model.addAttribute("title", "전체혜택");
-		model.addAttribute("benefitList", benefitList);
-		
-		return "admin/productInfo/benefitListView";
-	}	
-	
 	@GetMapping("/modelSpecList")
 	public String modelSpecList(Model model) {
 		
 		List<ProductInfoModelSpec> modelSpecList = adminProductInfoService.getModelSpecList();
 		
-		model.addAttribute("title", "모델별/상세스펙");
+		model.addAttribute("title", "모델별/상세스펙 목록");
 		model.addAttribute("modelSpecList", modelSpecList);
 		
 		return "admin/productInfo/modelSpecListView";
@@ -341,18 +410,29 @@ public class AdminProductInfoController {
 		
 		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoService.getCategorySpecList();
 		
-		model.addAttribute("title", "카테고리별/상세스펙");
+		model.addAttribute("title", "카테고리별/상세스펙 목록");
 		model.addAttribute("categorySpecList", categorySpecList);
 		
 		return "admin/productInfo/categorySpecListView";
 	}	
+	
+	@GetMapping("/benefitList")
+	public String getBenefitList(Model model) {
+		
+		List<ProductInfoBenefit> benefitList = adminProductInfoService.getBenefitList();
+		
+		model.addAttribute("title", "혜택 목록");
+		model.addAttribute("benefitList", benefitList);
+		
+		return "admin/productInfo/benefitListView";
+	}
 	
 	@GetMapping("/modelList")
 	public String getModelList(Model model) {
 
 		List<ProductInfoModel> modelList = adminProductInfoService.getModelList();
 		
-		model.addAttribute("title", "모델");
+		model.addAttribute("title", "모델 목록");
 		model.addAttribute("modelList", modelList);
 		
 		return "admin/productInfo/modelListView";
@@ -363,7 +443,7 @@ public class AdminProductInfoController {
 		
 		List<ProductInfoItem> itemList = adminProductInfoService.getItemList();
 		
-		model.addAttribute("title", "품목");
+		model.addAttribute("title", "품목 목록");
 		model.addAttribute("itemList", itemList);
 		
 		return "admin/productInfo/itemListView";
@@ -374,7 +454,7 @@ public class AdminProductInfoController {
 		
 		List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
 		
-		model.addAttribute("title", "브랜드");
+		model.addAttribute("title", "브랜드 목록");
 		model.addAttribute("brandList", brandList);
 		
 		return "admin/productInfo/brandListView";
@@ -385,7 +465,7 @@ public class AdminProductInfoController {
 		
 		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
 		
-		model.addAttribute("title", "카테고리");
+		model.addAttribute("title", "카테고리 목록");
 		model.addAttribute("categoryList", categoryList);
 		
 		return "admin/productInfo/categoryListView";
@@ -394,24 +474,24 @@ public class AdminProductInfoController {
 	/**
 	 * 상품정보 등록
 	 */
-	@PostMapping("/addBenefit")
-	public String addBenefit(ProductInfoBenefit productInfoBenefit) {
+	
+	@PostMapping("/addModelSpec")
+	public String addModelSpec(ProductInfoModelSpec productInfoModelSpec) {
 		
-		adminProductInfoService.addBenefit(productInfoBenefit);
+		adminProductInfoService.addModelSpec(productInfoModelSpec);
 		
-		return "redirect:/admin/productInfo/benefitList";
-	}
-
-	@GetMapping("/addBenefit")
-	public String addBenefit(Model model) {
-		
-		model.addAttribute("title", "혜택 등록");
-		
-		return "admin/productInfo/addBenefitView";
+		return "redirect:/admin/productInfo/modelSpecList";
 	}
 	
 	@GetMapping("/addModelSpec")
-	public String addModelSpec() {
+	public String addModelSpec(Model model) {
+		
+		List<ProductInfoModel> modelList = adminProductInfoService.getModelList();
+		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoService.getCategorySpecList();
+		
+		model.addAttribute("title", "모델별/상세스펙 등록");
+		model.addAttribute("modelList", modelList);
+		model.addAttribute("categorySpecList", categorySpecList);
 		
 		return "admin/productInfo/addModelSpecView";
 	}
@@ -433,6 +513,22 @@ public class AdminProductInfoController {
 		model.addAttribute("categoryList", categoryList);
 		
 		return "admin/productInfo/addCategorySpecView";
+	}
+	
+	@PostMapping("/addBenefit")
+	public String addBenefit(ProductInfoBenefit productInfoBenefit) {
+		
+		adminProductInfoService.addBenefit(productInfoBenefit);
+		
+		return "redirect:/admin/productInfo/benefitList";
+	}
+	
+	@GetMapping("/addBenefit")
+	public String addBenefit(Model model) {
+		
+		model.addAttribute("title", "혜택 등록");
+		
+		return "admin/productInfo/addBenefitView";
 	}
 	
 	@PostMapping("/addModel")
