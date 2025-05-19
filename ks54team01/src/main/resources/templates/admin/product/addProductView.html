@@ -18,9 +18,7 @@
 			<div class="content-header">
 				<h2 class="content-title">제품 등록</h2>
 				<div>
-					<button
-						class="btn btn-light rounded font-sm mr-5 text-body hover-up">임시저장</button>
-					<button class="btn btn-md rounded font-sm hover-up">저장</button>
+					
 				</div>
 			</div>
 		</div>
@@ -81,37 +79,12 @@
 					</div>
 					<div class="card-body">
 						<div class="row">
-							<div class="col-lg-6">
-								<label class="form-label">상세옵션</label> <select
-									class="form-select">
-									<option>알아서 들어감</option>
-								</select>
-							</div>
-							<div class="col-lg-6">
-								<label class="form-label">상세옵션</label> <select
-									class="form-select">
-									<option>알아서 들어감</option>
-								</select>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-lg-6">
-								<label class="form-label">상세옵션</label> <select
-									class="form-select">
-									<option>알아서 들어감</option>
-								</select>
-							</div>
-							<div class="col-lg-6">
-								<label class="form-label">상세옵션</label> <select
-									class="form-select">
-									<option>알아서 들어감</option>
-								</select>
-							</div>
-						</div>
+							<div id="specArea" class="mb-3"></div>
 					</div>
 				</div>
 				<!-- card end// -->
 				<!-- card end// -->
+				</div>
 				<div class="card mb-4">
 					<div class="card-header">
 						<h4>제품 썸네일</h4>
@@ -134,7 +107,7 @@
 						<div class="col-md-9">
 							<label for="files" class="form-label">제품상세</label>
 							<div class="input-group">
-								<input type="file" id="files2" name="products"
+								<input type="file" id="files2" name="details"
 									class="form-control" multiple>
 							</div>
 						</div>
@@ -144,11 +117,9 @@
 				<button class="btn btn-primary" type="submit">상품등록</button>
 			</form>
 		</div>
-
-		<!-- <form class="user" th:action="@{/admin/file/fileupload}" method="post" enctype="multipart/form-data">			
+		
 			
-		</form> -->
-		<div class="row col-lg-6">
+		<div class="row col-lg-4">
 			<div class="card">
 				<div class="card-header">
 					<h4>상품 썸네일 미리보기</h4>
@@ -166,38 +137,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- <div class="col-lg-3">
-			<div class="card mb-4">
-				<div class="card-header">
-					<h4>제품 사진</h4>
-				</div>
-				<div class="card-body">
-					<div class="input-upload">
-						<img src="manage/assets/imgs/theme/upload.svg" alt="" /> <input
-							type="file" name="multipartFilesThumbnail"
-							id="multipartFilesThumbnail" class="form-control" multiple
-							required>
-						<input type="file" name="file1" class="form-control"   />
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-lg-3">
-			<div class="card mb-4">
-				<div class="card-header">
-					<h4>상품 사진</h4>
-				</div>
-				<div class="card-body">
-					<div class="input-upload">
-						<img src="manage/assets/imgs/theme/upload.svg" alt="" /> <input
-							type="file" name="multipartFilesProducts"
-							id="multipartFilesProducts" class="form-control" multiple
-							required>
-						<input type="file" name="file1" class="form-control"   />
-					</div>
-				</div>
-			</div>
-		</div> -->
+		
 	</div>
 </th:block>
 <!-- card end// -->
@@ -305,125 +245,16 @@
    	    input.files = dataTransfer.files;
    	    $(this).closest('.img-box2').remove();
    	});
-   		/* $('#files1').change(function(){
-   			$('#previewThumnail').empty();
-   			const files = this.files;
-   			const fileList = [...files];
-   			fileList.forEach(function(file, idx){
-  	              
-  	              //div에 이미지 추가
-  	              const imgDiv = $('<div class="col-md-3 img-box1" style="position:relative"></div>');
-  	              const lastModified = files[idx].lastModified;
-  	              
-  	           	  const fileFullName = files[idx].name;
-			  const dotIdx = fileFullName.lastIndexOf('.');
-			  const fileName = (dotIdx != -1 &&  dotIdx < fileFullName.length - 1) 
-			  				   ? fileFullName.substring(0, dotIdx) 
-			  				   : fileFullName;
-  	              
-			  //이미지 파일 미리보기
-  	              if(file.type.match('image.*')){
-  	                  //파일을 읽기 위한 FileReader객체 생성
-  	                  const reader = new FileReader(); 
-  	                  reader.onload = function (e) { 
-  	                      //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
-  	                      const img = $('<img />', {src: e.target.result, id : lastModified, alt: fileName });
-  	                      const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
-  	                      imgDiv.append(img,span);
-  	                      imgDiv.appendTo('#previewThumnail');
-  	                  } 
-  	                  reader.readAsDataURL(file);
-  	              }else{
-  	                  //이미지 파일 아닐 경우 대체 이미지
-  	                  const noImage = $('<img />', { src : '/manage/assets/imgs/theme/upload.svg', id : lastModified, alt : fileName});
-  	               	  const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
-  	                  imgDiv.append(noImage, span);
-  	                  imgDiv.appendTo('#previewThumnail');
-  	                  
-  	              }
-  	          })
-   		});
    		
-   		$(document).on('click', '.delete-img1',function(){
-   			const files = $("#files1").prop('files');
-   			
-   	        const dataTranster = new DataTransfer();
-   	        const removeTargetId = $(this).attr('data-remove-key');
-   	        
-   	        Array.from(files)
-   	        	 .filter(file => file.lastModified != removeTargetId)
-    	         .forEach(file => dataTranster.items.add(file));
-   	 
-   	        $('#files')[0].files = dataTranster.files;
-   	 
-   	        $(this).closest('.img-box1').remove();
-   	 
-   		});
-   		
-   		$('#files2').change(function(){
-   			$('#previewThumnailProduct').empty();
-   			const files = this.files;
-   			const fileList = [...files];
-   			fileList.forEach(function(file, idx){
-  	              
-  	              //div에 이미지 추가
-  	              const imgDiv = $('<div class="col-md-3 img-box2" style="position:relative"></div>');
-  	              const lastModified = files[idx].lastModified;
-  	              
-  	           	  const fileFullName = files[idx].name;
-			  const dotIdx = fileFullName.lastIndexOf('.');
-			  const fileName = (dotIdx != -1 &&  dotIdx < fileFullName.length - 1) 
-			  				   ? fileFullName.substring(0, dotIdx) 
-			  				   : fileFullName;
-  	              
-			  //이미지 파일 미리보기
-  	              if(file.type.match('image.*')){
-  	                  //파일을 읽기 위한 FileReader객체 생성
-  	                  const reader = new FileReader(); 
-  	                  reader.onload = function (e) { 
-  	                      //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
-  	                      const img = $('<img />', {src: e.target.result, id : lastModified, alt: fileName });
-  	                      const span = $('<span />', {'class': 'delete-img2', 'data-remove-key' : lastModified}).text('X');
-  	                      imgDiv.append(img,span);
-  	                      imgDiv.appendTo('#previewThumnailProduct');
-  	                  } 
-  	                  reader.readAsDataURL(file);
-  	              }else{
-  	                  //이미지 파일 아닐 경우 대체 이미지
-  	                  const noImage = $('<img />', { src : '/manage/assets/imgs/theme/upload.svg', id : lastModified, alt : fileName});
-  	               	  const span = $('<span />', {'class': 'delete-img2', 'data-remove-key' : lastModified}).text('X');
-  	                  imgDiv.append(noImage, span);
-  	                  imgDiv.appendTo('#previewThumnail');
-  	                  
-  	              }
-  	          })
-   		});
-   		
-   		$(document).on('click', '.delete-img2',function(){
-   			const files = $("#files2").prop('files2');
-   			
-   	        const dataTranster = new DataTransfer();
-   	        const removeTargetId = $(this).attr('data-remove-key');
-   	        
-   	        Array.from(files)
-   	        	 .filter(file => file.lastModified != removeTargetId)
-    	         .forEach(file => dataTranster.items.add(file));
-   	 
-   	        $('#files2')[0].files = dataTranster.files;
-   	 
-   	        $(this).closest('.img-box2').remove();
-   	 
-   		}); */
    		$(document).ready(function(){
-
    		    // 1. 페이지 로딩 시 카테고리 목록 불러오기
    		    $.ajax({
    		        url: '/admin/product/categoryList',
    		        method: 'GET',
    		        success: function(data){
    		            $('#categorySelect').empty().append('<option value="">카테고리 선택</option>');
+   		           
    		            $.each(data, function(i, v){
-   		                // v.lgCategory + " > " + v.mdCategory + " > " + v.smCategory 로 풀네임 만들어도 됨!
    		                $('#categorySelect').append(
    		                    '<option value="' + v.categoryNo + '">' + v.lgCategory + ' > ' + v.mdCategory + ' > ' + v.smCategory + '</option>'
    		                );
@@ -504,29 +335,57 @@
    		        }
    		    });
    		 $('#modelSelect').empty().append('<option value="">모델 선택</option>');
-	   		if(categoryNo && itemNo && brandNo){
-	   		    $.ajax({
-	   		        url: '/admin/product/modelList',
-	   		        data: {
-	   		            categoryNo: categoryNo,
-	   		            itemNo: itemNo,
-	   		            brandNo: brandNo
-	   		        },
-	   		        success: function(data){
-	   		            console.log("받은 data: ", data);
-	   		            $.each(data, function(idx, model){
-	   		                if (!model) {
-	   		                    console.log("undefined model! idx=", idx, "data=", data);
-	   		                }
-	   		                $('#modelSelect').append(
-	   		                    '<option value="' + model.modelNo + '">' + model.modelNm + '</option>'
-	   		                );
-	   		            });
-	   		        }
-	   		    });
-	   		}
+   		var categoryNo = $('#categorySelect').val();
+   		var itemNo = $('#itemSelect').val();
+   		var brandNo = $('#brandSelect').val();
 
+   		if(categoryNo && itemNo && brandNo){
+   		    $.ajax({
+   		        url: '/admin/product/modelList',
+   		        data: {
+   		            categoryNo: categoryNo,
+   		            itemNo: itemNo,
+   		            brandNo: brandNo
+   		        },
+   		        success: function(data){
+   		            console.log("받은 data: ", data);
+   		            $.each(data, function(idx, model){
+   		                if (!model) {
+   		                    console.log("undefined model! idx=", idx, "data=", data);
+   		                }
+   		                $('#modelSelect').append(
+   		                    '<option value="' + model.modelNo + '">' + model.modelNm + '</option>'
+   		                );
+   		            });
+   		        }
+   		    });
+   		}
+	   		
    		});
+   		$('#modelSelect').change(function() {
+   		  var modelNo = $(this).val();
+   		  $('#specArea').empty();
+   		  if(modelNo){
+   		    $.ajax({
+   		      url: '/admin/product/specContent',
+   		      data: { modelNo: modelNo },
+   		      success: function(specList) {
+   		        if(specList.length === 0){
+   		          $('#specArea').html('<span>등록된 상세옵션이 없습니다.</span>');
+   		        } else {
+   		          $.each(specList, function(i, spec){
+   		            var html = '<div class="mb-2">';
+   		            html += '<label>' + spec.specNm + '</label>: ';
+   		            html += '<span>' + (spec.specContent ? spec.specContent : '-') + '</span>';
+   		            html += '</div>';
+   		            $('#specArea').append(html);
+   		          });
+   		        }
+   		      }
+   		    });
+   		  }
+   		});
+
    	</script>
 </th:block>
 

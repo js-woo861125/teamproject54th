@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="content">
+		<div class="content-header">
+			<div>
+				<h2 class="content-title card-title" th:text="${title}"></h2>
+			</div>
+		</div>
+		<div class="card mb-4 col-8">
+			<div class="card-body">
+				<div class="row gx-4">
+					<!-- 사이드 메뉴 -->
+					<aside class="col-lg-3 border-end">
+						<nav class="nav nav-pills flex-column mb-4">
+							<a class="nav-link" th:href="@{/admin/productInfo/addCategory}">카테고리</a>
+							<a class="nav-link" th:href="@{/admin/productInfo/addBrand}">브랜드</a>
+							<a class="nav-link" th:href="@{/admin/productInfo/addItem}">품목</a>
+							<a class="nav-link" th:href="@{/admin/productInfo/addModel}">모델</a>
+							<a class="nav-link" th:href="@{/admin/productInfo/addBenefit}">전체혜택</a>
+							<a class="nav-link" th:href="@{/admin/productInfo/addCategorySpec}">카테고리별/상세스펙</a> 
+							<a class="nav-link active" aria-current="page" th:href="@{/admin/productInfo/addModelSpec}">모델별/상세스펙</a>
+						</nav>
+					</aside>
+	
+					<!-- 본문 영역 -->
+					<div class="col-lg-9">
+						<form id="modifyProductInfoForm" 
+							  th:action="@{/admin/productInfo/modifyModelSpec}" 
+							  method="post"
+							  th:object="${modelSpecInfo}">
+							<section class="content-body p-xl-4">
+							
+								<!-- Hidden -->
+	                            <input type="hidden" th:field="*{modelSpecNo}" />
+	                            <input type="hidden" th:field="*{managerId}" />
+								
+								<!-- 수정 영역 -->
+								<div class="col-12">
+									<div class="mb-4">
+										<label class="form-label fs-6" for="modelNo">모델</label> 
+										<select th:field="*{modelNo}" class="form-select text-center fs-7" id="modelNo" name="modelNo">
+											<option value="">모델을 선택해주세요</option>
+											<th:block th:if="${not #lists.isEmpty(modelList)}" th:each="l : ${modelList}">
+				                         		<option th:value="${l.modelNo}" th:text="${l.modelName}"></option>
+				                        	</th:block>
+										</select>
+									</div>
+									<div class="mb-4">
+										<label class="form-label fs-6" for="specNo">스펙</label> 
+										<select th:field="*{specNo}" class="form-select text-center fs-7" id="specNo" name="specNo">
+											<option value="">스펙을 선택해주세요</option>
+											<th:block th:if="${not #lists.isEmpty(categorySpecList)}" th:each="l : ${categorySpecList}">
+				                         		<option th:value="${l.specNo}" th:text="${l.specName}"></option>
+				                        	</th:block>
+										</select>
+									</div>
+									<div class="mb-4">
+										<label class="form-label fs-6" for="">상세스펙내용</label>
+										<input type="text" th:field="*{modelSpecName}" id="modelSpecName" name="modelSpecName" class="form-control" placeholder="상세스펙내용을 입력해주세요" />
+									</div>
+								</div>
+								<br/>
+								<!-- 버튼 -->
+								<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+									<div class="col-md-2 col-2 ms-auto">
+										<button type="submit" id="modifyModelSpecBtn" 
+												class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6">수정</button>
+									</div>
+									<div class="col-md-2 col-2">
+										<button type="reset" onclick="location.href='/admin/productInfo/modelSpecList'" 
+												class="btn btn-warning w-100 rounded font-lg hover-up text-white justify-content-center fs-6">수정취소</button>
+									</div>
+								</div>
+							</section>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</th:block>
+
+</html>

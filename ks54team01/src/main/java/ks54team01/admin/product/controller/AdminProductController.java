@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import ks54team01.admin.product.domain.AdminAddProduct;
+import ks54team01.admin.product.domain.AdminProduct;
 import ks54team01.admin.product.domain.AdminProductSpecContent;
 import ks54team01.admin.product.mapper.AdminProductMapper;
 import ks54team01.admin.product.service.AdminProductService;
@@ -45,8 +47,10 @@ public class AdminProductController {
 	
 	@GetMapping("/productList")
 	public String productList(Model model) {
+	
 		
 		model.addAttribute("title", "등록상품리스트");
+
 		
 		return "admin/product/productListView";
 	}
@@ -92,7 +96,15 @@ public class AdminProductController {
 	}
 	
 	
-	@PostMapping("/product/register")
+	
+	
+	
+	@GetMapping("/register")
+	public String registerProductView() {
+	    return "admin/product/productList";
+	}
+	
+	@PostMapping("/register")
 	public String registerProduct(
 	    @RequestParam("categoryNo") String categoryNo,
 	    @RequestParam("itemNo") String itemNo,
@@ -100,9 +112,7 @@ public class AdminProductController {
 	    @RequestParam("modelNo") String modelNo,
 	    @RequestParam("productName") String productName,
 	    @RequestParam("thumbnails") MultipartFile[] thumbnails,
-	    @RequestParam("details") MultipartFile[] details,
-	    @RequestParam("specNos") List<String> specNos,
-	    @RequestParam("specContents") List<String> specContents
+	    @RequestParam("details") MultipartFile[] details
 	) {
 	    AdminAddProduct addProduct = new AdminAddProduct();
 	    addProduct.setCategoryNo(categoryNo);
@@ -111,7 +121,8 @@ public class AdminProductController {
 	    addProduct.setModelNo(modelNo);
 	    addProduct.setProductName(productName);
 
-	    adminProductService.registerProduct(addProduct, thumbnails, details, specNos, specContents);
+	  
+	    adminProductService.registerProduct(addProduct, thumbnails, details);
 
 	    return "redirect:/admin/product/productList";
 	}

@@ -9,6 +9,7 @@ public class AdminEntList {
 	
 	private String ceoCode;
 	private String entId;
+	private String entCeoName;
 	private String entName;
 	private String entBrno;
 	private String ceoTelNo;

@@ -13,6 +13,7 @@ public class FileMetaData {
 	    private String fileOriginalName;
 	    private String fileNewName;
 	    private String filePath;
+	    private String fileExt;
 	    private Long fileSize;
 	    private String fileType;
 	    private String useStatus;

@@ -9,7 +9,7 @@
 	<th:block layout:fragment="jsFile">
 		<script>
 			/**
-			* 품목명 + 카테고리 중복체크
+			* 카테고리 + 품목명 중복체크
 			*/
 			$('#modifyItemBtn').click(function(){
 				const itemName = $('#itemName').val();
@@ -82,17 +82,17 @@
 	                          th:object="${itemInfo}">
 	                        <section class="content-body p-xl-4">
 	
-	                            <!-- hidden 필드 -->
+	                            <!-- Hidden -->
 	                            <input type="hidden" th:field="*{itemNo}" />
 	                            <input type="hidden" th:field="*{managerId}" />
 	
 	                            <!-- 수정 영역 -->
 	                            <div class="mb-4">
 	                                <label class="form-label fs-6" for="categoryNo">카테고리</label>
-	                                <select class="form-select text-center fs-7" id="categoryNo" name="categoryNo">
+	                                <select th:field="*{categoryNo}" class="form-select text-center fs-7" id="categoryNo" name="categoryNo">
 	                                    <option value="">카테고리를 선택해주세요</option>
 	                                    <th:block th:each="l : ${categoryList}">
-	                                        <option th:value="${l.categoryNo}" th:text="${l.smCategory}" th:selected="${l.categoryNo} == *{categoryNo}"></option>
+	                                        <option th:value="${l.categoryNo}" th:text="${l.smCategory}"></option>
 	                                    </th:block>
 	                                </select>
 	                            </div>

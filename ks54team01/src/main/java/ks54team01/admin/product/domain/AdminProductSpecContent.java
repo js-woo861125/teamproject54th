@@ -9,4 +9,5 @@ public class AdminProductSpecContent {
 	private String specNo;       
     private String specNm;       
     private List<String> detailList;  
+    private String specContent;
 }

@@ -16,6 +16,26 @@ public class CustomerWishListServiceImpl implements CustomerWishListService{
 	private final CustomerWishListMapper customerWishListMapper;
 	
 	@Override
+	public boolean removeMyWishLists(List<String> wishListNum) {
+		
+		int deleted = customerWishListMapper.removeMyWishLists(wishListNum);
+		
+		boolean isDel = deleted > 0 ? true : false;
+		
+		return isDel;
+	}
+	
+	@Override
+	public boolean removeMyWishList(String wishListNum) {
+		
+		int deleted = customerWishListMapper.removeMyWishList(wishListNum);
+		
+		boolean isDel = deleted > 0 ? true : false;
+		
+		return isDel;
+	}
+	
+	@Override
 	public List<CustomerWishList> getWishListCategory(String custId) {
 		List<CustomerWishList> wishListCategory = customerWishListMapper.getWishListCategory(custId);
 		return wishListCategory;

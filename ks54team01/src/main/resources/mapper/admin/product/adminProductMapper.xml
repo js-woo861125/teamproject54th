@@ -6,32 +6,26 @@
 <mapper
 	namespace="ks54team01.admin.product.mapper.AdminProductMapper">
 
-	<resultMap id="specContentMap"
-		type="ks54team01.admin.product.domain.AdminProductSpecContent">
-		<result property="specNo" column="spec_no" />
-		<result property="specNm" column="spec_nm" />
-		<collection property="detailList" ofType="string">
-			<result column="detail_value" />
-		</collection>
-	</resultMap>
-
-	<select id="loadSpecContent" resultMap="specContentMap">
-		SELECT
-		s.spec_no,
-		s.spec_nm,
-		d.detail_value
-		FROM
-		products_spec s
-		JOIN
-		products_spec_detail d ON s.spec_no = d.spec_no
-		WHERE
-		s.product_category_no = (
-		SELECT product_category_no
-		FROM model
-		WHERE model_no = #{modelNo}
-		)
-		AND s.use_status = '사용중'
-		ORDER BY s.spec_no, d.detail_value
+	<select id="loadSpecContent" resultType="ks54team01.admin.product.domain.AdminProductSpecContent">
+	    SELECT
+	        s.spec_no AS specNo,
+	        s.spec_nm AS specNm,
+	        (
+	            SELECT sc.spec_content
+	            FROM model_spec_content sc
+	            WHERE sc.model_no = #{modelNo}
+	              AND sc.spec_no = s.spec_no
+	              AND sc.use_status = '사용중'
+	            LIMIT 1
+	        ) AS specContent
+	    FROM
+	        products_spec s
+	    WHERE
+	        s.product_category_no = (
+	            SELECT product_category_no FROM model WHERE model_no = #{modelNo}
+	        )
+	      AND s.use_status = '사용중'
+	    ORDER BY s.spec_no
 	</select>
 
 	<insert id="insertProduct" parameterType="string">
@@ -94,21 +88,24 @@
 		AND brand_no = #{brandNo}
 	</select>
 
-	<select id="getModelInfoByNo" resultType="ProductInfoModel">
-		SELECT
-			model_no,
-			manager_id,
-			brand_no,
-			item_no,
-			product_category_no,
-			model_nm,
-			register_date,
-			revision_date
-		FROM
-			model
-		WHERE
-			model_no = #{modelNo}
+	<select id="getModelInfoByNo" resultType="ks54team01.admin.productInfo.domain.ProductInfoModel">
+	SELECT
+		model_no AS modelNo,
+		manager_id AS managerId,
+		brand_no AS brandNo,
+		item_no AS itemNo,
+		product_category_no AS categoryNo,
+		model_nm AS modelName,
+		register_date AS modelRegDate,
+		revision_date AS modelRevDate,
+		use_status AS useStatus
+	FROM
+		model
+	WHERE
+		model_no = #{modelNo}
 	</select>
+	
+	
 	<select id="loadCategoryList"
 		resultType="ks54team01.admin.productInfo.domain.ProductInfoCategory">
 		SELECT 
@@ -155,6 +152,8 @@
 	        AND m.product_category_no = #{categoryNo}
 	    GROUP BY 
 	        b.brand_no
+	    AND
+	    	b.use_status = '사용중'
 	</select>
 	
 	 <select id="loadModelList" resultType="ks54team01.admin.product.domain.AdminProductInfoModel">

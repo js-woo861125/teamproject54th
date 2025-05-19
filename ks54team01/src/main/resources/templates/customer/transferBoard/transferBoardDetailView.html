@@ -8,14 +8,116 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
-	
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	</th:block>
 	
 	<th:block layout:fragment="jsScript">
+		<script>
+		$('#daumPostBtn').click(function(e){
+			new daum.Postcode({
+	            oncomplete: function(data) {
+	                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+	                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+	                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+	                var addr = ''; // 주소 변수
+	                var extraAddr = ''; // 참고항목 변수
+
+	                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+	                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+	                    addr = data.roadAddress;
+	                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+	                    addr = data.jibunAddress;
+	                }
+
+	                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+	                if(data.userSelectedType === 'R'){
+	                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+	                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+	                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+	                        extraAddr += data.bname;
+	                    }
+	                    // 건물명이 있고, 공동주택일 경우 추가한다.
+	                    if(data.buildingName !== '' && data.apartment === 'Y'){
+	                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+	                    }
+	                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+	                    if(extraAddr !== ''){
+	                        extraAddr = ' (' + extraAddr + ')';
+	                    }
+	                    // 조합된 참고항목을 해당 필드에 넣는다.
+	                    document.getElementById("delAddr").value = extraAddr;
+	                
+	                } else {
+	                    document.getElementById("delAddr").value = '';
+	                }
+
+	                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+	                document.getElementById('delZipNo').value = data.zonecode;
+	                document.getElementById("delAddr").value = addr;
+	                // 커서를 상세주소 필드로 이동한다.
+	                document.getElementById("delDaddr").focus();
+	            }
+	        }).open();
+		});
+		</script>
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
+	<!-- 모트스트랩 start -->
 	<th:block layout:fragment="customContents">
+		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<form id="addDeliveryForm" th:action="@{/customer/delivery/addDeliveryList}" method="post">
+						<div class="modal-header">
+							<h5 class="modal-title" id="staticBackdropLabel">양도 받기 신청서 작성!</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="form-group col-md-6">
+									<input placeholder="배송지명" class="form-control" id="delNm" name="delNm" type="text">
+								</div>
+								<div class="form-group col-md-6 mt-10">
+						        	<button type="button" id="daumPostBtn" class="btn col-12">주소찾기</button>
+						    	</div>
+								<div class="form-group col-md-12 d-flex">
+									<div class="col-sm-8">
+										<input placeholder="주소" class="form-control" id="delAddr" name="delAddr" type="text" readonly>
+									</div>
+									<div class="col-sm-4 pl-10">
+										<input placeholder="우편번호" class="form-control" id="delZipNo" name="delZipNo" type="text" readonly>
+									</div>
+								</div>
+								<div class="form-group col-md-12">
+									<input placeholder="상세주소" class="form-control" id="delDaddr" name="delDaddr" type="text">
+								</div>
+								<div class="form-group col-md-12">
+					       			<input placeholder="연락처" class="form-control" id="recipientPhone" name="recipientPhone" type="text" maxlength="13">
+					   				</div>
+					   			<div class="form-group col-md-12">
+					      			<input placeholder="요청사항" class="form-control" id="delRequest" name="delRequest" type="text">
+					  			</div>
+					   			<div class="form-group col-md-12">
+									<div class="custome-checkbox">
+	                  					<input class="form-check-input" type="checkbox" id="agreeCheckbox" name="agreeCheckbox">
+	                   					<label class="form-check-label mr-10" for="agreeCheckbox"><span>기본배송지로 설정</span></label>
+										<input type="hidden" name="primaryLocation" id="primaryLocationChk">
+									</div>
+									<input type="hidden" name="custId" id="custId" value="personalcustid2">
+									<input type="hidden" name="delNo" id="delNo">
+					  			</div>
+							</div>
+						</div>
+		 				<div class="modal-footer">
+			     			<button id="addDeliveryBtn" type="submit" class="btn btn-primary">등록</button>
+			   			</div>
+					</form>
+		  		</div>
+			</div>
+		</div>
+		<!-- 모트스트랩 end -->
         <div class="container mb-30">
             <div class="row">
                 <div class="col-xl-11 col-lg-12 m-auto">
@@ -84,13 +186,11 @@
                             </div>
                         </div>
                         <div class="col-xl-3 primary-sidebar sticky-sidebar mt-30">
-                            <div class="sidebar-widget widget-category-2 mb-30">
-                                <h5 class="section-title style-1 mb-30">💪 양도 신청하기</h5>
-                                <ul>
-                                    <li>
-                                        <a href="shop-grid-right.html">버튼으로 수정</a>
-                                    </li>
-                                </ul>
+                            <div class="sidebar-widget widget-category-2 mb-30 text-center">
+                                <h5 class="text-center section-title style-1 mb-30">💪 양도 신청하기</h5>
+								<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+									양도 신청서 작성하기
+								</button>
                             </div>
                         </div>
                     </div>
