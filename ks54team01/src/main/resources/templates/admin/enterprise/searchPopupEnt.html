@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/defaultPopUp}">
+	  
+<head>
+</head>
+
+<th:block layout:fragment="content">
+      
+	<div class="card mb-4">
+		<header class="card-header">
+            <form th:action="@{/admin/enterprise/searchPopupEnt}" method="get">
+                <div class="row gx-3">
+           			<div class="col-lg-2 col-md-3 col-12">
+               			<select class="form-select" name="searchKey">
+		                   <option value="entBrNo" th:selected="${searchKey == 'entBrNo'}">사업자번호</option>
+		                   <option value="entName" th:selected="${searchKey == 'entName'}">입점업체명</option> 
+               			</select>
+           			</div>
+           				<div class="col-lg-4 col-md-5">
+               				<input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
+           				</div>
+           				<div class="col-lg-1 col-md-1">
+							<button type="submit" class="form-control btn" style="font-size: 0.8rem;">검색</button>                   
+           				</div>      		
+				</div>
+			</form> 
+		</header>
+        
+
+		<div class="card-body">
+			<div class="table-responsive">
+				<div class="table-responsive">
+					<table class="table align-middle table-nowrap mb-0">
+						<thead class="table-light text-center">
+							<tr>		
+								<th class="align-middle" scope="col">대표코드</th>
+								<th class="align-middle" scope="col">사업자번호</th>
+								<th class="align-middle" scope="col">입점업체명</th>
+								<th class="align-middle" scope="col">대표자</th>		
+								<th class="align-middle" scope="col">연락처</th>
+								<th class="align-middle" scope="col">등록일자</th>
+							</tr>
+						</thead>
+		                <tbody class="text-center">	
+						<th:block th:if="${!#lists.isEmpty(searchPopupEntList)}" th:each="l : ${searchPopupEntList}">
+							<tr>	
+								<td><a class="fw-bold" th:text="${l.ceoCode}">entCeoNo</a></td>
+								<td th:text="${l.entBrno}">402-00-00000</td>
+								<td th:text="${l.entName}">(주)홍홍상사></td>
+								<td th:text="${l.entCeoName}">대표자명</td>
+								<td th:text="${l.ceoTelNo}">010-0001-0001</td>
+								<td th:text="${l.regDate}">010-0001-0001</td>
+							</tr>	
+						</th:block>	
+						<th:block th:unless="${!#lists.isEmpty(searchPopupEntList)}">
+	                		<tr>
+	                		<td colspan="6" class="text-center">조회된 업체가 없습니다.</td>
+	                		</tr>
+           				 </th:block>
+						 
+					 	</tbody>                
+					</table>       
+				</div>
+			</div>
+		</div>
+	</div>
+
+            
+</th:block>
+		
+    
+        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/vendors/select2.min.js"></script>
+        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+</html>
