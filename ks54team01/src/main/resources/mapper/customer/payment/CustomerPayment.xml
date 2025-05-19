@@ -3,7 +3,72 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace="ks54team01.customer.payment.mapper.CustomerPayment">
+  <mapper namespace="ks54team01.customer.payment.mapper.CustomerPaymentMapper">
   
+  	<resultMap type="CustomerPayment" id="paymentResultMap">
+  		<id 	column="payment_completed_no" 	property="paymentCompletedNo" />
+  		<result column="cust_id"	property="custId" />
+  		<result column="sell_products_no"	property="sellProdNo" />
+  		<result column="rental_contract_no"	property="rentalContractNo" />
+  		<result column="pay_info_no"	property="paymentInfoNo" />
+  		<result column="ent_ceo_no"	property="entCeoNo" />
+  		<result column="ent_emp_id"	property="entEmpNo" />
+  		<result column="manager_id"	property="managerId" />
+  		<result column="payment_type"	property="paymentType" />
+  		<result column="contract_details"	property="contractDetail" />
+  		<result column="payment_details"	property="paymentDetail" />
+  		<result column="payment_count"	property="paymentCount" />
+  		<result column="product_unit_price"	property="prodUnitPrice" />
+  		<result column="total_price"	property="totalPrice" />
+  		<result column="payment_completed_date"	property="paymentCompletedDate" />
+  		<result column="payment_status"	property="paymentStatus" />
+  		<result column="revision_date"	property="revDate" />
+  		<result column="products_nm"	property="prodNm" />
+  	</resultMap>
+	
+	
+	<insert id="addPayment" parameterType="CustomerPayment">
+		/* 결제시 payment테이블에 값 등록 */
+		insert into payment
+			(payment_completed_no, cust_id, sell_products_no, rental_contract_no, pay_info_no, ent_ceo_no, ent_emp_id, manager_id, payment_type, contract_details, 
+			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date)
+		values
+			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, '일시불', 'pay_info_3', 'ent_ceo_1', 'entempid1', 'managerid1', #{paymentType}, '일시불',
+			 '일시불판매', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), '정상결제상태', NOW())
+	</insert>
+	
+	
+	<select id="getPaymentList" resultMap="paymentResultMap">
+		select
+			pd.products_nm,
+			p.total_price,
+			p.rental_contract_no,
+			p.payment_completed_date
+		from
+			payment p inner join sell_products sp 
+			on p.sell_products_no  = sp.sell_products_no
+			inner join products pd
+			on sp.products_no = pd.products_no
+		where
+			p.cust_id = #{custId}
+		group by
+			CASE
+				WHEN p.rental_contract_no = '일시불판매' THEN CONCAT(p.rental_contract_no, '_', p.payment_completed_no)
+				ELSE p.rental_contract_no
+			END
+		order by
+			p.payment_completed_date desc
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
   </mapper>

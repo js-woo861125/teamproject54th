@@ -27,13 +27,13 @@
                 <div class="col-md-4 ml-5">
                     <input type="text" name="searchValue" th:value="${searchValue}" placeholder=" <입점업체 조회 후 검색해주세요> " class="form-control" />
                 </div>
-                <div class="col-md-2 ml-5">
-                    <button type="submit" class="form-control btn btn-outline-dark"> 🔎검색</button>
+                <div class="col-md-1 ml-5" >
+                    <button type="submit" class="form-control btn btn-sm btn-outline-dark center-text"  style="font-size: 1.2rem;"> 🔎검색</button>
                 </div>
-                <div class="col-md-2 ml-5">
-                    <button type="button" class="form-control btn btn-outline-info"
-                            th:onclick="'javascript:openEnterPricseList(\'' + @{/admin/enterprise/enterpriseListView} + '\'); return false;'">
-                        <i class="bi bi-list-ul"></i>📚 업체 조회
+                <div class="col-sm-2 ml-5">
+                    <button type="button" class="form-control btn btn-outline-dark center-text" style="font-size: 1.2rem;"
+                            th:onclick="'javascript:openEnterPricseList(\'' + @{/admin/enterprise/searchPopup} + '\'); return false;'">
+                        <i class="bi bi-list-ul ml-40">📚업체조회</i>
                     </button>
                 </div>
             </div>
@@ -297,7 +297,7 @@
 	<script th:inline="javascript">
 	
 	    function openEnterPricseList(url) {
-	        window.open(url, 'entListPopup', 'width=1024,height=768,scrollbars=yes');
+	        window.open(url, 'entListPopup', 'width=1250,height=768,scrollbars=yes');
 	    }
 	</script>
             

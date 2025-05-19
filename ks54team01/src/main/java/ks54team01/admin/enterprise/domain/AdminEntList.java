@@ -15,6 +15,8 @@ public class AdminEntList {
 	private String ceoTelNo;
 	private String entContractStatus;
 	private LocalDate contractEndDate;
-
+	
+	private LocalDate regDate;
+	
 }
 

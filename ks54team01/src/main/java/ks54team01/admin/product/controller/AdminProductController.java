@@ -33,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/admin/product")
 @Slf4j
 public class AdminProductController {
+	
 	@Value("${file.path}")
 	private String fileRealPath;
 	
@@ -55,12 +56,39 @@ public class AdminProductController {
 		return "admin/product/productListView";
 	}
 	
+	
+	
 	@GetMapping("/addProduct")
 	public String addProduct(Model model) {
 		
 		
 		return "admin/product/addProductView";
 	}
+	
+	@PostMapping("/addProduct")
+	public String addProduct(
+	    @RequestParam("categoryNo") String categoryNo,
+	    @RequestParam("itemNo") String itemNo,
+	    @RequestParam("brandNo") String brandNo,
+	    @RequestParam("modelNo") String modelNo,
+	    @RequestParam("productName") String productName,
+	    @RequestParam("mainImage") MultipartFile[] mainImage,
+	    @RequestParam("thumbnails") MultipartFile[] thumbnails,
+	    @RequestParam("details") MultipartFile[] details
+	) {
+	    AdminAddProduct addProduct = new AdminAddProduct();
+	    addProduct.setCategoryNo(categoryNo);
+	    addProduct.setItemNo(itemNo);
+	    addProduct.setBrandNo(brandNo);
+	    addProduct.setModelNo(modelNo);
+	    addProduct.setProductName(productName);
+
+	  
+	    adminProductService.addProduct(addProduct, mainImage, thumbnails, details);
+
+	    return "redirect:/admin/product/productList";
+	}
+	
 	
 	@GetMapping("/categoryList")
 	@ResponseBody
@@ -95,36 +123,7 @@ public class AdminProductController {
 	    return adminProductMapper.loadSpecContent(modelNo);
 	}
 	
-	
-	
-	
-	
-	@GetMapping("/register")
-	public String registerProductView() {
-	    return "admin/product/productList";
-	}
-	
-	@PostMapping("/register")
-	public String registerProduct(
-	    @RequestParam("categoryNo") String categoryNo,
-	    @RequestParam("itemNo") String itemNo,
-	    @RequestParam("brandNo") String brandNo,
-	    @RequestParam("modelNo") String modelNo,
-	    @RequestParam("productName") String productName,
-	    @RequestParam("thumbnails") MultipartFile[] thumbnails,
-	    @RequestParam("details") MultipartFile[] details
-	) {
-	    AdminAddProduct addProduct = new AdminAddProduct();
-	    addProduct.setCategoryNo(categoryNo);
-	    addProduct.setItemNo(itemNo);
-	    addProduct.setBrandNo(brandNo);
-	    addProduct.setModelNo(modelNo);
-	    addProduct.setProductName(productName);
 
-	  
-	    adminProductService.registerProduct(addProduct, thumbnails, details);
-
-	    return "redirect:/admin/product/productList";
-	}
+	
 	
 }

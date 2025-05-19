@@ -1,5 +1,6 @@
 package ks54team01.customer.payment.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpSession;
+import ks54team01.customer.member.domain.CommonMember;
+import ks54team01.customer.payment.domain.CustomerPayment;
 import ks54team01.customer.payment.service.CustomerPaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,23 +25,45 @@ public class CustomerPaymentController {
 	
 	private final CustomerPaymentService customerPaymentService;
 
-	@GetMapping("/addPayment")
-	public String getAddPayment() {
+	
+	@GetMapping("/paymentList")
+	public String getPaymentList(HttpSession session, Model model) {
 		
-		return "customer/payment/paymentView";
+		CommonMember loginMember = (CommonMember) session.getAttribute("loginMember");
+		
+		if(loginMember == null) {
+			return "redirect:/customer/login/memberLogin";
+		}
+		
+		String custId = loginMember.getMemberId();
+		
+		
+		List<CustomerPayment> PaymentList = customerPaymentService.getPaymentList(custId);
+		
+		model.addAttribute("title", "주문 목록");
+		model.addAttribute("PaymentList", PaymentList);
+		
+		
+		return "customer/myPage/myPaymentListView";
 	}
+	
+	
+	@GetMapping("/addPayment")
+	public String addPayment(CustomerPayment customerPayment) {
+		
+		customerPaymentService.addPayment(customerPayment);
+		
+		return "redirect:/customer/payment/paymentList";
+	}
+	
 	
 	
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/success")
-	public String paymentSuccess( @RequestParam("paymentKey") String paymentKey
-					            , @RequestParam("orderId") String orderId
-					            , @RequestParam("amount") Long amount
-					            , @RequestParam("sellProductsNo") String sellProductsNo
-					            , @RequestParam("unitPrice") String unitPrice
-					            , @RequestParam("quantity") String quantity
-					            , Model model
-					            , RedirectAttributes reAttr){
+	public String paymentSuccess( @RequestParam("paymentKey") String paymentKey, @RequestParam("orderId") String orderId
+					            , @RequestParam("amount") Long amount, @RequestParam("sellProductsNo") String sellProductsNo
+					            , @RequestParam("unitPrice") String unitPrice, @RequestParam("quantity") String quantity
+					            , Model model, RedirectAttributes reAttr, HttpSession session){
 
         log.info("paymentKey: {} ", paymentKey);
         log.info("orderId: {} ", orderId);
@@ -46,6 +72,8 @@ public class CustomerPaymentController {
         log.info("unitPrice: {} ", unitPrice);
         log.info("quantity: {} ", quantity);
         
+        CommonMember loginMember = (CommonMember) session.getAttribute("loginMember");
+        String custId = loginMember.getMemberId();
         
         
         Map<String, Object> responseMap = customerPaymentService.confirmPaymemt(paymentKey, orderId, amount);
@@ -56,11 +84,16 @@ public class CustomerPaymentController {
         
         int totalAmount = (int) responseMap.get("totalAmount");
         log.info("totalAmount : {}", totalAmount);
+        log.info("custId : {}", custId);
         
         
-        reAttr.addAttribute("sellProductsNo", sellProductsNo);
-        reAttr.addAttribute("provider", provider);
+        reAttr.addAttribute("sellProdNo", sellProductsNo);
+        reAttr.addAttribute("paymentType", provider);
+        reAttr.addAttribute("custId", custId);
+        reAttr.addAttribute("totalPrice", totalAmount);
+        reAttr.addAttribute("paymentCount", quantity);
+        reAttr.addAttribute("prodUnitPrice", unitPrice);
         
-        return "redirect:/customer/product/productDetail";
+        return "redirect:/customer/payment/addPayment";
 	}
 }

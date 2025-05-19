@@ -17,8 +17,8 @@ import ks54team01.admin.productInfo.domain.ProductInfoBrand;
 import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.admin.productInfo.domain.ProductInfoItem;
 import ks54team01.admin.productInfo.domain.ProductInfoModel;
-import ks54team01.common.file.domain.FileMetaData;
 import ks54team01.common.file.service.FileService;
+import ks54team01.common.file.service.impl.FileServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,10 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class AdminProductServiceImpl implements AdminProductService{
-		
+
+		private final FileServiceImpl fileServiceImpl;	
 		private final AdminProductMapper adminProductMapper;
 		private final FileService fileService;
-		
+
 	
 		@Override
 		public List<AdminProduct> getProductList() {
@@ -63,7 +64,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 		}
 		
 		@Override
-		public void registerProduct(AdminAddProduct product, MultipartFile[] thumbnails, MultipartFile[] details) {
+		public void addProduct(AdminAddProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails, MultipartFile[] details) {
 			
 			// Pk 랜덤 생성
 			String productNo = UUID.randomUUID().toString().replace("-", "");
@@ -87,9 +88,10 @@ public class AdminProductServiceImpl implements AdminProductService{
 	        //  상품 정보 DB에 등록
 	        adminProductMapper.insertProduct(product);
 	
-	        //  파일 메타데이터 DB에 등록
-	        fileService.addFiles(thumbnails, "thumbnail", productNo);
-	        fileService.addFiles(details, "detail", productNo);
+	        //  파일 메타데이터 DB에 등록   
+	        fileService.addFiles(mainImage, "main", product.getModelNo());
+	        fileService.addFiles(thumbnails, "thumbnail", product.getModelNo());
+	        fileService.addFiles(details, "detail", product.getModelNo());
         
  
 		}

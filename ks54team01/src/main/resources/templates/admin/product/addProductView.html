@@ -23,7 +23,7 @@
 			</div>
 		</div>
 		<div class="col-lg-6">
-			<form class="user" th:action="@{/admin/product/register}"
+			<form class="user" th:action="@{/admin/product/addProduct}"
 				method="post" enctype="multipart/form-data">
 
 				<div class="card mb-4">
@@ -87,11 +87,25 @@
 				</div>
 				<div class="card mb-4">
 					<div class="card-header">
-						<h4>제품 썸네일</h4>
+						<h4>대표사진</h4>
 					</div>
 					<div class="card-body">
 						<div class="col-md-9">
 							<label for="files" class="form-label">대표사진</label>
+							<div class="input-group">
+								<input type="file" id="files1" name="mainImage"
+									class="form-control">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card mb-4">
+					<div class="card-header">
+						<h4>썸네일</h4>
+					</div>
+					<div class="card-body">
+						<div class="col-md-9">
+							<label for="files" class="form-label">썸네일</label>
 							<div class="input-group">
 								<input type="file" id="files1" name="thumbnails"
 									class="form-control" multiple>
@@ -120,6 +134,14 @@
 		
 			
 		<div class="row col-lg-4">
+			<div class="card">
+				<div class="card-header">
+					<h4>대표 사진 미리보기</h4>
+				</div>
+				<div class="card-body">
+					<div class="row" id="previewmainImage"></div>
+				</div>
+			</div>
 			<div class="card">
 				<div class="card-header">
 					<h4>상품 썸네일 미리보기</h4>
@@ -157,7 +179,22 @@
 <!-- content-main end// -->
 <th:block layout:fragment="jsScript">
 	<script>
- // 썸네일(대표사진) 미리보기 & 삭제
+	
+	// 대표사진 미리보기
+	$('#mainImage').change(function(){
+	    $('#mainImagePreview').empty();
+	    const files = this.files;
+	    if (files.length > 0) {
+	        const reader = new FileReader();
+	        reader.onload = function (e) {
+	            const img = $('<img />', {src: e.target.result, alt: '대표사진'});
+	            $('#mainImagePreview').append(img);
+	        }
+	        reader.readAsDataURL(files[0]);
+	    }
+	});
+	
+ // 썸네일 미리보기 & 삭제
    	$('#files1').change(function(){
    	    $('#previewThumnail').empty();
    	    const files = this.files;
