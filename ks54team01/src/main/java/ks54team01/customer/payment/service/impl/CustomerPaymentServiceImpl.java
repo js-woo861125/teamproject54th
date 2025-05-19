@@ -7,7 +7,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ks54team01.customer.payment.domain.CustomerPayment;
+import ks54team01.customer.payment.mapper.CustomerPaymentMapper;
 import ks54team01.customer.payment.service.CustomerPaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +32,30 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 	private final String SECRET_KEY = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
 	
 	private final ObjectMapper objectMapper;
+	
+	private final CustomerPaymentMapper customerPaymentMapper;
+	
+	
+	
+	@Override
+	public List<CustomerPayment> getPaymentList(String custId) {
+		
+		List<CustomerPayment> customerPayment = customerPaymentMapper.getPaymentList(custId);
+		
+		return customerPayment;
+	}
+	
+	
+	@Override
+	public void addPayment(CustomerPayment customerPayment) {
+
+		String paymentCompletedNo = "payCompleteNo_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+		customerPayment.setPaymentCompletedNo(paymentCompletedNo);
+		
+		customerPaymentMapper.addPayment(customerPayment);
+	}
+	
+	
 	
 	@Transactional(timeout = 300, rollbackFor = Exception.class)
 	@Override
