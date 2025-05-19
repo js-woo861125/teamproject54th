@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{customer/layout/myPageDefault}">
+
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+	
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<script>
+			/**
+			 * 주소입력
+			 */
+			$('#daumPostBtn').click(function(e){
+				new daum.Postcode({
+		            oncomplete: function(data) {
+		                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+		
+		                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+		                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+		                var addr = ''; // 주소 변수
+		                var extraAddr = ''; // 참고항목 변수
+		
+		                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+		                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+		                    addr = data.roadAddress;
+		                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+		                    addr = data.jibunAddress;
+		                }
+		
+		                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+		                if(data.userSelectedType === 'R'){
+		                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+		                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+		                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+		                        extraAddr += data.bname;
+		                    }
+		                    // 건물명이 있고, 공동주택일 경우 추가한다.
+		                    if(data.buildingName !== '' && data.apartment === 'Y'){
+		                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+		                    }
+		                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+		                    if(extraAddr !== ''){
+		                        extraAddr = ' (' + extraAddr + ')';
+		                    }
+		                    // 조합된 참고항목을 해당 필드에 넣는다.
+		                    document.getElementById("custAddr").value = extraAddr;
+		                
+		                } else {
+		                    document.getElementById("custAddr").value = '';
+		                }
+		                document.getElementById("memberZip").value = data.zonecode;
+		                document.getElementById("custAddr").value = addr;
+		                $('#custDaddr').prop('disabled', false);
+		                // 커서를 상세주소 필드로 이동한다.
+		                document.getElementById("custDaddr").focus();
+		            }
+		        }).open();
+			});
+			
+			/**
+			 * 전화번호 조합
+			 */
+			function setPhoneValue() {
+			    const phone = `${$('#custPhone1').val()}-${$('#custPhone2').val()}-${$('#custPhone3').val()}`;
+			    $('#custPhone').val(phone);
+			}
+			
+			/**
+		     * email 유효성검증 및 인증코드 전송
+		     */
+		    function sendVerificationCode() {
+		    	const custEmail = $('#custEmail').val();
+	
+		        if (!custEmail) {
+		            alert("이메일을 정확히 입력해주세요.");
+		            return;
+		        }
+		        
+		        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		        
+		        if (!regex.test(custEmail)) {
+		            alert("이메일 형식이 올바르지 않습니다.");
+		            return;
+		        }
+	
+		        
+		        $.ajax({
+		            url: '/customer/register/sendCode',
+		            method: 'POST',
+		            data:{
+		            	email: custEmail
+		            },
+		            dataType: 'JSON',
+		            success: function(response) {
+		                if (response.status === 'success') {
+		                    alert(response.message);
+		                    $('#verify-section').show();
+		                } else {
+		                    alert(response.message);
+		                }
+		            },
+		            error: function() {
+		                alert("서버와의 통신 오류입니다.");
+		            }
+		        });
+		    }
+	
+		        
+		   	/**
+		   	 * email 인증코드 확인
+		   	 */
+		   	let isEmailVerified = false;
+		   	
+		   	function verifyCodeSubmit() {
+		        const custEmail = $('#custEmail').val();	       
+		        const code = $('#verifyCode').val();
+		        
+		        if (!code) {
+		            alert("인증코드를 입력하세요.");
+		            return;
+		        }
+	
+		        $.ajax({
+		            url: '/customer/register/verifyCode',
+		            method: 'POST',
+		            data: {
+		                email: custEmail,
+		                code: code
+		            },
+		            success: function(response) {
+		            	if (response.status === 'success') {
+		            	    alert("이메일 인증에 성공했습니다.");
+		            	    isEmailVerified = true;
+		            	    document.getElementById('verifyCode').disabled = true;
+		            	} else {
+		                    alert("인증코드가 일치하지 않습니다.");
+		                }
+		            },
+		            error: function() {
+		                alert("인증 확인 요청 중 오류가 발생했습니다.");
+		            }
+	       	 	});
+	    	}
+		    
+		    /**
+			 * email 인증여부 검증
+			 */	
+		    function validateEmailVerification() {
+		    	 if (!isEmailVerified) {
+				        if(!isEmailVerified) {
+				            alert("이메일 인증을 완료해주세요.");
+				            return false;
+				        }
+		        }
+		        return true;
+		    }
+		    
+		    /**
+			 * 비밀번호 유효성 검증
+			 */	
+		    function validatePasswordFields() {
+		    	const currentPw = $('input[name="currentPw"]').val().trim();
+		        const newPw = $('input[name="newPw"]').val().trim();
+		        const newPwConfirm = $('input[name="newPwConfirm"]').val().trim();
+		        
+		        if (!currentPw) {
+		            alert('기존 비밀번호를 입력해주세요.');
+		            $('input[name="currentPw"]').focus();
+		            return false;
+		        }
+		        
+		        if (newPw || newPwConfirm) {
+		
+		            if (!newPw) {
+		                alert('새 비밀번호를 입력해주세요.');
+		                $('input[name="newPw"]').focus();
+		                return false;
+		            }
+		            if (!newPwConfirm) {
+		                alert('새 비밀번호 확인을 입력해주세요.');
+		                $('input[name="newPwConfirm"]').focus();
+		                return false;
+		            }
+		            if (newPw !== newPwConfirm) {
+		                alert('새 비밀번호와 확인이 일치하지 않습니다.');
+		                $('input[name="newPwConfirm"]').focus();
+		                return false;
+		            }
+		        }
+		        return true;
+		    }
+			
+		    
+		    /**
+			 * input 유효성검증
+			 */
+			function validateRequiredFields() {
+			    const requiredFields = ['memberPw', 'custName', 'custBrdt','custPhone1', 'custPhone2', 'custEmail', 'custAddr', 'custDaddr'];
+			    for (let field of requiredFields) {
+			        const input = $(`#${field}`);
+			        
+			        if (!input) {
+			            console.warn(`Element not found: ${field}`);
+			            continue;
+			        }
+			        if (!input.val().trim()) {
+			            alert(`${input.attr('placeholder')} 필수 입력항목입니다.`);
+			            input.focus();
+			            return false;
+			        }
+			    }
+			    return true;
+			}
+		    
+			/**
+		     * 검증유형별 함수 실행
+		     */
+		    function validateForm() {
+		        if (!validateRequiredFields()) return false;
+		        if (!validateEmailVerification()) return false;
+		        if (!validatePasswordFields()) return false;
+	
+		        // 기업회원
+		        const isCorpMember = $('#memberType').val() === '기업고객';
+		        
+		        if (isCorpMember) {
+		            if (!validateBrno()) return false;
+		            if (!validateCorpName()) return false;
+		        }
+		        
+		        setPhoneValue();
+		        return true;
+		    }
+			
+		    /**
+		     * 폼 제출 및 추가 데이터 조합
+		     */
+		     $('#customerModifyBtn').click(function(e) {
+	    	    e.preventDefault();
+	
+	    	    if (validateForm()) {
+	    	        
+	    	        //$('#customerModifyForm').submit();
+	    	    }
+	    	});
+			
+		    /**
+			 * 회원탈퇴
+			 */	
+		    function confirmWithdrawal() {
+		        if (confirm("정말로 회원 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.")) {
+		            window.location.href = "/customer/main";
+		        }
+		    }
+		</script>
+	</th:block>
+	
+	 <!-- 페이지 삽입 공간 -->
+	<th:block layout:fragment="customContents">
+		<div class="container">
+    		<div class="row">
+		        <div class="col-xl-10 col-lg-12 col-md-12">
+		            <div>
+	                    <div class="d-flex">
+	                        <h3 class="mb-30" th:text="${title}"></h3>
+	                    </div>
+	                    <div>
+                    	<div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+						<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+	                        <form th:action="@{/customer/member/myAccount}" id="customerModifyForm" name="customerModifyForm" class="mx-auto" th:object="${memberInfo}" method="post">
+	                        	<div class="row">
+	                        		<input type="hidden" id="memberType" th:field="*{memberType}" />
+		                            <div class="col-md-6 mb-3">
+		                                <label class="form-label" for="memberId">아이디</label>
+		                                <input type="text" class="form-control" th:field="*{memberId}" readonly />
+		                            </div>
+		                            <div class="col-md-6 mb-3">
+		                                <label class="form-label" for="custName">이름</label>
+		                                <input type="text" class="form-control" th:field="*{custName}" required />
+		                            </div>
+	                        	</div>
+	                        	<div class="row">
+		                            <div class="col-md-6 mb-3">
+		                                <label class="form-label" for="custBrdt">생년월일</label>
+		                                <input type="text" class="form-control" th:field="*{custBrdt}" placeholder="생년월일"
+		                                       onfocus="this.type='date'; this.max = new Date().toISOString().split('T')[0];"
+		                                       onblur="if(this.value===''){this.type='text'}" required />
+		                            </div>
+		                            <div class="col-md-6 mb-3">
+		                                <label class="form-label" for="custPhone">연락처</label>
+		                                <input type="hidden" id="custPhone" name="custPhone"/>
+			                                <div class="d-flex gap-2">
+			                                    <input type="text" class="form-control" id ="custPhone1" name="custPhone1" th:value="${custPhone1}" readonly />
+			                                    <input type="text" class="form-control" id ="custPhone2" name="custPhone2" th:value="${custPhone2}" maxlength="4" />
+			                                    <input type="text" class="form-control" id ="custPhone3" name="custPhone3" th:value="${custPhone3}" maxlength="4" />
+			                                </div>
+		                            </div>
+	                            </div>
+	                            <div class="row">
+		                            <div class="col-md-6 mb-3">
+		                                <label class="form-label">주소</label>
+		                                <div class="d-flex align-items-center mb-2">
+		                                    <input type="text" class="form-control me-2" id="memberZip" name="memberZip" placeholder="우편번호" readonly disabled />
+		                                    <button type="button" id="daumPostBtn" class="btn btn-outline-secondary py-1 px-2">우편번호찾기</button>
+		                                </div>
+		                                <input type="text" class="form-control mb-2" th:field="*{custAddr}" placeholder="기본주소" readonly />
+		                                <input type="text" class="form-control" th:field="*{custDaddr}" placeholder="상세주소" />
+		                            </div>
+		                            <!-- 기업고객 추가정보 -->
+		                            <div id="corpCustomerInfo" class="col-md-6 mb-3 collapse" th:classappend="${memberInfo.memberType} == '기업고객' ? ' show' : ''">
+		                                <label class="form-label">사업자 정보</label>
+		                                <input type="text" class="form-control mb-2" th:field="*{corpBrno}" placeholder="사업자번호" />
+		                                <input type="text" class="form-control" th:field="*{corpName}" placeholder="상호명" />
+		                            </div>
+	                            </div>
+	                            <div class="row">
+		                            <div class="col-md-6 mb-3">
+		                                <label class="form-label" for="custEmail">이메일</label>
+		                                <div class="input-group">
+								            <input type="email" class="form-control" th:field="*{custEmail}" placeholder="example@domain.com" />
+								            <button type="button" class="btn btn-outline-secondary py-1 px-2" onclick="sendVerificationCode()">인증요청</button>
+								        </div>
+							        </div>
+									<div class="row" id="verify-section" style="display:none;">
+									    <div class="col-md-6 mb-3">
+									        <label class="form-label" for="verifyCode">인증코드 입력</label>
+									        <div class="input-group">
+									            <input type="text" class="form-control" id="verifyCode" name="verifyCode" placeholder="인증코드 입력" />
+									            <button type="button" class="btn btn-outline-secondary py-1 px-2" onclick="verifyCodeSubmit()">확인</button>
+									        </div>
+									    </div>
+									</div>
+	                            </div>
+	                            <div class="row">
+		                            <div class="col-md-6 mb-3">
+		                                <label class="form-label" for="memberPw">비밀번호</label>
+		                                <input type="password" class="form-control" th:field="*{memberPw}" name="currentPw" placeholder="기존 비밀번호" />
+		                            </div>
+		                      	</div>
+	                            <div class="row">
+		                            <div class="col-md-6 mb-3">
+		                                <input type="password" class="form-control" id="newPw" name="newPw" placeholder="새 비밀번호 (**변경시)" />
+		                            </div>
+		                            <div class="col-md-6 mb-3">
+		                                <input type="password" class="form-control" id="newPwConfirm" name="newPwConfirm" placeholder="새 비밀번호 확인 (**변경시)" />
+		                            </div>
+	                            </div>
+	                            <div class="d-flex justify-content-end mb-2">
+								    <a th:href="@{#}" onclick="confirmWithdrawal()" class="text-danger small text-decoration-underline">회원탈퇴</a>
+								</div>
+                            	<div class="d-flex justify-content-end">
+                                	<button type="submit" id="customerModifyBtn" name="customerModifyBtn" class="btn btn-primary w-auto">수정하기</button>
+                                </div>
+	                        </form>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</th:block>
+	
+	
+
+
+</html>

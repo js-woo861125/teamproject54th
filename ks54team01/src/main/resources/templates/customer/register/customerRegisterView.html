@@ -35,7 +35,7 @@
                                         <form id="customerRegisterForm" th:action="@{/customer/register/customerRegister}" method="post">
                                         	<!-- 이름 -->                                         
                                             <div class="form-group">
-                                                <input type="text" id="custName" name="custName" placeholder="이름" required />                                              
+                                                <input type="text" id="custName" name="custName" placeholder="이름" value="홍01" required />                                              
                                             </div>
                                             <!-- 생년월일 -->
                                             <div class="form-group">
@@ -48,15 +48,15 @@
 												<input type="hidden" id="custPhone" name="custPhone"/>
 		                                            <div class="form-group d-flex">
 													   	<input type="text" class="w-10 form-control fs-6" id="phoneFixed" name="phoneFixed" placeholder="010" value="010" readonly />
-													    <input type="text" class="mr-10 ml-10" id="phone1" name="phone1" placeholder="1234" required />
-													    <input type="text" placeholder="5678" id="phone2" name="phone2" required />
+													    <input type="text" class="mr-10 ml-10" id="phone1" name="phone1" placeholder="1234" value="0001" required />
+													    <input type="text" placeholder="5678" id="phone2" name="phone2" value="0001" required />
 													</div>
 											</div>
 											<!-- 이메일 본인인증 --> 
                                             <div class="form-group">
                                             	<input type="hidden" id="custEmail" name="custEmail"/>
 	                                            	<div class="form-group d-flex">
-		                                                <input type="text" class="w-60" id="emailFirst" name="emailFirst" placeholder="Email" required />
+		                                                <input type="text" class="w-60" id="emailFirst" name="emailFirst" placeholder="Email" value="snh2520" required />
 		                                                <select class="w-auto border-1 border-radius-10 ml-10" id="emailLast" name="emailLast">
 		                                                    <option value="@naver.com">@naver.com</option>
 		                                                    <option value="@daum.net">@daum.net</option>
@@ -179,27 +179,44 @@
 		            }
 		        }).open();
 			});
-		   
-		    /**
-			* 이메일 유효성 체크
+			
+			/**
+			* 전화번호 조합
 			*/
-		    function validateEmail(email) {
-		        const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-		        return re.test(email);
-		    }
-		    
-		    /**
-		     * 이메일 인증코드 전송
-		     */
+			function setPhoneValue() {
+			    const phone = `${$('#phoneFixed').val()}-${$('#phone1').val()}-${$('#phone2').val()}`;
+			    $('#custPhone').val(phone);
+			}
+			
+			/**
+			* email 조합
+			*/
+			function getFullEmail() {
+				const emailFirst = $('#emailFirst').val().trim();
+			    const emailLast = $('#emailLast').val().trim();
+			    if (!emailFirst || !emailLast) return null;
+			    return emailFirst + emailLast;
+			}
+		   
+			/**
+		    * email 유효성검증 및 인증코드 전송
+		    */
 		    function sendVerificationCode() {
-		    	
-		        const emailFirst = document.querySelector('input[name="emailFirst"]').value;
-		        const emailLast = document.querySelector('select[name="emailLast"]').value;
+		    	const custEmail  = getFullEmail();
 
-		        if (!emailFirst || !emailLast) {
+		        if (!custEmail) {
 		            alert("이메일을 정확히 입력해주세요.");
 		            return;
 		        }
+		        
+		        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		        
+		        if (!regex.test(custEmail )) {
+		            alert("이메일 형식이 올바르지 않습니다.");
+		            return;
+		        }
+
+		        $('#custEmail').val(custEmail);
 		        
 		        $.ajax({
 		            url: '/customer/register/sendCode',
@@ -213,7 +230,6 @@
 		                if (response.status === 'success') {
 		                    alert(response.message);
 		                    $('#verify-section').show();
-		                    document.getElementById("verify-section").style.display = "block";
 		                } else {
 		                    alert(response.message);
 		                }
@@ -223,17 +239,17 @@
 		            }
 		        });
 		    }
+	
 		        
-		    /**
-		     * 이메일 인증코드 확인
-		     */
-		    function verifyCodeSubmit() {
-		        const emailFirst = document.querySelector('input[name="emailFirst"]').value;
-		        const emailLast = document.querySelector('select[name="emailLast"]').value;
-		        const code = document.getElementById('verifyCode').value;
-
-		        const email = emailFirst + emailLast;
-
+		   	/**
+		   	* email 인증코드 확인
+		   	*/
+		   	let isEmailVerified = false;
+		   	
+		   	function verifyCodeSubmit() {
+		        const custEmail = getFullEmail();		       
+		        const code = $('#verifyCode').val();
+		        
 		        if (!code) {
 		            alert("인증코드를 입력하세요.");
 		            return;
@@ -243,12 +259,13 @@
 		            url: '/customer/register/verifyCode',
 		            method: 'POST',
 		            data: {
-		                email: email,
+		                email: custEmail,
 		                code: code
 		            },
 		            success: function(response) {
 		            	if (response.status === 'success') {
 		            	    alert("이메일 인증에 성공했습니다.");
+		            		isEmailVerified = true;
 		            	    document.getElementById('verifyCode').disabled = true;
 		            	} else {
 		                    alert("인증코드가 일치하지 않습니다.");
@@ -259,11 +276,24 @@
 		            }
 	       	 	});
 	    	}
+		    
+		    /**
+			* email 인증여부 검증
+			*/	
+		    function validateEmailVerification() {
+		    	 if (!isEmailVerified) {
+				        if(!isEmailVerified) {
+				            alert("이메일 인증을 완료해주세요.");
+				            return false;
+				        }
+		        }
+		        return true;
+		    }
      		
 		    /**
-			 * 기업회원 추가정보 입력란 생성
-			 */
-			 document.querySelectorAll('input[name="memberType"]').forEach(function (radio) {
+			* 기업회원 추가정보 입력란 생성
+			*/
+			document.querySelectorAll('input[name="memberType"]').forEach(function (radio) {
 				    radio.addEventListener('change', function () {
 				        const businessBlock = document.getElementById('businessInfo');
 				        if (this.value === '기업고객') {
@@ -274,15 +304,17 @@
 				    });
 				});
 		
-			 /**
-		     * 사업자등록번호 조합 및 형식 검증
-		     */
+			/**
+			* 사업자등록번호 조합 및 형식 검증
+			*/
 		    function validateBrno() {
+		    	const isCorpMember = $('input[name="memberType"]:checked').val() === '기업고객';
 		        const brno = `${$('#corpBrno1').val()}-${$('#corpBrno2').val()}-${$('#corpBrno3').val()}`;
 		        const pattern = /^\d{3}-\d{2}-\d{5}$/;
 
-		        if (!pattern.test(brno)) {
+		        if (isCorpMember && !pattern.test(brno)) {
 		            alert("사업자등록번호 형식이 올바르지 않습니다. (예: 123-45-67890)");
+		            $('#corpBrno1').focus();
 		            return false;
 		        }
 		        $('#corpBrno').val(brno);
@@ -290,51 +322,65 @@
 		    }
 			 
 		    /**
-			* 회원등록 폼 유효성 검증
-			*/	
-		    $('#customerRegisterBtn').click( function (e) {
+			* 기업회원 상호명 유효성검증
+			*/
+		    function validateCorpName() {
+		        const corpName = $('#corpName').val().trim();
+		        if (!corpName) {
+		            alert("상호명을 입력해주세요.");
+		            $('#corpName').focus();
+		            return false;
+		        }
+		        return true;
+		    }
+		    
+		    
+		    /**
+			* input 유효성검증
+			*/
+			function validateRequiredFields() {
+			    const requiredFields = ['custName', 'custBrdt','phone1', 'phone2', 'emailFirst', 'emailLast', 'custAddr', 'custDaddr'];
+			    for (let field of requiredFields) {
+			        const input = document.getElementById(field);
+			        if (!input.value.trim()) {
+			            alert(`${input.placeholder} 필수 입력항목입니다.`);
+			            input.focus();
+			            return false;
+			        }
+			    }
+			    return true;
+			}
+			
+		    /**
+		    * 검증유형별 함수 실행
+		    */
+		    function validateForm() {
+		        if (!validateRequiredFields()) return false;
+		        if (!validateEmailVerification()) return false;
+
+		        // 기업회원
+		        const isCorpMember = $('input[name="memberType"]:checked').val() === '기업고객';
+		        
+		        if (isCorpMember) {
+		            if (!validateBrno()) return false;
+		            if (!validateCorpName()) return false;
+		        }
+		        
+		        setPhoneValue();
+		        return true;
+		    }
+				
+		       
+		    /**
+		    * 폼 제출 및 추가 데이터 조합
+		    */
+		    $('#customerRegisterBtn').click(function(e) {
 		        e.preventDefault();
 
-		        const requiredFields = ['custName', 'custBrdt','phone1', 'phone2', 'emailFirst', 'emailLast', 'custAddr', 'custDaddr'];
-		        let isSubmit = true;
-		        
-		        for (let field of requiredFields) {
-		            const input = document.getElementById(field);
-		            if (!input.value.trim()) {
-		            	
-		                alert(`${input.placeholder} 필수 입력항목입니다.`);
-		                input.focus();
-		                isSubmit = false;
-		                break;
-		            }  
+		        if (validateForm()) {
+		            alert("회원가입이 완료되었습니다.");
+		            $('#customerRegisterForm').submit();
 		        }
-				
-				
-		        // 이메일 인증 여부 확인
-		        if (document.getElementById('verify-section').style.display === 'block') {
-		            const verifyCode = document.getElementById('verifyCode').value;
-		            if (!verifyCode) {
-		                alert("인증 코드를 입력해주세요.");
-		                isSubmit = false;
-		            }
-		        }
-		        
-		        if(isSubmit){
-		        	alert("회원가입이 완료되었습니다.");
-					const custPhone = `${$('#phoneFixed').val()}-${$('#phone1').val()}-${$('#phone2').val()}`;
-					const custEmail = `${$('#emailFirst').val()}${$('#emailLast').val()}`; 
-					
-					$('#custPhone').val(custPhone);
-					$('#custEmail').val(custEmail);
-					
-					const isCorpMember = $('input[name="memberType"]:checked').val() === '기업고객';
-					 
-				    if (isCorpMember) {
-				        const corpBrno = `${$('#corpBrno1').val()}-${$('#corpBrno2').val()}-${$('#corpBrno3').val()}`;
-				        $('#corpBrno').val(corpBrno);
-				    }
-				    $('#customerRegisterForm').submit();
-				}
 		    });
 		</script>
 	</th:block>
