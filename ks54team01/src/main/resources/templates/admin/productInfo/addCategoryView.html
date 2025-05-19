@@ -7,6 +7,55 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
+		<script>
+			/**
+			* 대분류 + 중분류 + 소분류 중복체크
+			*/
+			$('#addCategoryBtn').click(function(){
+				const lgCategory = $('#lgCategory').val();
+				const mdCategory = $('#mdCategory').val();
+				const smCategory = $('#smCategory').val();
+				
+				if(!lgCategory){
+					alert('대분류를 입력해주세요');
+					$('#lgCategory').focus();
+					return ;
+				}
+				
+				if (!mdCategory) {
+					alert('중분류를 선택해주세요');
+					$('#mdCategory').focus();
+					return;
+				}
+				
+				if (!smCategory) {
+					alert('소분류를 선택해주세요');
+					$('#smCategory').focus();
+					return;
+				}
+				$.ajax({
+					url : '/admin/productInfo/categoryCheck',
+					method : 'post',
+					data : {
+						'lgCategory': lgCategory,
+						'mdCategory' : mdCategory,
+						'smCategory' : smCategory
+					},
+					dataType : 'json'
+				}).done(function(isDuplicate) {
+					if(isDuplicate){
+						alert('이미 등록된 카테고리 입니다.');
+						$('#itemName').focus();
+						return ;
+					}
+				
+					$('#addProductInfoForm').submit();
+			    }).fail(function(jqXHR, textStatus, error) {
+			        console.log("에러 발생:", textStatus, error);
+			        alert('품목명 확인 중 오류가 발생했습니다.');
+			    });
+			});
+		</script>	
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
@@ -67,7 +116,7 @@
                                	<!-- 버튼 -->
                                	<div class="d-grid gap-2 d-md-flex justify-content-md-end">
 					                <div class="col-md-2 col-2 ms-auto">
-					                    <button type="submit" id="addCategoryBtn" 
+					                    <button type="button" id="addCategoryBtn" 
 					                    		class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >등록</button>
 					                </div>
 					                <div class="col-md-2 col-2">

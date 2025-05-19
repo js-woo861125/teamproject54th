@@ -7,55 +7,6 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
-		<script>
-			/**
-			* 모델 + 스펙 + 상세스펙내용 중복체크
-			*/
-			$('#addModelSpecBtn').click(function(){
-				const modelSpecName = $('#modelSpecName').val();
-				const modelNo = $('#modelNo').val();
-				const specNo = $('#specNo').val();
-				
-				if(!modelSpecName){
-					alert('상세스펙내용을 입력해주세요');
-					$('#modelSpecName').focus();
-					return ;
-				}
-				
-				if (!modelNo) {
-					alert('모델을 선택해주세요');
-					$('#modelNo').focus();
-					return;
-				}
-				
-				if (!specNo) {
-					alert('스펙을 선택해주세요');
-					$('#specNo').focus();
-					return;
-				}
-				$.ajax({
-					url : '/admin/productInfo/specContentCheck',
-					method : 'post',
-					data : {
-						'modelSpecName': modelSpecName,
-						'modelNo' : modelNo,
-						'specNo' : specNo
-					},
-					dataType : 'json'
-				}).done(function(isDuplicate) {
-					if(isDuplicate){
-						alert('이미 등록된 상세스펙내용 입니다.');
-						$('#itemName').focus();
-						return ;
-					}
-				
-					$('#addProductInfoForm').submit();
-			    }).fail(function(jqXHR, textStatus, error) {
-			        console.log("에러 발생:", textStatus, error);
-			        alert('품목명 확인 중 오류가 발생했습니다.');
-			    });
-			});
-		</script>	
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
@@ -83,17 +34,21 @@
 	
 					<!-- 본문 영역 -->
 					<div class="col-lg-9">
-						<form id="addProductInfoForm" th:action="@{/admin/productInfo/addModelSpec}" method="post">
+						<form id="modifyProductInfoForm" 
+							  th:action="@{/admin/productInfo/modifyModelSpec}" 
+							  method="post"
+							  th:object="${modelSpecInfo}">
 							<section class="content-body p-xl-4">
-								<!-- 모델별 상세스펙 정보 등록 -->
+							
+								<!-- Hidden -->
+	                            <input type="hidden" th:field="*{modelSpecNo}" />
+	                            <input type="hidden" th:field="*{managerId}" />
+								
+								<!-- 수정 영역 -->
 								<div class="col-12">
 									<div class="mb-4">
-		                                <label class="form-label fs-6" for="managerId">관리자아이디</label>
-		                                <input type="text" id="managerId" name="managerId" class="form-control" placeholder="아이디를 입력해주세요" />
-		                          	</div>
-									<div class="mb-4">
 										<label class="form-label fs-6" for="modelNo">모델</label> 
-										<select class="form-select text-center fs-7" id="modelNo" name="modelNo">
+										<select th:field="*{modelNo}" class="form-select text-center fs-7" id="modelNo" name="modelNo">
 											<option value="">모델을 선택해주세요</option>
 											<th:block th:if="${not #lists.isEmpty(modelList)}" th:each="l : ${modelList}">
 				                         		<option th:value="${l.modelNo}" th:text="${l.modelName}"></option>
@@ -102,7 +57,7 @@
 									</div>
 									<div class="mb-4">
 										<label class="form-label fs-6" for="specNo">스펙</label> 
-										<select class="form-select text-center fs-7" id="specNo" name="specNo">
+										<select th:field="*{specNo}" class="form-select text-center fs-7" id="specNo" name="specNo">
 											<option value="">스펙을 선택해주세요</option>
 											<th:block th:if="${not #lists.isEmpty(categorySpecList)}" th:each="l : ${categorySpecList}">
 				                         		<option th:value="${l.specNo}" th:text="${l.specName}"></option>
@@ -111,19 +66,19 @@
 									</div>
 									<div class="mb-4">
 										<label class="form-label fs-6" for="">상세스펙내용</label>
-										<input type="text" id="modelSpecName" name="modelSpecName" class="form-control" placeholder="상세스펙내용을 입력해주세요" />
+										<input type="text" th:field="*{modelSpecName}" id="modelSpecName" name="modelSpecName" class="form-control" placeholder="상세스펙내용을 입력해주세요" />
 									</div>
 								</div>
 								<br/>
 								<!-- 버튼 -->
 								<div class="d-grid gap-2 d-md-flex justify-content-md-end">
 									<div class="col-md-2 col-2 ms-auto">
-										<button type="button" id="addModelSpecBtn" 
-												class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6">등록</button>
+										<button type="submit" id="modifyModelSpecBtn" 
+												class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6">수정</button>
 									</div>
 									<div class="col-md-2 col-2">
 										<button type="reset" onclick="location.href='/admin/productInfo/modelSpecList'" 
-												class="btn btn-warning w-100 rounded font-lg hover-up text-white justify-content-center fs-6">등록취소</button>
+												class="btn btn-warning w-100 rounded font-lg hover-up text-white justify-content-center fs-6">수정취소</button>
 									</div>
 								</div>
 							</section>

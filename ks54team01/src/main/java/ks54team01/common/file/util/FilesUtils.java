@@ -104,6 +104,7 @@ public class FilesUtils {
 												 .fileNewName(newFileName)
 												 .fileOriginalName(originalFilename)
 												 .filePath(uploadPath.toString().replace("c:","/").replace("\\","/").replace(fileRealPath, ""))
+												 .fileExt(extension)  
 												 .fileSize(multipartFile.getSize())
 												 .build();
 			
@@ -174,12 +175,17 @@ public class FilesUtils {
 			// file_250513550e8400e29b1a4a3s3
 			String fileIdx = "file_" + now.format(FILEIDX_FORMATTER)
 									 + UUID.randomUUID().toString().replace("-", "").substring(0, 16);
-			
+			String filePath = uploadPath.toString();
+			if(osRoot.length() > 0) {
+				filePath = filePath.replace(osRoot, "");
+			}
+			filePath = filePath.replace("\\","/").replace(fileRealPath, "");
 			
 			fileMetaData = FileMetaData.builder().fileIdx(fileIdx)
 												 .fileNewName(newFileName)
 												 .fileOriginalName(originalFilename)
-												 .filePath(uploadPath.toString().replace("c:","/").replace("\\","/").replace(fileRealPath, ""))
+												 .filePath(filePath)
+												 .fileExt(extension)  
 												 .fileSize(multipartFile.getSize())
 												 .build();
 			

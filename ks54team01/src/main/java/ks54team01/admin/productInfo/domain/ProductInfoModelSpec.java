@@ -7,7 +7,6 @@ public class ProductInfoModelSpec {
 
 	private String modelSpecNo;
 	private String managerId;
-	private String productNo;
 	private String modelNo;
 	private String specNo;
 	private String modelSpecName;
@@ -15,7 +14,6 @@ public class ProductInfoModelSpec {
 	private String modelSpecRevDate;
 	private String useStatus;
 	
-	private ProductInfoCategory productInfo;
-	private ProductInfoBrand modelInfo;
-	private ProductInfoItem specInfo;
+	private ProductInfoModel modelInfo;
+	private ProductInfoCategorySpec specInfo;
 }

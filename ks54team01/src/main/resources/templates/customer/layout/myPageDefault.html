@@ -36,6 +36,9 @@
 	                                <li th:if="${session.loginMember != null}">
 									    <span th:text="${session.loginMember.memberId} + '님 환영합니다!'">OOO님 환영합니다</span>
 									</li>
+									<li th:if="${session.loginMember != null}">
+                                    	<a th:href="@{/customer/login/logout}">로그아웃</a>
+                                    </li>
 	                                <!-- <li>
 	                                    <a class="language-dropdown-active" href="#"><i class="fi-rs-angle-small-down"></i> USD</a>
 	                                    <ul class="language-dropdown">
