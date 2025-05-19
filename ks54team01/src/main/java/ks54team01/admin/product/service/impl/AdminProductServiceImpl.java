@@ -63,37 +63,34 @@ public class AdminProductServiceImpl implements AdminProductService{
 		}
 		
 		@Override
-		public void registerProduct(AdminAddProduct product, MultipartFile[] thumbnails, MultipartFile[] details, List<String> spec, List<String> specContents) {
+		public void registerProduct(AdminAddProduct product, MultipartFile[] thumbnails, MultipartFile[] details) {
 			
 			// Pk 랜덤 생성
-			String productNo = "Prod_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+			String productNo = UUID.randomUUID().toString().replace("-", "");
 			product.setProductNo(productNo);
 			
 			// model 브랜드, 스펙, 카테 가져오기
 			ProductInfoModel modelInfo = adminProductMapper.getModelInfoByNo(product.getModelNo());
-		        product.setItemNo(modelInfo.getItemNo());
-		        product.setCategoryNo(modelInfo.getCategoryNo());
-		        product.setBrandNo(modelInfo.getBrandNo());
+	        product.setItemNo(modelInfo.getItemNo());
+	        product.setCategoryNo(modelInfo.getCategoryNo());
+	        product.setBrandNo(modelInfo.getBrandNo());
 		        
-		    product.setManagerId("manageid1");    
+		    product.setManagerId("managerid1");    
 		    product.setProductStatus("비활성화");
 		    LocalDateTime now = LocalDateTime.now();
 	        product.setRegisterDate(now.toString());
 	        product.setRevisionDate(now.toString());
 		
-		  //  썸네일 이미지 저장
-        List<FileMetaData> thumbnailList = fileService.uploadFiles(thumbnails, "thumbnail");
-        if (!thumbnailList.isEmpty()) {
-            product.setProductImage(thumbnailList.get(0).getFileNewName());
-        }
-
-        //  상품 정보 DB에 등록
-        adminProductMapper.insertProduct(product);
-
-        //  파일 메타데이터 DB에 등록
-        fileService.addFiles(thumbnails, "thumbnail", productNo);
-        fileService.addFiles(details, "detail", productNo);
+	        //  썸네일 이미지 저장
+	        //List<FileMetaData> thumbnailList = fileService.uploadFiles(thumbnails, "thumbnail");
+	
+	        //  상품 정보 DB에 등록
+	        adminProductMapper.insertProduct(product);
+	
+	        //  파일 메타데이터 DB에 등록
+	        fileService.addFiles(thumbnails, "thumbnail", productNo);
+	        fileService.addFiles(details, "detail", productNo);
         
  
-    }
+		}
 }
