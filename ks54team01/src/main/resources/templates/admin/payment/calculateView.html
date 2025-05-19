@@ -4,7 +4,9 @@
 	  layout:decorate="~{admin/layout/default}">
 	<head>
     </head>
-	<th:block layout:fragment="content">     
+    
+
+<th:block layout:fragment="content">     
             
 	<section class="content-main">
 		<div class="content-header">
@@ -14,71 +16,72 @@
 		    </div>    
 		</div>
 	<header class="card card-header">
-		<form th:action="@{/admin/enterprise/searchEnterprise}" method="get">
-			<div class="row gx-3">
-           		<div class="d-flex">
-           		<div class="col-md-2 col-12">
-	               <select class="form-select" name="searchKey">
-	                   <option>Show all</option>
-	                   <option value="ceoCode" th:selected="${searchKey == 'ceoCode'}" >대표코드</option>
-	                   <option value="entName" th:selected="${searchKey == 'entName'}">입점업체명</option>
-	                   <option value="entContractStatus" th:selected="${searchKey == 'entContractStatus'}">계약상태</option>
-	               </select>
-           		</div>
-				<div class="col-md-5 ml-5">
-				    <input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
-				</div>
-				<div class="col-md-1 ml-5 text-center">
-					<button type="submit" class="form-control btn btn-outline-dark"> 🔎Search</button>                   
-				</div>
-           		</div>
-             </div>
-		</form> 
+    <form th:action="@{/admin/payment/searchEnterprise}" method="get">
+        <div class="row gx-3">
+            <div class="d-flex">
+                <div class="col-md-2 col-12">
+                   <select class="form-select" name="searchKey">
+                       <option value="entCeoNo" th:selected="${searchKey == 'entCeoNo'}" >대표코드</option>
+                   </select>
+                </div>
+                <div class="col-md-4 ml-5">
+                    <input type="text" name="searchValue" th:value="${searchValue}" placeholder=" <입점업체 조회 후 검색해주세요> " class="form-control" />
+                </div>
+                <div class="col-md-2 ml-5">
+                    <button type="submit" class="form-control btn btn-outline-dark"> 🔎검색</button>
+                </div>
+                <div class="col-md-2 ml-5">
+                    <button type="button" class="form-control btn btn-outline-info"
+                            th:onclick="'javascript:openEnterPricseList(\'' + @{/admin/enterprise/enterpriseListView} + '\'); return false;'">
+                        <i class="bi bi-list-ul"></i>📚 업체 조회
+                    </button>
+                </div>
+            </div>
+         </div>
+    </form>
 	</header>
 
 	<div class="row">
 	    <div class="col-xl-12 col-lg-12">
-	
 	        <div class="row">
 	            <div class="col-lg-5">
 	                <div class="card mb-4">
 	                    <article class="card-body">
-	                        <h5 class="card-title">(주)스마트렌탈</h5>
-	                        <div class="new-member-list">
-	                            <div class="d-flex align-items-center justify-content-between mb-4">
-	                                <div class="d-flex align-items-center">
-	                                    <img th:src="@{/manage/assets/imgs/people/avatar-4.png}" alt="" class="avatar" />
-	                                    <div>
-	                                        <h6>Patric Adams</h6>
-	                                        <p class="text-muted font-xs">Sanfrancisco</p>
-	                                    </div>
-	                                </div>
-	                                <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Add</a>
-	                            </div>
-	                            <div class="d-flex align-items-center justify-content-between mb-4">
-	                                <div class="d-flex align-items-center">
-	                                    <img th:src="@{/manage/assets/imgs/people/avatar-2.png}" alt="" class="avatar" />
-	                                    <div>
-	                                        <h6>Dilan Specter</h6>
-	                                        <p class="text-muted font-xs">Sanfrancisco</p>
-	                                    </div>
-	                                </div>
-	                                <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Add</a>
-	                            </div>
-	                            <div class="d-flex align-items-center justify-content-between mb-4">
-	                                <div class="d-flex align-items-center">
-	                                    <img th:src="@{/manage/assets/imgs/people/avatar-3.png}" alt="" class="avatar" />
-	                                    <div>
-	                                        <h6>Tomas Baker</h6>
-	                                        <p class="text-muted font-xs">Sanfrancisco</p>
-	                                    </div>
-	                                </div>
-	                                <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Add</a>
-	                            </div>
-	                        </div>
-	                    </article>
-	                </div>
-	            </div>
+	                		<th:block th:if="${!#lists.isEmpty(entList)}" th:each="el : ${entList}">
+	                			
+	                        	<h5 class="card-title" th:text="${el.entName}">상호</h5>
+	                        		<div class="new-member-list">
+			                            <div class="d-flex align-items-center justify-content-between mb-4">
+			                                <div class="d-flex align-items-center">
+			                                    <img th:src="@{/manage/assets/imgs/vendor/vendor-1.png}" alt="vendorImage" class="vendor mr-20" />
+			                                    <div>
+			                                        <h4 class="mb-2" th:text=" ' 대표자 : '+${el.entCeoName}">대표자명</h4>
+			                                    	<ul>
+				                                    	<li>
+				                                    		 <h5 class="mb-1" th:text="'• 사업자번호 : '+ ${el.entBrno}">사업자번호</h5>
+					                                    </li>	
+					                                    <li>
+				                                    		 <h5 class="mb-1" th:text="'• 업체코드 : '+ ${el.ceoCode}">업체코드</h5>
+					                                    </li>
+					                                    <li>
+				                                    		<h5 class="mb-1" th:text="'• 계약만료일 : '+ ${el.contractEndDate}">계약만료일</h5>
+					                                    </li>	
+					                                    <li>
+				                                    		<h5 class="text-success" th:text="'• 계약상태 : '+ ${el.entContractStatus}"><span>계약상태</span></h5>
+					                                    </li>	
+			                                    	</ul>
+			                                    </div>
+			                                </div>
+				                         </div>
+			                     	</div>
+			                </th:block>
+							<th:block th:unless="${!#lists.isEmpty(entList)}">
+                            	<p>조회된 업체가 없습니다.</p>
+							</th:block>
+			                  
+			              </article>
+					</div>
+				</div>
 	
 	            <div class="col-lg-4">
 	                <div class="card mb-4">
@@ -289,8 +292,22 @@
            
       
             <!-- content-main end// -->
-          
+            
+            
+	<script th:inline="javascript">
+	
+	    function openEnterPricseList(url) {
+	        window.open(url, 'entListPopup', 'width=1024,height=768,scrollbars=yes');
+	    }
+	</script>
+            
+            
 	</th:block>
+	
+
+	
+	
+	
         <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
         <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
         <script src="assets/js/vendors/select2.min.js"></script>

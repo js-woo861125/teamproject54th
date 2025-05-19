@@ -2,6 +2,8 @@ package ks54team01.admin.payment.domain;
 
 import java.time.LocalDate;
 
+import ks54team01.admin.enterprise.domain.AdminEntDetail;
+import ks54team01.admin.enterprise.domain.AdminEntList;
 import lombok.Data;
 
 @Data
@@ -35,5 +37,9 @@ public class AdminFee {
 	private String paymentStatus;
 	// 14수정일
 	private LocalDate revisionDate;
+	
+	private AdminEntList adminEntList;
+	
+	private AdminEntDetail adminEntDetail;
 	
 }

@@ -43,7 +43,7 @@
 		  WHERE ec.ent_ceo_no = #{ceoCode}
 	</select>
  	 
- 	<select id="getSearchEnt" parameterType="map" resultType="AdminEntList">
+ 	<select id="getSearchEnt" parameterType="string" resultType="AdminEntList">
 		/* 입점업체 검색 조회 */
 		SELECT 
 			ec.ent_ceo_no AS ceoCode,
