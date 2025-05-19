@@ -29,6 +29,19 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	private final AdminProductInfoMapper adminProductInfoMapper;
 	
 	// 상품정보 검색
+	
+	
+	@Override
+	public List<ProductInfoModelSpec> getSearchModelSpec(String searchKey, String searchValue) {
+		
+		switch (searchKey) {
+		case "modelSpecName" -> searchKey = "spec_content";
+		case "modelInfo.modelName" -> searchKey = "m.model_nm";
+		case "specInfo.specName" -> searchKey = "ps.spec_nm";
+		}
+		List<ProductInfoModelSpec> modelSpecList = adminProductInfoMapper.getSearchModelSpec(searchKey, searchValue);
+		return modelSpecList;
+	}
 	@Override
 	public List<ProductInfoCategorySpec> getSearchCategorySpec(String searchKey, String searchValue) {
 		
@@ -111,6 +124,16 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	
 	// 상품정보 중복체크
 	@Override
+	public boolean isSpecContentCheck(String modelSpecName, String modelNo, String specNo) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("modelSpecName", modelSpecName);
+		params.put("modelNo", modelNo);
+		params.put("specNo", specNo);
+		
+		return adminProductInfoMapper.isSpecContentCheck(params);
+	}
+	
+	@Override
 	public boolean isSpecNameCheck(String specName, String categoryNo) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("specName", specName);
@@ -122,6 +145,17 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	public boolean isBenefitNameCheck(String benefitName) {
 		
 		return adminProductInfoMapper.isBenefitNameCheck(benefitName);
+	}
+	
+	@Override
+	public boolean isModelNameCheck(String categoryNo, String brandNo, String itemNo, String modelName) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("modelName", modelName);
+		params.put("categoryNo", categoryNo);
+		params.put("brandNo", brandNo);
+		params.put("itemNo", itemNo);
+		
+		return adminProductInfoMapper.isModelNameCheck(params);
 	}
 	
 	@Override
@@ -139,7 +173,23 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		return adminProductInfoMapper.isBrandNameCheck(brandName);
 	}
 	
+	@Override
+	public boolean isCategoryCheck(String lgCategory, String mdCategory, String smCategory) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("lgCategory", lgCategory);
+		params.put("mdCategory", mdCategory);
+		params.put("smCategory", smCategory);
+		
+		return adminProductInfoMapper.isCategoryCheck(params);
+	}
+	
 	// 상품정보 수정
+	
+	@Override
+	public void modifyModelSpec(ProductInfoModelSpec productInfoModelSpec) {
+		
+		adminProductInfoMapper.modifyModelSpec(productInfoModelSpec);
+	}
 	@Override
 	public void modifyCategorySpec(ProductInfoCategorySpec productInfoCategorySpec) {
 		
@@ -177,6 +227,13 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	}
 	
 	// 상품정보 조회
+	
+	@Override
+	public ProductInfoModelSpec getModelSpecInfoByNo(String modelSpecNo) {
+	
+		return adminProductInfoMapper.getModelSpecInfoByNo(modelSpecNo);
+	}
+	
 	@Override
 	public ProductInfoCategorySpec getCategorySpecInfoByNo(String categorySpecyNo) {
 		
@@ -214,8 +271,19 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	}
 	
 	// 상품정보 등록
+	
+	@Override
+	public void addModelSpec(ProductInfoModelSpec productInfoModelSpec) {
+		log.info("상품등록 전 : {}", productInfoModelSpec);
+		
+		adminProductInfoMapper.addModelSpec(productInfoModelSpec);
+		
+		log.info("상품등록 후 : {}", productInfoModelSpec);	
+	}
+	
 	@Override
 	public void addCategorySpec(ProductInfoCategorySpec ProductInfoCategorySpec) {
+		
 		log.info("상품등록 전 : {}", ProductInfoCategorySpec);
 		
 		adminProductInfoMapper.addCategorySpec(ProductInfoCategorySpec);
@@ -325,7 +393,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	@Override
 	public List<ProductInfoCategory> getCategoryList() {
 		
-	List<ProductInfoCategory> categoryList = adminProductInfoMapper.getCategoryList();
+		List<ProductInfoCategory> categoryList = adminProductInfoMapper.getCategoryList();
 	
 		return categoryList;
 	}

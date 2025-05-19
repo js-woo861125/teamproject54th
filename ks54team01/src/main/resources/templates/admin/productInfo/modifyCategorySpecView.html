@@ -11,7 +11,7 @@
 			/**
 			* 카테고리 + 스펙명 중복체크
 			*/
-			$('#addSpecBtn').click(function(){
+			$('#modifySpecBtn').click(function(){
 				const specName = $('#specName').val();
 				const categoryNo = $('#categoryNo').val();
 				
@@ -42,7 +42,7 @@
 						return ;
 					}
 				
-					$('#addProductInfoForm').submit();
+					$('#modifyProductInfoForm').submit();
 			    }).fail(function(jqXHR, textStatus, error) {
 			        console.log("에러 발생:", textStatus, error);
 			        alert('품목명 확인 중 오류가 발생했습니다.');
@@ -59,9 +59,8 @@
             </div>
         </div>
         <div class="card mb-4 col-8">
-        		
 	        <div class="card-body">
-	            <div class="row gx-4">
+	            <div class="row gx-5">
 	            <!-- 사이드 메뉴 -->
 	                <aside class="col-lg-3 border-end">
 	                    <nav class="nav nav-pills flex-column mb-4">
@@ -77,38 +76,40 @@
 	                
 	                <!-- 본문 영역 -->
 	                <div class="col-lg-9">
-	                	<form id="modifyProductInfoForm" th:action="@{/admin/productInfo/modifyCategorySpec}" method="post">
+	                	<form id="modifyProductInfoForm" 
+	                		  th:action="@{/admin/productInfo/modifyCategorySpec}" 
+	                		  method="post"
+	                		  th:object="${specInfo}">
 	                    	<section class="content-body p-xl-4">
+	                    	
+	                            <!-- Hidden -->
+	                            <input type="hidden" th:field="*{specNo}" />
+	                            <input type="hidden" th:field="*{managerId}" />
+		                        
 		                    	<!-- 수정 영역 -->
-		                        <div class="col-12">
-		                   			<div class="mb-4">
-		                                <label class="form-label fs-6" for="managerId">관리자아이디</label>
-		                                <input type="text" id="managerId" name="managerId"class="form-control" placeholder="아이디를 입력해주세요" />
-		                            </div>
-				                   	<div class="mb-4">
-				                        <label class="form-label fs-6" for="categoryNo">카테고리</label>
-				                        <select class="form-select text-center fs-7" id="categoryNo" name="categoryNo">
-				                            <option value=""> 카테고리를 선택해주세요 </option>
-				                            <th:block th:if="${not #lists.isEmpty(categoryList)}" th:each="l : ${categoryList}">
-				                           	<option th:value="${l.categoryNo}" th:text="${l.smCategory}"></option>
-				                           </th:block>
-				                        </select>
-				                    </div>
-		                            <div class="mb-4">
-		                                <label class="form-label fs-6" for="specName">스펙명</label>
-		                                <div class="col-lg-12">
-		                                    <input type="text" id="specName" name="specName" class="form-control" placeholder="스펙명을 입력해주세요" />
-		                                </div>
-		                            </div> 
-		                        </div>                    
+	                            <div class="mb-4">
+	                                <label class="form-label fs-6" for="categoryNo">카테고리</label>
+	                                <select th:field="*{categoryNo}" class="form-select text-center fs-7" id="categoryNo" name="categoryNo">
+	                                    <option value="">카테고리를 선택해주세요</option>
+	                                    <th:block th:each="l : ${categoryList}">
+	                                        <option th:value="${l.categoryNo}" th:text="${l.smCategory}"></option>
+	                                    </th:block>
+	                                </select>
+	                            </div>
+	                            <div class="mb-4">
+	                                <label class="form-label fs-6" for="specName">스펙명</label>
+	                                <input type="text" th:field="*{specName}" class="form-control" placeholder="스펙명을 입력해주세요" />
+	                            </div>                   
 		                        <br/>
 		                        <!-- 버튼 -->
-	                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+	                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
 						              <div class="col-md-2 col-2 ms-auto">
-						                  <button type="submit" id="addCategorySpecBtn" class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >수정</button>
+						                  <button type="button" id="modifySpecBtn" 
+						                  		  class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >수정</button>
 						              </div>
 						              <div class="col-md-2 col-2">
-						                  <button type="reset" onclick="location.href='/admin/productInfo/categorySpecList'" class="btn btn-warning w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >등록취소</button>
+						                  <button type="reset" onclick="location.href='/admin/productInfo/categorySpecList'" 
+						                  		  class="btn btn-warning w-100 rounded font-lg hover-up text-white fs-6 justify-content-center" >수정취소</button>
 						              </div>
 						        </div>
 	                   		</section>

@@ -16,6 +16,25 @@
 			</div>
 		</div>
 		<div class="card mb-4 col-12">
+			<header class="card-header">
+				<form th:action="@{/admin/productInfo/searchModelSpec}" method="get">
+					<div class="row gx-3">
+	                   <div class="col-lg-2 col-md-3 col-12">
+	                       <select class="form-select" name="searchKey">
+	                           <option value="modelSpecName" th:selected="${searchKey == 'modelSpecName'}">상세스펙내용</option>
+	                           <option value="modelInfo.modelName" th:selected="${searchKey == 'modelInfo.modelName'}">모델</option>
+	                           <option value="specInfo.specName" th:selected="${searchKey == 'specInfo.specName'}">스펙</option>
+	                       </select>
+	                   </div>
+	                   <div class="col-lg-4 col-md-5">
+	                       <input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
+	                   </div>
+	                   <div class="col-lg-1 col-md-1 me-auto">
+						   <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
+	                   </div>
+	               </div>
+				</form>
+			</header>		
 			<div class="card-body">
 				<div class="row gx-4">
 					<!-- 사이드 메뉴 -->
@@ -40,40 +59,42 @@
 										<tr>
 											<th>No.</th>
 											<th>모델별 상세스펙코드</th>
-											<th>상품명</th>
-											<th>모델명</th>
-											<th>스펙명</th>
+											<th>모델</th>
+											<th>스펙</th>
 											<th>상세스펙내용</th>
 											<th>사용유무</th>
+											<th>등록일자</th>
+											<th>수정일자</th>
 											<th>수정/삭제</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
-											<td>1</td>
-											<td>spec_content_1</td>
-											<td>라온 LED 저상형 침대 SS</td>
-											<td>라온 LED 저상형 침대 SS</td>
-											<td>침대사이즈</td>
-											<td>1220x2220x610 mm</td>
-											<td class="col-lg-1 col-sm-2 col-4 col-status"><span
-												class="badge rounded-pill alert-success">사용중</span></td>
+										<tr th:if="${!#lists.isEmpty(modelSpecList)}"
+											th:each="l, index : ${modelSpecList}">
+											<td th:text="${index.count}">1</td>
+											<td th:text="${l.modelSpecNo}">spec_content_1</td>
+											<td th:text="${l.modelInfo.modelName}">라온 LED 저상형 침대 SS</td>
+											<td th:text="${l.specInfo.specName}">침대사이즈</td>
+											<td th:text="${l.modelSpecName}">1220x2220x610 mm</td>
+											<td>
+												<span class="badge rounded-pill" th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'" th:text="${l.useStatus}">사용중</span>
+											</td>
+											<td th:text="${l.modelSpecRegDate}">2023-01-01 10:00:00</td>
+											<td th:text="${l.modelSpecRevDate}">2023-01-01 10:00:00</td>
 											<td>
 												<div class="dropdown">
-													<a href="#" data-bs-toggle="dropdown"
-														class="btn btn-light rounded btn-sm font-sm"> <i
-														class="material-icons md-more_horiz"></i>
+													<a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> 
+														<i class="material-icons md-more_horiz"></i>
 													</a>
 													<div class="dropdown-menu">
-														<a class="dropdown-item"
-															href="54.modifyCategory(카테고리수정).html">수정</a> <a
-															class="dropdown-item text-danger" href="#">삭제</a>
+														<a class="dropdown-item" th:href="@{/admin/productInfo/modifyModelSpec(modelSpecNo=${l.modelSpecNo})}">수정</a> 
+														<a class="dropdown-item text-danger" href="#">삭제</a>
 													</div>
 												</div> 
 											</td>
 										</tr>
-										<tr th:unless="${not #lists.isEmpty(modelList)}">
-											<td colspan="12">등록된 모델이 없습니다.</td>
+										<tr th:unless="${not #lists.isEmpty(modelSpecList)}">
+											<td colspan="12">등록된 상세스펙내용이 없습니다.</td>
 										</tr>
 									</tbody>
 								</table>
