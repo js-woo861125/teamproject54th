@@ -7,11 +7,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import ks54team01.customer.wishList.domain.CustomerWishList;
 import ks54team01.customer.wishList.service.CustomerWishListService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 @Controller
 @RequestMapping("/customer/wishList")
@@ -21,8 +24,27 @@ public class CustomerWishListController {
 
 	private final CustomerWishListService customerWishListService;
 	
+	@PostMapping("/removeMyWishLists")
+	@ResponseBody
+	public boolean removeMyWishLists(@RequestParam(name="wishListNum") List<String> wishListNum) {
+		
+		boolean isRemove = customerWishListService.removeMyWishLists(wishListNum);
+		
+		return isRemove;
+	}
+	
+	@PostMapping("/removeMyWishList")
+	@ResponseBody
+	public boolean removeMyWishList(@RequestParam(name="wishListNum") String wishListNum) {
+		
+		boolean isRemove = customerWishListService.removeMyWishList(wishListNum);
+		
+		return isRemove;
+	}
+	
+	
 	@GetMapping("/myWishList")
-	public String getMyWishList(@RequestParam(name="viewValue", required = false, defaultValue = "all") String viewValue
+	public String getMyWishList(@RequestParam(name="viewValue", required = false, defaultValue = "전체") String viewValue
 								, Model model) {
 		
 		String custId = "personalcustid2";

@@ -84,7 +84,7 @@
 	<!-- 페이지 삽입공간 -->
 	<th:block layout:fragment="customContents">
         <div class="container mb-80 mt-50">
-            <div class="row">
+            <div class="row justify-content-center">
                 <div class="col-lg-8 mb-40">
                     <h1 class="heading-2 mb-10">양수 게시글 등록</h1>
                 </div>
@@ -92,11 +92,11 @@
             <div class="row justify-content-center">
                 <div class="col-lg-7">
                     <div class="row">
-                        <h4 class="mb-30">Billing Details</h4>
+                        
                         <form method="post">
                             <div class="row">
                                 <div class="form-group col-lg-6">
-                                    <input type="text" required="" name="fname" placeholder="상품 카테고리 선택">
+                                    <input type="text" required="" name="fname" placeholder="상품 카테고리 선택" readonly>
                                 </div>
                                 <div class="col-2">
 		                            <div class="mb-4">
@@ -150,17 +150,17 @@
                         	</div>
 	                        <div class="row">
 	                        	<div class="form-group col-lg-6">
-	                            	<input type="text" name="billing_address" required="" placeholder="상품명 입력" />
+	                            	<input type="text" name="billing_address" required="" placeholder="상품명 입력"/>
 	                        	</div>
 	                     	</div>
                             <div class="row">
                                 <div class="form-group col-lg-6">
-                                    <input type="text" id="hopeArea" name="billing_address" required="" placeholder="희망 설치지역 입력" />
+                                    <input type="text" id="hopeArea" name="billing_address" required="" placeholder="희망 설치지역 입력" readonly/>
                                 </div>
                                 <div class="col-2">
-		                            <div class="mb-4">
+		                            <div>
 		                            	<button type="button" id="daumPostBtn" 
-		                            			class="btn btn-info w-100 rounded text-white justify-content-center" >주소
+		                            			class="btn btn-info w-100 rounded text-white justify-content-center" >주소찾기
 		                            	</button>
 		                            </div>                        		
 	                        	</div>
