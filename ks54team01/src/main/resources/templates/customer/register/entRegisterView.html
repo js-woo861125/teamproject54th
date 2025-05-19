@@ -188,21 +188,6 @@
 			    if (!emailFirst || !emailLast) return null;
 			    return emailFirst + emailLast;
 			}
-			
-			/**
-			* email 유효성검증
-			*/
-		    function validateEmail() {
-		    	const entCeoEmail = getFullEmail();
-		        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
-		        if (!regex.test(entCeoEmail)) {
-		            alert("이메일 형식이 올바르지 않습니다.");
-		            return false;
-		        }
-		        $('#entCeoEmail').val(entCeoEmail);
-		        return true;
-		    }
 		    
 		    /**
 		     * email 유효성검증 및 인증코드 전송
@@ -236,7 +221,6 @@
 		                if (response.status === 'success') {
 		                    alert(response.message);
 		                    $('#verify-section').show();
-		                    /* document.getElementById("verify-section").style.display = "block"; */
 		                } else {
 		                    alert(response.message);
 		                }
@@ -251,6 +235,8 @@
 		    /**
 		     * email 인증코드 확인
 		     */
+		    let isEmailVerified = false;
+		     
 		    function verifyCodeSubmit() {
 		        const entCeoEmail = getFullEmail();		       
 		        const code = document.getElementById('verifyCode').value;
@@ -270,6 +256,7 @@
 		            success: function(response) {
 		            	if (response.status === 'success') {
 		            	    alert("이메일 인증에 성공했습니다.");
+		            	    isEmailVerified = true;
 		            	    document.getElementById('verifyCode').disabled = true;
 		            	} else {
 		                    alert("인증코드가 일치하지 않습니다.");
@@ -285,10 +272,9 @@
 			* email 인증여부 검증
 			*/	
 		    function validateEmailVerification() {
-		    	 if (document.getElementById('verify-section').style.display === 'block') {
-				        const verifyCode = document.getElementById('verifyCode').value;
-				        if (!verifyCode.trim()) {
-				            alert("인증 코드를 입력해주세요.");
+		    	 if (!isEmailVerified) {
+				        if(!isEmailVerified) {
+				            alert("이메일 인증을 완료해주세요.");
 				            return false;
 				        }
 		        }
@@ -366,7 +352,6 @@
 		    function validateForm() {
 		        if (!validateRequiredFields()) return false;
 		        if (!validateEmailVerification()) return false;
-		        if (!validateEmail()) return false;
 		        if (!validateBrno()) return false;
 		        if (!validateBank()) return false;
 
