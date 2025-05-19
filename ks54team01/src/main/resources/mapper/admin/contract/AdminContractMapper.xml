@@ -39,21 +39,24 @@
 	</resultMap>
 
 	<select id="getContractDetail" parameterType="string" resultMap="contractDetailResultMap">
-		SELECT 
-			rcd.paid_in_rounds ,
-			rcd.payment_amount,
-			rcd.penalty_fee,
-			rcd.monthly_date,
-			rcd.monthly_payment_date ,
-			rcd.unpaid_status,
-			rcd.rental_contract_type
-		FROM 
-			rental_contract_d etails rcd
-		WHERE 
-			rcd.rental_contract_no = #{rentalContNo}
-		ORDER BY 
-			rcd.paid_in_rounds DESC ;
 	
+			
+	SELECT 
+		rcd.rental_contract_no ,
+		rcd.paid_in_rounds ,
+		rcd.payment_amount,
+		rcd.penalty_fee,
+		rcd.monthly_date,
+		rcd.monthly_payment_date ,
+		rcd.unpaid_status,
+		rcd.rental_contract_type
+	FROM 
+		rental_contract_details rcd
+	WHERE 
+		rcd.rental_contract_no =#{rentalContNo}
+	ORDER BY 
+		rcd.paid_in_rounds DESC ;
+				
 	</select>
 
 	<select id="getSearchContractList" parameterType="string" resultMap="contractResultMap">

@@ -6,7 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import ks54team01.admin.enterprise.domain.AdminEntList;
 import ks54team01.admin.payment.domain.AdminFee;
 import ks54team01.admin.payment.domain.AdminPayment;
 import ks54team01.admin.payment.service.AdminPaymentService;
@@ -45,13 +47,31 @@ public class AdminPaymentController {
 		return "admin/payment/paymentListView";
 	}
 	
-	@GetMapping("/calculate")
-	// 입점업체 정산 조회
-	public String getadminpayment(Model model) {
+	// 입점업체 검색
+	@GetMapping("/searchEnterprise")
+
+	public String getSearchEnterprise(@RequestParam(name="searchKey", required = false, defaultValue = "entCeoNo") String searchKey,
+			 						@RequestParam(name="searchValue", required = false)String searchValue,
+			 						Model model) {
 		
-		List<AdminFee> adminFeeList = adminPaymentService.getAdminPayFee();
+		List<AdminEntList> entList = adminPaymentService.getSearchEnt(searchKey, searchValue);
+		
+		List<AdminFee> adminFeeList = adminPaymentService.getAdminPayFee(searchValue);
+		
+		model.addAttribute("entList", entList);
+		model.addAttribute("title", "입점업체목록");
+		model.addAttribute("searchKey", searchKey);
+		model.addAttribute("searchValue", searchValue);
+		
 		model.addAttribute("adminFeeList",adminFeeList);
 		
+		
+		return "admin/payment/calculateView";
+	}
+	
+	// 처음 빈페이지
+	@GetMapping("/calculate")
+	public String getAdminPayment() {
 		
 		return "admin/payment/calculateView";
 	}
