@@ -17,8 +17,7 @@ public interface CustomerAssigneeBoardMapper {
 	int getAssigneeBoardCount(Map<String, Object> searchParamMap);
 
 	// 양수게시글상세조회
-	CustomerAssigneeBoard getAssigneeBoardInfoByCode(String assigneeBoardNum);
-	
+	CustomerAssigneeBoard getAssigneeBoardInfoByCode(String assigneeBoardNum);	
 	
 	// 양수 게시글 목록 조회
 	List<CustomerAssigneeBoard> getAssigneeBoardList(Map<String, Object> searchParamMap);

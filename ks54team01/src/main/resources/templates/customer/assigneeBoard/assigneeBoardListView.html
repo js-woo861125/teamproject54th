@@ -53,7 +53,7 @@
 							<a th:href="@{/customer/assigneeBoard/addAssigneeBoard}" class="btn btn-success w-30 rounded font-lg hover-up text-white justify-content-center fs-6 mb-50">글쓰기</a>
 						</div>
                     </div>
-                    <div class="w-50 widget_search mb-50">
+                    <div class="w-25 widget_search mb-50">
                         <div class="search-form">
                             <form th:action="@{/customer/assigneeBoard/assigneeBoardList}" method="get">
                                 <input type="text" name="searchValue" th:value="${searchValue}" 
@@ -66,28 +66,30 @@
 						<div class="totall-product">
 							<h5 class="text-body">
 								양수 상품
-								<span th:text="${'&emsp;' + assigneeBoardList.size()}"
-									  class="text-brand">5
-								</span> 
+								<span class="text-brand">&emsp;
+									<span th:text="${contentRowCount}">5</span>
+								</span>
 								<span>건</span>
 							</h5>
 						</div>
-						<div class="sort-by-product-area">
-							<div class="sort-by-cover mr-10">
-								<div class="sort-by">
-									<a th:href="@{#}" th:data-sort-value="recentReg">
-										<span>최신등록순</span>
-									</a>
+						<th:block th:if="${contentRowCount > 0}">
+							<div class="sort-by-product-area">
+								<div class="sort-by-cover mr-10">
+									<div class="sort-by">
+										<a th:href="@{#}" th:data-sort-value="recentReg">
+											<span>최신등록순</span>
+										</a>
+									</div>
+								</div>
+								<div class="sort-by-cover mr-10">
+									<div class="sort-by">
+										<a th:href="@{#}" th:data-sort-value="deadline">
+											<span>마감임박순</span>
+										</a>
+									</div>
 								</div>
 							</div>
-							<div class="sort-by-cover mr-10">
-								<div class="sort-by">
-									<a th:href="@{#}" th:data-sort-value="deadline">
-										<span>마감임박순</span>
-									</a>
-								</div>
-							</div>
-						</div>
+						</th:block>
 					</div>
                     <div class="product-list mb-50">
                         <th:block th:if="${!#lists.isEmpty(assigneeBoardList)}"
@@ -95,7 +97,7 @@
 	                        <!-- 상품1 -->
 	                        <div class="product-cart-wrap border">
 	                            <div class="product-content-wrap mt-50 mb-30 ml-50">
-	                                <h4><a th:text="${l.productName}" th:href="@{/customer/assigneeBoard/assigneeBoardDetail(assigneeBoardNum=${l.assigneeBoardNum})}">그램 프로 노트북 16인치 (옵시디안 블랙)</a></h4>
+	                                <h4><a th:text="${#strings.isEmpty(l.productName) ? '상관없음' : l.productName}" th:href="@{/customer/assigneeBoard/assigneeBoardDetail(assigneeBoardNum=${l.assigneeBoardNum})}">그램 프로 노트북 16인치 (옵시디안 블랙)</a></h4>
                                 	<div class="dropdown">
                                         <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
                                         <div class="dropdown-menu">
@@ -135,7 +137,7 @@
 	                            </div>
 	                        </div>
                         </th:block>
-                        <div th:if="${#lists.isEmpty(assigneeBoardList)}"
+                        <div th:if="${contentRowCount < 1}"
 							 class="mt-100" style="text-align: center;">
 							<p>게시글이 없습니다.</p>	
 						</div>
@@ -146,7 +148,7 @@
 								<!-- 이전페이지 이동 -->
 								<li id="prev-page" class="page-item" th:classappend="${startPageNum < 10} ? 'disabled'">
 									<a class="page-link" th:classappend="${startPageNum < 10} ? 'bg-white'"
-										th:href="@{/customer/transferBoard/transferBoardList(currentPage=${startPageNum - 1})}">
+										th:href="@{/customer/assigneeBoard/assigneeBoardList(currentPage=${startPageNum - 1})}">
 										<i class="material-icons md-first_page"></i>
 									</a>
 								</li>
@@ -158,14 +160,13 @@
 										<a class="page-link page-num"
 										   href="#"
 										   th:text="${num < 10 ? '0' + num : num}"
-										   th:data-current-Page="${num}">01</a>
+										   th:data-current-page="${num}">01</a>
 									</li>
 								</th:block>
-								
 								<!-- 다음페이지 이동 -->
 								<li id="next-page" class="page-item" th:classappend="${(startPageNum + 10) > lastPage} ? 'disabled'">
 									<a class="page-link" th:classappend="${(startPageNum + 10) > lastPage} ? 'bg-white'"
-									   th:href="@{/customer/transferBoard/transferBoardList(currentPage=${endPageNum + 1})}">
+									   th:href="@{/customer/assigneeBoard/assigneeBoardList(currentPage=${endPageNum + 1})}">
 									   <i class="material-icons md-last_page"></i>
 									</a>
 								</li>
