@@ -102,7 +102,15 @@
 	  	SELECT 
 			COUNT(assignee_no)
 		FROM
-			assignee_board; 
+			customer c RIGHT JOIN assignee_board ab 
+			USING (cust_id)
+			INNER JOIN products_category pc
+			USING (product_category_no)
+		<where>
+			<if test="searchValue != null and searchValue != ''">
+				ab.products_nm LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+		</where>
   	</select>
   	
   	<select id="getAssigneeBoardList" parameterType="map" resultMap="assigneeBoardResultMap">

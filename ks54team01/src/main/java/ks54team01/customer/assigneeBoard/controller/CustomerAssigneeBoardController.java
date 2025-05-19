@@ -82,7 +82,7 @@ public class CustomerAssigneeBoardController {
 		int contentRowCount = assigneeBoard.getTotalRowCount();	
 		
 		
-		model.addAttribute("title", "양수게시글목록");
+		model.addAttribute("title", "양수 게시글 목록");
 		model.addAttribute("assigneeBoardList", assigneeBoardList);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("lastPage", lastPage);

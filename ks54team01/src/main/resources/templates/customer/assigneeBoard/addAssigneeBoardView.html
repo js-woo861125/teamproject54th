@@ -83,6 +83,60 @@
 	
 	<!-- 페이지 삽입공간 -->
 	<th:block layout:fragment="customContents">
+        <!-- modal start -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg"> <!-- 넉넉한 너비로 변경 -->
+				<div class="modal-content">
+			    	<form id="addDeliveryForm" th:action="@{/customer/delivery/addDeliveryList}" method="post">
+			        	<div class="modal-header">
+			          		<h5 class="modal-title" id="staticBackdropLabel">필요한 제품을 선택해주세요.</h5>
+			          		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalCloseBtn"></button>
+			        	</div>
+			        	<div class="modal-body d-flex">
+			          		<!-- 좌측 중분류 리스트 -->
+			          		<div class="modalLeft border-end pe-3" style="width: 220px; max-height: 300px; overflow-y: auto;">
+			            		<ul id="middlCategoryList" class="list-group list-group-flush">
+			              			<!-- AJAX로 중분류 리스트 나열 -->
+			              			<li class="list-group-item py-2">
+			                			<a href="#" class="text-decoration-none">TV/디지털</a>
+			              			</li>
+						            <li class="list-group-item py-2">세탁가전</li>
+						            <li class="list-group-item py-2">냉장가전</li>
+						            <li class="list-group-item py-2">주방가전</li>
+						            <li class="list-group-item py-2">생활가전</li>
+						            <li class="list-group-item py-2">계절/환경</li>
+						            <li class="list-group-item py-2">건강/뷰티</li>
+						            <li class="list-group-item py-2">가구/침대</li>
+		            			</ul>
+		          			</div>
+			          		<!-- 우측 소분류 리스트 -->
+			          		<div class="modalRight ps-4 flex-grow-1">
+			            		<div id="smallCategoryList" class="row g-3">
+			              			<!-- AJAX로 소분류 리스트 나열 -->
+			              			<div class="col-6 col-md-4">
+			                			<div class="form-check">
+			                  				<input class="form-check-input" type="radio" name="product" id="product1" value="TV">
+			                  				<label class="form-check-label" for="product1">TV</label>
+			                			</div>
+			              			</div>
+			              			<div class="col-6 col-md-4">
+			                			<div class="form-check">
+			                  				<input class="form-check-input" type="radio" name="product" id="product2" value="냉장고">
+			                  				<label class="form-check-label" for="product2">냉장고</label>
+			                			</div>
+		              				</div>
+			             			 <!-- 더 추가할 소분류 항목도 이 형식으로 넣으면 됨 -->
+		            			</div>
+		          			</div>
+		        		</div>
+			        	<div class="modal-footer">
+			          		<button id="addDeliveryBtn" type="submit" class="btn btn-primary">선택</button>
+			        	</div>
+		      		</form>
+		    	</div>
+	  		</div>
+		</div>
+        <!-- modal end -->
         <div class="container mb-80 mt-50">
             <div class="row justify-content-center">
                 <div class="col-lg-8 mb-40">
@@ -92,60 +146,15 @@
             <div class="row justify-content-center">
                 <div class="col-lg-7">
                     <div class="row">
-                        
                         <form method="post">
                             <div class="row">
                                 <div class="form-group col-lg-6">
                                     <input type="text" required="" name="fname" placeholder="상품 카테고리 선택" readonly>
                                 </div>
                                 <div class="col-2">
-		                            <div class="mb-4">
-		                            	<div class="modal">
-									  		<div class="categoryModal">
-								   				<div class="modalHeader">
-											    	<h3>필요한 제품을 선택해주세요.</h3>
-											      	<button class="modal-close-btn" id="modalCloseBtn">×</button>
-											    </div>
-									   			<div class="modalBody">
-											    	<div class="modalLeft pe-4 border-end">
-											        	<ul id="middlCategoryList list-group list-group-flush">
-											          		<!-- AJAX로 중분류 리스트 나열할거 -->
-											          		<li class="list-group-item py-3">
-											          			<a href="">TV/디지털</a>
-											          		</li>
-											          		<li class="list-group-item py-3">세탁가전</li>
-											          		<li class="list-group-item py-3">냉장가전</li>
-											          		<li class="list-group-item py-3">주방가전</li>
-											          		<li class="list-group-item py-3">생활가전</li>
-											          		<li class="list-group-item py-3">계절/환경</li>
-											          		<li class="list-group-item py-3">건강/뷰티</li>
-											          		<li class="list-group-item py-3">가구/침대</li>
-											        	</ul>
-										      		</div>
-											      	<div class="modalRight ps-4">
-											        	<div id="smallCategoryList" class="row g-3">
-											         		<!-- 선택된 중분류에 따라 AJAX로 소분류 리스트 나열할거 -->
-											         		<div class="col-6">
-														      	<div class="form-check">
-														        	<input class="form-check-input" type="radio" name="product" id="product1" value="TV">
-														        	<label class="form-check-label" for="product1">TV</label>
-														    	</div>
-														    </div>
-														    <div class="col-6">
-														      	<div class="form-check">
-														        	<input class="form-check-input" type="radio" name="product" id="product2" value="냉장고">
-														        	<label class="form-check-label" for="product2">냉장고</label>
-														    	</div>
-															</div>
-											        	</div>
-											      	</div>
-										    	</div>
-									  		</div>
-								  		</div>
-							        </div>
-	                            	<button type="button"
-	                            			class="openModalBtn btn btn-info w-100 rounded text-white justify-content-center" >모달
-	                            	</button>
+	                            	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+										카테고리 선택
+									</button>
 	                            </div>                        		
                         	</div>
 	                        <div class="row">
