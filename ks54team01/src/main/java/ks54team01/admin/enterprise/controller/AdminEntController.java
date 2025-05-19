@@ -52,9 +52,26 @@ public class AdminEntController {
 		return "admin/enterprise/enterpriseListView";
 	}
 	
+	// 팝업검색
+	@GetMapping("/searchPopupEnt")
+	public String searchPopupEnt(@RequestParam(name="searchKey", required = false, defaultValue = "ceoCode") String searchKey,
+								@RequestParam(name="searchValue", required = false) String searchValue,
+								Model model) {
+		List<AdminEntList> searchPopupEntList = adminEntListService.getSearchEnt(searchKey, searchValue);
+		model.addAttribute("searchPopupEntList", searchPopupEntList);
+		
+		return "admin/enterprise/searchPopupEnt";
+	}
 	
-	@GetMapping("/EntDetail")
+	// 팝업검색 처음 빈페이지
+		@GetMapping("/searchPopup")
+		public String searchPopup() {
+			
+			return "admin/enterprise/searchPopupEnt";
+		}
+	
 	// 입점업체 상세 조회
+	@GetMapping("/EntDetail")
 	 public String entDetail(@RequestParam("ceoCode") String ceoCode, Model model) {
      
 		AdminEntDetail detail = adminEntListService.getEntDetail(ceoCode);

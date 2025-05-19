@@ -49,7 +49,10 @@
 			ec.ent_ceo_no AS ceoCode,
 			ec.ent_nm AS entName,
 			ec.ent_ceo_phone AS ceoTelNo,
+			ec.ent_ceo_id AS entId,
 			ec.ent_brno AS entBrNo,
+			ec.ent_ceo_nm AS entCeoName,
+			ec.register_date AS regDate,
 			ct.contract_status AS entContractStatus,
 			ct.contract_expiry_date AS contractEndDate
 		FROM 

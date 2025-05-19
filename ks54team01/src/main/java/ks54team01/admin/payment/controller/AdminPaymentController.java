@@ -69,7 +69,8 @@ public class AdminPaymentController {
 		return "admin/payment/calculateView";
 	}
 	
-	// 처음 빈페이지
+	
+	// 정산페이지 처음 빈 페이지
 	@GetMapping("/calculate")
 	public String getAdminPayment() {
 		
