@@ -27,6 +27,7 @@ public class ProductController {
 		
 		CustomerProduct productDetail = customerProductService.getProductDetail(sellProductsNo);
 		model.addAttribute("productDetail", productDetail);
+		model.addAttribute("sellProductsNo", sellProductsNo);
 		
 		return "customer/product/productDetail";
 	}
