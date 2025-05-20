@@ -80,10 +80,17 @@
 			ent_ceo ec 
 			LEFT JOIN ent_contract ct ON ec.ent_ceo_no = ct.ent_ceo_no
 		<where>
-			<if test="searchValue != null and searchValue != ''">
-				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
-			</if>
-		</where>
+	        <if test="searchValue != null and searchValue != ''">
+	            <choose>
+	                <when test="searchKey == 'entBrNo'">
+	                    ec.ent_brno = #{searchValue}
+	                </when>
+	                <otherwise>
+	                    ${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+	                </otherwise>
+	            </choose>
+	        </if>
+    	</where>
 		ORDER BY CAST(SUBSTRING_INDEX(ec.ent_ceo_no, 'ent', -1) AS UNSIGNED) ASC;
 	</select>
 		 	
