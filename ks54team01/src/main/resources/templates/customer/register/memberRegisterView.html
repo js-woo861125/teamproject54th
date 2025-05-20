@@ -17,7 +17,7 @@
 			* 아이디 중복체크
 			*/
 			$('#idCheckBtn').click(function() {
-			    let memberId = $('#memberId').val();
+			    let memberId = $('#memberId').val().trim();
 			
 				if(!memberId){
 					alert('아이디를 입력해주세요');
@@ -32,7 +32,6 @@
 			        return;
 			    }
 			    
-			    memberId = memberId.trim();
 				
 				const request = $.ajax({
 					url : '/customer/register/idCheck',
@@ -50,6 +49,7 @@
 					}
 					
 					alert('사용가능한 아이디 입니다.');
+					$('#isIdChecked').val('true');
 					// 중복되지 않은 경우 비밀번호 필드 활성화
 					$('#memberPw, #memberPwConfirm').prop('readonly', false);
 					$('#memberPw').focus();
@@ -179,6 +179,7 @@
                                         <form id="memberRegisterForm" th:action="@{/customer/register/memberRegister}" method="post"> 
                                         	 <!-- 아이디 입력 및 중복 확인 -->                                        
                                             <div class="form-group d-flex">
+                                            	<input type="hidden" id="isIdChecked" value="false" />
                                                 <input type="text" id="memberId" name="memberId" placeholder="아이디(6-12자 이내, 영문/숫자 사용 가능)" value="corpcustid5" required />
                                                 <button type="button" id="idCheckBtn" class="btn btn-heading btn-block p-10 ml-10" style="width:70px;">중복확인</button>
                                             </div>     
