@@ -154,7 +154,7 @@
                         <div class="product-cart-wrap mb-30">
                             <div class="product-img-action-wrap">
                                 <div class="product-img product-img-zoom">
-                                    <a th:href="@{/customer/product/productDetail(sellProductsNo=${l.customerSellProduct.sellProductsNo})}">
+                                    <a th:href="@{/customer/product/productDetailByProd(productsNum=${l.productsNum})}">
                                        
                                         <img class="default-img"
                                             th:src="@{/user/assets/imgs/shop/noteBook1.avif}" alt="" />
@@ -184,7 +184,7 @@
                                     <div th:text="${title}">노트북(소분류)</div>
                                 </div>
                                 <h2>
-                                    <a th:href="@{/customer/product/productDetail(sellProductsNo=${l.customerSellProduct.sellProductsNo})}"
+                                    <a th:href="@{/customer/product/productDetailByProd(productsNum=${l.productsNum})}"
                                         th:text="${l.productsName}">
                                     </a>
                                 </h2>

@@ -142,10 +142,7 @@
 		<div class="product-list mb-50">
 			<th:block th:if="${!#lists.isEmpty(PaymentList)}" th:each="l : ${PaymentList}">
 				<!-- 상품1 -->
-				<div>
-					<span th:text="${l.paymentCompletedDate}" style="font-weight:150; color: black; font-size: 20px; padding-right: 10px;">결제일</span>
-				</div>
-				<div class="product-cart-wrap border col-12">
+				<div class="product-cart-wrap border col-12" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
 					<div class="product-content-wrap mt-50 mb-30 col-8">
 						<h4><a href="#" th:text="${l.prodNm}">상품명</a></h4>
 						<div>
@@ -153,6 +150,8 @@
 						</div>
 						<div>
 							<span th:text="${#strings.contains(l.rentalContractNo, 'rental') ? '렌탈' : (l.rentalContractNo == '일시불판매' ? '일반판매' : l.rentalContractNo)}" style="color: black;">계약정보</span>
+							<span style="color: black;">|</span>
+							<span th:text="${l.paymentCompletedDate}" style="color: black;">계약정보</span>
 						</div>
 						
 					</div>
