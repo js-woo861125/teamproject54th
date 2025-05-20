@@ -37,8 +37,12 @@ public interface AdminProductInfoMapper {
 	/**
 	 * 상품정보 삭제
 	 */
+	// 품목 삭제
+	int removeItemInfoByNo(String itemNo);
 	// 브랜드 삭제
 	int removeBrandInfoByNo(String brandNo);
+	// 카테고리 삭제
+	int removeCategoryInfoByNo(String categoryNo);
 	
 	/**
 	 * 상품정보 중복체크
@@ -79,6 +83,8 @@ public interface AdminProductInfoMapper {
 	/**
 	 * 상품정보 조회
 	 */
+	// 모델코드로 카테고리코드 조회 (모델별/상세스펙 등록)
+	String getCategoryNoByModelNo(String modelNo);
 	// 모델별/상세스펙 조회
 	ProductInfoModelSpec getModelSpecInfoByNo(String modelSpecNo);
 	// 카테고리별/상세스펙 조회
@@ -115,6 +121,10 @@ public interface AdminProductInfoMapper {
 	/**
 	 * 상품정보 목록 조회
 	 */
+	// 카테고리코드로 스펙 목록 조회 (모델별/상세스펙 등록)
+	List<ProductInfoCategorySpec> getSpecListByCategoryNo(String categoryNo);
+	// 카테고리코드로 품목 목록 조회 (모델 등록)
+	List<ProductInfoItem> getItemListByCategoryNo(String categoryNo);
 	// 모델별/상세스펙 목록 조회
 	List<ProductInfoModelSpec> getModelSpecList();
 	// 카테고리별/상세스펙 목록 조회
