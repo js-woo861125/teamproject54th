@@ -5,11 +5,16 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import ks54team01.admin.enterprise.domain.AdminEntAddContract;
 import ks54team01.admin.enterprise.domain.AdminEntDetail;
 import ks54team01.admin.enterprise.domain.AdminEntList;
 
 @Mapper
 public interface AdminEntMapper {
+	
+	// 입점업체 계약 등록
+	int addContract(AdminEntAddContract adminEntAddContract);
+	
 	// 거래처 목록 조회
 	List<AdminEntList> getEntList();
 	

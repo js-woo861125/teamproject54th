@@ -3,7 +3,28 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	<mapper namespace="ks54team01.admin.enterprise.mapper.AdminEntMapper">
- 	
+	
+	<resultMap type="AdminEntAddContract" id="contractResultMap">
+		<id 	column="ent_contract_no" 	  property="entContractNo"/>
+		<result column="ent_ceo_no" 		  property="entCeoNo"/>
+		<result column="ent_emp_id" 		  property="entEmpId"/>
+		<result column="manager_id" 		  property="managerId"/>
+		<result column="fee_rate_sales" 	  property="feeRateSales"/>
+		<result column="fee_rate_rental" 	  property="feeRateRental"/>
+		<result column="fee_rate_penalty" 	  property="feeRatePenalty"/>
+		<result column="entry_fee" 			  property="entryFee"/>
+		<result column="contract_date" 		  property="contractDate"/>
+		<result column="contract_expiry_date" property="contractEndDate"/>
+		<result column="ent_cal_date" 		  property="entCalDate"/>
+		<result column="contract_status" 	  property="contractStatus"/>
+	
+		<association property="entCeoInfo" javaType="EntMember">
+			<id 	column="ent_ceo_no" property="entCeoNo"/>
+			<result column="ent_emp_id" property="memberId"/>
+			<result column="ent_nm" 	property="entName"/>
+			<result column="ent_emp_nm" property="entCeoName"/>
+		</association>	
+	</resultMap>
 
 	 <select id="getEntList" parameterType="string">
 		/* 입점업체 목록 조회 */

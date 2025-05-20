@@ -26,14 +26,16 @@
 		                <a th:href="@{/admin/delivery/deliveryList}">배송지 목록</a>
 		            </div>
 		        </li>
-		        <li class="menu-item has-submenu">
-		            <a class="menu-link" href="page-products-list.html">
+		        <li class="menu-item has-submenu" th:classappend="${activeMenu} == 'productInfo' ? 'active'">
+		            <a class="menu-link" href="#">
 		                <i class="icon material-icons md-shopping_bag"></i>
 		                <span class="text">상품정보관리</span>
 		            </a>
-		            <div class="submenu">
-		                <a th:href="@{/admin/productInfo/categoryList}">상품정보목록</a>
-		                <a th:href="@{/admin/productInfo/addCategory}">상품정보등록</a>
+		            <div class="submenu" th:classappend="${activeMenu} == 'productInfo' ? 'show'">
+		                <a th:href="@{/admin/productInfo/categoryList}"
+		                   th:classappend="${activeSubMenu} == 'productInfoList' ? 'active'">상품정보목록</a>
+		                <a th:href="@{/admin/productInfo/addCategory}"
+		                   th:classappend="${activeSubMenu} == 'addProductInfo' ? 'active'">상품정보등록</a>
 		            </div>
 		        </li>
 		        <li class="menu-item has-submenu">
@@ -54,6 +56,7 @@
 		            <div class="submenu">
            			    <a th:href="@{#}">입점업체&고객 계약목록(해야함)</a>
 		                <a th:href="@{/admin/enterprise/List }">입점업체 목록(상세 수정 해야함)</a>
+		                <a th:href="@{/admin/enterprise/addContract}">입점업체 계약등록(하는중)</a>
 		            </div>
 		        </li>
 		        <li class="menu-item has-submenu">

@@ -13,5 +13,21 @@ public class ProductInfoCategorySpec {
 	private String specRevDate;
 	private String useStatus;
 	
+    public String getSpecNo() {
+        return specNo;
+    }
+
+    public void setSpecNo(String specNo) {
+        this.specNo = specNo;
+    }
+
+    public String getSpecName() {
+        return specName;
+    }
+
+    public void setSpecName(String specName) {
+        this.specName = specName;
+    }
+	
 	private ProductInfoCategory categoryInfo;
 }

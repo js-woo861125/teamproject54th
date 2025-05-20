@@ -22,7 +22,9 @@ public class AdminEntController {
 	
 	@GetMapping("/addContract")
 	// 입점업체 계약 등록
-	public String addContract() {
+	public String addContract(Model model) {
+		
+		model.addAttribute("title", "입점업체 계약 등록");
 		
 		return "admin/enterprise/enterpriseAddContractView";
 	}
