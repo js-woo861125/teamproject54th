@@ -25,6 +25,38 @@
   		<result column="revision_date"	property="revDate" />
   		<result column="products_nm"	property="prodNm" />
   	</resultMap>
+  	
+  	
+  	<resultMap type="CustomerDelivery" id="deliveryResultMap">
+		
+		<id 	column="delivery_location_no" 	property="delNo" />
+		<result column="cust_id" 				property="custId" />
+		<result column="delivery_nm" 			property="delNm" />
+		<result column="primary_location" 		property="primaryLocation" />
+		<result column="delivery_addr" 			property="delAddr" />
+		<result column="delivery_daddr" 		property="delDaddr" />
+		<result column="delivery_zip_no" 		property="delZipNo" />
+		<result column="recipient_phone" 		property="recipientPhone" />		
+		<result column="delivery_request" 		property="delRequest" />
+		<result column="register_date" 			property="regDate" />
+		<result column="revision_date" 			property="revDate" />
+			
+	</resultMap>
+	
+	
+	
+	<select id="getDeliveryListById" resultMap="deliveryResultMap">
+		select
+			dl.delivery_location_no,
+			dl.delivery_nm,
+			dl.primary_location,
+			dl.delivery_addr,
+			dl.delivery_daddr
+		from
+			delivery_list dl
+		where
+			dl.cust_id = #{custId}
+	</select>
 	
 	
 	<insert id="addPayment" parameterType="CustomerPayment">

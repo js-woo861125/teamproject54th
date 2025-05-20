@@ -83,6 +83,34 @@
 			    });
 	
 			});
+			
+			
+			document.addEventListener("DOMContentLoaded", function () {
+			    document.querySelectorAll("#orderBtn").forEach(function (btn) {
+			        btn.addEventListener("click", function (e) {
+			            e.preventDefault();
+
+			            const form = btn.closest("form");
+			            const card = btn.closest(".card");
+			            const activeLi = card.querySelector("li.active");
+
+			            if (!activeLi) {
+			                alert("옵션을 먼저 선택해주세요.");
+			                return;
+			            }
+
+			            const period = activeLi.getAttribute("data-period");
+			            const ceo = activeLi.querySelector('input[name="entCeoNo"]').value;
+			            const emp = activeLi.querySelector('input[name="entEmpId"]').value;
+
+			            form.querySelector(".hidden-period").value = period;
+			            form.querySelector(".hidden-ceo").value = ceo;
+			            form.querySelector(".hidden-emp").value = emp;
+
+			            form.submit();
+			        });
+			    });
+			});
 
 				
 		</script>
@@ -168,7 +196,7 @@
 							<div class="col-md-7">
 								<div class="detail-info pr-30 pl-30 d-flex mb-30">
 	
-									<h2 class="title-detail">LG 그램 Pro</h2>
+									<h2 class="title-detail"	>LG 그램 Pro</h2>
 									<div class="product-extra-link2">
 										<a aria-label="Add To Wishlist" class="action-btn hover-up"
 											href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
@@ -186,7 +214,7 @@
 											
 											<div class="card col-sm-12">
 												<div class="mt-15 ml-10">
-													<div id="Vendor-info">
+													<div id="vendorInfo">
 														<div class="vendor-logo d-flex mb-15">
 															<div class="vendor-name">
 																<h6>
@@ -212,6 +240,10 @@
 													<input type="hidden" class="unit-price" name="prodUnitPrice" value="0" />
 													<input type="hidden" class="total-price-input" name="totalPrice" value="0" />
 													<input type="hidden" class="total-price-input" name="managerId" th:value="${l.managerId}" />
+													<input type="hidden" name="productsName" th:value="${l.productsName}" />
+													<input type="hidden" name="period" class="hidden-period">
+												    <input type="hidden" name="entCeoNo" class="hidden-ceo">
+												    <input type="hidden" name="entEmpId" class="hidden-emp">
 													
 													
 													<input type="hidden" th:value="${l.managerId}" />
@@ -222,7 +254,7 @@
 														<div class="detail-extralink">
 															<div class="detail-qty border radius">
 																<a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-																<input type="text" name="quantity" id="quantity" class="qty-val" value="1">
+																<input type="text" name="orderQuantity" id="quantity" class="qty-val" value="1">
 																<a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
 															</div>
 															<div class="product-extra-link2">

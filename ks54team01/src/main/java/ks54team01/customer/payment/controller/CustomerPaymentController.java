@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 import ks54team01.customer.member.domain.CommonMember;
+import ks54team01.customer.payment.domain.CustomerDelivery;
 import ks54team01.customer.payment.domain.CustomerPayment;
 import ks54team01.customer.payment.service.CustomerPaymentService;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +29,26 @@ public class CustomerPaymentController {
 	
 	
 	@GetMapping("/order")
-	public String getOrder() {
+	public String getOrder( @RequestParam("prodUnitPrice") int prodUnitPrice, @RequestParam("totalPrice") int totalPrice,
+						    @RequestParam("managerId") String managerId, @RequestParam("period") int period,
+						    @RequestParam("entCeoNo") String entCeoNo,  @RequestParam("entEmpId") String entEmpId,
+						    @RequestParam("orderQuantity") int orderQuantity, @RequestParam("productsName") String productsName, HttpSession session, Model model) {
 		
+		model.addAttribute("prodUnitPrice", prodUnitPrice);
+	    model.addAttribute("totalPrice", totalPrice);
+	    model.addAttribute("managerId", managerId);
+	    model.addAttribute("period", period);
+	    model.addAttribute("entCeoNo", entCeoNo);
+	    model.addAttribute("entEmpId", entEmpId);
+	    model.addAttribute("productsName", productsName);
+	    model.addAttribute("orderQuantity", orderQuantity);
+		
+	    CommonMember loginMember = (CommonMember) session.getAttribute("loginMember");
+        String custId = loginMember.getMemberId();
+		
+        List<CustomerDelivery> DeliveryList = customerPaymentService.getDeliveryListById(custId);
+        
+        model.addAttribute("DeliveryList", DeliveryList);
 		
 		return "customer/payment/order";
 	}
