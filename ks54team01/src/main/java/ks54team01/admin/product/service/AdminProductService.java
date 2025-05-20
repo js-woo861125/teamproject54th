@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 import ks54team01.admin.product.domain.AdminAddProduct;
 import ks54team01.admin.product.domain.AdminProduct;
 import ks54team01.admin.product.domain.AdminProductSpecContent;
-import ks54team01.admin.product.mapper.AdminProductMapper;
 import ks54team01.admin.productInfo.domain.ProductInfoBrand;
 import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.admin.productInfo.domain.ProductInfoItem;
@@ -18,6 +17,11 @@ public interface AdminProductService {
 
 	// 상품 목록 조회
 	public List<AdminProduct> getProductList();
+	
+	AdminProduct getProduct(String productNo);
+
+	// 상품 수정
+	void modifyProduct(AdminProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails);
 	
 	// 상품 등록
 	public void addProduct(AdminAddProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails, MultipartFile[] details);

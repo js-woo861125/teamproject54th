@@ -3,9 +3,47 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper
-	namespace="ks54team01.admin.product.mapper.AdminProductMapper">
+<mapper namespace="ks54team01.admin.product.mapper.AdminProductMapper">
 
+	<resultMap type="ks54team01.admin.product.domain.AdminProduct" id="adminProductResultMap">
+		<id 	column="products_no" 			property="productNo"/>
+		<result column="model_no" 				property="modelNo"/>
+		<result column="product_category_no" 	property="categoryNo"/>
+		<result column="brand_no" 				property="brandNo"/>
+		<result column="products_nm" 			property="productName"/>
+		<result column="products_status" 		property="productStatus"/>
+		<result column="register_date" 			property="registerDate"/>
+		<result column="revision_date" 			property="revisionDate"/>
+		<result column="products_image" 		property="productImage"/>
+		<result column="item_no" 				property="itemNo"/>
+		<result column="model_nm" 				property="modelName"/>
+		<!-- <association property="mainImageData" javaType="ks54team01.common.file.domain.FileMetaData" foreignColumn="model_no">
+			<id 	column="file_idx" 			property="fileIdx"/>
+			<result	column="ref_id" 			property="refId"/>
+			<result column="file_original_name" property="fileOriginalName"/>
+			<result column="file_path" 			property="filePath"/>
+			<result column="file_type" 			property="fileType"/>
+		</association> -->
+	</resultMap>
+	<select id="getProductList" resultMap="adminProductResultMap">
+		/* 상품 목록 조회 */
+		SELECT 
+			p.products_no,
+			p.products_nm,
+			m.model_no,
+			m.model_nm,
+			p.products_status,
+			IFNULL(f.file_path, '/manage/assets/imgs/theme/upload.svg') AS products_image,
+			DATE_FORMAT(p.register_date, '%Y-%m-%d %H:%i:%s') AS register_date,
+			DATE_FORMAT(p.revision_date, '%Y-%m-%d %H:%i:%s') AS revision_date
+		FROM 
+			products p INNER JOIN model m 
+			ON p.model_no = m.model_no 
+			LEFT JOIN files f
+			ON m.model_no = f.ref_id AND f.file_type = 'main';	
+	</select>
+	
+		
 	<select id="loadSpecContent" resultType="ks54team01.admin.product.domain.AdminProductSpecContent">
 	    SELECT
 	        s.spec_no AS specNo,
@@ -66,26 +104,29 @@
 
 	<select id="getBrandListByItem" resultType="ProductInfoBrand">
 		SELECT
-		DISTINCT brand_no AS brandNo,
-		brand_nm AS brandNm
-		FROM
-		model
+			DISTINCT brand_no AS brandNo,
+			brand_nm AS brandNm
+			FROM
+			model
 		WHERE
-		product_category_no = #{categoryNo}
-		AND item_no = #{itemNo}
+			product_category_no = #{categoryNo}
+		AND 
+			item_no = #{itemNo}
 	</select>
 
 	<select id="getModelListByCondition"
 		resultType="ProductInfoModel">
 		SELECT
-		model_no AS modelNo,
-		model_nm AS modelName
-		FROM
-		model
+			model_no AS modelNo,
+			model_nm AS modelName
+			FROM
+			model
 		WHERE
-		product_category_no = #{categoryNo}
-		AND item_no = #{itemNo}
-		AND brand_no = #{brandNo}
+			product_category_no = #{categoryNo}
+		AND 
+			item_no = #{itemNo}
+		AND 
+			brand_no = #{brandNo}
 	</select>
 
 	<select id="getModelInfoByNo" resultType="ks54team01.admin.productInfo.domain.ProductInfoModel">
@@ -169,4 +210,47 @@
         AND
             brand_no = #{brandNo}
     </select>
+    
+    <update id="modifyProduct" parameterType="ks54team01.admin.product.domain.AdminProduct">
+   		 UPDATE
+   		 	 products
+    <set>
+        <if test="categoryNo != null and categoryNo != ''">
+            product_category_no = #{categoryNo},
+        </if>
+        <if test="itemNo != null and itemNo != ''">
+            item_no = #{itemNo},
+        </if>
+        <if test="modelNo != null and modelNo != ''">
+            model_no = #{modelNo},
+        </if>
+        <if test="productName != null and productName != ''">
+            product_nm = #{productName},
+        </if>
+        <if test="revisionDate != null and revisionDate != ''">
+            revision_date = #{revisionDate},
+        </if>
+    </set>
+   		 WHERE 
+   		 	products_no = #{productNo}
+	</update>
+    
+    <select id="getProduct" parameterType="string" resultType="ks54team01.admin.product.domain.AdminProduct">
+	    SELECT
+	        products_no AS productNo,
+	        product_category_no AS categoryNo,
+	        item_no AS itemNo,
+	        model_no AS modelNo,
+	        products_nm AS productName,
+	        products_status AS productStatus,
+	        register_date AS registerDate,
+	        revision_date AS revisionDate
+	    FROM 
+	    	products
+	    WHERE
+	     	products_no = #{productNo}
+	</select>
+    
+    
+    
 </mapper>
