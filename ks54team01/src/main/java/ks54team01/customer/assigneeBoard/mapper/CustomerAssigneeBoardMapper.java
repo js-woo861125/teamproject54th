@@ -10,6 +10,11 @@ import ks54team01.customer.assigneeBoard.domain.CustomerAssigneeBoard;
 @Mapper
 public interface CustomerAssigneeBoardMapper {
 
+	// 양수 게시글 등록
+	int addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard);
+	
+	List<CustomerAssigneeBoard> getMiddleCategory(String mdCategoryNo);	
+	
 	// 내 양수 게시글 목록 조회
 	List<CustomerAssigneeBoard> getMyAssigneeBoardList();
 	

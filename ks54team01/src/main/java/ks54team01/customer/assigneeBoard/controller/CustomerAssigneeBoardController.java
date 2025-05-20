@@ -1,16 +1,24 @@
 package ks54team01.customer.assigneeBoard.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import ks54team01.admin.productInfo.domain.ProductInfoCategory;
+import ks54team01.admin.productInfo.service.AdminProductInfoService;
 import ks54team01.customer.assigneeBoard.domain.CustomerAssigneeBoard;
+import ks54team01.customer.assigneeBoard.mapper.CustomerAssigneeBoardMapper;
 import ks54team01.customer.assigneeBoard.service.CustomerAssigneeBoardService;
 import ks54team01.system.util.PageInfo;
 import ks54team01.system.util.Pageable;
@@ -24,9 +32,54 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomerAssigneeBoardController {
 
 	private final CustomerAssigneeBoardService customerAssigneeBoardService;
+	private final AdminProductInfoService adminProductInfoService; 
+	private final CustomerAssigneeBoardMapper customerAssigneeBoardMapper;
+	
+	
+	@PostMapping("/addAssigneeBoard")
+	public String addProduct(CustomerAssigneeBoard customerAssigneeBoard) {
+		
+		customerAssigneeBoardService.addAssigneeBoard(customerAssigneeBoard);
+		
+		return "redirect:/customer/assigneeBoard/assigneeBoardList";
+	}
+	
+	@PostMapping("/getMiddleCategory")
+	@ResponseBody
+	public List<CustomerAssigneeBoard> getMiddleCategory(@RequestParam(name="mdCategoryNo", required = false) String mdCategoryNo) {
+		 
+		List<CustomerAssigneeBoard> itemList = customerAssigneeBoardMapper.getMiddleCategory(mdCategoryNo);
+		
+		return itemList;
+	}
 	
 	@GetMapping("/addAssigneeBoard")
-	public String addAssigneeBoard() {
+	public String selectAssigneeBoardCategory(@RequestParam(name="mdCategoryNo", required = false) String mdCategoryNo
+								  				, Model model) {
+		
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
+		
+		// 모달에 넘길 중분류 카테고리 목록 (categoryList에서는 중복 없이 중분류 목록을 가져오지 못함)
+		List<ProductInfoCategory> mdCategoryList = categoryList.stream()
+														       .collect(Collectors.collectingAndThen(
+														    		 Collectors.toMap(
+														    				 ProductInfoCategory::getMdCategory,
+														    				 Function.identity(),
+														    				 (existing, duplicate) -> existing
+														    				 ),
+														    		 map -> new ArrayList<>(map.values())
+														    		 ));
+		
+//		List<CustomerAssigneeBoard> cateItemList = customerAssigneeBoardService.selectAssigneeBoardCategory(mdCategoryNo);
+		
+		log.info("카테고리 목록: {}", categoryList);
+		log.info("실제 랜더링될 중분류 목록: {}", mdCategoryList);
+//		log.info("실제 랜더링될 품목 목록: {}", cateItemList);
+		
+		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("mdCategoryList", mdCategoryList);
+//		model.addAttribute("cateItemList", cateItemList);
+		
 		
 		return "customer/assigneeBoard/addAssigneeBoardView";
 	}

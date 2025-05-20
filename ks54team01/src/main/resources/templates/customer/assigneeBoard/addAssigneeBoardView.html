@@ -64,20 +64,89 @@
 	        }).open();
 		});
 		
-        const modal = document.querySelector('.modal');
+       /*  const modal = document.querySelector('.modal');
         const btnOpenModal=document.querySelector('.openModalBtn');
 
         btnOpenModal.addEventListener("click", ()=>{
             modal.style.display="flex";
-        });
+        }); */
         
         /* categoryModal_close-icon-wrap__LDSmc.addEventListener("click", e => {
             modal.style.display = "none"
         }); */
         
-        document.querySelector("#modalCloseBtn").addEventListener("click", () => {
+        /* document.querySelector("#modalCloseBtn").addEventListener("click", () => {
        		document.querySelector(".modal").style.display = "none";
+        }); */
+        
+        
+        $('.mdCategory').click(function() {
+        	const data = $(this).data('mdCategoryNo');
+        	console.log(data);
+        	
+        	const request = $.ajax({
+                 url : '/customer/assigneeBoard/getMiddleCategory',
+                 method : 'post',
+                 data : { 'mdCategoryNo' : data},
+                 dataType : 'json'
+             });
+             request.done(response => {
+                 console.log(response); // 요청 성공 시 수행
+                 const appendElements = response.map((cateInfo, idx) => {
+                	const $div = $('<div />', { class : 'col-6 col-md-4'});
+                	const $subDiv = $('<div />', { class : 'form-check'});
+                	const $radio = $('<input />', { class : 'form-check-input', type: 'radio', name : 'product', id : `product${idx+1}`,  value: cateInfo.categoryNo});
+                	const $label = $('<label />', { class : 'form-check-label', for: `product${idx+1}`}).text(cateInfo.itemName);
+                	$subDiv.append($radio, $label);
+                	$div.append($subDiv);
+                	return $div; 
+                 });
+                 console.log(appendElements);
+                 $('#smallCategoryList').empty();
+                 $('#smallCategoryList').append(...appendElements);
+             });
+             request.fail((jqXHR, textStatus, error) => {
+                 console.log(jqXHR, textStatus, error); // 요청 실패 시 수행
+             }); 
         });
+        
+        $('.openModal').click(function(e){
+        	e.preventDefault();
+        	$('.mdCategory').eq(0).click();
+        	$('#staticBackdrop').modal('show');
+        	
+        });
+        
+        
+        $('#selectItemBtn').click(function () {
+        	  const productCategoryNum = $('input[name="product"]:checked').val();
+        	  const itemName = $('input[name="product"]:checked').next().text();
+        	  //alert(value);
+        	  $('#selectedItem').val(itemName)
+        	  $('#productCategoryNum').val(productCategoryNum);
+        	  //const selectedValue = $(this).prev().val(); 
+        	  //$('#selectedItem').val(selectedValue); 
+        	  $('#staticBackdrop').modal('hide');
+        	});
+        
+        
+        $('#addAssigneeBoardBtn').click(e => {
+			e.preventDefault();
+			const $formTags = $('#addAssigneeBoardForm').find('input, select');
+			let isSubmit = true;
+			$formTags.each((idx, element) => {
+				const value = $(element).val();
+				if(!value){
+					/* const id = $(element).attr('id');
+					const cate = $(`label[for="${id}"]`).text();
+					alert(`${cate} 필수 입력항목입니다.`); */
+					$(element).focus();
+					isSubmit = false;
+					return false;
+				}
+			});	
+			if(isSubmit) $('#addAssigneeBoardForm').submit();
+		});
 		</script>
 	</th:block>
 	
@@ -85,9 +154,9 @@
 	<th:block layout:fragment="customContents">
         <!-- modal start -->
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered modal-lg"> <!-- 넉넉한 너비로 변경 -->
+			<div class="modal-dialog modal-dialog-centered modal-lg">
 				<div class="modal-content">
-			    	<form id="addDeliveryForm" th:action="@{/customer/delivery/addDeliveryList}" method="post">
+			    	<form id="selectCategoryForm" th:action="@{/customer/assigneeBoard/addAssigneeBoard}" method="get">
 			        	<div class="modal-header">
 			          		<h5 class="modal-title" id="staticBackdropLabel">필요한 제품을 선택해주세요.</h5>
 			          		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalCloseBtn"></button>
@@ -96,41 +165,25 @@
 			          		<!-- 좌측 중분류 리스트 -->
 			          		<div class="modalLeft border-end pe-3" style="width: 220px; max-height: 300px; overflow-y: auto;">
 			            		<ul id="middlCategoryList" class="list-group list-group-flush">
-			              			<!-- AJAX로 중분류 리스트 나열 -->
-			              			<li class="list-group-item py-2">
-			                			<a href="#" class="text-decoration-none">TV/디지털</a>
-			              			</li>
-						            <li class="list-group-item py-2">세탁가전</li>
-						            <li class="list-group-item py-2">냉장가전</li>
-						            <li class="list-group-item py-2">주방가전</li>
-						            <li class="list-group-item py-2">생활가전</li>
-						            <li class="list-group-item py-2">계절/환경</li>
-						            <li class="list-group-item py-2">건강/뷰티</li>
-						            <li class="list-group-item py-2">가구/침대</li>
+			              			<th:block th:if="${!#lists.isEmpty(mdCategoryList)}"
+								  			  th:each="mc : ${mdCategoryList}">
+				              			<li class="list-group-item py-2">
+				                			<a th:text="${mc.mdCategory}" th:data-md-category-no="${mc.mdCategoryNo}" th:href="@{#}" class="mdCategory text-decoration-none">
+				                				TV/디지털
+				                			</a>
+				              			</li>
+			              			</th:block>
 		            			</ul>
 		          			</div>
-			          		<!-- 우측 소분류 리스트 -->
-			          		<div class="modalRight ps-4 flex-grow-1">
-			            		<div id="smallCategoryList" class="row g-3">
-			              			<!-- AJAX로 소분류 리스트 나열 -->
-			              			<div class="col-6 col-md-4">
-			                			<div class="form-check">
-			                  				<input class="form-check-input" type="radio" name="product" id="product1" value="TV">
-			                  				<label class="form-check-label" for="product1">TV</label>
-			                			</div>
-			              			</div>
-			              			<div class="col-6 col-md-4">
-			                			<div class="form-check">
-			                  				<input class="form-check-input" type="radio" name="product" id="product2" value="냉장고">
-			                  				<label class="form-check-label" for="product2">냉장고</label>
-			                			</div>
-		              				</div>
-			             			 <!-- 더 추가할 소분류 항목도 이 형식으로 넣으면 됨 -->
-		            			</div>
-		          			</div>
+		          			<!-- 우측 품목 리스트 -->
+				          		<div class="modalRight ps-4 flex-grow-1">
+				            		<div id="smallCategoryList" class="row g-3">
+					              		<!-- 품목 -->
+			            			</div>
+			          			</div>
 		        		</div>
 			        	<div class="modal-footer">
-			          		<button id="addDeliveryBtn" type="submit" class="btn btn-primary">선택</button>
+			          		<button id="selectItemBtn" type="button" class="btn btn-primary">선택</button>
 			        	</div>
 		      		</form>
 		    	</div>
@@ -146,25 +199,26 @@
             <div class="row justify-content-center">
                 <div class="col-lg-7">
                     <div class="row">
-                        <form method="post">
+                        <form id="addAssigneeBoardForm" th:action="@{/customer/assigneeBoard/addAssigneeBoard}" method="post">
                             <div class="row">
                                 <div class="form-group col-lg-6">
-                                    <input type="text" required="" name="fname" placeholder="상품 카테고리 선택" readonly>
+                                    <input id="productCategoryNum" type="hidden" name="productCategoryNum" required readonly>
+                                    <input id="selectedItem" type="text" placeholder="상품 카테고리 선택" required readonly>
                                 </div>
                                 <div class="col-2">
-	                            	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardCategory}" class="openModal btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 										카테고리 선택
-									</button>
+									</a>									
 	                            </div>                        		
                         	</div>
 	                        <div class="row">
 	                        	<div class="form-group col-lg-6">
-	                            	<input type="text" name="billing_address" required="" placeholder="상품명 입력"/>
+	                            	<input type="text" name="productName" placeholder="상품명 입력"/>
 	                        	</div>
 	                     	</div>
                             <div class="row">
                                 <div class="form-group col-lg-6">
-                                    <input type="text" id="hopeArea" name="billing_address" required="" placeholder="희망 설치지역 입력" readonly/>
+                                    <input type="text" id="hopeArea" name="desiredInstallArea" required placeholder="희망 설치지역 입력" readonly/>
                                 </div>
                                 <div class="col-2">
 		                            <div>
@@ -176,20 +230,20 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-lg-6">
-                                    <input required="" type="text" name="zipcode" placeholder="희망 계약기간 입력" />
+                                    <input type="text" name="remainingMonths" placeholder="희망 계약기간 입력" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-lg-6">
-                                    <input required="" type="text" name="cname" placeholder="희망 렌탈료 입력" />
+                                    <input type="text" name="rentalFee" placeholder="희망 렌탈료 입력" />
                                 </div>
                             </div>
                             <div class="form-group mb-30">
-                                <textarea name="detailDescription" rows="5" placeholder="기타 상세 설명을 입력해주세요."></textarea>
+                                <textarea name="assigneeContent" rows="5" placeholder="기타 상세 설명을 입력해주세요."></textarea>
                             </div>
                             <div class="row align-items-end">
 			                    <div class="col-md-2 col-2 ms-auto">
-			                        <button type="submit"
+			                        <button type="submit" id="addAssigneeBoardBtn"
 			                        		class="btn btn-warning w-20 rounded font-lg hover-up text-white justify-content-center fs-6" >등록</button>
 			                    </div>
 			                    <div class="col-md-2 col-2">
