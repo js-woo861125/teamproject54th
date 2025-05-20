@@ -74,12 +74,12 @@
 			cust_id = #{memberId};
   	</update>
   	
-  	<update id="modifyCommonInfo" parameterType="CustomerMember">
+  	<update id="modifyCommonInfo" parameterType="map">
   		/* 회원 공통정보 수정 */
 		UPDATE members
 		<set>
-			<if test="memberPw != null and memberPw != ''">
-				members_pw = #{memberPw}, 			
+			<if test="newPw != null and newPw != ''">
+				members_pw = #{newPw},
 			</if>
 				state_transition_date = CURDATE()	
 		</set>		 
@@ -87,6 +87,16 @@
 			members_id = #{memberId};
   	</update>
   
+	<select id="isPwCheck" parameterType="map" resultType="boolean">
+		/* 비밀번호 일치여부 체크 */
+		SELECT 
+			COUNT(*)
+    	FROM 
+    		members
+    	WHERE 
+    		members_id = #{memberId} 
+    		AND members_pw = #{memberPw};
+	</select>
   
 	<select id="getCorpInfoById" resultType="ks54team01.customer.member.domain.CustomerMember">
 		/* 기업고객 정보 조회 */
