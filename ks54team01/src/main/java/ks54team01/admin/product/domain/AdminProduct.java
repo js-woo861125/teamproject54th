@@ -1,5 +1,6 @@
 package ks54team01.admin.product.domain;
 
+import ks54team01.common.file.domain.FileMetaData;
 import lombok.Data;
 
 @Data
@@ -12,5 +13,11 @@ public class AdminProduct {
 	    private String productStatus; 
 	    private String registerDate; 
 	    private String revisionDate; 
+	    
+	    private String itemNo;
+	    private String productImage;
+	    private String modelName;
+	    
+	    private FileMetaData mainImageData; 
 	}
 
