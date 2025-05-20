@@ -1,332 +1,345 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{admin/layout/default}">
-	<head>
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/default}">
+<head>
     </head>
-    
+<body>
+<th:block layout:fragment="content">
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">매출조회 및 정산</h2>
+                <p>접속자 ID 표시??</p>
+            </div>
+        </div>
+        <header class="card card-header">
+            <form th:action="@{/admin/payment/searchEnterprise}" method="get">
+                <div class="row gx-3">
+                    <div class="d-flex">
+                        <div class="col-md-2 col-12">
+                           <select class="form-select" name="searchKey">
+                               <option value="entCeoNo" th:selected="${searchKey == 'entCeoNo'}" >대표코드</option>
+                           </select>
+                        </div>
+                        <div class="col-md-4 ml-5">
+                            <input type="text" id="searchInput" name="searchValue" th:value="${searchValue}" placeholder=" 입점업체 조회 후 검색해주세요" class="form-control" disabled/>
+                        </div>
+                        <div class="col-md-1 ml-5" >
+                            <button type="submit" id="searchButton" class="form-control btn-sm btn btn-outline-dark center-text" style="font-size: 1.2rem;" disabled> 🔎검색</button>
+                        </div>
+                        <div class="col-sm-2 ml-5">
+                            <button type="button" class="form-control btn btn-outline-dark center-text" style="font-size: 1.2rem;"
+                                    th:onclick="'javascript:openEnterPricseList(\'' + @{/admin/enterprise/searchPopup} + '\'); return false;'">
+                                <i class="bi bi-list-ul ml-30">📚업체조회</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </header>
 
-<th:block layout:fragment="content">     
-            
-	<section class="content-main">
-		<div class="content-header">
-		    <div>
-		        <h2 class="content-title card-title">매출조회 및 정산</h2>
-		        <p>접속자 ID 표시??</p>
-		    </div>    
-		</div>
-	<header class="card card-header">
-    <form th:action="@{/admin/payment/searchEnterprise}" method="get">
-        <div class="row gx-3">
-            <div class="d-flex">
-                <div class="col-md-2 col-12">
-                   <select class="form-select" name="searchKey">
-                       <option value="entCeoNo" th:selected="${searchKey == 'entCeoNo'}" >대표코드</option>
-                   </select>
-                </div>
-                <div class="col-md-4 ml-5">
-                    <input type="text" id="searchInput" name="searchValue" th:value="${searchValue}" placeholder=" 입점업체 조회 후 검색해주세요" class="form-control" readonly/>
-                </div>
-                <div class="col-md-1 ml-5" >
-                    <button type="submit" id="searchButton" class="form-control btn-sm btn btn-outline-dark center-text"  style="font-size: 1.2rem;"> 🔎검색</button>
-                </div>
-                <div class="col-sm-2 ml-5">
-                    <button type="button" class="form-control btn btn-outline-dark center-text" style="font-size: 1.2rem;"
-                            th:onclick="'javascript:openEnterPricseList(\'' + @{/admin/enterprise/searchPopup} + '\'); return false;'">
-                        <i class="bi bi-list-ul ml-30">📚업체조회</i>
-                    </button>
+        <div class="row">
+            <div class="col-xl-12 col-lg-12">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <div class="card mb-4">
+                            <article class="card-body">
+                                <th:block th:if="${!#lists.isEmpty(entList)}" th:each="el : ${entList}">
+                                    <h5 class="card-title" th:text="${el.entName}">상호</h5>
+                                        <div class="new-member-list">
+                                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                                <div class="d-flex align-items-center">
+                                                    <img th:src="@{/manage/assets/imgs/vendor/vendor-1.png}" alt="vendorImage" class="vendor mr-30 ml-10" />
+                                                    <div>
+                                                        <h4 class="mb-2" th:text=" ' 대표자 : '+${el.entCeoName}">대표자명</h4>
+                                                        <ul>
+                                                            <li>
+                                                                   <h5 class="mb-1" th:text="'• 사업자번호 : '+ ${el.entBrno}">사업자번호</h5>
+                                                            </li>
+                                                            <li>
+                                                                   <h5 class="mb-1" th:text="'• 업체코드 : '+ ${el.ceoCode}">업체코드</h5>
+                                                            </li>
+                                                            <li>
+                                                                <h5 class="mb-1" th:text="'• 계약만료일 : '+ ${el.contractEndDate}">계약만료일</h5>
+                                                            </li>
+                                                            <li>
+                                                                <h5 class="text-success" th:text="'• 계약상태 : '+ ${el.entContractStatus}"><span>계약상태</span></h5>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </th:block>
+                                <th:block th:unless="${!#lists.isEmpty(entList)}">
+                                    <p>조회된 업체가 없습니다.</p>
+                                </th:block>
+                            </article>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="card mb-4">
+                            <article class="card-body">
+                                <h5 class="card-title">정산내역</h5>
+                                <ul class="verti-timeline list-unstyled font-sm">
+                                    <li class="event-list">
+                                        <div class="event-timeline-dot">
+                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                        </div>
+                                        <div class="media">
+                                            <div class="me-3">
+                                                <h6><span>20 May</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                            </div>
+                                            <div class="media-body">
+                                                <div>₩12,345,678</div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="event-list">
+                                        <div class="event-timeline-dot">
+                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                        </div>
+                                        <div class="media">
+                                            <div class="me-3">
+                                                <h6><span>20 Apr</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                            </div>
+                                            <div class="media-body">
+                                                <div>₩12,345,678</div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="event-list">
+                                        <div class="event-timeline-dot">
+                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                        </div>
+                                        <div class="media">
+                                            <div class="me-3">
+                                                <h6><span>20 Mar</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                            </div>
+                                            <div class="media-body">
+                                                <div>₩12,345,678</div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="event-list">
+                                        <div class="event-timeline-dot">
+                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                        </div>
+                                        <div class="media">
+                                            <div class="me-3">
+                                                <h6><span>20 Feb</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                            </div>
+                                            <div class="media-body">
+                                                <div>₩12,345,678</div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="event-list">
+                                        <div class="event-timeline-dot">
+                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                        </div>
+                                        <div class="media">
+                                            <div class="me-3">
+                                                <h6><span>20 Jan</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                            </div>
+                                            <div class="media-body">
+                                                <div>₩12,345,678</div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </article>
+                        </div>
+                    </div>
+                    <div class="col-lg-3" th:if="${!#lists.isEmpty(adminMonthlyFeeList)}"
+                                             th:each="ll : ${adminMonthlyFeeList}">
+                        <div class="card card-body mb-1 d-flex">
+                            <div class="text" >
+                                <h3> △ <span th:text="${ll.settlementMonth}"> </span>매출합계 ▽</h3>
+                                <h3 class="text-warning text-center">1+2+3-4 = ₩ <span th:text="${ll.entFee}"></span></h3>
+                            </div>
+                        </div>
+
+                        <div class="card card-body" style="height: 170px;">
+                            <article class="icontext">
+                                <div class="d-flex">
+                                    <h4 class="mb-2">△ 매출구분 ▽</h4>
+                                </div>
+                            </article>
+                            <div class="ml-30">
+                                <h5 class="card-title mb-1">1.렌탈 : <span class="text-warning">₩345,678</span></h5>
+                                <h5 class="card-title mb-1">2.판매 : <span class="text-warning">₩1,000,000</span></h5>
+                                <h5 class="card-title mb-1">3.위약 : <span class="text-warning">₩0</span></h5>
+                                <h5 class="card-title mb-1">4.플랫폼수수료 : <span class="text-warning">₩0</span></h5>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-         </div>
-    </form>
-	</header>
+        </div>
+        <div class="card mb-4">
+            <header class="card-header">
+                <h4 class="card-title">매출내역</h4>
+                <div class="row align-items-center">
+                    <div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
+                        </div>
+                    <div class="col-md-2 col-6">
+                        <input type="date" value="02.05.2021" class="form-control" />
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <input type="date" value="02.05.2021" class="form-control" />
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <div class="custom_select">
+                            <select class="form-select select-nice">
+                                <option selected>Status</option>
+                                <option>All</option>
+                                <option>Paid</option>
+                                <option>Chargeback</option>
+                                <option>Refund</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div class="table-responsive">
+                        <table class="table align-middle table-nowrap mb-0">
+                            <thead class="table-light">
+                                <tr class="text-center">
 
-	<div class="row">
-	    <div class="col-xl-12 col-lg-12">
-	        <div class="row">
-	            <div class="col-lg-5">
-	                <div class="card mb-4">
-	                    <article class="card-body">
-	                		<th:block th:if="${!#lists.isEmpty(entList)}" th:each="el : ${entList}">
-	                        	<h5 class="card-title" th:text="${el.entName}">상호</h5>
-	                        		<div class="new-member-list">
-			                            <div class="d-flex align-items-center justify-content-between mb-4">
-			                                <div class="d-flex align-items-center">
-			                                    <img th:src="@{/manage/assets/imgs/vendor/vendor-1.png}" alt="vendorImage" class="vendor mr-30 ml-10" />
-			                                    <div>
-			                                        <h4 class="mb-2" th:text=" ' 대표자 : '+${el.entCeoName}">대표자명</h4>
-			                                    	<ul>
-				                                    	<li>
-				                                    		 <h5 class="mb-1" th:text="'• 사업자번호 : '+ ${el.entBrno}">사업자번호</h5>
-					                                    </li>	
-					                                    <li>
-				                                    		 <h5 class="mb-1" th:text="'• 업체코드 : '+ ${el.ceoCode}">업체코드</h5>
-					                                    </li>
-					                                    <li>
-				                                    		<h5 class="mb-1" th:text="'• 계약만료일 : '+ ${el.contractEndDate}">계약만료일</h5>
-					                                    </li>	
-					                                    <li>
-				                                    		<h5 class="text-success" th:text="'• 계약상태 : '+ ${el.entContractStatus}"><span>계약상태</span></h5>
-					                                    </li>	
-			                                    	</ul>
-			                                    </div>
-			                                </div>
-				                         </div>
-			                     	</div>
-			                </th:block>
-							<th:block th:unless="${!#lists.isEmpty(entList)}">
-                            	<p>조회된 업체가 없습니다.</p>
-							</th:block>
-			                  
-			              </article>
-					</div>
-				</div>
-	
-	            <div class="col-lg-4">
-	                <div class="card mb-4">
-	                    <article class="card-body">
-	                        <h5 class="card-title">정산내역</h5>
-	                        <ul class="verti-timeline list-unstyled font-sm">
-	                            <li class="event-list">
-	                                <div class="event-timeline-dot">
-	                                    <i class="material-icons md-play_circle_outline font-xxl"></i>
-	                                </div>
-	                                <div class="media">
-	                                    <div class="me-3">
-	                                        <h6><span>20 May</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
-	                                    </div>
-	                                    <div class="media-body">
-	                                        <div>₩12,345,678</div>
-	                                    </div>
-	                                </div>
-	                            </li>
-	                            <!-- active 녹색 -->
-	                            <li class="event-list">
-	                                <div class="event-timeline-dot">
-	                                    <!-- animation-fade-right 애니메이션 효과 -->
-	                                    <i class="material-icons md-play_circle_outline font-xxl"></i>
-	                                </div>
-	                                <div class="media">
-	                                    <div class="me-3">
-	                                        <h6><span>20 Apr</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
-	                                    </div>
-	                                    <div class="media-body">
-	                                        <div>₩12,345,678</div>
-	                                    </div>
-	                                </div>
-	                            </li>
-	                            <li class="event-list">
-	                                <div class="event-timeline-dot">
-	                                    <i class="material-icons md-play_circle_outline font-xxl"></i>
-	                                </div>
-	                                <div class="media">
-	                                    <div class="me-3">
-	                                        <h6><span>20 Mar</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
-	                                    </div>
-	                                    <div class="media-body">
-	                                        <div>₩12,345,678</div>
-	                                    </div>
-	                                </div>
-	                            </li>
-	                            <li class="event-list">
-	                                <div class="event-timeline-dot">
-	                                    <i class="material-icons md-play_circle_outline font-xxl"></i>
-	                                </div>
-	                                <div class="media">
-	                                    <div class="me-3">
-	                                        <h6><span>20 Feb</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
-	                                    </div>
-	                                    <div class="media-body">
-	                                        <div>₩12,345,678</div>
-	                                    </div>
-	                                </div>
-	                            </li>
-	                            <li class="event-list">
-	                                <div class="event-timeline-dot">
-	                                    <i class="material-icons md-play_circle_outline font-xxl"></i>
-	                                </div>
-	                                <div class="media">
-	                                    <div class="me-3">
-	                                        <h6><span>20 Jan</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
-	                                    </div>
-	                                    <div class="media-body">
-	                                        <div>₩12,345,678</div>
-	                                    </div>
-	                                </div>
-	                            </li>
-	                        </ul>
-	                    </article>
-	                </div>
-	            </div>
-				<div class="col-lg-3" th:if="${!#lists.isEmpty(adminMonthlyFeeList)}"
-                        				th:each="ll : ${adminMonthlyFeeList}">
-					<div class="card card-body mb-1 d-flex">	
-						<div class="text" >
-							<h3> △ <span th:text="${ll.settlementMonth}"> </span> 매출합계 ▽</h3>
-							<h3 class="text-warning text-center"> ₩ <span th:text="${ll.entFee}"></span></h3>
-							
-														
-								
-						</div>
-								
-					</div>
-		
-						<div class="card card-body" style="height: 170px;">
-							<article class="icontext">
-								<div class="d-flex">
-									
-									<h4 class="mb-2">△ 매출구분 ▽</h4>
-								</div>
-							</article>
-							<div class="ml-80">
-								<h5 class="card-title mb-1">1.렌탈 : <span class="text-warning">₩345,678</span></h5>
-								<h5 class="card-title mb-1">2.판매 : <span class="text-warning">₩1,000,000</span></h5>
-								<h5 class="card-title mb-1">3.위약 : <span class="text-warning">₩0</span></h5>
-								<h5 class="card-title mb-1">4.플랫폼수수료 : <span class="text-warning">₩0</span></h5>
-							</div>    
-						</div>
-				</div>
-	        </div>
-	    </div> 
-	</div>
-	<div class="card mb-4">
-		<header class="card-header">
-			<h4 class="card-title">매출내역</h4>
-			<div class="row align-items-center">
-				<div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
-					<!-- <div class="custom_select">
-						<select class="form-select select-nice">
-							<option selected>All Categories</option>
-							<option>Women's Clothing</option>
-							<option>Men's Clothing</option>
-							<option>Cellphones</option>
-							<option>Computer & Office</option>
-							<option>Consumer Electronics</option>
-							<option>Jewelry & Accessories</option>
-							<option>Home & Garden</option>
-							<option>Luggage & Bags</option>
-							<option>Shoes</option>
-							<option>Mother & Kids</option>
-						</select>
-					</div> -->
-				</div>
-				<div class="col-md-2 col-6">
-					<input type="date" value="02.05.2021" class="form-control" />
-				</div>
-				<div class="col-md-2 col-6">
-					<input type="date" value="02.05.2021" class="form-control" />
-				</div>
-				<div class="col-md-2 col-6">
-					<div class="custom_select">
-						<select class="form-select select-nice">
-							<option selected>Status</option>
-							<option>All</option>
-							<option>Paid</option>
-							<option>Chargeback</option>
-							<option>Refund</option>
-						</select>
-					</div>
-				</div>
-			</div>
-		</header>
-			<div class="card-body">
-			<div class="table-responsive">
-				<div class="table-responsive">
-					<table class="table align-middle table-nowrap mb-0">
-						<thead class="table-light">
-							<tr class="text-center">
-						
-								<th class="align-middle" scope="col">수수료관리코드</th>
-								<th class="align-middle" scope="col">업체코드</th>
-								<th class="align-middle" scope="col">매출구분</th>
-								<th class="align-middle" scope="col">플렛폼수수료</th>
-								<th class="align-middle" scope="col">입점업체 매출</th>
-								<th class="align-middle" scope="col">지급예정일</th>
-								<th class="align-middle" scope="col">지급일</th>
-								<th class="align-middle" scope="col">정산연월</th>
-								<th class="align-middle" scope="col">마감구분</th>
-								<th class="align-middle" scope="col">상태</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr class="text-center" th:if="${!#lists.isEmpty(adminFeeList)}" th:each="l : ${adminFeeList}">
-								<th class="align-middle" scope="col" th:text="${l.feeNo}">수수료관리 코드</th>
-								<th class="align-middle" scope="col" th:text="${l.entCeoNo}">업체코드</th>
-								<th class="align-middle" scope="col" th:text="${l.paymentDetils}">매출구분</th>
-								<th class="align-middle" scope="col" th:text="${l.platFormFee}">플렛폼수수료</th>
-								<th class="align-middle" scope="col" th:text="${l.entSales}">입점업체 매출</th>
-								<th class="align-middle" scope="col" th:text="${l.provisionScheduleDate}">지급예정일</th>
-								<th class="align-middle" scope="col" th:text="${l.provisionDate}">지급일</th>
-								<th class="align-middle" scope="col" th:text="${l.settlementMonth}">정산연월</th>          
-								<th class="align-middle" scope="col" th:text="${l.closingSttelement}">마감구분</th>
-								<th class="align-middle" scope="col" th:text="${l.paymentStatus}">상태</th>
-							</tr>
-							<tr th:unless="${!#lists.isEmpty(adminFeeList)}">
-								<td colspan="12">등록없음</td>
-							</tr>
-							
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<!-- table-responsive end// -->
-		</div>
-	</div>
+                                    <th class="align-middle" scope="col">수수료관리코드</th>
+                                    <th class="align-middle" scope="col">업체코드</th>
+                                    <th class="align-middle" scope="col">매출구분</th>
+                                    <th class="align-middle" scope="col">플렛폼수수료</th>
+                                    <th class="align-middle" scope="col">입점업체 매출</th>
+                                    <th class="align-middle" scope="col">지급예정일</th>
+                                    <th class="align-middle" scope="col">지급일</th>
+                                    <th class="align-middle" scope="col">정산연월</th>
+                                    <th class="align-middle" scope="col">마감구분</th>
+                                    <th class="align-middle" scope="col">상태</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center" th:if="${!#lists.isEmpty(adminFeeList)}" th:each="l : ${adminFeeList}">
+                                    <th class="align-middle" scope="col" th:text="${l.feeNo}">수수료관리 코드</th>
+                                    <th class="align-middle" scope="col" th:text="${l.entCeoNo}">업체코드</th>
+                                    <th class="align-middle" scope="col" th:text="${l.paymentDetils}">매출구분</th>
+                                    <th class="align-middle" scope="col" th:text="${l.platFormFee}">플렛폼수수료</th>
+                                    <th class="align-middle" scope="col" th:text="${l.entSales}">입점업체 매출</th>
+                                    <th class="align-middle" scope="col" th:text="${l.provisionScheduleDate}">지급예정일</th>
+                                    <th class="align-middle" scope="col" th:text="${l.provisionDate}">지급일</th>
+                                    <th class="align-middle" scope="col" th:text="${l.settlementMonth}">정산연월</th>
+                                    <th class="align-middle" scope="col" th:text="${l.closingSttelement}">마감구분</th>
+                                    <th class="align-middle" scope="col" th:text="${l.paymentStatus}">상태</th>
+                                </tr>
+                                <tr th:unless="${!#lists.isEmpty(adminFeeList)}">
+                                    <td colspan="12">등록없음</td>
+                                </tr>
 
-	<div class="pagination-area mt-30 mb-50">
-		<nav aria-label="Page navigation example">
-			<ul class="pagination justify-content-start">
-				<li class="page-item active"><a class="page-link" href="#">01</a></li>
-				<li class="page-item"><a class="page-link" href="#">02</a></li>
-				<li class="page-item"><a class="page-link" href="#">03</a></li>
-				<li class="page-item"><a class="page-link dot" href="#">...</a></li>
-				<li class="page-item"><a class="page-link" href="#">16</a></li>
-				<li class="page-item">
-					<a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-				</li>
-			</ul>
-		</nav>
-	</div>
-</section>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                </div>
+        </div>
+
+        <div class="pagination-area mt-30 mb-50">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-start">
+                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                    <li class="page-item"><a class="page-link" href="#">02</a></li>
+                    <li class="page-item"><a class="page-link" href="#">03</a></li>
+                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#">16</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </section>
 </th:block>
 
+<th:block layout:fragment="jsScript">
+    <script>
+        // 업체 조회 팝업 함수 (기존과 동일)
+        function openEnterPricseList(url) {
+            window.open(url, 'entListPopup', 'width=1250,height=600,scrollbars=yes');
+        }
 
- 	<th:block layout:fragment="jsScript">
-		<script>
-			function openEnterPricseList(url) {
-				window.open(url, 'entListPopup', 'width=1250,height=600,scrollbars=yes');
-			}
+        // 팝업에서 searchValue를 받아왔을 때 호출될 함수 (예시)
+        // 팝업 페이지에서 이 함수를 호출하여 값을 넘겨주세요.
+        // 예: opener.updateSearchValue('새로운업체코드');
+        function updateSearchValue(value) {
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
 
-			function updateMonth() {
-				const now = new Date();
-				const currentMonth = now.getMonth(); // getMonth()는 0부터 시작하므로 1을 더합니다.
-				document.getElementById('realtimeMonth').textContent = currentMonth;
-			}
-
-				// 페이지 로딩 시 초기 월 표시
-				updateMonth();
-
-				// 1초마다 updateMonth 함수를 호출하여 실시간으로 월 업데이트 (필요에 따라 간격 조정)
-				setInterval(updateMonth, 1000);
-
-
-		</script>
-	</th:block>
-	
-		<script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-        <script src="assets/js/vendors/select2.min.js"></script>
-        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
-        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-        <script src="assets/js/vendors/chart.js"></script>
-        <!-- Main Script -->
-        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-        <script src="assets/js/custom-chart.js" type="text/javascript"></script>
+            if (searchInput && searchButton) { // 요소가 존재하는지 다시 확인
+                searchInput.value = value; // 팝업에서 넘겨받은 값으로 설정
+                // 값이 채워졌으므로 disabled 해제 및 버튼 활성화
+                searchInput.disabled = false;
+                searchButton.disabled = false;
+                console.log('팝업에서 값 수신: searchInput 활성화, searchButton 활성화. 값:', value);
+            }
+        }
 
 
-	
-	
-	
-       
-    </body>
+        // DOMContentLoaded 이벤트 리스너
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+
+            console.log('--- DOMContentLoaded 시작 ---');
+            console.log('searchInput 요소:', searchInput);
+            console.log('searchButton 요소:', searchButton);
+
+            // 요소가 제대로 찾아졌는지 확인
+            if (!searchInput || !searchButton) {
+                console.error('searchInput 또는 searchButton 요소를 찾을 수 없습니다. ID 오타 확인 필요.');
+                return;
+            }
+
+            // HTML에서 이미 disabled 되어 있는 상태를 기준으로 시작합니다.
+            // 추가적으로 disabled = true를 설정할 필요는 없습니다.
+
+            // 1. 초기 상태: searchInput에 값이 미리 채워져 있다면 (예: 서버에서 ${searchValue}로 값이 넘어온 경우)
+            //    disabled 속성을 제거하고 검색 버튼을 활성화합니다.
+            const initialInputValue = searchInput.value.trim();
+            if (initialInputValue.length > 0) {
+                searchInput.disabled = false;  // 값이 있으면 searchInput 활성화
+                searchButton.disabled = false; // 값이 있으면 searchButton 활성화
+                console.log('초기 searchValue 존재 (' + initialInputValue + '), searchInput 및 searchButton 활성화.');
+            } else {
+                // 값이 없다면 HTML에 있는 disabled 상태를 유지합니다.
+                // 즉, searchInput과 searchButton은 여전히 disabled 상태입니다.
+                console.log('초기 searchValue 없음, searchInput 및 searchButton은 disabled 상태 유지.');
+            }
+
+            // 2. searchInput에 텍스트가 입력될 때마다 실행될 이벤트 리스너를 추가합니다.
+            //    이것은 사용자가 직접 입력하거나 (만약 searchInput이 활성화된 상태라면)
+            //    또는 팝업을 통해 값이 채워진 후 추가적인 입력을 할 때 작동합니다.
+            searchInput.addEventListener('input', function() {
+                const currentInputValue = this.value.trim();
+                console.log('input 이벤트 발생. 현재 입력 값:', currentInputValue);
+
+                if (currentInputValue.length > 0) {
+                    // 사용자가 값을 입력했거나, 팝업으로 채워진 후 추가 입력 시
+                    searchButton.disabled = false;
+                    console.log('입력 감지: 텍스트가 있어 검색 버튼 활성화.');
+                } else {
+                    // 값이 모두 지워지면 다시 비활성화
+                    searchButton.disabled = true;
+                    console.log('입력 감지: 텍스트가 없어 검색 버튼 비활성화.');
+                }
+            });
+            console.log('--- DOMContentLoaded 종료 ---');
+        });
+    </script>
+</th:block>
+
+</body>
 </html>
