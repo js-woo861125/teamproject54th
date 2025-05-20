@@ -34,12 +34,23 @@ public class AdminProductServiceImpl implements AdminProductService{
 
 		@Override
 		public void modifyProduct(AdminProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails) {
-		    // 1. 상품 정보 업데이트
+		 
 		    adminProductMapper.modifyProduct(product);
 
-		  
-		    fileService.addFiles(mainImage, "main", product.getModelNo());
-		    fileService.addFiles(thumbnails, "thumbnail", product.getModelNo());
+		    // 수정시 사진 변경있다면 기존 데이터 삭제
+		    if (mainImage != null && mainImage.length > 0 && !mainImage[0].isEmpty()) {
+		        
+		        fileService.deleteFiles(product.getProductNo(), "mainImage");
+		      
+		        fileService.addFiles(mainImage, "mainImage", product.getProductNo());
+		    }
+		   
+		    if (thumbnails != null && thumbnails.length > 0 && !thumbnails[0].isEmpty()) {
+		      
+		        fileService.deleteFiles(product.getProductNo(), "thumbnail");
+		       
+		        fileService.addFiles(thumbnails, "thumbnail", product.getProductNo());
+		    }
 		}
 		
 		@Override
@@ -80,7 +91,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 		}
 		
 		@Override
-		public void addProduct(AdminAddProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails, MultipartFile[] details) {
+		public void addProduct(AdminAddProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails) {
 			
 			// Pk 랜덤 생성
 			String productNo = UUID.randomUUID().toString().replace("-", "");
@@ -104,7 +115,6 @@ public class AdminProductServiceImpl implements AdminProductService{
 	
 	        //  파일 메타데이터 DB에 등록   
 	        fileService.addFiles(mainImage, "main", product.getModelNo());
-	        fileService.addFiles(thumbnails, "thumbnail", product.getModelNo());
         
  
 		}
