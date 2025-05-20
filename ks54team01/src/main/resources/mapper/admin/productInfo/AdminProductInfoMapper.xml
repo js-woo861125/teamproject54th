@@ -267,13 +267,31 @@
 		</where>				
 	</select>
 
+	<delete id="removeItemInfoByNo" parameterType="String">
+		/* 품목 삭제 */
+		DELETE
+		FROM
+			item
+		WHERE
+			item_no = #{itemNo};	
+	</delete>
+
 	<delete id="removeBrandInfoByNo" parameterType="String">
-		/* 상품정보 브랜드 삭제 */
+		/* 브랜드 삭제 */
 		DELETE 
 		FROM 
 			brand
 		WHERE 
 			brand_no = #{brandNo};
+	</delete>
+	
+	<delete id="removeCategoryInfoByNo" parameterType="String">
+		/* 카테고리 삭제 */
+		DELETE
+		FROM
+			products_category
+		WHERE
+			product_category_no = #{categoryNo};
 	</delete>
 	
 	<select id="isSpecContentCheck" parameterType="String" resultType="boolean">
@@ -308,7 +326,7 @@
 		WHERE
 			model_nm = #{modelName}
 			AND product_category_no = #{categoryNo}
-			AND brand_no = #{brandNo};	
+			AND brand_no = #{brandNo}	
 			AND item_no = #{itemNo};	
 	</select>
 
@@ -437,6 +455,41 @@
 		WHERE 
 		  product_category_no = #{categoryNo};
 	</update>
+	
+		
+	<select id="getCategoryNoByModelNo" resultType="String">
+		/* 모델 번호로 카테고리 조회 */
+		SELECT
+			product_category_no
+		FROM
+			model
+		WHERE
+			model_no = #{modelNo}
+	</select>
+	
+	<select id="getSpecListByCategoryNo" resultType="ProductInfoCategorySpec">
+		/* 카테고리 번호로 스펙 조회 */
+		SELECT
+			spec_no AS specNo,
+			spec_nm AS specName,
+			product_category_no
+		FROM
+			products_spec
+		WHERE
+			product_category_no = #{categoryNo}
+	</select>
+	
+	<select id="getItemListByCategoryNo" resultType="ProductInfoItem">
+		/* 카테고리 번호로 품목 조회 */
+		SELECT
+			item_no AS itemNo,
+			item_nm AS itemName,
+			product_category_no
+		FROM
+			item	
+		WHERE
+			product_category_no = #{categoryNo}	
+	</select>
 	
 	<select id="getModelSpecInfoByNo" parameterType="String" resultMap="modelSpecResultMap"> 
 		/* 모델별/상세스펙 조회 */

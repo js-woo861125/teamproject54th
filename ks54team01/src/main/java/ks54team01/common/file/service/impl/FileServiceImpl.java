@@ -39,7 +39,7 @@ public class FileServiceImpl implements FileService {
 	    for (FileMetaData file : fileList) {
 	        file.setRefId(refId);
 	        file.setFileType(fileType);
-	        file.setUseStatus("Y");
+	        file.setUseStatus("사용중");
 	        file.setRegisterDate(LocalDateTime.now());
 	        file.setRevisionDate(LocalDateTime.now());
 	    }
