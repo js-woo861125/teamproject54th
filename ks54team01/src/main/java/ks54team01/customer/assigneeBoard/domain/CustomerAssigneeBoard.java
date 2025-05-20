@@ -1,6 +1,7 @@
 package ks54team01.customer.assigneeBoard.domain;
 
 import ks54team01.admin.productInfo.domain.ProductInfoCategory;
+import ks54team01.admin.productInfo.domain.ProductInfoItem;
 import ks54team01.customer.member.domain.CustomerMember;
 import lombok.Data;
 
@@ -23,4 +24,5 @@ public class CustomerAssigneeBoard {
 	private CustomerMember customerMember;
 	
 	private ProductInfoCategory productInfoCategory;
+	private ProductInfoItem productInfoItem;
 }

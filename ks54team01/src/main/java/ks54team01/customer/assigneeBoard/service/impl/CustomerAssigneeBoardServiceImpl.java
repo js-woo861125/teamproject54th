@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ks54team01.admin.productInfo.domain.ProductInfoCategory;
+import ks54team01.admin.productInfo.mapper.AdminProductInfoMapper;
 import ks54team01.customer.assigneeBoard.domain.CustomerAssigneeBoard;
 import ks54team01.customer.assigneeBoard.mapper.CustomerAssigneeBoardMapper;
 import ks54team01.customer.assigneeBoard.service.CustomerAssigneeBoardService;
@@ -21,6 +23,35 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomerAssigneeBoardServiceImpl implements CustomerAssigneeBoardService{
 
 	private final CustomerAssigneeBoardMapper customerAssigneeBoardMapper;
+	private final AdminProductInfoMapper adminProductInfoMapper;
+	
+	@Override
+	public void addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard) {
+		customerAssigneeBoardMapper.addAssigneeBoard(customerAssigneeBoard);
+	}
+	
+	/**
+	 *  양수 게시글 등록 시 카테고리 선택
+	 */
+	@Override
+	public List<CustomerAssigneeBoard> selectAssigneeBoardCategory(String mdCategoryNo) {
+		
+
+		List<CustomerAssigneeBoard> cateItemList = customerAssigneeBoardMapper.getMiddleCategory(mdCategoryNo);
+		
+	    return cateItemList;
+	}
+	
+	/**
+	 * 양수 게시글 등록
+	 */
+	@Override
+	public List<ProductInfoCategory> addAssigneeBoard() {
+
+		List<ProductInfoCategory> categoryList = adminProductInfoMapper.getCategoryList();
+		
+		return categoryList;
+	}
 	
 	/**
 	 * 내 양수 게시글 목록 조회
