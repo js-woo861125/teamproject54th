@@ -46,11 +46,13 @@
 	<th:block layout:fragment="customContents">
 		<div class="container mb-30">
             <div class="row flex-row-reverse">
-                <div class="col-lg-11">
+                <div class="col-lg-10">
                     <div class="section-title">
                         <h1 class="heading-2 mb-50">양도 받기!</h1>
                         <div class="col-md-2 col-2 ms-auto mt-50">
-							<a th:href="@{/customer/assigneeBoard/addAssigneeBoard}" class="btn btn-success w-30 rounded font-lg hover-up text-white justify-content-center fs-6 mb-50">글쓰기</a>
+							<a th:href="@{/customer/assigneeBoard/addAssigneeBoard}" class="btn btn-success w-30 rounded font-lg hover-up text-white justify-content-center fs-6 mb-50">
+								글쓰기
+							</a>
 						</div>
                     </div>
                     <div class="w-25 widget_search mb-50">
@@ -62,7 +64,7 @@
                             </form>
                         </div>
                     </div> 
-                    <div class="shop-product-fillter">
+                    <div class="shop-product-fillter d-flex col-lg-10">
 						<div class="totall-product">
 							<h5 class="text-body">
 								양수 상품
@@ -91,12 +93,12 @@
 							</div>
 						</th:block>
 					</div>
-                    <div class="product-list mb-50">
+                    <div class="product-list mb-50 col-lg-10">
                         <th:block th:if="${!#lists.isEmpty(assigneeBoardList)}"
 								  th:each="l : ${assigneeBoardList}">
 	                        <!-- 상품1 -->
-	                        <div class="product-cart-wrap border">
-	                            <div class="product-content-wrap mt-50 mb-30 ml-50">
+	                        <div class="product-cart-wrap border" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
+	                            <div class="product-content-wrap mt-50 mb-30 ml-50" >
 	                                <h4><a th:text="${#strings.isEmpty(l.productName) ? '상관없음' : l.productName}" th:href="@{/customer/assigneeBoard/assigneeBoardDetail(assigneeBoardNum=${l.assigneeBoardNum})}">그램 프로 노트북 16인치 (옵시디안 블랙)</a></h4>
                                 	<div class="dropdown">
                                         <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
@@ -123,6 +125,8 @@
 	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">희망설치지역</span>
 	                                        <span th:text="${l.desiredInstallArea}" style="color: black; font-size: 20px;">전주</span>
 	                                     </div>
+	                                </div>
+	                                <div class="product-price d-flex">
 	                                     <div>
 	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">마감일</span>
 	                                        <span th:text="${l.boardValidDate}" style="color: black; font-size: 20px;">2025-04-10</span>
