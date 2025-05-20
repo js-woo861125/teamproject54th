@@ -22,6 +22,7 @@ import ks54team01.admin.productInfo.domain.ProductInfoBrand;
 import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.admin.productInfo.domain.ProductInfoItem;
 import ks54team01.admin.productInfo.domain.ProductInfoModel;
+import ks54team01.common.file.domain.FileMetaData;
 import ks54team01.common.file.mapper.FileMapper;
 import ks54team01.common.file.service.FileService;
 import lombok.RequiredArgsConstructor;
@@ -52,28 +53,32 @@ public class AdminProductController {
 	    List<ProductInfoItem> itemList = adminProductService.loadItemList(product.getCategoryNo());
 	    List<ProductInfoBrand> brandList = adminProductService.loadBrandList(product.getCategoryNo(), product.getItemNo());
 	    List<ProductInfoModel> modelList = adminProductService.loadModelList(product.getCategoryNo(), product.getItemNo(), product.getBrandNo());
-
+	    List<FileMetaData> mainImageList = fileService.getFileListByRefId(productNo, "mainImage");
+	    List<FileMetaData> thumbnailList = fileService.getFileListByRefId(productNo, "thumbnail");
 	 
 	    model.addAttribute("product", product);
 	    model.addAttribute("categoryList", categoryList);
 	    model.addAttribute("itemList", itemList);
 	    model.addAttribute("brandList", brandList);
 	    model.addAttribute("modelList", modelList);
-
+	    model.addAttribute("mainImageList");
+	    model.addAttribute("thumbnailList");
 	   
 	    return "admin/product/modifyProductView";
 	}
 	
-		@PostMapping("/modifyProduct")
-		public String modifyProduct(AdminProduct product,
-		                            @RequestParam("mainImage") MultipartFile[] mainImage,
-		                            @RequestParam("thumbnails") MultipartFile[] thumbnails,
-		                            @RequestParam("details") MultipartFile[] details) {
-		   
-		//	adminProductService.modifyProduct(product, mainImage, thumbnails, details);
-		    return "redirect:/admin/product/productList";
-		}
 	
+	@PostMapping("/modifyProduct")
+	public String modifyProduct(
+	    AdminProduct product,
+	    @RequestParam(value = "mainImage", required = false) MultipartFile[] mainImage,
+	    @RequestParam(value = "thumbnails", required = false) MultipartFile[] thumbnails) {
+	   
+		adminProductService.modifyProduct(product, mainImage, thumbnails);
+		
+	    return "redirect:/admin/product/productList";
+	}
+		
 		@GetMapping("/productList")
 	public String getProductList(Model model) {
 		List<AdminProduct> adminProductList = adminProductService.getProductList();
@@ -101,8 +106,7 @@ public class AdminProductController {
 	    @RequestParam("modelNo") String modelNo,
 	    @RequestParam("productName") String productName,
 	    @RequestParam("mainImage") MultipartFile[] mainImage,
-	    @RequestParam("thumbnails") MultipartFile[] thumbnails,
-	    @RequestParam("details") MultipartFile[] details
+	    @RequestParam("thumbnails") MultipartFile[] thumbnails
 	) {
 	    AdminAddProduct addProduct = new AdminAddProduct();
 	    addProduct.setCategoryNo(categoryNo);
@@ -112,7 +116,7 @@ public class AdminProductController {
 	    addProduct.setProductName(productName);
 
 	  
-	    adminProductService.addProduct(addProduct, mainImage, thumbnails, details);
+	    adminProductService.addProduct(addProduct, mainImage, thumbnails);
 
 	    return "redirect:/admin/product/productList";
 	}

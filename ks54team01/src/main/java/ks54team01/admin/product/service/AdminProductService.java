@@ -24,7 +24,7 @@ public interface AdminProductService {
 	void modifyProduct(AdminProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails);
 	
 	// 상품 등록
-	public void addProduct(AdminAddProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails, MultipartFile[] details);
+	public void addProduct(AdminAddProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails);
 	
 	List<AdminProductSpecContent> loadSpecContent(@Param("modelNo") String modelNo);
 	

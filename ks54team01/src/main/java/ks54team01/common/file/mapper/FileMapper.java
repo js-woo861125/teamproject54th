@@ -3,6 +3,7 @@ package ks54team01.common.file.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.data.repository.query.Param;
 
 import ks54team01.common.file.domain.FileMetaData;
 
@@ -19,4 +20,8 @@ public interface FileMapper {
 		
 		// 특정 파일 메타데이터 조회
 		FileMetaData getFileInfoByIdx(String fileIdx);
+		
+		List<FileMetaData> getFileListByRefId(@Param("refId") String refId, @Param("fileType") String fileType);
+		
+		 void deleteFilesByRefIdAndType(@Param("refId") String refId, @Param("fileType") String fileType);
 }
