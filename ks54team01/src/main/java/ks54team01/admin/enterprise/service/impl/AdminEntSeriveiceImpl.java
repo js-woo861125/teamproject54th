@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ks54team01.admin.enterprise.domain.AdminEntAddContract;
 import ks54team01.admin.enterprise.domain.AdminEntDetail;
 import ks54team01.admin.enterprise.domain.AdminEntList;
 import ks54team01.admin.enterprise.mapper.AdminEntMapper;
@@ -17,9 +18,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminEntSeriveiceImpl implements AdminEntListService{
 	
-
 	private final AdminEntMapper adminEntMapper;
 
+	// 입점업체 계약 등록
+	@Override
+	public void addContract(AdminEntAddContract adminEntAddContract) {
+		
+		adminEntMapper.addContract(adminEntAddContract);
+
+	}
+	
 	@Override
     public List<AdminEntList> getEntList() {
 	  	   List<AdminEntList> entList = adminEntMapper.getEntList();

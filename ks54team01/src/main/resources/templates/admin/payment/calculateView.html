@@ -25,15 +25,15 @@
                    </select>
                 </div>
                 <div class="col-md-4 ml-5">
-                    <input type="text" name="searchValue" th:value="${searchValue}" placeholder=" <입점업체 조회 후 검색해주세요> " class="form-control" />
+                    <input type="text" id="searchInput" name="searchValue" th:value="${searchValue}" placeholder=" 입점업체 조회 후 검색해주세요" class="form-control" readonly/>
                 </div>
                 <div class="col-md-1 ml-5" >
-                    <button type="submit" class="form-control btn btn-sm btn-outline-dark center-text"  style="font-size: 1.2rem;"> 🔎검색</button>
+                    <button type="submit" id="searchButton" class="form-control btn-sm btn btn-outline-dark center-text"  style="font-size: 1.2rem;"> 🔎검색</button>
                 </div>
                 <div class="col-sm-2 ml-5">
                     <button type="button" class="form-control btn btn-outline-dark center-text" style="font-size: 1.2rem;"
                             th:onclick="'javascript:openEnterPricseList(\'' + @{/admin/enterprise/searchPopup} + '\'); return false;'">
-                        <i class="bi bi-list-ul ml-40">📚업체조회</i>
+                        <i class="bi bi-list-ul ml-30">📚업체조회</i>
                     </button>
                 </div>
             </div>
@@ -48,12 +48,11 @@
 	                <div class="card mb-4">
 	                    <article class="card-body">
 	                		<th:block th:if="${!#lists.isEmpty(entList)}" th:each="el : ${entList}">
-	                			
 	                        	<h5 class="card-title" th:text="${el.entName}">상호</h5>
 	                        		<div class="new-member-list">
 			                            <div class="d-flex align-items-center justify-content-between mb-4">
 			                                <div class="d-flex align-items-center">
-			                                    <img th:src="@{/manage/assets/imgs/vendor/vendor-1.png}" alt="vendorImage" class="vendor mr-20" />
+			                                    <img th:src="@{/manage/assets/imgs/vendor/vendor-1.png}" alt="vendorImage" class="vendor mr-30 ml-10" />
 			                                    <div>
 			                                        <h4 class="mb-2" th:text=" ' 대표자 : '+${el.entCeoName}">대표자명</h4>
 			                                    	<ul>
@@ -159,156 +158,162 @@
 	                    </article>
 	                </div>
 	            </div>
-	
-	            <div class="col-lg-3">
-	                <div class="card card-body mb-1">
-	                    <article class="icontext">
-	                        <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary">💲</i></span>
-	                        <div class="text align-bottom">
-	                            <h3 class="mb-1">4월총 매출</h3>
-	                            <span class="ml-30 text-warning">₩12,345,678</span>
-	                        </div>
-	                    </article>
-	                </div>
-	
-	                <div class="card card-body">
-	                    <article class="icontext">
-	                        <div class="d-flex">
-	                            <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary">📜</i></span>
-	                            <h3>매출구분</h3>
-	                        </div>
-	                    </article>
-	                    <div class="ml-80">
-	                        <h5 class="mb-1 card-title">1.렌탈 : <span class="text-warning">₩345,678</span></h5>
-	                        <h5 class="mb-1 card-title">2.판매 : <span class="text-warning">₩1,000,000</span></h5>
-	                        <h5 class="mb-1 card-title">3.위약 : <span class="text-warning">₩0</span></h5>
-	                    </div>    
-	                </div>
-	            </div>
+				<div class="col-lg-3" th:if="${!#lists.isEmpty(adminMonthlyFeeList)}"
+                        				th:each="ll : ${adminMonthlyFeeList}">
+					<div class="card card-body mb-1 d-flex">	
+						<div class="text" >
+							<h3> △ <span th:text="${ll.settlementMonth}"> </span> 매출합계 ▽</h3>
+							<h3 class="text-warning text-center"> ₩ <span th:text="${ll.entFee}"></span></h3>
+							
+														
+								
+						</div>
+								
+					</div>
+		
+						<div class="card card-body" style="height: 170px;">
+							<article class="icontext">
+								<div class="d-flex">
+									
+									<h4 class="mb-2">△ 매출구분 ▽</h4>
+								</div>
+							</article>
+							<div class="ml-80">
+								<h5 class="card-title mb-1">1.렌탈 : <span class="text-warning">₩345,678</span></h5>
+								<h5 class="card-title mb-1">2.판매 : <span class="text-warning">₩1,000,000</span></h5>
+								<h5 class="card-title mb-1">3.위약 : <span class="text-warning">₩0</span></h5>
+								<h5 class="card-title mb-1">4.플랫폼수수료 : <span class="text-warning">₩0</span></h5>
+							</div>    
+						</div>
+				</div>
 	        </div>
-	    </div>
-	    
+	    </div> 
 	</div>
-                <div class="card mb-4">
-                    <header class="card-header">
-                        <h4 class="card-title">매출내역</h4>
-                        <div class="row align-items-center">
-                            <div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
-                                <div class="custom_select">
-                                    <select class="form-select select-nice">
-                                        <option selected>All Categories</option>
-                                        <option>Women's Clothing</option>
-                                        <option>Men's Clothing</option>
-                                        <option>Cellphones</option>
-                                        <option>Computer & Office</option>
-                                        <option>Consumer Electronics</option>
-                                        <option>Jewelry & Accessories</option>
-                                        <option>Home & Garden</option>
-                                        <option>Luggage & Bags</option>
-                                        <option>Shoes</option>
-                                        <option>Mother & Kids</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <input type="date" value="02.05.2021" class="form-control" />
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <input type="date" value="02.05.2021" class="form-control" />
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <div class="custom_select">
-                                    <select class="form-select select-nice">
-                                        <option selected>Status</option>
-                                        <option>All</option>
-                                        <option>Paid</option>
-                                        <option>Chargeback</option>
-                                        <option>Refund</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </header>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <div class="table-responsive">
-                                <table class="table align-middle table-nowrap mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                    
-                                            <th class="align-middle" scope="col">수수료관리 코드</th>
-                                            <th class="align-middle" scope="col">업체코드</th>
-                                            <th class="align-middle" scope="col">매출구분</th>
-                                            <th class="align-middle" scope="col">플렛폼수수료</th>
-                                            <th class="align-middle" scope="col">입점업체 매출</th>
-                                            <th class="align-middle" scope="col">지급예정일</th>
-                                            <th class="align-middle" scope="col">지급일</th>
-                                            <th class="align-middle" scope="col">정산연월</th>
-                                            <th class="align-middle" scope="col">마감구분</th>
-                                            <th class="align-middle" scope="col">상태</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr th:if="${!#lists.isEmpty(adminFeeList)}" th:each="l : ${adminFeeList}">
-                                           	<th class="align-middle" scope="col" th:text="${l.feeNo}">수수료관리 코드</th>
-                                            <th class="align-middle" scope="col" th:text="${l.entCeoNo}">업체코드</th>
-                                            <th class="align-middle" scope="col" th:text="${l.paymentDetils}">매출구분</th>
-                                            <th class="align-middle" scope="col" th:text="${l.platFormFee}">플렛폼수수료</th>
-                                            <th class="align-middle" scope="col" th:text="${l.entSales}">입점업체 매출</th>
-                                            <th class="align-middle" scope="col" th:text="${l.provisionScheduleDate}">지급예정일</th>
-                                            <th class="align-middle" scope="col" th:text="${l.provisionDate}">지급일</th>
-                                            <th class="align-middle" scope="col" th:text="${l.settlementMonth}">정산연월</th>          
-                                            <th class="align-middle" scope="col" th:text="${l.closingSttelement}">마감구분</th>
-                                            <th class="align-middle" scope="col" th:text="${l.paymentStatus}">상태</th>
-                                        </tr>
-                                        <tr th:unless="${!#lists.isEmpty(adminFeeList)}">
-                                			<td colspan="12">등록없음</td>
-                               			</tr>
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <!-- table-responsive end// -->
-                    </div>
-                </div>
+	<div class="card mb-4">
+		<header class="card-header">
+			<h4 class="card-title">매출내역</h4>
+			<div class="row align-items-center">
+				<div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
+					<!-- <div class="custom_select">
+						<select class="form-select select-nice">
+							<option selected>All Categories</option>
+							<option>Women's Clothing</option>
+							<option>Men's Clothing</option>
+							<option>Cellphones</option>
+							<option>Computer & Office</option>
+							<option>Consumer Electronics</option>
+							<option>Jewelry & Accessories</option>
+							<option>Home & Garden</option>
+							<option>Luggage & Bags</option>
+							<option>Shoes</option>
+							<option>Mother & Kids</option>
+						</select>
+					</div> -->
+				</div>
+				<div class="col-md-2 col-6">
+					<input type="date" value="02.05.2021" class="form-control" />
+				</div>
+				<div class="col-md-2 col-6">
+					<input type="date" value="02.05.2021" class="form-control" />
+				</div>
+				<div class="col-md-2 col-6">
+					<div class="custom_select">
+						<select class="form-select select-nice">
+							<option selected>Status</option>
+							<option>All</option>
+							<option>Paid</option>
+							<option>Chargeback</option>
+							<option>Refund</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</header>
+			<div class="card-body">
+			<div class="table-responsive">
+				<div class="table-responsive">
+					<table class="table align-middle table-nowrap mb-0">
+						<thead class="table-light">
+							<tr class="text-center">
+						
+								<th class="align-middle" scope="col">수수료관리코드</th>
+								<th class="align-middle" scope="col">업체코드</th>
+								<th class="align-middle" scope="col">매출구분</th>
+								<th class="align-middle" scope="col">플렛폼수수료</th>
+								<th class="align-middle" scope="col">입점업체 매출</th>
+								<th class="align-middle" scope="col">지급예정일</th>
+								<th class="align-middle" scope="col">지급일</th>
+								<th class="align-middle" scope="col">정산연월</th>
+								<th class="align-middle" scope="col">마감구분</th>
+								<th class="align-middle" scope="col">상태</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="text-center" th:if="${!#lists.isEmpty(adminFeeList)}" th:each="l : ${adminFeeList}">
+								<th class="align-middle" scope="col" th:text="${l.feeNo}">수수료관리 코드</th>
+								<th class="align-middle" scope="col" th:text="${l.entCeoNo}">업체코드</th>
+								<th class="align-middle" scope="col" th:text="${l.paymentDetils}">매출구분</th>
+								<th class="align-middle" scope="col" th:text="${l.platFormFee}">플렛폼수수료</th>
+								<th class="align-middle" scope="col" th:text="${l.entSales}">입점업체 매출</th>
+								<th class="align-middle" scope="col" th:text="${l.provisionScheduleDate}">지급예정일</th>
+								<th class="align-middle" scope="col" th:text="${l.provisionDate}">지급일</th>
+								<th class="align-middle" scope="col" th:text="${l.settlementMonth}">정산연월</th>          
+								<th class="align-middle" scope="col" th:text="${l.closingSttelement}">마감구분</th>
+								<th class="align-middle" scope="col" th:text="${l.paymentStatus}">상태</th>
+							</tr>
+							<tr th:unless="${!#lists.isEmpty(adminFeeList)}">
+								<td colspan="12">등록없음</td>
+							</tr>
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!-- table-responsive end// -->
+		</div>
+	</div>
 
-                <div class="pagination-area mt-30 mb-50">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                            <li class="page-item"><a class="page-link" href="#">02</a></li>
-                            <li class="page-item"><a class="page-link" href="#">03</a></li>
-                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">16</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </section>
-            <!-- content-main end// -->
-           
-      
-            <!-- content-main end// -->
-            
-            
-	<script th:inline="javascript">
-	
-	    function openEnterPricseList(url) {
-	        window.open(url, 'entListPopup', 'width=1250,height=768,scrollbars=yes');
-	    }
-	</script>
-            
-            
+	<div class="pagination-area mt-30 mb-50">
+		<nav aria-label="Page navigation example">
+			<ul class="pagination justify-content-start">
+				<li class="page-item active"><a class="page-link" href="#">01</a></li>
+				<li class="page-item"><a class="page-link" href="#">02</a></li>
+				<li class="page-item"><a class="page-link" href="#">03</a></li>
+				<li class="page-item"><a class="page-link dot" href="#">...</a></li>
+				<li class="page-item"><a class="page-link" href="#">16</a></li>
+				<li class="page-item">
+					<a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</section>
+</th:block>
+
+
+ 	<th:block layout:fragment="jsScript">
+		<script>
+			function openEnterPricseList(url) {
+				window.open(url, 'entListPopup', 'width=1250,height=600,scrollbars=yes');
+			}
+
+			function updateMonth() {
+				const now = new Date();
+				const currentMonth = now.getMonth(); // getMonth()는 0부터 시작하므로 1을 더합니다.
+				document.getElementById('realtimeMonth').textContent = currentMonth;
+			}
+
+				// 페이지 로딩 시 초기 월 표시
+				updateMonth();
+
+				// 1초마다 updateMonth 함수를 호출하여 실시간으로 월 업데이트 (필요에 따라 간격 조정)
+				setInterval(updateMonth, 1000);
+
+
+		</script>
 	</th:block>
 	
-
-	
-	
-	
-        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+		<script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
         <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
         <script src="assets/js/vendors/select2.min.js"></script>
         <script src="assets/js/vendors/perfect-scrollbar.js"></script>
@@ -317,5 +322,11 @@
         <!-- Main Script -->
         <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
         <script src="assets/js/custom-chart.js" type="text/javascript"></script>
+
+
+	
+	
+	
+       
     </body>
 </html>

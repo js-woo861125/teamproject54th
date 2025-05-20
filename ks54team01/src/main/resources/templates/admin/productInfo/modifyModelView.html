@@ -7,6 +7,92 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
+		<script>
+			/**
+			* 카테고리 + 브랜드 + 품목 + 모델명 중복체크
+			*/
+			$('#modifyModelBtn').click(function(){
+				const modelName = $('#modelName').val();
+				const categoryNo = $('#categoryNo').val();
+				const brandNo = $('#brandNo').val();
+				const itemNo = $('#itemNo').val();
+				
+				if(!modelName){
+					alert('모델명을 입력해주세요');
+					$('#modelName').focus();
+					return ;
+				}
+				
+				if (!categoryNo) {
+					alert('카테고리를 선택해주세요');
+					$('#categoryNo').focus();
+					return;
+				}
+				
+				if (!brandNo) {
+					alert('브랜드를 선택해주세요');
+					$('#brandNo').focus();
+					return;
+				}
+				
+				if (!itemNo) {
+					alert('품목을 선택해주세요');
+					$('#itemNo').focus();
+					return;
+				}
+				$.ajax({
+					url : '/admin/productInfo/modelNameCheck',
+					method : 'post',
+					data : {
+						'modelName': modelName,
+						'categoryNo' : categoryNo,
+						'brandNo' : brandNo,
+						'itemNo' : itemNo
+					},
+					dataType : 'json'
+				}).done(function(isDuplicate) {
+					if(isDuplicate){
+						alert('이미 등록된 모델명 입니다.');
+						$('#modelName').focus();
+						return ;
+					}
+
+					$('#modifyProductInfoForm').submit();
+			    }).fail(function(jqXHR, textStatus, error) {
+			        console.log("에러 발생:", textStatus, error);
+			        alert('모델명 확인 중 오류가 발생했습니다.');
+			    });
+			});
+			
+			/**
+			* 카테고리 선택 시 해당 품목 조회
+			*/
+			$('#categoryNo').change(function() {
+			    const categoryNo = $(this).val();
+			    const itemNo = $(this).val();
+			    $('#itemNo').empty().append('<option value="">품목을 선택해주세요</option>');
+			    
+			    if (categoryNo) {
+			        $.ajax({
+			            url: '/admin/productInfo/itemListByCategory',
+			            type: 'GET',
+			            data: { categoryNo: categoryNo },
+			            success: function(itemList) {
+			                if (itemList && itemList.length > 0) {
+			                	$.each(itemList, function(idx, item) {
+			                	    $('#itemNo').append('<option value="' + item.itemNo + '">' + item.itemName + '</option>');
+			                	});
+			                } else {
+			                    $('#itemNo').append('<option value="">품목이 없습니다</option>');
+			                }
+			            },
+			            error: function() {
+			                alert('품목 목록을 불러오는 중 오류가 발생했습니다.');
+			            }
+			        });
+			    }
+			});
+		</script>		
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
@@ -79,7 +165,7 @@
 								<!-- 버튼 -->
 								<div class="d-grid gap-2 d-md-flex justify-content-md-end">
 									<div class="col-md-2 col-2 ms-auto">
-										<button type="submit" id="modifyModelBtn" 
+										<button type="button" id="modifyModelBtn" 
 												class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6">수정</button>
 									</div>
 									<div class="col-md-2 col-2">

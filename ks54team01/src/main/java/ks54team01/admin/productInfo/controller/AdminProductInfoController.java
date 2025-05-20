@@ -36,7 +36,6 @@ public class AdminProductInfoController {
 	/**
 	 * 상품정보 검색
 	 */
-	
 	@GetMapping("/searchModelSpec")
 	public String getSearchModelSpec(String searchKey, String searchValue, Model model) {
 
@@ -132,6 +131,16 @@ public class AdminProductInfoController {
 	/**
 	 * 상품정보 삭제
 	 */
+	@PostMapping("/removeItem")
+	@ResponseBody
+	public boolean removeItem(String itemNo) {
+		log.info("삭제 할 품목코드 : {}", itemNo);
+		
+		boolean isDel = adminProductInfoService.removeItemInfoByNo(itemNo);
+		
+		return isDel;
+	}
+	
 	@PostMapping("/removeBrand")
 	@ResponseBody
 	public boolean removeBrand(String brandNo) {
@@ -142,10 +151,19 @@ public class AdminProductInfoController {
 		return isDel;
 	}
 	
+	@PostMapping("/removeCategory")
+	@ResponseBody
+	public boolean removeCategory(String categoryNo) {
+		log.info("삭제 할 카테고리코드: {}", categoryNo);
+		
+		boolean isDel = adminProductInfoService.removeCategoryInfoByNo(categoryNo);
+		
+		return isDel;
+	}
+	
 	/**
 	 * 상품정보 중복체크
 	 */
-	
 	@PostMapping("/specContentCheck")
 	@ResponseBody
 	public boolean specContentCheck(String modelSpecName, String modelNo, String specNo) {
@@ -181,6 +199,21 @@ public class AdminProductInfoController {
 		log.info("체크혜택명 : {}", benefitName);
 		
 		isDuplicate = adminProductInfoService.isBenefitNameCheck(benefitName);
+		
+		return isDuplicate;
+	}
+	
+	@PostMapping("/modelNameCheck")
+	@ResponseBody
+	public boolean modelNameCheck(String categoryNo, String brandNo, String itemNo, String modelName) {
+		boolean isDuplicate =  false;
+		
+		log.info("체크모델명 : {}", modelName);
+		log.info("체크품목코드 : {}", itemNo);
+		log.info("체크브랜드코드 : {}", brandNo);
+		log.info("체크카테고리코드 : {}", categoryNo);
+		
+		isDuplicate = adminProductInfoService.isModelNameCheck(categoryNo, brandNo, itemNo, modelName);
 		
 		return isDuplicate;
 	}
@@ -251,6 +284,7 @@ public class AdminProductInfoController {
 		model.addAttribute("modelSpecInfo", modelSpecInfo);
 		model.addAttribute("modelList", modelList);
 		model.addAttribute("categorySpecList", categorySpecList);
+		model.addAttribute("activeMenu", "productInfo");
 		
 		return "admin/productInfo/modifyModelSpecView";
 	}
@@ -274,6 +308,7 @@ public class AdminProductInfoController {
 		model.addAttribute("title", "카테고리별/상세스펙 수정");
 		model.addAttribute("specInfo", specInfo);
 		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("activeMenu", "productInfo");
 		
 		return "admin/productInfo/modifyCategorySpecView";
 	}
@@ -295,6 +330,7 @@ public class AdminProductInfoController {
 		
 		model.addAttribute("title", "혜택 수정");
 		model.addAttribute("benefitInfo", benefitInfo);
+		model.addAttribute("activeMenu", "productInfo");
 		
 		return "admin/productInfo/modifyBenefitView";
 	}
@@ -322,6 +358,7 @@ public class AdminProductInfoController {
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("brandList", brandList);
 		model.addAttribute("itemList", itemList);
+		model.addAttribute("activeMenu", "productInfo");
 		
 		return "admin/productInfo/modifyModelView";
 	}
@@ -345,6 +382,7 @@ public class AdminProductInfoController {
 		model.addAttribute("title", "품목 수정");
 		model.addAttribute("itemInfo", itemInfo);
 		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("activeMenu", "productInfo");
 		
 		return "admin/productInfo/modifyItemView";
 	}
@@ -366,6 +404,7 @@ public class AdminProductInfoController {
 		
 		model.addAttribute("title", "브랜드 수정");
 		model.addAttribute("brandInfo", brandInfo);
+		model.addAttribute("activeMenu", "productInfo");
 		
 		return "admin/productInfo/modifyBrandView";
 	}
@@ -401,6 +440,8 @@ public class AdminProductInfoController {
 		
 		model.addAttribute("title", "모델별/상세스펙 목록");
 		model.addAttribute("modelSpecList", modelSpecList);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "productInfoList");
 		
 		return "admin/productInfo/modelSpecListView";
 	}
@@ -412,6 +453,8 @@ public class AdminProductInfoController {
 		
 		model.addAttribute("title", "카테고리별/상세스펙 목록");
 		model.addAttribute("categorySpecList", categorySpecList);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "productInfoList");
 		
 		return "admin/productInfo/categorySpecListView";
 	}	
@@ -423,6 +466,8 @@ public class AdminProductInfoController {
 		
 		model.addAttribute("title", "혜택 목록");
 		model.addAttribute("benefitList", benefitList);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "productInfoList");
 		
 		return "admin/productInfo/benefitListView";
 	}
@@ -434,6 +479,8 @@ public class AdminProductInfoController {
 		
 		model.addAttribute("title", "모델 목록");
 		model.addAttribute("modelList", modelList);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "productInfoList");
 		
 		return "admin/productInfo/modelListView";
 	}
@@ -445,6 +492,8 @@ public class AdminProductInfoController {
 		
 		model.addAttribute("title", "품목 목록");
 		model.addAttribute("itemList", itemList);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "productInfoList");
 		
 		return "admin/productInfo/itemListView";
 	}
@@ -456,6 +505,8 @@ public class AdminProductInfoController {
 		
 		model.addAttribute("title", "브랜드 목록");
 		model.addAttribute("brandList", brandList);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "productInfoList");
 		
 		return "admin/productInfo/brandListView";
 	}	
@@ -472,9 +523,31 @@ public class AdminProductInfoController {
 	}	
 	
 	/**
+	 * 모델별/상세스펙 등록할 때, 모델코드로 스펙 목록 조회
+	 */
+	@GetMapping("specListByModel")
+	@ResponseBody
+	public List<ProductInfoCategorySpec> getSpecListByModel(@RequestParam String modelNo) {
+		// 1. 모델 번호로 카테고리 번호 조회
+		String categoryNo = adminProductInfoService.getCategoryNoByModelNo(modelNo);
+		
+		// 2. 카테고리 번호로 스펙 목록 조회
+		return adminProductInfoService.getSpecListByCategoryNo(categoryNo);
+	}
+
+	/**
+	 * 모델 등록할 때, 카테고리코드로 품목 목록 조회
+	 */
+	@GetMapping("itemListByCategory")
+	@ResponseBody
+	public List<ProductInfoItem> getItemListByCategoryNo(@RequestParam String categoryNo) {
+		
+		return adminProductInfoService.getItemListByCategoryNo(categoryNo);
+	}
+	
+	/**
 	 * 상품정보 등록
 	 */
-	
 	@PostMapping("/addModelSpec")
 	public String addModelSpec(ProductInfoModelSpec productInfoModelSpec) {
 		
@@ -492,6 +565,8 @@ public class AdminProductInfoController {
 		model.addAttribute("title", "모델별/상세스펙 등록");
 		model.addAttribute("modelList", modelList);
 		model.addAttribute("categorySpecList", categorySpecList);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "addProductInfo");
 		
 		return "admin/productInfo/addModelSpecView";
 	}
@@ -511,6 +586,8 @@ public class AdminProductInfoController {
 		
 		model.addAttribute("title", "카테고리별/상세스펙 등록");
 		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "addProductInfo");
 		
 		return "admin/productInfo/addCategorySpecView";
 	}
@@ -527,6 +604,8 @@ public class AdminProductInfoController {
 	public String addBenefit(Model model) {
 		
 		model.addAttribute("title", "혜택 등록");
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "addProductInfo");
 		
 		return "admin/productInfo/addBenefitView";
 	}
@@ -550,6 +629,8 @@ public class AdminProductInfoController {
 		model.addAttribute("brandList", brandList);
 		model.addAttribute("itemList", itemList);
 		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "addProductInfo");
 		
 		return "admin/productInfo/addModelView";
 	}
@@ -569,6 +650,8 @@ public class AdminProductInfoController {
 		
 		model.addAttribute("title", "품목 등록");
 		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "addProductInfo");
 		
 		return "admin/productInfo/addItemView";
 	}
@@ -585,6 +668,8 @@ public class AdminProductInfoController {
 	public String addBrand(Model model) {
 		
 		model.addAttribute("title", "브랜드 등록");
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "addProductInfo");
 		
 		return "admin/productInfo/addBrandView";
 	}

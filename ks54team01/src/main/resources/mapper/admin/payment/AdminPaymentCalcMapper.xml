@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.admin.payment.mapper.AdminPaymentCalcMapper">
+
+	<resultMap type="AdminMonthlyFee" id="adminPaymentCalc">
+		<id 	column="monthly_fee_no" 		property="monthlyFeeNo" />
+		<result column="ent_ceo_no"				property="entCeoNo" />
+		<result column="mf.ent_emp_id"			property="entEmpId" />
+		<result column="manager_id"				property="managerId" />
+		<result column="payment_details"		property="paymentDetails" />
+		<result column="platform_fee"			property="platformFee" />
+		<result column="ent_fee"				property="entFee" />
+		<result column="pay_status"				property="payStatus" />
+		<result column="provision_date"			property="provisionDate" />
+		<result column="settlement_month"		property="settlementMonth" />
+	</resultMap>
+
+	<select id="getAdminPaymentCalc" parameterType="string" resultMap="adminPaymentCalc">
+		
+		SELECT 
+			mf.monthly_fee_no, 
+			mf.ent_ceo_no, 
+			mf.ent_emp_id, 
+			mf.manager_id, 
+			mf.payment_details, 
+			mf.platform_fee,
+			mf.ent_fee, 
+			mf.pay_status, 
+			mf.provision_date, 
+			mf.settlement_month
+		FROM 
+			monthly_fee mf 
+		WHERE 
+			mf.ent_ceo_no = #{entCeoNo}
+			AND mf.payment_details  ='4.총합계'
+			AND mf.settlement_month = (
+		        						SELECT 
+		        							MAX(settlement_month)
+								        FROM 
+								        	monthly_fee
+								        WHERE 
+								        	ent_ceo_no = #{entCeoNo}
+								        	AND payment_details = '4.총합계'
+	    								);
+	
+	</select>
+	
+	
+	
+</mapper>
+
+

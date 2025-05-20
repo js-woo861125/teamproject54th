@@ -1,5 +1,8 @@
 package ks54team01.customer.member.service.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
 import ks54team01.customer.member.domain.CustomerMember;
@@ -19,9 +22,15 @@ public class MemberServiceImpl implements MemberService{
 	 * 회원정보 수정
 	 */
 	@Override
-    public boolean modifyCustomerInfo(CustomerMember modifyMember) {
+    public boolean modifyCustomerInfo(CustomerMember modifyMember, String  newPw) {
+		Map<String, Object> commonInfoMap = new HashMap<>();
+		commonInfoMap.put("memberId", modifyMember.getMemberId());
+
+	    if (newPw != null && !newPw.trim().isEmpty()) {
+	    	commonInfoMap.put("newPw", newPw);
+	    }
 		
-		int commonUpdateCount = memberMapper.modifyCommonInfo(modifyMember);
+		int commonUpdateCount = memberMapper.modifyCommonInfo(commonInfoMap);
 		
 		int customerUpdateCount = memberMapper.modifyCustomerInfo(modifyMember);
 
@@ -35,6 +44,15 @@ public class MemberServiceImpl implements MemberService{
     }
 	
 	/**
+	 * 비밀번호 일치여부 체크
+	 */
+	@Override
+	public boolean isPwCheck(String memberId, String memberPw) {
+		
+		return memberMapper.isPwCheck(Map.of("memberId", memberId, "memberPw", memberPw));
+	}
+	
+	/**
 	 * 고객유형별 개인정보 조회
 	 */
 	@Override
@@ -46,6 +64,7 @@ public class MemberServiceImpl implements MemberService{
 	public CustomerMember getCustomerInfoById(String memberId) {
 		return memberMapper.getCustomerInfoById(memberId);
 	}
+	
 }
 
 
