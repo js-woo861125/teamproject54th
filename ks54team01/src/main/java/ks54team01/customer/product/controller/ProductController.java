@@ -1,6 +1,9 @@
 package ks54team01.customer.product.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,15 +25,24 @@ public class ProductController {
 
 	private final CustomerProductService customerProductService;
 	
-	@GetMapping("/productDetail")
-	public String getProductDetail(@RequestParam(value = "sellProductsNo") String sellProductsNo, Model model) {
+	
+	@GetMapping("/productDetailByProd")
+	public String getProductDetailByProd(@RequestParam(value="productsNum") String productsNum, Model model) {
 		
-		CustomerProduct productDetail = customerProductService.getProductDetail(sellProductsNo);
-		model.addAttribute("productDetail", productDetail);
-		model.addAttribute("sellProductsNo", sellProductsNo);
+		List<CustomerProduct> productDetailByProd = customerProductService.getProductDetailByProd(productsNum);
 		
-		return "customer/product/productDetail";
+		
+
+		log.info("productDetailByProd:{}", productDetailByProd);
+		
+		model.addAttribute("productDetailByProd", productDetailByProd);
+		
+		
+		return "customer/product/productDetailView";
 	}
+	
+	
+
 	
 	
 	@GetMapping("/productList")

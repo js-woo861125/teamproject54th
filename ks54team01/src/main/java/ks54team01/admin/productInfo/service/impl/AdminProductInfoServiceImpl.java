@@ -29,8 +29,6 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	private final AdminProductInfoMapper adminProductInfoMapper;
 	
 	// 상품정보 검색
-	
-	
 	@Override
 	public List<ProductInfoModelSpec> getSearchModelSpec(String searchKey, String searchValue) {
 		
@@ -110,6 +108,19 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	}
 	
 	// 상품정보 삭제
+	
+	@Override
+	public boolean removeItemInfoByNo(String itemNo) {
+		
+		int delCount = 0;
+		
+		delCount += adminProductInfoMapper.removeItemInfoByNo(itemNo);
+		
+		boolean isDel = delCount > 0 ? true : false;
+		
+		return isDel;
+	}
+	
 	@Override
 	public boolean removeBrandInfoByNo(String brandNo) {
 		
@@ -118,6 +129,18 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		delCount += adminProductInfoMapper.removeBrandInfoByNo(brandNo);
 		
 		boolean isDel = delCount > 0 ? true : false;
+		
+		return isDel;
+	}
+	
+	@Override
+	public boolean removeCategoryInfoByNo(String categoryNo) {
+		
+		int delCount = 0;
+		
+		delCount += adminProductInfoMapper.removeCategoryInfoByNo(categoryNo);
+		
+		boolean isDel = delCount > 0 ? true : false; 
 		
 		return isDel;
 	}
@@ -226,7 +249,15 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		adminProductInfoMapper.modifyCategory(productInfoCategory);
 	}
 	
-	// 상품정보 조회
+	/**
+	 *  상품정보 조회
+	 */
+	// 모델코드로 카테고리코드 조회 (모델별/상세스펙 등록)
+	@Override
+	public String getCategoryNoByModelNo(String modelNo) {
+		
+		return adminProductInfoMapper.getCategoryNoByModelNo(modelNo);
+	}
 	
 	@Override
 	public ProductInfoModelSpec getModelSpecInfoByNo(String modelSpecNo) {
@@ -341,7 +372,23 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		log.info("상품등록 후 : {}", productInfoCategory);
 	}
 	
-	// 상품정보 목록 조회
+	/**
+	 *  상품정보 목록 조회
+	 */
+	// 카테고리코드로 스펙 목록 조회 (모델별/상세스펙 등록)
+	@Override
+	public List<ProductInfoCategorySpec> getSpecListByCategoryNo(String categoryNo) {
+		
+		return adminProductInfoMapper.getSpecListByCategoryNo(categoryNo);
+	}
+	
+	// 카테고리코드로 품목 목록 조회 (모델 등록)
+	@Override 	
+	public List<ProductInfoItem> getItemListByCategoryNo(String categoryNo) {
+		
+		return adminProductInfoMapper.getItemListByCategoryNo(categoryNo);
+	}
+	
 	@Override
 	public List<ProductInfoModelSpec> getModelSpecList() {
 		

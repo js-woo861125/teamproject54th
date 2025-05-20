@@ -1,5 +1,7 @@
 package ks54team01.customer.product.domain;
 
+import java.util.List;
+
 import lombok.Data;
 
 	@Data
@@ -18,9 +20,9 @@ import lombok.Data;
 		private String lumpPrice;
 		private String minRentalPrice;
 		
-		private CustomerSellProduct customerSellProduct;
+		private List<CustomerSellProduct> customerSellProduct;
 		private ProductCate productCate;
-		private EntCeo entCeo;
+		private List<EntCeo> entCeo;
 		
 
 	}

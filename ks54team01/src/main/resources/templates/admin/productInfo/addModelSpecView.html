@@ -55,6 +55,36 @@
 			        alert('품목명 확인 중 오류가 발생했습니다.');
 			    });
 			});
+			
+			/**
+			* 모델 선택 시 해당 스펙 조회
+			*/
+			$('#modelNo').change(function() {
+			    const modelNo = $(this).val();
+			    const specNo = $(this).val();
+			    $('#specNo').empty().append('<option value="">스펙을 선택해주세요</option>');
+			    
+			    if (modelNo) {
+			        $.ajax({
+			            url: '/admin/productInfo/specListByModel',
+			            type: 'GET',
+			            data: { modelNo: modelNo },
+			            success: function(categorySpecList) {
+			                console.log(categorySpecList); // 응답 데이터 확인
+			                if (categorySpecList && categorySpecList.length > 0) {
+			                	$.each(categorySpecList, function(idx, spec) {
+			                	    $('#specNo').append('<option value="' + spec.specNo + '">' + spec.specName + '</option>');
+			                	});
+			                } else {
+			                    $('#specNo').append('<option value="">스펙이 없습니다</option>');
+			                }
+			            },
+			            error: function() {
+			                alert('스펙 목록을 불러오는 중 오류가 발생했습니다.');
+			            }
+			        });
+			    }
+			});
 		</script>	
 	</th:block>
 	

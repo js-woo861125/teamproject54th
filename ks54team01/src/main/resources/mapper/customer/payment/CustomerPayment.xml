@@ -46,7 +46,7 @@
 			p.payment_completed_date
 		from
 			payment p inner join sell_products sp 
-			on p.sell_products_no  = sp.sell_products_no
+			on p.sell_products_no = sp.sell_products_no
 			inner join products pd
 			on sp.products_no = pd.products_no
 		where

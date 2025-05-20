@@ -4,10 +4,12 @@ import java.util.List;
 
 import ks54team01.admin.enterprise.domain.AdminEntList;
 import ks54team01.admin.payment.domain.AdminFee;
+import ks54team01.admin.payment.domain.AdminMonthlyFee;
 import ks54team01.admin.payment.domain.AdminPayment;
 
 public interface AdminPaymentService {
 
+	List<AdminMonthlyFee> getAdminPaymentCalc(String searchValue);
 	
 	List<AdminEntList> getSearchEnt(String searchKey, String searchValue);
 	

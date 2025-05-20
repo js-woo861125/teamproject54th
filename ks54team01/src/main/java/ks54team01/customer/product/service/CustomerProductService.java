@@ -11,7 +11,9 @@ import ks54team01.customer.product.domain.CustomerProduct;
 @Service
 public interface CustomerProductService {
 	
-	CustomerProduct getProductDetail(String sellProductsNo);
+	List<CustomerProduct> getProductDetailByProd(String productsNum);
+	
+	
 
 	List<CustomerProduct> getCustomerProductList(String smallCategory);
 	

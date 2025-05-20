@@ -41,18 +41,18 @@
 					return;
 				}
 				$.ajax({
-					url : '/admin/productInfo/categoryCheck',
+					url : '/admin/productInfo/modelNameCheck',
 					method : 'post',
 					data : {
 						'modelName': modelName,
 						'categoryNo' : categoryNo,
 						'brandNo' : brandNo,
-						'brandNo' : brandNo
+						'itemNo' : itemNo
 					},
 					dataType : 'json'
 				}).done(function(isDuplicate) {
 					if(isDuplicate){
-						alert('이미 등록된 상세스펙내용 입니다.');
+						alert('이미 등록된 모델명 입니다.');
 						$('#modelName').focus();
 						return ;
 					}
@@ -60,8 +60,37 @@
 					$('#addProductInfoForm').submit();
 			    }).fail(function(jqXHR, textStatus, error) {
 			        console.log("에러 발생:", textStatus, error);
-			        alert('품목명 확인 중 오류가 발생했습니다.');
+			        alert('모델명 확인 중 오류가 발생했습니다.');
 			    });
+			});
+			
+			/**
+			* 카테고리 선택 시 해당 품목 조회
+			*/
+			$('#categoryNo').change(function() {
+			    const categoryNo = $(this).val();
+			    const itemNo = $(this).val();
+			    $('#itemNo').empty().append('<option value="">품목을 선택해주세요</option>');
+			    
+			    if (categoryNo) {
+			        $.ajax({
+			            url: '/admin/productInfo/itemListByCategory',
+			            type: 'GET',
+			            data: { categoryNo: categoryNo },
+			            success: function(itemList) {
+			                if (itemList && itemList.length > 0) {
+			                	$.each(itemList, function(idx, item) {
+			                	    $('#itemNo').append('<option value="' + item.itemNo + '">' + item.itemName + '</option>');
+			                	});
+			                } else {
+			                    $('#itemNo').append('<option value="">품목이 없습니다</option>');
+			                }
+			            },
+			            error: function() {
+			                alert('품목 목록을 불러오는 중 오류가 발생했습니다.');
+			            }
+			        });
+			    }
 			});
 		</script>	
 	</th:block>

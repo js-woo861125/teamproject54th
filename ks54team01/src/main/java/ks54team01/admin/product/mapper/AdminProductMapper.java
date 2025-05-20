@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.data.repository.query.Param;
 
 import ks54team01.admin.product.domain.AdminAddProduct;
+import ks54team01.admin.product.domain.AdminProduct;
 import ks54team01.admin.product.domain.AdminProductSpecContent;
 import ks54team01.admin.productInfo.domain.ProductInfoBrand;
 import ks54team01.admin.productInfo.domain.ProductInfoCategory;
@@ -15,8 +16,13 @@ import ks54team01.admin.productInfo.domain.ProductInfoModel;
 @Mapper
 public interface AdminProductMapper {
 	
+	// 상품 수정
+	int modifyProduct(AdminProduct product);
 	
+	// 플랫폼 상품 조회
+	List<AdminProduct>getProductList();
 	
+	AdminProduct getProduct(@Param("productNo") String productNo);
 	
 	ProductInfoModel getModelInfoByNo(@Param("modelNo") String modelNo);
 	

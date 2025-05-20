@@ -32,12 +32,28 @@ public class AdminProductServiceImpl implements AdminProductService{
 		private final AdminProductMapper adminProductMapper;
 		private final FileService fileService;
 
-	
+		@Override
+		public void modifyProduct(AdminProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails) {
+		    // 1. 상품 정보 업데이트
+		    adminProductMapper.modifyProduct(product);
+
+		  
+		    fileService.addFiles(mainImage, "main", product.getModelNo());
+		    fileService.addFiles(thumbnails, "thumbnail", product.getModelNo());
+		}
+		
+		@Override
+		public AdminProduct getProduct(String productNo) {
+			
+		    return adminProductMapper.getProduct(productNo); 
+		}
+		
 		@Override
 		public List<AdminProduct> getProductList() {
-			// TODO Auto-generated method stub
-			return null;
+		
+			return adminProductMapper.getProductList();
 		}
+		
 		@Override
 	    public List<ProductInfoCategory> loadCategoryList() {
 	        return adminProductMapper.loadCategoryList();
@@ -82,16 +98,13 @@ public class AdminProductServiceImpl implements AdminProductService{
 	        product.setRegisterDate(now.toString());
 	        product.setRevisionDate(now.toString());
 		
-	        //  썸네일 이미지 저장
-	        //List<FileMetaData> thumbnailList = fileService.uploadFiles(thumbnails, "thumbnail");
-	
+	 
 	        //  상품 정보 DB에 등록
 	        adminProductMapper.insertProduct(product);
 	
 	        //  파일 메타데이터 DB에 등록   
 	        fileService.addFiles(mainImage, "main", product.getModelNo());
 	        fileService.addFiles(thumbnails, "thumbnail", product.getModelNo());
-	        fileService.addFiles(details, "detail", product.getModelNo());
         
  
 		}
