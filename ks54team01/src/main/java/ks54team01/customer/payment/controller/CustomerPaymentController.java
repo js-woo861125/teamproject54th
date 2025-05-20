@@ -26,6 +26,14 @@ public class CustomerPaymentController {
 	private final CustomerPaymentService customerPaymentService;
 
 	
+	
+	@GetMapping("/order")
+	public String getOrder() {
+		
+		
+		return "customer/payment/order";
+	}
+	
 	@GetMapping("/paymentList")
 	public String getPaymentList(HttpSession session, Model model) {
 		

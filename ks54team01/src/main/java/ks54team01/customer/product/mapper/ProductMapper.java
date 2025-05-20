@@ -9,11 +9,12 @@ import ks54team01.customer.product.domain.CustomerProduct;
 @Mapper
 public interface ProductMapper {
 	
+	
+	List<CustomerProduct> getProductDetailByProd(String productsNum);
+	
+	
 	//상품목록 조회
 	List<CustomerProduct> getCustomerProductList(String smallCategory);
 			
-	// 상품 상세 정보 조회 (productName으로)
-	
-	CustomerProduct getProductDetail(String productName);
 	
 }
