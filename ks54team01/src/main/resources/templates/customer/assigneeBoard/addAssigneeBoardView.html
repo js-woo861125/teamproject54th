@@ -147,6 +147,41 @@
 			});	
 			if(isSubmit) $('#addAssigneeBoardForm').submit();
 		});
+        
+        /* 유효성 검증 */
+        $('#periodInput').on("blur",function() {
+        	let isNumber;
+        	
+        	const checkNumber = /^[0-9]*$/;
+
+        	if ($(this).val() == '') {
+        		/* alert("입력하세요."); */
+        		this.focus();
+        		testBoolean = false;
+        		return;
+        	}
+        	
+        	if (checkNumber.test($(this).val())) {
+        		testBoolean = true;
+        	} else {
+        		alert("숫자 입력");
+        		testBoolean = false;
+        	}
+        });
+        
+        $('#rentalFeeInput').on("blur",function() {
+        	let isNumber;
+        	
+        	const checkNumber = /^[0-9]*$/;
+
+        	if (checkNumber.test($(this).val())) {
+        		testBoolean = true;
+        	} else {
+        		alert("숫자 입력");
+        		testBoolean = false;
+        		$(this).val('');
+        	}
+        });
 		</script>
 	</th:block>
 	
@@ -203,7 +238,7 @@
                             <div class="row">
                                 <div class="form-group col-lg-6">
                                     <input id="productCategoryNum" type="hidden" name="productCategoryNum" required readonly>
-                                    <input id="selectedItem" type="text" placeholder="상품 카테고리 선택" required readonly>
+                                    <input id="selectedItem" type="text" placeholder="*상품 카테고리 선택" required readonly>
                                 </div>
                                 <div class="col-2">
 									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardCategory}" class="openModal btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -218,7 +253,7 @@
 	                     	</div>
                             <div class="row">
                                 <div class="form-group col-lg-6">
-                                    <input type="text" id="hopeArea" name="desiredInstallArea" required placeholder="희망 설치지역 입력" readonly/>
+                                    <input type="text" id="hopeArea" name="desiredInstallArea" required placeholder="*희망 설치지역 입력" readonly/>
                                 </div>
                                 <div class="col-2">
 		                            <div>
@@ -230,12 +265,12 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-lg-6">
-                                    <input type="text" name="remainingMonths" placeholder="희망 계약기간 입력" />
+                                    <input id="periodInput" type="text" name="remainingMonths" placeholder="*최소 희망 계약기간(개월) 입력" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-lg-6">
-                                    <input type="text" name="rentalFee" placeholder="희망 렌탈료 입력" />
+                                    <input id="rentalFeeInput" type="text" name="rentalFee" placeholder="*최소 희망 렌탈료 입력" />
                                 </div>
                             </div>
                             <div class="form-group mb-30">

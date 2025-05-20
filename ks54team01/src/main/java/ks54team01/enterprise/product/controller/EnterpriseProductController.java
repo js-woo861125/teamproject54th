@@ -7,7 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import ks54team01.enterprise.product.domain.EnterpriseMarginRatio;
 import ks54team01.enterprise.product.domain.EnterpriseProductQuantity;
+import ks54team01.enterprise.product.service.EnterpriseMarginRatioService;
 import ks54team01.enterprise.product.service.EnterpriseProductService;
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class EnterpriseProductController {
 	
 	private final EnterpriseProductService enterpriseProductService;
+	private final EnterpriseMarginRatioService enterpriseMarginRatioService;
 	
 	@GetMapping("/product/sellProductList")
 	public String sellProductList(Model model) {
@@ -37,7 +40,10 @@ public class EnterpriseProductController {
 	@GetMapping("/product/marginRatio")
 	public String enterpriseMarginRatio(Model model) {
 		
+		List<EnterpriseMarginRatio> enterpriseMarginRatio = enterpriseMarginRatioService.getEnterpriseMarginRatio();
+		
 		model.addAttribute("title", "마진율 등록");
+		model.addAttribute("enterpriseMarginRatio", enterpriseMarginRatio);
 		
 		return "enterprise/product/enterpriseMarginRatioView";
 	}
