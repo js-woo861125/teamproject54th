@@ -4,10 +4,13 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import ks54team01.customer.payment.domain.CustomerDelivery;
 import ks54team01.customer.payment.domain.CustomerPayment;
 
 @Mapper
 public interface CustomerPaymentMapper {
+	
+	List<CustomerDelivery> getDeliveryListById(String custId);
 	
 	List<CustomerPayment> getPaymentList(String custId);
 

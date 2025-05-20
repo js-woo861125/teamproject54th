@@ -1,22 +1,37 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{customer/layout/default}">
-	
-	<head>
-		<script src="https://js.tosspayments.com/v2/standard"></script>
-	</head>
-	
-	<th:block layout:fragment="jsFile">
-		
-	</th:block>
-	
-	
-	
-	
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{customer/layout/default}">
+
+<head>
+<script src="https://js.tosspayments.com/v2/standard"></script>
+</head>
+
+<th:block layout:fragment="jsFile">
+
+</th:block>
+
+
+
+
 	<th:block layout:fragment="jsScript">
 		<script type="text/javascript" th:inline="javascript">
 		
+			document.addEventListener("DOMContentLoaded", function () {
+			    // 배송지 선택 버튼 클릭 시
+			    document.querySelectorAll(".product-cart-wrap .btn").forEach(function (btn) {
+			        btn.addEventListener("click", function (e) {
+			            e.preventDefault();
+	
+			            const card = btn.closest(".product-cart-wrap");
+			            const delNo = card.getAttribute("data-delno");
+	
+			            // 선택한 값 input에 채우기
+			            document.getElementById("delSelected").value = delNo;
+			        });
+			    });
+			});
+
 		
 			
 		
@@ -37,10 +52,8 @@
 		        const tossPayments = TossPayments(clientKey);
 		        const orderId = crypto.randomUUID().replaceAll('-', '');
 		        const sellProductsNo = /*[[${sellProductsNo}]]*/"";
-		        const quantity = parseInt(document.getElementById("quantity").value, 10);
-		        const unitPrice  = parseInt(document.getElementById("unitPrice").value, 10);
 		        
-		        const totalPrice = quantity * unitPrice;
+		        const totalPrice = /*[[${totalPrice}]]*/"";
 		        
 		        // 회원 결제
 		        const customerKey = "3g3Cca_AwBjjg837BM8Bv";
@@ -80,32 +93,122 @@
 				});
 			};
 		</script>
-	
-		
+
+
 	</th:block>
-	
-	
-	
+
+
+
 	<th:block layout:fragment="customContents">
-	        
-		<div class="modal fade custom-modal" id="tossPay" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
-	        <div class="modal-dialog row justify-content-center">
-	            <div class="modal-content w-75">
-	                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	                <div class="modal-body">
-	                    <div class="row">
-	                        <div class="col-md-12 col-sm-12 col-xs-12 mb-md-0 mb-sm-5">
-	                            <div id="payment-method"></div>
-	                            <div id="agreement"></div>
-	                            <button class="button" id="payment-button" style="margin-top: 30px">결제하기</button>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	        </div>
-	    </div>
-	    
-	    <button id="paymentBtn" type="button" class="button">button </button>
-        
+
+		<div class="modal fade custom-modal" id="tossPay"
+			data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="quickViewModalLabel" aria-hidden="true">
+			<div class="modal-dialog row justify-content-center">
+				<div class="modal-content w-75">
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12 col-sm-12 col-xs-12 mb-md-0 mb-sm-5">
+								<div id="payment-method"></div>
+								<div id="agreement"></div>
+								<button class="button" id="payment-button"
+									style="margin-top: 30px">결제하기</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="container mb-80 mt-50">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 mb-40">
+                    <h1 class="heading-2 mb-10">주문/결제</h1>
+                 </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="table-responsive shopping-summery">
+                        <table class="table table-wishlist">
+                            <thead>
+                                <tr class="main-heading text-center">
+                                    <th scope="col">상품</th>
+                                    <th scope="col">가격</th>
+                                    <th scope="col">수량</th>
+                                    <th scope="col">총액</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="pt-30 text-center">
+                                    <td class="product-des product-name">
+                                        <h6 class="product-name text-heading" th:text="${productsName}">라온 저상형 침대</h6>
+                                    </td>
+                                    <td class="price" data-title="Price">
+                                        <h4 class="text-body" th:text="|₩ ${#numbers.formatInteger(prodUnitPrice,3,'COMMA')}|">$2.51 </h4>
+                                    </td>
+                                    
+                                     <td class="product-des product-name">
+                                        <h6 class="product-name" th:text="${orderQuantity} + '개'">n개</h6>
+                                    </td>
+                                    
+                                    <td class="price" data-title="Price">
+                                        <h4 class="text-brand" id="totalPrice" th:text="|₩ ${#numbers.formatInteger(totalPrice,3,'COMMA')}|">$2.51 </h4>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row mt-50">
+                        <div class="col-lg-7">
+                            <div class="calculate-shiping p-40 border-radius-15 border">
+                                <h4 class="mb-10">배송지</h4>
+                                    
+								<div class="product-list mb-50">
+									<div class="overflow-auto" style="height: 200px;">
+										<th:block th:if="${!#lists.isEmpty(DeliveryList)}" th:each="l : ${DeliveryList}">
+											<!-- 상품1 -->
+											<div class="product-cart-wrap border col-12" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);" th:data-delno="${l.delNo}">
+												<div class="product-content-wrap mt-50 mb-30 col-8">
+													<h4 th:text="${l.delNm}">상품명</h4>
+													<div>
+														<span th:text="${l.primaryLocation}" style="color: black; font-size: 20px;">기본배송지여부</span>
+													</div>
+													<div>
+														<span th:text="${l.delAddr}" style="color: black;">주소</span>
+														<span style="color: black;">|</span>
+														<span th:text="${l.delDaddr}" style="color: black;">상세주소</span>
+													</div>
+																				
+												</div>
+												<div class="product-price d-flex col-4">
+													<div class=" text-center">
+														<a href="#" class="btn btn-xl">선택</a>
+													</div>
+												</div>
+											</div>
+										</th:block>
+									</div>
+								</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                        	<div class="calculate-shiping p-40 border-radius-15 border">
+	                        	<div class="product-list mb-50">
+									<div class="form-group">
+										<input type="text" id="delSelected" name="delNo" placeholder="선택한 주소" readonly>
+									</div>	                        	
+								</div>
+                        	</div>
+                        	<div>
+                        		<button type="button" id="paymentBtn" class="btn mt-20 col-md-12">결제</button>
+                        	</div>
+                        </div>
+                    </div>
+                </div>
+			</div>
+		</div>
 	<th:block>
 </html>
