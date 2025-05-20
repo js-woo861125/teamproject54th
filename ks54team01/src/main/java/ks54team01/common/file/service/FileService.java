@@ -23,4 +23,9 @@ public interface FileService {
 		int addFiles(MultipartFile[] multipartFiles, String fileType, String refId);
 		
 		List<FileMetaData> uploadFiles(MultipartFile[] multipartFiles, String imgType);
+
+		List<FileMetaData> getFileListByRefId(String refId, String fileType);
+		
+		// 파일 삭제
+		 void deleteFiles(String refId, String fileType);
 }

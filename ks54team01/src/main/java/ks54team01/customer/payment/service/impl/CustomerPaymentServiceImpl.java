@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ks54team01.customer.payment.domain.CustomerDelivery;
 import ks54team01.customer.payment.domain.CustomerPayment;
 import ks54team01.customer.payment.mapper.CustomerPaymentMapper;
 import ks54team01.customer.payment.service.CustomerPaymentService;
@@ -34,6 +35,16 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 	private final ObjectMapper objectMapper;
 	
 	private final CustomerPaymentMapper customerPaymentMapper;
+	
+	
+	@Override
+	public List<CustomerDelivery> getDeliveryListById(String custId) {
+		
+		List<CustomerDelivery> customerDelivery = customerPaymentMapper.getDeliveryListById(custId);
+		
+		return customerDelivery;
+	}
+	
 	
 	
 	
