@@ -3,7 +3,6 @@ package ks54team01.customer.register.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +26,7 @@ public class EmailAuthController {
     @PostMapping("/sendCode")
     @ResponseBody
     public Map<String, Object> sendCode(@RequestParam String emailFirst,
-                                                        @RequestParam String emailLast) {
+                                        @RequestParam String emailLast) {
         String fullEmail = emailFirst + emailLast;
         Map<String, Object> response = new HashMap<>();
 

@@ -7,6 +7,85 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
+		<script>
+			/**
+			* 모델 + 스펙 + 상세스펙내용 중복체크
+			*/
+			$('#modifyModelSpecBtn').click(function(){
+				const modelSpecName = $('#modelSpecName').val();
+				const modelNo = $('#modelNo').val();
+				const specNo = $('#specNo').val();
+				
+				if(!modelSpecName){
+					alert('상세스펙내용을 입력해주세요');
+					$('#modelSpecName').focus();
+					return ;
+				}
+				
+				if (!modelNo) {
+					alert('모델을 선택해주세요');
+					$('#modelNo').focus();
+					return;
+				}
+				
+				if (!specNo) {
+					alert('스펙을 선택해주세요');
+					$('#specNo').focus();
+					return;
+				}
+				$.ajax({
+					url : '/admin/productInfo/specContentCheck',
+					method : 'post',
+					data : {
+						'modelSpecName': modelSpecName,
+						'modelNo' : modelNo,
+						'specNo' : specNo
+					},
+					dataType : 'json'
+				}).done(function(isDuplicate) {
+					if(isDuplicate){
+						alert('이미 등록된 상세스펙내용 입니다.');
+						$('#itemName').focus();
+						return ;
+					}
+				
+					$('#modifyProductInfoForm').submit();
+			    }).fail(function(jqXHR, textStatus, error) {
+			        console.log("에러 발생:", textStatus, error);
+			        alert('품목명 확인 중 오류가 발생했습니다.');
+			    });
+			});
+			
+			/**
+			* 모델 선택 시 해당 스펙 조회
+			*/
+			$('#modelNo').change(function() {
+			    const modelNo = $(this).val();
+			    const specNo = $(this).val();
+			    $('#specNo').empty().append('<option value="">스펙을 선택해주세요</option>');
+			    
+			    if (modelNo) {
+			        $.ajax({
+			            url: '/admin/productInfo/specListByModel',
+			            type: 'GET',
+			            data: { modelNo: modelNo },
+			            success: function(categorySpecList) {
+			                console.log(categorySpecList); // 응답 데이터 확인
+			                if (categorySpecList && categorySpecList.length > 0) {
+			                	$.each(categorySpecList, function(idx, spec) {
+			                	    $('#specNo').append('<option value="' + spec.specNo + '">' + spec.specName + '</option>');
+			                	});
+			                } else {
+			                    $('#specNo').append('<option value="">스펙이 없습니다</option>');
+			                }
+			            },
+			            error: function() {
+			                alert('스펙 목록을 불러오는 중 오류가 발생했습니다.');
+			            }
+			        });
+			    }
+			});
+		</script>			
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
@@ -73,7 +152,7 @@
 								<!-- 버튼 -->
 								<div class="d-grid gap-2 d-md-flex justify-content-md-end">
 									<div class="col-md-2 col-2 ms-auto">
-										<button type="submit" id="modifyModelSpecBtn" 
+										<button type="button" id="modifyModelSpecBtn" 
 												class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6">수정</button>
 									</div>
 									<div class="col-md-2 col-2">
