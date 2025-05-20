@@ -3,9 +3,12 @@ package ks54team01.customer.payment.service;
 import java.util.List;
 import java.util.Map;
 
+import ks54team01.customer.payment.domain.CustomerDelivery;
 import ks54team01.customer.payment.domain.CustomerPayment;
 
 public interface CustomerPaymentService {
+	
+	List<CustomerDelivery> getDeliveryListById(String custId);
 	
 	List<CustomerPayment> getPaymentList(String custId);
 	
