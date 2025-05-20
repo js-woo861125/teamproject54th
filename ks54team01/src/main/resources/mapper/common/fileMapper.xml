@@ -5,6 +5,18 @@
 <mapper namespace="ks54team01.common.file.mapper.FileMapper">
 		
 		
+		<select id="getFileListByRefId" resultType="FileMetaData">
+		    SELECT
+		     *
+		    FROM files
+		    WHERE 
+		    	ref_id = #{refId}
+		    AND 
+		      	file_type = #{fileType}
+		    AND 
+		      	file_status = '사용중'
+		</select>
+		
 	 <insert id="addFile" parameterType="FileMetaData">
         /* 단인 파일 INSERT */
         INSERT INTO 
@@ -69,5 +81,16 @@
             )
         	</foreach>
    	</insert>
+   	
+   	<delete id="deleteFiles" >
+    DELETE 
+    FROM 
+    	files 
+    WHERE 
+    	ref_id = #{refId} 
+    AND 
+    	file_type = #{fileType}
+	</delete>
+   	
    		
 </mapper>

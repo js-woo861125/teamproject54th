@@ -21,6 +21,18 @@ public class FileServiceImpl implements FileService {
 	private final FilesUtils filesUtils;
 	private final FileMapper fileMapper;
 	
+
+	@Override
+	public void deleteFiles(String refId, String fileType) {
+		fileMapper.deleteFilesByRefIdAndType(refId, fileType);
+	}
+	
+	
+	@Override
+	public List<FileMetaData> getFileListByRefId(String refId, String fileType) {
+	    return fileMapper.getFileListByRefId(refId, fileType);
+	}
+
 	
 	@Override
 	public List<FileMetaData> uploadFiles(MultipartFile[] multipartFiles, String imgType) {
@@ -39,7 +51,7 @@ public class FileServiceImpl implements FileService {
 	    for (FileMetaData file : fileList) {
 	        file.setRefId(refId);
 	        file.setFileType(fileType);
-	        file.setUseStatus("사용중");
+	        file.setFileStatus("사용중");
 	        file.setRegisterDate(LocalDateTime.now());
 	        file.setRevisionDate(LocalDateTime.now());
 	    }
@@ -50,9 +62,6 @@ public class FileServiceImpl implements FileService {
 
 	    return 0;
 	}
-	
-	
-	
 	
 	
 	@Override
