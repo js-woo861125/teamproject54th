@@ -19,12 +19,33 @@
 		<result column="contract_status" 	  property="contractStatus"/>
 	
 		<association property="entCeoInfo" javaType="EntMember">
-			<id 	column="ent_ceo_no" property="entCeoNo"/>
-			<result column="ent_emp_id" property="memberId"/>
+			<id 	column="ent_emp_id" property="memberId"/>
+			<result column="ent_ceo_no" property="entCeoNo"/>
 			<result column="ent_nm" 	property="entName"/>
+			<result column="ent_brno" 	property="entBrno"/>
 			<result column="ent_emp_nm" property="entCeoName"/>
 		</association>	
 	</resultMap>
+
+	<insert id="addContract" parameterType="AdminEntAddContract">
+		<selectKey keyProperty="entContractNo" resultType="string" order="BEFORE">
+		/* 계약코드 자동증가 */
+		SELECT 
+			case
+			when count(*) = 0 then 'ent_contract_1'
+			else
+				CONCAT('ent_contract_',max(cast(SUBSTRING_INDEX(ent_contract_no, '_', -1) as unsigned))+1)
+			end as entContractNo	
+		FROM
+			ent_contract;
+		</selectKey>
+		/* 플랫폼 입점업체 계약 등록 */
+		INSERT INTO ent_contract
+		(ent_contract_no, ent_ceo_no, ent_emp_id, manager_id, fee_rate_sales, fee_rate_rental, 
+		fee_rate_penalty, entry_fee, contract_date, contract_expiry_date, ent_cal_date, contract_status)
+		VALUES
+		(#{entContractNo}, #{entCeoNo}, #{entEmpId}, #{managerId}, 0.1, 0.05, 0.05, 3000000, #{contractDate}, #{contractEndDate}, 20, '계약중');
+	</insert>	
 
 	 <select id="getEntList" parameterType="string">
 		/* 입점업체 목록 조회 */
