@@ -61,32 +61,34 @@
                     <table class="table table-hover">
                         <thead>
                             <tr class=text-center>
-                                <th>상품코드</th>
-                                <th>카테고리</th>
-                                <th>상품이미지</th>                            
                                 <th>상품명</th>
+                                <th>상품이미지</th>                            
+                                <th>모델명</th>
                                 <th>판매상태</th>
                                 <th>등록일자</th>
                                 <th>수정일자</th>
                                 <th>수정/삭제</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr class=text-center>
-                                <td>prod_1</td>
-                                <td>침대</td>
-                                <td>
-                                    <a class="item" href="#">
-                                        <div class="img">
-                                            <img src="https://storage.bilrigo.com/data/thumbnails/230421/QXWVYba3s51p1vlpZVXnKF3dd8JYAC.jpg" class="img-sm img-thumbnail" alt="Item" />
-                                        </div>
-                                    </a>
-                                </td>
-                                <td>
-                                    <div class="info">
-                                        <h6 class="mb-0">라온 LED 저상형 침대 SS</h6>
-                                    </div>
-                                </td>
+                        <tbody class="text-center">
+                        <th:block th:if="${!#lists.isEmpty(adminProductList)}" th:each="l : ${adminProductList}">
+                            <tr>
+                                <td><a class="fw-bold" th:text="${l.productName}"></a></td>
+                               <td>
+								    <a class="item" href="#">
+								        <div class="img">
+								            <img th:if="${l.productImage != null}" 
+								                 th:src="${l.productImage}" 
+								                 class="img-sm img-main" 
+								                 alt="상품이미지" />
+								                 
+								            <div th:if="${l.productImage == null}" 
+								                 class="img-sm img-main bg-light d-inline-block" 
+								                 style="width: 100px; height: 100px;"></div>
+								        </div>
+								    </a>
+								</td>
+                                <td th:text="${l.modelName}">모델명</td>
                                 <td class="col-lg-2 col-sm-2 col-4 col-status">
                                     <span class="badge rounded-pill alert-success">활성화</span>
                                     <div class="dropdown">
@@ -98,13 +100,17 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023-01-01 13:00:00</td>
-                                <td>2023-01-01 13:00:00</td>
+                                <td th:text="${l.registerDate}">2023-01-01 13:00:00</td>
+                                <td th:text="${l.revisionDate}">2023-01-01 13:00:00</td>
                                 <td class="col-lg-2 col-sm-2 col-4 col-action">
-                                    <a href="#" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
+                                    <a th:href="@{/admin/product/modifyProduct(productNo=${l.productNo})}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
                                     <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
                                 </td>
                             </tr>
+                          </th:block>
+                          	 <tr th:unless="${!#lists.isEmpty(entList)}">
+							 	<td colspan="11">등록없음</td>
+							 </tr>  
                         </tbody>
                     </table>
                 </div>

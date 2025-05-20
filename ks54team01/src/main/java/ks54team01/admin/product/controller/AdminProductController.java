@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ks54team01.admin.product.domain.AdminAddProduct;
 import ks54team01.admin.product.domain.AdminProduct;
@@ -22,7 +22,6 @@ import ks54team01.admin.productInfo.domain.ProductInfoBrand;
 import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.admin.productInfo.domain.ProductInfoItem;
 import ks54team01.admin.productInfo.domain.ProductInfoModel;
-import ks54team01.admin.productInfo.service.AdminProductInfoService;
 import ks54team01.common.file.mapper.FileMapper;
 import ks54team01.common.file.service.FileService;
 import lombok.RequiredArgsConstructor;
@@ -36,22 +35,51 @@ public class AdminProductController {
 	
 	@Value("${file.path}")
 	private String fileRealPath;
-	
-	
-	
+
 	private final FileMapper fileMapper;
 	private final FileService fileService;
-	private final AdminProductInfoService adminProductInfoservice;
 	private final AdminProductService adminProductService;
 	private final AdminProductMapper adminProductMapper;
 		
 	
-	@GetMapping("/productList")
-	public String productList(Model model) {
+	@GetMapping("/modifyProduct")
+	public String modifyProduct(@RequestParam("productNo") String productNo, Model model) {
+	    
+	    AdminProduct product = adminProductService.getProduct(productNo);
+
+	  
+	    List<ProductInfoCategory> categoryList = adminProductService.loadCategoryList();
+	    List<ProductInfoItem> itemList = adminProductService.loadItemList(product.getCategoryNo());
+	    List<ProductInfoBrand> brandList = adminProductService.loadBrandList(product.getCategoryNo(), product.getItemNo());
+	    List<ProductInfoModel> modelList = adminProductService.loadModelList(product.getCategoryNo(), product.getItemNo(), product.getBrandNo());
+
+	 
+	    model.addAttribute("product", product);
+	    model.addAttribute("categoryList", categoryList);
+	    model.addAttribute("itemList", itemList);
+	    model.addAttribute("brandList", brandList);
+	    model.addAttribute("modelList", modelList);
+
+	   
+	    return "admin/product/modifyProductView";
+	}
 	
+		@PostMapping("/modifyProduct")
+		public String modifyProduct(AdminProduct product,
+		                            @RequestParam("mainImage") MultipartFile[] mainImage,
+		                            @RequestParam("thumbnails") MultipartFile[] thumbnails,
+		                            @RequestParam("details") MultipartFile[] details) {
+		   
+		//	adminProductService.modifyProduct(product, mainImage, thumbnails, details);
+		    return "redirect:/admin/product/productList";
+		}
+	
+		@GetMapping("/productList")
+	public String getProductList(Model model) {
+		List<AdminProduct> adminProductList = adminProductService.getProductList();
 		
 		model.addAttribute("title", "등록상품리스트");
-
+		model.addAttribute("adminProductList", adminProductList);
 		
 		return "admin/product/productListView";
 	}
