@@ -16,7 +16,7 @@ public class FileMetaData {
 	    private String fileExt;
 	    private Long fileSize;
 	    private String fileType;
-	    private String useStatus;
+	    private String fileStatus;
 	    private LocalDateTime registerDate;
 	    private LocalDateTime revisionDate;
 }
