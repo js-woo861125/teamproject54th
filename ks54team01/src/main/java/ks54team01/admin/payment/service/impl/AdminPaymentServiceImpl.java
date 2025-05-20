@@ -7,7 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ks54team01.admin.enterprise.domain.AdminEntList;
 import ks54team01.admin.payment.domain.AdminFee;
+import ks54team01.admin.payment.domain.AdminMonthlyFee;
 import ks54team01.admin.payment.domain.AdminPayment;
+import ks54team01.admin.payment.mapper.AdminPaymentCalcMapper;
 import ks54team01.admin.payment.mapper.AdminPaymentMapper;
 import ks54team01.admin.payment.service.AdminPaymentService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,16 @@ import lombok.RequiredArgsConstructor;
 public class AdminPaymentServiceImpl implements AdminPaymentService{
 
 	private final AdminPaymentMapper adminPaymentMapper;
+	private final AdminPaymentCalcMapper adminPaymentCalcMapper; 
+	
+	@Override
+	public List<AdminMonthlyFee> getAdminPaymentCalc(String ceoCode) {
+		
+		List<AdminMonthlyFee> getAdminMonthlyFees = adminPaymentCalcMapper.getAdminPaymentCalc(ceoCode);
+		
+		return getAdminMonthlyFees;
+	}
+	
 	
 	@Override
 	public List<AdminFee> getAdminPayFee(String ceoCode) {

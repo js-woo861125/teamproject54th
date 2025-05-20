@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ks54team01.admin.enterprise.domain.AdminEntList;
 import ks54team01.admin.payment.domain.AdminFee;
+import ks54team01.admin.payment.domain.AdminMonthlyFee;
 import ks54team01.admin.payment.domain.AdminPayment;
 import ks54team01.admin.payment.service.AdminPaymentService;
 import lombok.RequiredArgsConstructor;
@@ -47,9 +48,8 @@ public class AdminPaymentController {
 		return "admin/payment/paymentListView";
 	}
 	
-	// 입점업체 검색
+//	 입점업체 검색
 	@GetMapping("/searchEnterprise")
-
 	public String getSearchEnterprise(@RequestParam(name="searchKey", required = false, defaultValue = "entCeoNo") String searchKey,
 			 						@RequestParam(name="searchValue", required = false)String searchValue,
 			 						Model model) {
@@ -58,6 +58,8 @@ public class AdminPaymentController {
 		
 		List<AdminFee> adminFeeList = adminPaymentService.getAdminPayFee(searchValue);
 		
+		List<AdminMonthlyFee> adminMonthlyFeeList = adminPaymentService.getAdminPaymentCalc(searchValue);
+		
 		model.addAttribute("entList", entList);
 		model.addAttribute("title", "입점업체목록");
 		model.addAttribute("searchKey", searchKey);
@@ -65,15 +67,19 @@ public class AdminPaymentController {
 		
 		model.addAttribute("adminFeeList",adminFeeList);
 		
+		model.addAttribute("adminMonthlyFeeList",adminMonthlyFeeList);
+		
 		
 		return "admin/payment/calculateView";
 	}
-	
 	
 	// 정산페이지 처음 빈 페이지
 	@GetMapping("/calculate")
-	public String getAdminPayment() {
-		
+	public String getAdminPaymentCalc() {
+				
 		return "admin/payment/calculateView";
 	}
+	
+	
+	
 }
