@@ -18,6 +18,49 @@ public class MemberServiceImpl implements MemberService{
 
 	private final MemberMapper memberMapper;
 	
+
+	/**
+	 * 회원탈퇴
+	 */
+	@Override
+	public boolean customerLeave(String memberType, String memberId) {
+		 int result = 0;
+
+		    switch (memberType) {
+		        case "개인고객":
+		            result += memberMapper.deactivateCustomerMember(memberId);
+		            break;
+		        case "기업고객":		        	
+		        	result += memberMapper.deactivateCorpMember(memberId);
+		        	result += memberMapper.deactivateCustomerMember(memberId);
+		            break;
+		        default:
+		            log.warn("알 수 없는 회원 아이디: {}, 회원유형 : {}", memberId, memberType);
+		            return false;
+		    }
+
+		    result += memberMapper.deactivateCommonMember(memberId);
+		    
+		    return result > 1;
+		}
+		
+	
+	
+	
+	/**
+	 * 처리 진행중인 상태 여부 조회(탈퇴)
+	 */
+	@Override
+	public boolean checkStatus(String memberId) {
+		
+        int resultCount = memberMapper.resultCountById(memberId);
+        if (resultCount > 0) return true;
+
+		return false;
+	}
+	
+
+	
 	/**
 	 * 회원정보 수정
 	 */
@@ -52,6 +95,7 @@ public class MemberServiceImpl implements MemberService{
 		return memberMapper.isPwCheck(Map.of("memberId", memberId, "memberPw", memberPw));
 	}
 	
+	
 	/**
 	 * 고객유형별 개인정보 조회
 	 */
@@ -64,6 +108,8 @@ public class MemberServiceImpl implements MemberService{
 	public CustomerMember getCustomerInfoById(String memberId) {
 		return memberMapper.getCustomerInfoById(memberId);
 	}
+
+
 	
 }
 

@@ -8,6 +8,18 @@ import ks54team01.customer.member.domain.CustomerMember;
 
 @Mapper
 public interface MemberMapper {
+	// 공통정보 테이블 탈퇴처리
+	int deactivateCommonMember(String memberId);
+	
+	// 기업고객 탈퇴
+	int deactivateCorpMember(String memberId);
+	
+	// 개인고객 탈퇴
+	int deactivateCustomerMember(String memberId);
+	
+	// 처리 진행중인 상태 여부 조회(탈퇴)
+	int resultCountById(String memberId);
+	
 	// 기업회원 추가정보 수정
 	int modifyCorpInfo(CustomerMember modifyMember);
 	
@@ -25,6 +37,15 @@ public interface MemberMapper {
 	
 	// 개인 및 기업고객 정보 조회
 	CustomerMember getCustomerInfoById(String memberId);
+
+
+
+
+
+
+
+
+
 
 
 	

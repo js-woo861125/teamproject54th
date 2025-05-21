@@ -9,5 +9,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface LoginService {
 	// 회원정보 조회(로그인)
-	Map<String, Object> login(String memberId, String memberPw);
+	Map<String, Object> matchMember(String memberId, String memberPw);
 }

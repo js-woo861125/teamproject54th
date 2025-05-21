@@ -11,9 +11,11 @@ public interface AdminPaymentService {
 
 	List<AdminMonthlyFee> getAdminPaymentCalc(String searchValue);
 	
+	List<AdminMonthlyFee> getAdminPaymentCalc(String searchValue, String settlementMonth);
+	
 	List<AdminEntList> getSearchEnt(String searchKey, String searchValue);
 	
-	List<AdminFee> getAdminPayFee(String ceoCode);
+	List<AdminFee> getAdminPayFee(String ceoCode, String settlementMonth);
 	
 	List<AdminPayment> getSearchPaymentList(String searchKey, String searchValue);
 	
