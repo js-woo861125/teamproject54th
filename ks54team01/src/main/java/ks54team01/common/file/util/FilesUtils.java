@@ -103,7 +103,7 @@ public class FilesUtils {
 			fileMetaData = FileMetaData.builder().fileIdx(fileIdx)
 												 .fileNewName(newFileName)
 												 .fileOriginalName(originalFilename)
-												 .filePath(uploadPath.toString().replace("c:","/").replace("\\","/").replace(fileRealPath, ""))
+												 .filePath(uploadPath.toString().replace("d:","").replace("\\","/").replace(fileRealPath, ""))
 												 .fileExt(extension)  
 												 .fileSize(multipartFile.getSize())
 												 .build();
@@ -136,7 +136,14 @@ public class FilesUtils {
 		String typeDirectory = (contentType != null && contentType.contains("image")) ? "image" : "files";
 		String imgTypeDirectory = null;
 		if(typeDirectory.equals("image")) {
-			imgTypeDirectory = (imgType != null && imgType.contains("thumnail")) ? "thumnail" : "product";
+		    // imgType 값에 따라 폴더명 구분
+		    if ("main".equalsIgnoreCase(imgType)) {
+		        imgTypeDirectory = "main";
+		    } else if ("thumnail".equalsIgnoreCase(imgType)) {
+		        imgTypeDirectory = "thumnail";
+		    } else {
+		        imgTypeDirectory = "product"; // 기본값
+		    }
 		}
 		 
 		// os별 루트 설정
@@ -207,17 +214,15 @@ public class FilesUtils {
 	}
 	
 	
-	// 다중 파일 저장
-		public List<FileMetaData> uploadFiles (MultipartFile[] multipartFiles){
-			
-			List<FileMetaData> fileList = new ArrayList<FileMetaData>();
-			FileMetaData fileMetaData = null;
-			for(MultipartFile multipartFile : multipartFiles) {
-				fileMetaData = storeFile(multipartFile);
-				if(fileMetaData != null) fileList.add(fileMetaData);
-			}
-			return fileList;
-		}
+	
+	  // 다중 파일 저장 
+	public List<FileMetaData> uploadFiles (MultipartFile[] multipartFiles){
+	  
+	  List<FileMetaData> fileList = new ArrayList<FileMetaData>(); FileMetaData
+	  fileMetaData = null; for(MultipartFile multipartFile : multipartFiles) {
+	  fileMetaData = storeFile(multipartFile); if(fileMetaData != null)
+	  fileList.add(fileMetaData); } return fileList; }
+	
 		
 	// 다중 파일 저장
 	public List<FileMetaData> uploadFiles (MultipartFile[] multipartFiles, String imgType){

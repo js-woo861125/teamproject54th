@@ -14,15 +14,14 @@
 
 <th:block layout:fragment="content">
 	<div class="row">
-		<div class="col-9">
-			<div class="content-header">	
-				<h2 class="content-title">제품 수정</h2>
-			</div>
-		</div>
+		<!-- 왼쪽: 폼 -->
 		<div class="col-lg-6">
 			<form class="user" th:action="@{/admin/product/modifyProduct}"
 				method="post" enctype="multipart/form-data">
-			<input type="hidden" name="productNo" th:value="${product.productNo}" />
+				<input type="hidden" name="productNo"
+					th:value="${product.productNo}" />
+
+				<!-- 제품정보 -->
 				<div class="card mb-4">
 					<div class="card-header">
 						<h4>제품정보</h4>
@@ -31,112 +30,117 @@
 						<div class="mb-4">
 							<label for="product_name" class="form-label">제품 이름</label> <input
 								type="text" name="productName" placeholder="제품을 입력해주세요"
-								class="form-control" id="product_name" required />
+								class="form-control" id="product_name" required
+								th:value="${product.productName}" />
 						</div>
 						<div class="row">
 							<div class="col-lg-10">
 								<div class="mb-4">
-									<label class="form-label">카테고리</label> 
-									<select name="categoryNo" class="form-select" id="categorySelect">
-										    <option value="">카테고리 선택</option>
-										    <option th:each="category : ${categoryList}"
-										            th:value="${category.categoryNo}"
-										            th:text="${category.lgCategory + ' > ' + category.mdCategory + ' > ' + category.smCategory}"
-										            th:selected="${product.categoryNo} == ${category.categoryNo}">
-										    </option>
-										</select>
+								<label class="form-label">카테고리</label> <select name="categoryNo"
+									class="form-select" id="categorySelect">
+									<option value="">카테고리 선택</option>
+									<option th:each="category : ${categoryList}"
+										th:value="${category.categoryNo}"
+										th:text="${category.lgCategory + ' > ' + category.mdCategory + ' > ' + category.smCategory}"
+										th:selected="${product.categoryNo} == ${category.categoryNo}"></option>
+								</select>
 								</div>
+							</div>
+							<div class="row">
+							<div class="col-lg-4">
+								<label class="form-label">품목</label> <select name="itemNo"
+									class="form-select" id="itemSelect">
+									<option value="">품목 선택</option>
+									<option th:each="item : ${itemList}" th:value="${item.itemNo}"
+										th:text="${item.itemName}"
+										th:selected="${product.itemNo} == ${item.itemNo}"></option>
+								</select>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-lg-4">
-								<div class="mb-4">
-									<label class="form-label">품목</label> 
-									<select id="itemSelect" name="itemNo" class="form-select">
-										<option value="">품목 선택</option>
-									</select>
-								</div>
+								<label class="form-label">브랜드</label> <select name="brandNo"
+									class="form-select" id="brandSelect">
+									<option value="">브랜드 선택</option>
+									<option th:each="brand : ${brandList}"
+										th:value="${brand.brandNo}" th:text="${brand.brandName}"
+										th:selected="${product.brandNo} == ${brand.brandNo}"></option>
+								</select>
 							</div>
-							<div class="col-lg-4">
-								<div class="mb-4">
-									<label class="form-label">브랜드</label> <select id="brandSelect"
-										name="brandNo" class="form-select">
-										<option value="">브랜드 선택</option>
-									</select>
-								</div>
+							<div class="col-lg-10">
+								<label class="form-label">모델</label> <select name="modelNo"
+									class="form-select" id="modelSelect">
+									<option value="">모델 선택</option>
+									<option th:each="model : ${modelList}"
+										th:value="${model.modelNo}" th:text="${model.modelNm}"
+										th:selected="${product.modelNo} == ${model.modelNo}"></option>
+								</select>
 							</div>
-						</div>
-						<div class="col-lg-10">
-							<label class="form-label">모델</label> <select id="modelSelect"
-								name="modelNo" class="form-select">
-								<option value="">모델 선택</option>							
-							</select>
 						</div>
 					</div>
 				</div>
-				<!-- card end// -->
+
+				<!-- 상세옵션 -->
 				<div class="card mb-4">
 					<div class="card-header">
 						<h4>제품 상세옵션</h4>
 					</div>
 					<div class="card-body">
-						<div class="row">
-							<div id="specArea" class="mb-3"></div>
+						<div id="specArea">
+							<div th:if="${#lists.isEmpty(specContentList)}">등록된 상세옵션이
+								없습니다.</div>
+							<div th:each="spec : ${specContentList}"
+								style="margin-bottom: 2px;">
+								<span th:text="${spec.specNm}"></span>: <span
+									th:text="${spec.specContent != null ? spec.specContent : '-'}"></span>
+							</div>
+						</div>
 					</div>
 				</div>
-				<!-- card end// -->
-				<!-- card end// -->
-				</div>
+				<div class="card-body">
+	                <div class="card-body">
+	                	<div class="row mb-20">
+	                		<h4>2. 상세페이지 작성</h4>
+	                	</div>
+	                    <div class="row">
+	                        <div class="col-12">
+	                        	<textarea id="editor" name="productDetail"></textarea>
+	                        </div>
+	                    </div> <!-- row.// -->
+	                    
+	                </div>
+	                <!-- table-responsive end// -->
+	            </div>
+
+				<!-- 대표사진 업로드 -->
 				<div class="card mb-4">
 					<div class="card-header">
 						<h4>대표사진</h4>
 					</div>
 					<div class="card-body">
-						<div class="col-md-9">
-							<label for="files" class="form-label">대표사진</label>
-							<div class="input-group">
-								<input type="file" id="files1" name="mainImage"
-									class="form-control">
-							</div>
-						</div>
+						<label class="form-label">대표사진</label> <input type="file"
+							id="mainImage" name="mainImage" class="form-control">
 					</div>
 				</div>
+
+				<!-- 썸네일 업로드 -->
 				<div class="card mb-4">
 					<div class="card-header">
 						<h4>썸네일</h4>
 					</div>
 					<div class="card-body">
-						<div class="col-md-9">
-							<label for="files" class="form-label">썸네일</label>
-							<div class="input-group">
-								<input type="file" id="files1" name="thumbnails"
-									class="form-control" multiple>
-							</div>
-						</div>
+						<label class="form-label">썸네일</label> <input type="file"
+							id="files1" name="thumbnails" class="form-control" multiple>
 					</div>
 				</div>
-				<div class="card mb-4">
-					<div class="card-header">
-						<h4>제품 사진</h4>
-					</div>
-					<div class="card-body">
-						<div class="col-md-9">
-							<label for="files" class="form-label">제품상세</label>
-							<div class="input-group">
-								<input type="file" id="files2" name="details"
-									class="form-control" multiple>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- card end// -->
+
 				<button class="btn btn-primary" type="submit">상품등록</button>
 			</form>
 		</div>
-		
-			
-		<div class="row col-lg-4">
-			<div class="card">
+
+		<!-- 오른쪽: 사진 미리보기 -->
+		<div class="col-lg-4">
+			<div class="card mb-4">
 				<div class="card-header">
 					<h4>대표 사진 미리보기</h4>
 				</div>
@@ -144,24 +148,15 @@
 					<div class="row" id="previewmainImage"></div>
 				</div>
 			</div>
-			<div class="card">
+			<div class="card mb-4">
 				<div class="card-header">
-					<h4>상품 썸네일 미리보기</h4>
+					<h4>썸네일 미리보기</h4>
 				</div>
 				<div class="card-body">
 					<div class="row" id="previewThumnail"></div>
 				</div>
 			</div>
-			<div class="card">
-				<div class="card-header">
-					<h4>상품 이미지 미리보기</h4>
-				</div>
-				<div class="card-body">
-					<div class="row" id="previewThumnailProduct"></div>
-				</div>
-			</div>
 		</div>
-		
 	</div>
 </th:block>
 <!-- card end// -->
@@ -285,145 +280,139 @@
    	    $(this).closest('.img-box2').remove();
    	});
    		
-   		$(document).ready(function(){
-   		    // 1. 페이지 로딩 시 카테고리 목록 불러오기
-   		    $.ajax({
-   		        url: '/admin/product/categoryList',
-   		        method: 'GET',
-   		        success: function(data){
-   		            $('#categorySelect').empty().append('<option value="">카테고리 선택</option>');
-   		           
-   		            $.each(data, function(i, v){
-   		                $('#categorySelect').append(
-   		                    '<option value="' + v.categoryNo + '">' + v.lgCategory + ' > ' + v.mdCategory + ' > ' + v.smCategory + '</option>'
-   		                );
-   		            });
-   		        }
-   		    });
+   	$(document).ready(function(){
 
-   		    // 2. 카테고리 선택 > 품목 불러오기
-   		    $('#categorySelect').change(function(){
-   		        var categoryNo = $(this).val();
-   		        $('#itemSelect').empty().append('<option value="">품목 선택</option>');
-   		        $('#brandSelect').empty().append('<option value="">브랜드 선택</option>');
-   		        $('#modelSelect').empty().append('<option value="">모델 선택</option>');
+   	    // ========== [1] 카테고리 셀렉트 옵션이 없으면 최초 AJAX로 채움 ==========
+   	 $(document).ready(function(){
+	
+	    if ($('#categorySelect option').length <= 1) {
+	        $.ajax({
+	            url: '/admin/product/categoryList',
+	            method: 'GET',
+	            success: function(data){
+	                $('#categorySelect').empty().append('<option value="">카테고리 선택</option>');
+	                $.each(data, function(i, v){
+	                    $('#categorySelect').append(
+	                        '<option value="' + v.categoryNo + '">' +
+	                        v.lgCategory + ' > ' + v.mdCategory + ' > ' + v.smCategory +
+	                        '</option>'
+	                    );
+	                });
+	            }
+	        });
+	    }
+   	 });
 
-   		        if(categoryNo){
-   		            $.ajax({
-   		                url: '/admin/product/itemList',
-   		                data: { categoryNo: categoryNo },
-   		                method: 'GET',
-   		                success: function(list){
-   		                    $.each(list, function(idx, item){
-   		                        $('#itemSelect').append('<option value="'+item.itemNo+'">'+item.itemName+'</option>');
-   		                    });
-   		                }
-   		            });
-   		        }
-   		    });
+   	    // ========== [2] 카테고리 변경 시 품목 초기화 및 AJAX ==========
+   	    $('#categorySelect').change(function(){
+   	        var categoryNo = $(this).val();
+   	        $('#itemSelect').empty().append('<option value="">품목 선택</option>');
+   	        $('#brandSelect').empty().append('<option value="">브랜드 선택</option>');
+   	        $('#modelSelect').empty().append('<option value="">모델 선택</option>');
 
-	   		 // 품목 선택 시 브랜드 목록 AJAX
-	   		$('#itemSelect').on('change', function() {
-			    var categoryNo = $('#categorySelect').val();
-			    var itemNo = $(this).val();
-			
-			    $('#brandSelect').empty().append('<option value="">브랜드 선택</option>');
-			    $('#modelSelect').empty().append('<option value="">모델 선택</option>');
-			
-			    if(categoryNo && itemNo){
-			        $.ajax({
-			            url: '/admin/product/brandList',
-			            method: 'GET',
-			            data: {
-			                categoryNo: categoryNo,
-			                itemNo: itemNo
-			            },
-			            success: function(brandList){
-			                brandList.forEach(function(brand){
-			                    $('#brandSelect').append(
-			                        '<option value="' + brand.brandNo + '">' + brand.brandName + '</option>'
-			                    );
-			                });
-			            }
-			        });
-			    }
-			});
+   	        if(categoryNo){
+   	            $.ajax({
+   	                url: '/admin/product/itemList',
+   	                data: { categoryNo: categoryNo },
+   	                method: 'GET',
+   	                success: function(list){
+   	                    $.each(list, function(idx, item){
+   	                        $('#itemSelect').append(
+   	                            '<option value="'+item.itemNo+'">'+item.itemName+'</option>'
+   	                        );
+   	                    });
+   	                }
+   	            });
+   	        }
+   	    });
 
-   		    // 4. 브랜드 선택 > 모델 불러오기
-   		    $('#brandSelect').change(function(){
-   		        var categoryNo = $('#categorySelect').val();
-   		        var itemNo = $('#itemSelect').val();
-   		        var brandNo = $(this).val();
-   		        $('#modelSelect').empty().append('<option value="">모델 선택</option>');
+   	    // ========== [3] 품목 변경 시 브랜드 초기화 및 AJAX ==========
+   	    $('#itemSelect').change(function(){
+   	        var categoryNo = $('#categorySelect').val();
+   	        var itemNo = $(this).val();
 
-   		        if(categoryNo && itemNo && brandNo){
-   		            $.ajax({
-   		                url: '/admin/product/modelList',
-   		                data: {
-   		                    categoryNo: categoryNo,
-   		                    itemNo: itemNo,
-   		                    brandNo: brandNo
-   		                },
-   		                method: 'GET',
-   		                success: function(list){
-   		                    $.each(list, function(idx, model){
-   		                        $('#modelSelect').append('<option value="'+model.modelNo+'">'+model.modelNm+'</option>');
-   		                    });
-   		                }
-   		            });
-   		        }
-   		    });
-   		 $('#modelSelect').empty().append('<option value="">모델 선택</option>');
-   		var categoryNo = $('#categorySelect').val();
-   		var itemNo = $('#itemSelect').val();
-   		var brandNo = $('#brandSelect').val();
+   	        $('#brandSelect').empty().append('<option value="">브랜드 선택</option>');
+   	        $('#modelSelect').empty().append('<option value="">모델 선택</option>');
 
-   		if(categoryNo && itemNo && brandNo){
-   		    $.ajax({
-   		        url: '/admin/product/modelList',
-   		        data: {
-   		            categoryNo: categoryNo,
-   		            itemNo: itemNo,
-   		            brandNo: brandNo
-   		        },
-   		        success: function(data){
-   		            console.log("받은 data: ", data);
-   		            $.each(data, function(idx, model){
-   		                if (!model) {
-   		                    console.log("undefined model! idx=", idx, "data=", data);
-   		                }
-   		                $('#modelSelect').append(
-   		                    '<option value="' + model.modelNo + '">' + model.modelNm + '</option>'
-   		                );
-   		            });
-   		        }
-   		    });
-   		}
-	   		
-   		});
-   		$('#modelSelect').change(function() {
-   		  var modelNo = $(this).val();
-   		  $('#specArea').empty();
-   		  if(modelNo){
-   		    $.ajax({
-   		      url: '/admin/product/specContent',
-   		      data: { modelNo: modelNo },
-   		      success: function(specList) {
-   		        if(specList.length === 0){
-   		          $('#specArea').html('<span>등록된 상세옵션이 없습니다.</span>');
-   		        } else {
-   		          $.each(specList, function(i, spec){
-   		            var html = '<div class="mb-2">';
-   		            html += '<label>' + spec.specNm + '</label>: ';
-   		            html += '<span>' + (spec.specContent ? spec.specContent : '-') + '</span>';
-   		            html += '</div>';
-   		            $('#specArea').append(html);
-   		          });
-   		        }
-   		      }
-   		    });
-   		  }
-   		});
+   	        if(categoryNo && itemNo){
+   	            $.ajax({
+   	                url: '/admin/product/brandList',
+   	                method: 'GET',
+   	                data: {
+   	                    categoryNo: categoryNo,
+   	                    itemNo: itemNo
+   	                },
+   	                success: function(brandList){
+   	                 console.log("브랜드 리스트:", brandList);
+   	                    $.each(brandList, function(i, brand){
+   	                        $('#brandSelect').append(
+   	                            '<option value="' + brand.brandNo + '">' + brand.brandName + '</option>'
+   	                        );
+   	                    });
+   	                }
+   	            });
+   	        }
+   	    });
+
+   	    // ========== [4] 브랜드 변경 시 모델 초기화 및 AJAX ==========
+   	    $('#brandSelect').change(function(){
+   	        var categoryNo = $('#categorySelect').val();
+   	        var itemNo = $('#itemSelect').val();
+   	        var brandNo = $(this).val();
+
+   	        $('#modelSelect').empty().append('<option value="">모델 선택</option>');
+
+   	        if(categoryNo && itemNo && brandNo){
+   	            $.ajax({
+   	                url: '/admin/product/modelList',
+   	                method: 'GET',
+   	                data: {
+   	                    categoryNo: categoryNo,
+   	                    itemNo: itemNo,
+   	                    brandNo: brandNo
+   	                },
+   	                success: function(modelList){
+   	                    $.each(modelList, function(i, model){
+   	                        $('#modelSelect').append(
+   	                            '<option value="' + model.modelNo + '">' + model.modelNm + '</option>'
+   	                        );
+   	                    });
+   	                }
+   	            });
+   	        }
+   	    });
+
+   	    // ========== [5] 모델 변경 시 상세옵션(스펙) 표시 ==========
+   	    $('#modelSelect').change(function() {
+   	        var modelNo = $(this).val();
+   	        $('#specArea').empty();
+
+   	        if(modelNo){
+   	            $.ajax({
+   	                url: '/admin/product/specContent',
+   	                data: { modelNo: modelNo },
+   	                success: function(specList) {
+   	                    if(specList.length === 0){
+   	                        $('#specArea').html('<span>등록된 상세옵션이 없습니다.</span>');
+   	                    } else {
+   	                        $.each(specList, function(i, spec){
+   	                            var html = '<div class="mb-2">';
+   	                            html += '<label>' + spec.specNm + '</label>: ';
+   	                            html += '<span>' + (spec.specContent ? spec.specContent : '-') + '</span>';
+   	                            html += '</div>';
+   	                            $('#specArea').append(html);
+   	                        });
+   	                    }
+   	                }
+   	            });
+   	        }
+   	    });
+
+   	    // ========== [6] 수정폼에서 초기값 세팅시(옵션 있음) 하위 자동 AJAX 안 보냄 ==========
+   	    // 필요하다면, 폼 진입 시 option value가 있으면 그 값을 유지하도록 하면 된다.
+   	 
+   	});
+
 
    	</script>
 </th:block>

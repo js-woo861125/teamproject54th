@@ -20,5 +20,7 @@ public class AdminAddProduct {
     private String registerDate;     
     private String revisionDate;
     
+    private String productDetail;
+    
     private List<FileMetaData> fileList; 
 }
