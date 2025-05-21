@@ -11,7 +11,7 @@ public class CustomerPayment {
 	private String rentalContractNo;
 	private String paymentInfoNo;
 	private String entCeoNo;
-	private String entEmpNo;
+	private String entEmpId;
 	private String managerId;
 	private String paymentType;
 	private String contractDetail;
@@ -22,8 +22,6 @@ public class CustomerPayment {
 	private String paymentCompletedDate;
 	private String paymentStatus;
 	private String revDate;
-	
-	private String quantity;
-	
+		
 	private String prodNm;
 }

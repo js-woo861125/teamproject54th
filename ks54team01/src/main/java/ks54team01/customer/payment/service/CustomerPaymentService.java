@@ -8,6 +8,10 @@ import ks54team01.customer.payment.domain.CustomerPayment;
 
 public interface CustomerPaymentService {
 	
+	void modifyQuantity(Integer orderQuantity, String prodNo, String entCeoNo);
+	
+	int getQuantity(String prodNo, String entCeoNo);
+	
 	List<CustomerDelivery> getDeliveryListById(String custId);
 	
 	List<CustomerPayment> getPaymentList(String custId);

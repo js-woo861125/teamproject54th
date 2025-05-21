@@ -36,6 +36,20 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 	
 	private final CustomerPaymentMapper customerPaymentMapper;
 	
+	@Override
+	public void modifyQuantity(Integer orderQuantity, String prodNo, String entCeoNo) {
+
+		customerPaymentMapper.modifyQuantity(orderQuantity, prodNo, entCeoNo);
+	}
+	
+	
+	@Override
+	public int getQuantity(String prodNo, String entCeoNo) {
+		
+		int quantity = customerPaymentMapper.getQuantity(prodNo, entCeoNo);
+		
+		return quantity;
+	}
 	
 	@Override
 	public List<CustomerDelivery> getDeliveryListById(String custId) {

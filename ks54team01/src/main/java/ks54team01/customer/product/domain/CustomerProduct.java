@@ -20,6 +20,7 @@ import lombok.Data;
 		private String lumpPrice;
 		private String minRentalPrice;
 		
+		
 		private List<CustomerSellProduct> customerSellProduct;
 		private ProductCate productCate;
 		private List<EntCeo> entCeo;
