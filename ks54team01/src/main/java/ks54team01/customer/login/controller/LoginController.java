@@ -40,25 +40,25 @@ public class LoginController {
 
 	     log.info("로그인 시도: memberId={}", memberId);
 
-	     Map<String, Object> loginResult = loginService.login(memberId, memberPw);
+	     Map<String, Object> loginResult = loginService.matchMember(memberId, memberPw);
 
 	     if (loginResult == null || loginResult.get("memberInfo") == null) {
 	         log.warn("로그인 실패: 존재하지 않거나 비밀번호 불일치 - memberId={}", memberId);
 	         return "redirect:/customer/login/memberLogin?error=true";
 	     }
 	     
-	     CommonMember commonMember = new CommonMember();
-	     commonMember.setMemberId(memberId);
-	     commonMember.setMemberType((String) loginResult.get("memberType"));
+	     CommonMember memberInfo = new CommonMember();
+	     memberInfo.setMemberId(memberId);
+	     memberInfo.setMemberType((String) loginResult.get("memberType"));
 
-	     session.setAttribute("loginMember", commonMember);
-	     session.setAttribute("memberType", commonMember.getMemberType());
+	     session.setAttribute("loginMember", memberInfo);
+	     session.setAttribute("memberType", memberInfo.getMemberType());
 
-	     if ("입점업체 대표".equals(commonMember.getMemberType()) || "입점업체 직원".equals(commonMember.getMemberType())) {
+	     if ("입점업체 대표".equals(memberInfo.getMemberType()) || "입점업체 직원".equals(memberInfo.getMemberType())) {
 	         return "redirect:/enterprise";
 	     }
 
-	     log.info("로그인 성공: memberId={} memberType={}", memberId, commonMember.getMemberType());
+	     log.info("로그인 성공: memberId={} memberType={}", memberId, memberInfo.getMemberType());
 
 	     return "redirect:/";
 	 }

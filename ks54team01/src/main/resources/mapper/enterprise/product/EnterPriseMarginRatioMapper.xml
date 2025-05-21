@@ -3,6 +3,39 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ks54team01.enterprise.product.mapper.EnterpriseMarginRatioMapper">
+
+	<insert id="addEnterpriseMarginRatio" parameterType="ks54team01.enterprise.product.domain.EnterpriseMarginRatio">
+		/* 업체별 마진율 최초 등록 */
+		INSERT INTO margin_ratio
+		(margin_ratio_no, ent_ceo_no, ent_emp_id, period, margin_ratio, register_date, revision_date, use_status)
+		VALUES(#{marginRatioNum}, 'ent_ceo_2', 'entempid2', #{period}, #{marginRatio}, NOW(), NOW(), '사용중');
+	</insert>
+	
+	<update id="modifyMarginRatioUseStatus" parameterType="ks54team01.enterprise.product.domain.EnterpriseMarginRatio">
+		/* 업체별 마진율 사용유무 설정 (사실상 삭제 기능도 포함) */
+		UPDATE margin_ratio
+		SET
+			<if test="useStatus == '사용중'">
+			    use_status = '사용불가',
+			</if>
+			<if test="useStatus == '사용불가'">
+			    use_status = '사용중',
+			</if>
+		    revision_date = NOW()
+		WHERE
+		    margin_ratio_no = #{marginRatioNum};
+	</update>
+	
+	<update id="modifyEnterpriseMarginRatio" parameterType="ks54team01.enterprise.product.domain.EnterpriseMarginRatio">
+		/* 업체별 설정한 마진율 변경 */
+		UPDATE margin_ratio
+		SET
+		    margin_ratio = #{marginRatio},
+		    revision_date = NOW()
+		WHERE
+		    ent_ceo_no = #{enterpriseCeoNum}
+		    AND period = #{period};
+	</update>
 	
 	<select id="getEnterpriseMarginRatio" parameterType="string">
 		/* 업체별 마진율 조회 */
@@ -18,12 +51,9 @@
 		FROM
 			margin_ratio
 		WHERE
-			ent_ceo_no = 'ent_ceo_1'
+			ent_ceo_no = 'ent_ceo_2'
 		ORDER BY period DESC;
 	</select>
-	
-	
-	
 </mapper>
 
 

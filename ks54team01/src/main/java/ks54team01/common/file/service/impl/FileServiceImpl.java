@@ -29,7 +29,7 @@ public class FileServiceImpl implements FileService {
 	
 	
 	@Override
-	public List<FileMetaData> getFileListByRefId(String refId, String fileType) {
+	public List<FileMetaData> getFileList(String refId, String fileType) {
 	    return fileMapper.getFileListByRefId(refId, fileType);
 	}
 

@@ -83,27 +83,32 @@
 	<select id="getSearchEntFee" parameterType="string" resultType="AdminFee">
 	/*수수료조회*/
 		SELECT 
-		f.fee_no AS feeNo, 
-		f.payment_completed_no AS paymentCompletedNo, 
-		f.ent_ceo_no AS entCeoNo, 
-		f.ent_emp_id AS entEmpId,
-		f.manager_id AS managerId, 
-		f.payment_details AS paymentDetils, 
-		f.platform_fee AS platFormFee,
-		f.ent_sales AS entSales,
-		f.provision_schedule_date AS provisionScheduleDate,
-		f.provision_date AS provisionDate, 
-		f.settlement_month AS settlementMonth,
-		f.closing_settlement AS closingSttelement,
-		f.payment_status AS paymentStatus,
-		f.revision_date AS revisionDate
-	FROM 
-		fee f INNER JOIN ent_ceo ec 
-		ON f.ent_ceo_no = ec.ent_ceo_no
-	WHERE 
-		f.ent_ceo_no = #{entCeoNo}
-	ORDER BY 
-		CAST(substring(f.fee_no,5)AS UNSIGNED);
+			f.fee_no AS feeNo, 
+			f.payment_completed_no AS paymentCompletedNo, 
+			f.ent_ceo_no AS entCeoNo, 
+			f.ent_emp_id AS entEmpId,
+			f.manager_id AS managerId, 
+			f.payment_details AS paymentDetils, 
+			f.platform_fee AS platFormFee,
+			f.ent_sales AS entSales,
+			f.provision_schedule_date AS provisionScheduleDate,
+			f.provision_date AS provisionDate, 
+			f.settlement_month AS settlementMonth,
+			f.closing_settlement AS closingSttelement,
+			f.payment_status AS paymentStatus,
+			f.revision_date AS revisionDate
+		FROM 
+			fee f INNER JOIN ent_ceo ec 
+			ON f.ent_ceo_no = ec.ent_ceo_no
+		WHERE 
+			f.ent_ceo_no = #{entCeoNo}        
+			<if test="settlementMonth != null and settlementMonth != ''">
+       	 		AND f.settlement_month = #{settlementMonth}
+    		</if>
+			
+			
+		ORDER BY 
+			CAST(substring(f.fee_no,5)AS UNSIGNED);
 			
 			
 	</select>

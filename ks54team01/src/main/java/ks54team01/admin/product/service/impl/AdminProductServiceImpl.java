@@ -115,7 +115,6 @@ public class AdminProductServiceImpl implements AdminProductService{
 	
 	        //  파일 메타데이터 DB에 등록   
 	        fileService.addFiles(mainImage, "main", product.getModelNo());
-        
- 
+	        fileService.addFiles(thumbnails, "thumbnail", product.getModelNo());
 		}
 }
