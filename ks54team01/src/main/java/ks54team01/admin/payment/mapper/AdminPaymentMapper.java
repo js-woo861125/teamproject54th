@@ -17,7 +17,7 @@ public interface AdminPaymentMapper {
 	List<AdminEntList> getSearchEnt(String searchKey, String searchValue);
 	
 	// 입접 업체별 수수료 조회
-	List<AdminFee> getSearchEntFee(String ceoNo);
+	List<AdminFee> getSearchEntFee(String entCeoNo, String settlementMonth);
 	
 	// 회원별 결제내역 검색
 	List<AdminPayment> getSearchPaymentList(String searchKey, String searchValue);
