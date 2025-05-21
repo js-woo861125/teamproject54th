@@ -5,7 +5,7 @@
 <mapper namespace="ks54team01.common.file.mapper.FileMapper">
 		
 		
-		<select id="getFileListByRefId" resultType="FileMetaData">
+		<select id="getFileList" resultType="FileMetaData">
 		    SELECT
 		     *
 		    FROM files
@@ -42,7 +42,7 @@
             #{fileExt},
             #{fileSize},
             #{fileType},
-            #{useStatus},
+            #{fileStatus},
             #{registerDate},
             #{revisionDate}
        		)
@@ -75,7 +75,7 @@
                 #{l.fileExt},
                 #{l.fileSize},
                 #{l.fileType},
-                #{l.useStatus},
+                #{l.fileStatus},
                 #{l.registerDate},
                 #{l.revisionDate}
             )

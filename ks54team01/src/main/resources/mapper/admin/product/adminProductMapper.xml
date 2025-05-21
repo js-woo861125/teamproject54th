@@ -75,7 +75,7 @@
 		product_category_no,
 		products_nm,
 		products_status,
-		products_image,
+		products_detail,
 		register_date,
 		revision_date
 		)
@@ -87,7 +87,7 @@
 		#{categoryNo},
 		#{productName},
 		#{productStatus},
-		#{productImage},
+		#{productDetail},
 		#{registerDate},
 		#{revisionDate}
 		)
@@ -190,25 +190,31 @@
 	        JOIN model m ON b.brand_no = m.brand_no
 	    WHERE
 	        m.item_no = #{itemNo}
-	        AND m.product_category_no = #{categoryNo}
-	    GROUP BY 
-	        b.brand_no
+	    AND 
+	    	m.product_category_no = #{categoryNo}
 	    AND
 	    	b.use_status = '사용중'
+	    GROUP BY 
+	        b.brand_no
+	    
 	</select>
 	
 	 <select id="loadModelList" resultType="ks54team01.admin.product.domain.AdminProductInfoModel">
         SELECT
-            model_no AS modelNo,
-            model_nm AS modelNm
-        FROM
-            model
-        WHERE
-            product_category_no = #{categoryNo}
-        AND 
-            item_no = #{itemNo}
-        AND
-            brand_no = #{brandNo}
+       		model_no AS modelNo,
+	        model_nm AS modelNm
+	    FROM
+	        model
+	    WHERE
+	        product_category_no = #{categoryNo}
+	        AND 
+	        	item_no = #{itemNo}
+	        <if test="brandNo != null and brandNo != ''">
+	            AND 
+	            	brand_no = #{brandNo}
+	        </if>
+	        AND 
+	        	use_status = '사용중'
     </select>
     
     <update id="modifyProduct" parameterType="ks54team01.admin.product.domain.AdminProduct">
@@ -236,19 +242,22 @@
 	</update>
     
     <select id="getProduct" parameterType="string" resultType="ks54team01.admin.product.domain.AdminProduct">
-	    SELECT
-	        products_no AS productNo,
-	        product_category_no AS categoryNo,
-	        item_no AS itemNo,
-	        model_no AS modelNo,
-	        products_nm AS productName,
-	        products_status AS productStatus,
-	        register_date AS registerDate,
-	        revision_date AS revisionDate
-	    FROM 
-	    	products
-	    WHERE
-	     	products_no = #{productNo}
+	   SELECT
+		    p.products_no AS productNo,
+		    p.product_category_no AS categoryNo,
+		    p.item_no AS itemNo,
+		    m.brand_no AS brandNo, 
+		    p.model_no AS modelNo,
+		    p.products_nm AS productName,
+		    p.products_detail AS productDetail,
+		    p.products_status AS productStatus,
+		    p.register_date AS registerDate,
+		    p.revision_date AS revisionDate
+		FROM
+		    products p
+		    LEFT JOIN model m ON p.model_no = m.model_no
+		WHERE
+		    p.products_no = #{productNo}
 	</select>
     
     
