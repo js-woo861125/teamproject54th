@@ -12,6 +12,7 @@ public class CommonMember {
 	private String memberId;
 	private String memberPw;
 	private String memberType;
+	private String memberWithdrawStatus;
 	private String memberStateTransitionDate;
 }
 
