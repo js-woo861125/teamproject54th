@@ -12,7 +12,7 @@
   		<result column="rental_contract_no"	property="rentalContractNo" />
   		<result column="pay_info_no"	property="paymentInfoNo" />
   		<result column="ent_ceo_no"	property="entCeoNo" />
-  		<result column="ent_emp_id"	property="entEmpNo" />
+  		<result column="ent_emp_id"	property="entEmpId" />
   		<result column="manager_id"	property="managerId" />
   		<result column="payment_type"	property="paymentType" />
   		<result column="contract_details"	property="contractDetail" />
@@ -44,6 +44,41 @@
 	</resultMap>
 	
 	
+	<resultMap type="CustomerQuantity" id="quantityResultMap">
+	
+		<id 	column="quantity_no" 		property="quantityNo" />
+		<result column="products_no" 		property="prodNo" />
+		<result column="ent_ceo_no" 		property="entCeoNo" />
+		<result column="ent_emp_id" 		property="entEmpId" />
+		<result column="quantity" 			property="quantity" />
+		<result column="register_date" 		property="regDate" />
+		<result column="revision_date" 		property="revDate" />
+			
+	</resultMap>
+
+	
+	<update id="modifyQuantity" parameterType="CustomerQuantity">
+		UPDATE quantity q
+		<set>
+				q.quantity = q.quantity - #{orderQuantity},	
+				revision_date = NOW()
+		</set>		 
+		WHERE 
+			q.products_no = #{prodNo} and q.ent_ceo_no = #{entCeoNo};
+	</update>
+
+
+
+	<select id="getQuantity" resultType="int">
+		select
+			q.quantity as quantity
+		from
+			quantity q
+		where
+			q.products_no = #{prodNo} and q.ent_ceo_no = #{entCeoNo};
+	</select>
+
+	
 	
 	<select id="getDeliveryListById" resultMap="deliveryResultMap">
 		select
@@ -65,7 +100,7 @@
 			(payment_completed_no, cust_id, sell_products_no, rental_contract_no, pay_info_no, ent_ceo_no, ent_emp_id, manager_id, payment_type, contract_details, 
 			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date)
 		values
-			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, '일시불', 'pay_info_3', 'ent_ceo_1', 'entempid1', 'managerid1', #{paymentType}, '일시불',
+			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, '일시불판매', 'pay_info_3', #{entCeoNo}, #{entEmpId}, #{managerId}, #{paymentType}, '일시불판매',
 			 '일시불판매', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), '정상결제상태', NOW())
 	</insert>
 	
@@ -75,7 +110,8 @@
 			pd.products_nm,
 			p.total_price,
 			p.rental_contract_no,
-			p.payment_completed_date
+			p.payment_completed_date,
+			p.payment_status
 		from
 			payment p inner join sell_products sp 
 			on p.sell_products_no = sp.sell_products_no

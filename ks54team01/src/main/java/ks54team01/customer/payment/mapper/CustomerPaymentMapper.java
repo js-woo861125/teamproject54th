@@ -10,6 +10,10 @@ import ks54team01.customer.payment.domain.CustomerPayment;
 @Mapper
 public interface CustomerPaymentMapper {
 	
+	void modifyQuantity( Integer orderQuantity, String prodNo, String entCeoNo);
+	
+	int getQuantity(String prodNo, String entCeoNo);
+	
 	List<CustomerDelivery> getDeliveryListById(String custId);
 	
 	List<CustomerPayment> getPaymentList(String custId);

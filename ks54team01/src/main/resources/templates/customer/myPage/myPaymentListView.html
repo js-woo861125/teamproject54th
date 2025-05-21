@@ -140,30 +140,33 @@
 		
 		
 		<div class="product-list mb-50">
-			<th:block th:if="${!#lists.isEmpty(PaymentList)}" th:each="l : ${PaymentList}">
-				<!-- 상품1 -->
-				<div class="product-cart-wrap border col-12" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
-					<div class="product-content-wrap mt-50 mb-30 col-8">
-						<h4><a href="#" th:text="${l.prodNm}">상품명</a></h4>
-						<div>
-							<span th:text="|₩${#numbers.formatInteger(l.totalPrice, 3, 'COMMA')}|" style="color: black; font-size: 20px;">금액</span>
+			<div class="overflow-auto" style="height: 400px;">
+				<th:block th:if="${!#lists.isEmpty(PaymentList)}" th:each="l : ${PaymentList}">
+					<!-- 상품1 -->
+					<div class="product-cart-wrap border col-12" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
+						<div class="product-content-wrap mt-50 mb-30 col-8">
+							<span th:text="${l.paymentStatus}">상태</span>
+							<h4><a href="#" th:text="${l.prodNm}">상품명</a></h4>
+							<div>
+								<span th:text="|₩${#numbers.formatInteger(l.totalPrice, 3, 'COMMA')}|" style="color: black; font-size: 20px;">금액</span>
+							</div>
+							<div>
+								<span th:text="${#strings.contains(l.rentalContractNo, 'rental') ? '렌탈' : (l.rentalContractNo == '일시불판매' ? '일반판매' : l.rentalContractNo)}" style="color: black;">계약정보</span>
+								<span style="color: black;">|</span>
+								<span th:text="${l.paymentCompletedDate}" style="color: black;">계약정보</span>
+							</div>
+							
 						</div>
-						<div>
-							<span th:text="${#strings.contains(l.rentalContractNo, 'rental') ? '렌탈' : (l.rentalContractNo == '일시불판매' ? '일반판매' : l.rentalContractNo)}" style="color: black;">계약정보</span>
-							<span style="color: black;">|</span>
-							<span th:text="${l.paymentCompletedDate}" style="color: black;">계약정보</span>
+						<div class="product-price d-flex col-4">
+							<div class="ml-100 text-center">
+								<p style="font-weight:bold; color: black;font-size: 25px; padding-right: 10px;">주문취소/환불</p>
+								<a href="#" class="btn btn-xl">취소</a>
+								<a href="#" class="btn btn-xl">환불</a>
+							</div>
 						</div>
-						
 					</div>
-					<div class="product-price d-flex col-4">
-						<div class="ml-100 text-center">
-							<p style="font-weight:bold; color: black;font-size: 25px; padding-right: 10px;">주문취소/환불</p>
-							<a href="#" class="btn btn-xl">취소</a>
-							<a href="#" class="btn btn-xl">환불</a>
-						</div>
-					</div>
-				</div>
-			</th:block>
+				</th:block>
+			</div>
 		</div>
 
 		

@@ -18,6 +18,7 @@
 		<result column="revision_date" 			property="revisionDate"/>
 		<result column="lump_price" 			property="lumpPrice"/>
 		<result column="min_rental_price" 		property="minRentalPrice"/>
+		
 
 		
 
