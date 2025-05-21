@@ -11,35 +11,46 @@
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+	
 		<script>
 			/**
-			* 계약일자 선택하기
+			* 계약일자 & 계약만료일자 달력 및 계약일 계산하기
 			*/
-				$(function() {
+			// 현재 날짜를 기준으로 계약일자 계약만료일자 계산 (3년 후 하루 전날) 
+			$(function() {
+				  function updateContractEndDate(startDateStr) {
+				    const start = moment(startDateStr, 'YYYY-MM-DD');
+				    const end = moment(start).add(3, 'years').subtract(1, 'days');
+				    $('input[name="contractEndDate"]').val(end.format('YYYY-MM-DD'));
+				  }
+				  
+				  // 계약일자 달력
 				  $('input[name="contractDate"]').daterangepicker({
 				    singleDatePicker: true,
 				    showDropdowns: true,
+				    autoUpdateInput: true,
+				    locale: { format: 'YYYY-MM-DD' },
 				    minYear: 2000,
-				    maxYear: parseInt(moment().format('YYYY'),10) +5
-				  }, function(start, end, label) {
-				    var years = moment().diff(start, 'years');
+				    maxYear: parseInt(moment().format('YYYY'), 10) + 5
+				  }, function(start) {
+				    updateContractEndDate(start.format('YYYY-MM-DD'));
+				  });
+
+				  // 수동으로 계약일자 선택 시 계약만료일자 계산
+				  $('input[name="contractDate"]').on('change', function() {
+				    updateContractEndDate($(this).val());
 				  });
 				});
-			
-			/**
-			* 계약만료일자 선택하기
-			*/
-				$(function() {
-				  $('input[name="contractEndDate"]').daterangepicker({
-				    singleDatePicker: true,
-				    showDropdowns: true,
-				    minYear: 2000,
-				    maxYear: parseInt(moment().format('YYYY'),10) +5
-				  }, function(start, end, label) {
-				    var years = moment().diff(start, 'years');
-				  });
+			// 페이지 로딩 시 계약일자가 있는 경우 계약만료일자 계산
+			$(document).ready(function() {
+				  const startDateVal = $('input[name="contractDate"]').val();
+				  if (startDateVal) {
+				    const start = moment(startDateVal, 'YYYY-MM-DD');
+				    const end = moment(start).add(3, 'years').subtract(1, 'days');
+				    $('input[name="contractEndDate"]').val(end.format('YYYY-MM-DD'));
+				  }
 				});
-			
+
 			/**
 			* 입점업체 대표코드로 입점업체 정보 불러오기
 			*/
