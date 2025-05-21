@@ -5,8 +5,11 @@ import java.util.List;
 import ks54team01.admin.enterprise.domain.AdminEntAddContract;
 import ks54team01.admin.enterprise.domain.AdminEntDetail;
 import ks54team01.admin.enterprise.domain.AdminEntList;
+import ks54team01.customer.member.domain.EntMember;
 
 public interface AdminEntListService {
+	// 입점업체 대표코드로 입점업체 목록 조회
+		List<EntMember> getEntListByEntCeoNo(String entCeoNo);
 	
 	// 입점업체 계약 등록
 		void addContract(AdminEntAddContract adminEntAddContract);
