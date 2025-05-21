@@ -9,7 +9,7 @@ public class EnterpriseMarginRatio {
 	private String EnterpriseCeoNum;
 	private String EnterpriseEmployeeId;
 	private int period;
-	private double marginRatio;
+	private Double marginRatio;
 	private String registerDate;
 	private String revisionDate;
 	private String useStatus;

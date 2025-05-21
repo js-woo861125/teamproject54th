@@ -1,6 +1,7 @@
 package ks54team01.enterprise.product.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,43 @@ public class EnterpriseMarginRatioServiceImpl implements EnterpriseMarginRatioSe
 	
 	private final EnterpriseMarginRatioMapper enterpriseMarginRatioMapper;
 	
+	/**
+	 * 업체별 마진율 최초 등록
+	 */
+	@Override
+	public void addEnterpriseMarginRatio(EnterpriseMarginRatio enterpriseMarginRatio) {
+		
+		String marginRatioNum =  "margin_ratio_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+		enterpriseMarginRatio.setMarginRatioNum(marginRatioNum);
+		
+		enterpriseMarginRatioMapper.addEnterpriseMarginRatio(enterpriseMarginRatio);
+	}
+	
+	/**
+	 * 업체별 마진율 사용유무 변경 (사실상 삭제 기능도 포함)
+	 */
+	@Override
+	public void modifyMarginRatioUseStatus(String marginRatioNum, String useStatus) {
+		
+		enterpriseMarginRatioMapper.modifyMarginRatioUseStatus(marginRatioNum, useStatus);
+	
+	}
+	
+	
+	/**
+	 * 업체별 마진율 변경
+	 */
+	@Override
+	public void modifyEnterpriseMarginRatio(List<EnterpriseMarginRatio> list) {
+
+		list.stream()
+	    .filter(item -> item != null && item.getMarginRatio() != null)
+	    .forEach(item -> enterpriseMarginRatioMapper.modifyEnterpriseMarginRatio(item));
+	}
+	
+	/**
+	 * 업체별 마진율 조회
+	 */
 	@Override
 	public List<EnterpriseMarginRatio> getEnterpriseMarginRatio() {
 		

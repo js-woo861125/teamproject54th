@@ -7,11 +7,16 @@
 	<head>
 	</head>
 	
-	<!--  <th:block layout:fragment="jsScript">
+	<th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
 		<script>
-         $('.toggle-margin-use').on('change', function() {
+
+			/* $('.toggle-margin-use').on('change', function() {
              const marginId = $(this).data('id');
-             const useYn = $(this).is(':checked') ? 'Y' : 'N';
+    0         const useYn = $(this).is(':checked') ? 'Y' : 'N';
          
              $.ajax({
                  type: 'POST',
@@ -24,86 +29,151 @@
                      alert('오류 발생');
                  }
              });
+         }); */
+         $('button.modifyUseStatusBtn').click(function(e) {
+        	e.preventDefault();
+        	const form = $(this).closest('form');
+         	Swal.fire({
+         		text: "상태가 변경되었습니다.",
+         		confirmButtonText: "확인"
+         	}).then((result) => {
+                if (result.isConfirmed) {
+                	form.submit(); 
+                }
+        	 });
          });
-      </script>   -->  
+		</script>
+    </th:block>
+        
 	 <th:block layout:fragment="content">
+	 	<!-- Modal start-->
+		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<form id="modifyMarginRatioForm" th:action="@{/enterprise/product/modifyMarginRatio}" method="post">
+						<div class="modal-header">
+							<h5 class="modal-title" id="staticBackdropLabel">마진율 변경</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<div class="row"
+								 th:if="${!#lists.isEmpty(enterpriseMarginRatio)}" 
+								 th:each="m : ${enterpriseMarginRatio}">
+					   			<div class="form-group col-md-2">
+					      			<p th:text="${m.period eq 0 ? '일시불' : m.period + '개월'}" class="mt-10">12개월</p>
+					      			<input type="hidden" name="periodList" th:value="${m.period}" />
+					  			</div>
+					  			<div class="form-group col-md-4 mb-20 mr-20">
+					      			<input th:value="${m.marginRatio}" 
+					      				   class="form-control" id="delRequest" name="delRequest" type="text" disabled>
+					  			</div>
+					   			<div class="form-group col-md-4 mb-20">
+					      			<input placeholder="변경할 마진율 입력" class="form-control" id="modifyMarginRatio" name="marginRatioList" type="text">
+					  			</div>
+							</div>
+						</div>
+		 				<div class="modal-footer">
+			     			<button id="modifyMarginRatioBtn" type="submit" class="btn btn-primary">변경</button>
+			   			</div>
+					</form>
+		  		</div>
+			</div>
+		</div>
+		<!-- Modal end -->
         <div class="screen-overlay"></div>
-               <div class="content-header">
-	                    <div>
-	                        <h2 class="content-title card-title">마진율 등록</h2>
-	                    </div>
-	                    
+        <div class="content-header">
+        	<div>
+            	<h2 class="content-title card-title">마진율</h2>
+            </div>
+     	</div>
+        <div class="card mb-4">
+       		<div class="card-header">
+    			<h5 class="mb-0">마진율 등록</h5>
+			</div>
+		    <div class="card-body">
+		    	<form id="addMarginRatioForm" th:action="@{/enterprise/product/addMarginRatio}" method="post" class="row gx-3 form-test">
+		        	<div class="col-lg-1 col-md-3 col-12">
+                    	<select class="form-select" name="period">
+                    		<option th:value="0">일시불</option>
+                    		<option th:value="3">3개월</option>
+                    		<option th:value="6">6개월</option>
+                    		<option th:value="12">12개월</option>
+                    		<option th:value="24">24개월</option>
+                    		<option th:value="36">36개월</option>
+                    		<option th:value="48">48개월</option>
+                    		<option th:value="60">60개월</option>
+                    	</select>
+                  	</div>
+		            <div class="col-md-2">
+		                <input type="text"  name="marginRatio" placeholder="마진율 입력" class="form-control" />
+		            </div>
+		            <div class="col-md-2">
+		                <button id="addMarginRatioBtn" class="btn btn-primary" type="submit">등록하기</button>
+		            </div>
+	        	</form>
+	 	   	</div>
+	  		<div class="card-body">
+				<button type="button" class="btn btn-xs modifyDeliveryBtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >
+               		<i class="material-icons md-edit"></i>
+                    수정
+            	</button>
+	    	</div>
+		</div>
+        <!-- card-header end// -->
+        <div class="card mb-4">
+       		<div class="card-body">
+            	<div class="table-responsive">
+                	<table class="table table-hover">
+                    	<thead>
+                        	<tr>
+                            	<th>번호</th>
+                                <th scope="col">기간</th>
+                                <th scope="col">마진율</th>
+                                <th scope="col">최초 등록일시</th>
+                                <th scope="col">최종 수정일시</th>
+                                <th scope="col">사용유무</th>
+                                <th scope="col">사용변경</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          	<th:block th:if="${!#lists.isEmpty(enterpriseMarginRatio)}"
+		  							  th:each="l, stat : ${enterpriseMarginRatio}">
+                            	<tr>
+                                	<td th:text="${stat.count}">1</td>
+                                  	<td th:text="${l.period eq 0 ? '일시불' : l.period + '개월'}"><b>60개월</b></td>
+                                    <td th:text="${l.marginRatio}">1.7</td>                                    
+                                    <td th:text="${l.registerDate}">2023-03-02</td>
+                                    <td th:text="${l.revisionDate}">2023-03-02</td>
+                                    <td>
+                                   		<span th:if="${l.useStatus eq '사용중'}" th:text="${l.useStatus}" class="badge rounded-pill alert-success">사용중</span>
+                                   		<span th:if="${l.useStatus eq '사용불가'}" th:text="${l.useStatus}" class="badge rounded-pill alert-warning"></span>
+                                   	</td>
+                             		<td>
+                             			<form id="modifyUseStatusForm" th:action="@{/enterprise/product/modifyMarginRatioUseStatus}" method="post">
+	                          				<input type="hidden" name="marginRatioNum" th:value="${l.marginRatioNum}" />
+											<input type="hidden" name="useStatus" th:value="${l.useStatus}" />
+	                          				<button type="submit" class="btn btn-xs modifyUseStatusBtn">
+	                          					사용변경
+	                          				</button>
+                         				</form>
+                             		</td>
+                               </tr>
+                            </th:block>
+                        </tbody>
+                   		</table>
 	                </div>
-	               <div class="card mb-4">
-				    <div class="card-header">
-				        <h5 class="mb-0">마진율 등록</h5>
-				    </div>
-					    <div class="card-body">
-					        <form class="row gx-3 form-test">
-					        	<div class="col-lg-1 col-md-3 col-12">
-		                       		<select class="form-select" name="searchKey">
-		                           		<option>일시불</option>
-		                           		<option>3개월</option>
-		                           		<option>6개월</option>
-		                           		<option>12개월</option>
-		                           		<option>24개월</option>
-		                           		<option>36개월</option>
-		                           		<option>48개월</option>
-		                           		<option>60개월</option>
-		                       		</select>
-		                   		</div>
-					            <div class="col-md-2">
-					                <input type="text" placeholder="마진율" class="form-control" />
-					            </div>
-					            <div class="col-md-2">
-					                <button class="btn btn-primary" type="button">등록하기</button>
-					            </div>
-					        </form>
-					    </div>
-					</div>
-	                    <!-- card-header end// -->
-	                    <div class="card mb-4">
-	                        <div class="card-body">
-	                            <div class="table-responsive">
-	                                <table class="table table-hover">
-	                                    <thead>
-	                                        <tr>
-	                                            <th>번호</th>
-	                                            <th scope="col">기간</th>
-	                                            <th scope="col">마진율</th>
-	                                            <th scope="col">사용유무</th>
-	                                            <th scope="col">등록일시</th>
-	                                            <th scope="col">수정일시</th>
-	                                            <th scope="col">수정</th>
-	                                        </tr>
-	                                    </thead>
-	                                    <tbody>
-	                                    	<th:block th:if="${!#lists.isEmpty(enterpriseMarginRatio)}"
-													  th:each="l, stat : ${enterpriseMarginRatio}">	                                       
-	                                        <tr>
-	                                            <td th:text="${stat.count}">1</td>
-	                                            <td th:text="${l.period eq 0 ? '일시불' : l.period + '개월'}"><b>60개월</b></td>
-	                                            <td th:text="${l.marginRatio}">1.7</td>                                    
-	                                            <td><span th:text="${l.useStatus}" class="badge rounded-pill alert-success">사용중</span></td>
-	                                            <td th:text="${l.registerDate}">2023-03-02</td>
-	                                            <td th:text="${l.revisionDate}">2023-03-02</td>
-	                                      		<td>수정</td>
-	                                        </tr>
-	                                    </tbody>
-	                                </table>
-	                            </div>
-	                            <!-- table-responsive //end -->
-	                        </div>
-	                        <!-- card-body end// -->
-	                </div>
-			</th:block>
-        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-        <script src="assets/js/vendors/select2.min.js"></script>
-        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
-        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-        <!-- Main Script -->
-        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-    
-    </body>
+	                <!-- table-responsive //end -->
+            	</div>
+            <!-- card-body end// -->
+        	</div>
+	</th:block>
+       <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+       <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+       <script src="assets/js/vendors/select2.min.js"></script>
+       <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+       <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+       <!-- Main Script -->
+       <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+   
+   </body>
 </html>
