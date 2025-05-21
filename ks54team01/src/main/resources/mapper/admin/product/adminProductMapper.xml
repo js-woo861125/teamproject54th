@@ -114,8 +114,7 @@
 			item_no = #{itemNo}
 	</select>
 
-	<select id="getModelListByCondition"
-		resultType="ProductInfoModel">
+	<select id="getModelListByCondition" resultType="ProductInfoModel">
 		SELECT
 			model_no AS modelNo,
 			model_nm AS modelName

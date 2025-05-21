@@ -11,6 +11,7 @@ public class AdminProduct {
 	    private String modelNo;     
 	    private String productName;  
 	    private String productStatus; 
+	    private String productDetail;
 	    private String registerDate; 
 	    private String revisionDate; 
 	    

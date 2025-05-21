@@ -64,7 +64,7 @@ public class FilesUtils {
 		 
 		// os별 루트 설정
 		String osName = System.getProperty("os.name").toLowerCase();
-		String osRoot = osName.contains("win") ? "d:" : "";
+		String osRoot = osName.contains("win") ? "c:" : "";
 		String rootFilePath = osRoot + fileRealPath;
 		
 		// 디렉토리 폴더 경로 설정
@@ -103,7 +103,7 @@ public class FilesUtils {
 			fileMetaData = FileMetaData.builder().fileIdx(fileIdx)
 												 .fileNewName(newFileName)
 												 .fileOriginalName(originalFilename)
-												 .filePath(uploadPath.toString().replace("d:","").replace("\\","/").replace(fileRealPath, ""))
+												 .filePath(uploadPath.toString().replace("c:","").replace("\\","/").replace(fileRealPath, ""))
 												 .fileExt(extension)  
 												 .fileSize(multipartFile.getSize())
 												 .build();
