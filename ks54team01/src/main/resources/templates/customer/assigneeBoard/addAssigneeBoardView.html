@@ -63,21 +63,6 @@
 	            }
 	        }).open();
 		});
-		
-       /*  const modal = document.querySelector('.modal');
-        const btnOpenModal=document.querySelector('.openModalBtn');
-
-        btnOpenModal.addEventListener("click", ()=>{
-            modal.style.display="flex";
-        }); */
-        
-        /* categoryModal_close-icon-wrap__LDSmc.addEventListener("click", e => {
-            modal.style.display = "none"
-        }); */
-        
-        /* document.querySelector("#modalCloseBtn").addEventListener("click", () => {
-       		document.querySelector(".modal").style.display = "none";
-        }); */
         
         
         $('.mdCategory').click(function() {
@@ -193,7 +178,7 @@
 				<div class="modal-content">
 			    	<form id="selectCategoryForm" th:action="@{/customer/assigneeBoard/addAssigneeBoard}" method="get">
 			        	<div class="modal-header">
-			          		<h5 class="modal-title" id="staticBackdropLabel">필요한 제품을 선택해주세요.</h5>
+			          		<h5 class="modal-title" id="staticBackdropLabel">필요한 품목을 선택해주세요.</h5>
 			          		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalCloseBtn"></button>
 			        	</div>
 			        	<div class="modal-body d-flex">
@@ -225,6 +210,29 @@
 	  		</div>
 		</div>
         <!-- modal end -->
+        <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+				<div class="modal-content">
+			    	<form id="selectCategoryForm" th:action="@{/customer/assigneeBoard/addAssigneeBoard}" method="get">
+			        	<div class="modal-header">
+			          		<h5 class="modal-title" id="staticBackdropLabel">필요한 상품을 선택해주세요.</h5>
+			          		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalCloseBtn"></button>
+			        	</div>
+			        	<div class="modal-body d-flex">
+		          			<!-- 우측 품목 리스트 -->
+				          		<div class="modalRight ps-4 flex-grow-1">
+				            		<div id="smallCategoryList" class="row g-3">
+					              		<!-- 품목 -->
+			            			</div>
+			          			</div>
+		        		</div>
+			        	<div class="modal-footer">
+			          		<button id="selectItemBtn" type="button" class="btn btn-primary">선택</button>
+			        	</div>
+		      		</form>
+		    	</div>
+	  		</div>
+		</div>
         <div class="container mb-80 mt-50">
             <div class="row justify-content-center">
                 <div class="col-lg-8 mb-40">
@@ -241,15 +249,21 @@
                                     <input id="selectedItem" type="text" placeholder="*상품 카테고리 선택" required readonly>
                                 </div>
                                 <div class="col-2">
-									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardCategory}" class="openModal btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-										카테고리 선택
+									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardCategory}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
+										품목찾기
 									</a>									
 	                            </div>                        		
                         	</div>
 	                        <div class="row">
 	                        	<div class="form-group col-lg-6">
-	                            	<input type="text" name="productName" placeholder="상품명 입력"/>
+	                        		<input id="productNum" type="hidden" name="productNum" required readonly>
+	                            	<input id="selectedProduct" type="text" name="productName" placeholder="상품명 입력 (선택사항)"/>
 	                        	</div>
+	                        	<div class="col-2">
+									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardProduct}" class="openModal btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
+										상품찾기
+									</a>									
+	                            </div>
 	                     	</div>
                             <div class="row">
                                 <div class="form-group col-lg-6">

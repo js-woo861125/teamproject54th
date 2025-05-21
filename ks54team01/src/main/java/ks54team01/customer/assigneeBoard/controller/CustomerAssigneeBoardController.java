@@ -37,7 +37,7 @@ public class CustomerAssigneeBoardController {
 	
 	
 	@PostMapping("/addAssigneeBoard")
-	public String addProduct(CustomerAssigneeBoard customerAssigneeBoard) {
+	public String addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard) {
 		
 		customerAssigneeBoardService.addAssigneeBoard(customerAssigneeBoard);
 		
