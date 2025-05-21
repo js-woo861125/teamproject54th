@@ -45,6 +45,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		switch (searchKey) {
 		case "specName" -> searchKey = "spec_nm";
+		case "categoryInfo.smCategory" -> searchKey = "pc.small_category";
 		}
 		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoMapper.getSearchCategorySpec(searchKey, searchValue);
 		
@@ -68,6 +69,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		case "modelName" -> searchKey = "model_nm";
 		case "brandInfo.brandName" -> searchKey ="b.brand_nm";
 		case "itemInfo.itemName" -> searchKey ="i.item_nm";
+		case "categoryInfo.smCategory" -> searchKey = "pc.small_category";
 		}
 		List<ProductInfoModel> modelList = adminProductInfoMapper.getSearchModel(searchKey, searchValue);
 		
@@ -79,6 +81,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		switch (searchKey) {
 		case "itemName" -> searchKey = "item_nm";
+		case "categoryInfo.smCategory" -> searchKey = "pc.small_category";
 		}
 		List<ProductInfoItem> itemList = adminProductInfoMapper.getSearchItem(searchKey, searchValue);
 				
