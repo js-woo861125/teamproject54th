@@ -61,8 +61,7 @@ public class AdminProductController {
 	    List<FileMetaData> thumbnailList = fileService.getFileList(productNo, "thumbnail");
 	    List<AdminProductSpecContent> specContentList = adminProductMapper.loadSpecContent(product.getModelNo());
 	    
-	    
-	    if(!brandList.isEmpty()) log.info("첫번째 브랜드: {}", brandList.get(0).getBrandName());
+	   
 	    System.out.println("categoryNo=" + product.getCategoryNo() + ", itemNo=" + product.getItemNo());
 	    System.out.println("brandList size=" + brandList.size());
 	    

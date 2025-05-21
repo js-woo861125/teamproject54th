@@ -42,7 +42,7 @@ public class WebConfig implements WebMvcConfigurer{
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		
 		String osName = System.getProperty("os.name").toLowerCase();
-		String rootPath = osName.contains("win") ? "file:///d:" : "file://";
+		String rootPath = osName.contains("win") ? "file:///c:" : "file://";
 		
 		// 특정 패턴의 주소요청이 발생시 실제 파일의 절대 경로(프로젝트 외부 환경)으로 접근
 		// c:/home/teamproject/attachment
