@@ -33,17 +33,12 @@
 		FROM 
 			monthly_fee mf 
 		WHERE 
-			mf.ent_ceo_no = #{entCeoNo}
-			AND mf.payment_details  ='4.총합계'
-			AND mf.settlement_month = (
-		        						SELECT 
-		        							MAX(settlement_month)
-								        FROM 
-								        	monthly_fee
-								        WHERE 
-								        	ent_ceo_no = #{entCeoNo}
-								        	AND payment_details = '4.총합계'
-	    								);
+			mf.ent_ceo_no = #{entCeoNo} 
+		<if test="settlementMonth != null and settlementMonth != ''">
+       	 AND mf.settlement_month = #{settlementMonth}
+    	</if>
+			
+			
 	
 	</select>
 	

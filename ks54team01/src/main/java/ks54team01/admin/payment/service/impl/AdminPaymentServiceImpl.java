@@ -26,15 +26,22 @@ public class AdminPaymentServiceImpl implements AdminPaymentService{
 	public List<AdminMonthlyFee> getAdminPaymentCalc(String ceoCode) {
 		
 		List<AdminMonthlyFee> getAdminMonthlyFees = adminPaymentCalcMapper.getAdminPaymentCalc(ceoCode);
+	
+		return getAdminMonthlyFees;
+	}
+	@Override
+	public List<AdminMonthlyFee> getAdminPaymentCalc(String ceoCode, String settlementMonth) {
+		
+		List<AdminMonthlyFee> getAdminMonthlyFees = adminPaymentCalcMapper.getAdminPaymentCalc(ceoCode, settlementMonth);
 		
 		return getAdminMonthlyFees;
 	}
 	
 	
 	@Override
-	public List<AdminFee> getAdminPayFee(String ceoCode) {
+	public List<AdminFee> getAdminPayFee(String ceoCode, String settlementMonth) {
 	
-		List<AdminFee> getAdminPayFee = adminPaymentMapper.getSearchEntFee(ceoCode);
+		List<AdminFee> getAdminPayFee = adminPaymentMapper.getSearchEntFee(ceoCode, settlementMonth);
 		
 		return getAdminPayFee;
 	}
