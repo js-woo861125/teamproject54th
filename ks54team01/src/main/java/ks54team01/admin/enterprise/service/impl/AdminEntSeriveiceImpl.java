@@ -11,6 +11,7 @@ import ks54team01.admin.enterprise.domain.AdminEntDetail;
 import ks54team01.admin.enterprise.domain.AdminEntList;
 import ks54team01.admin.enterprise.mapper.AdminEntMapper;
 import ks54team01.admin.enterprise.service.AdminEntListService;
+import ks54team01.customer.member.domain.EntMember;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -20,8 +21,15 @@ public class AdminEntSeriveiceImpl implements AdminEntListService{
 	
 	private final AdminEntMapper adminEntMapper;
 
-	// 입점업체 계약 등록
 	@Override
+	// 입점업체 대표코드로 입점업체 목록 조회
+	public List<EntMember> getEntListByEntCeoNo(String entCeoNo) {
+		
+		return adminEntMapper.getEntListByEntCeoNo(entCeoNo);
+	}
+	
+	@Override
+	// 입점업체 계약 등록
 	public void addContract(AdminEntAddContract adminEntAddContract) {
 		
 		adminEntMapper.addContract(adminEntAddContract);

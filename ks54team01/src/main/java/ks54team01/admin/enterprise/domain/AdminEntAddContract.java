@@ -17,5 +17,5 @@ public class AdminEntAddContract {
 	public String entCalDate;
 	public String contractStatus;
 
-	private EntMember entCeoInfo;
+	private EntMember entInfo;
 }

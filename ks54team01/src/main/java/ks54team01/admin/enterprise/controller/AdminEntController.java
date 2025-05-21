@@ -7,10 +7,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import ks54team01.admin.enterprise.domain.AdminEntDetail;
 import ks54team01.admin.enterprise.domain.AdminEntList;
 import ks54team01.admin.enterprise.service.AdminEntListService;
+import ks54team01.customer.member.domain.EntMember;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -20,11 +22,27 @@ public class AdminEntController {
 	
 	private final AdminEntListService adminEntListService;
 	
+	@GetMapping("/entListByNo")
+	@ResponseBody
+	// 입점업체 대표코드로 입점업체 조회
+	public List<EntMember> getEntListByEntCeoNo(@RequestParam String entCeoNo) {
+		
+		return adminEntListService.getEntListByEntCeoNo(entCeoNo);
+	}
+	
 	@GetMapping("/addContract")
 	// 입점업체 계약 등록
 	public String addContract(Model model) {
+		List<AdminEntList> entList = adminEntListService.getEntList();
 		
 		model.addAttribute("title", "입점업체 계약 등록");
+		model.addAttribute("entList", entList);
+		
+		model.addAttribute("defaultFeeRateSales", 0.1);
+		model.addAttribute("defaultFeeRateRental", 0.05);
+		model.addAttribute("defaultFeeRatePenalty", 0.05);
+		model.addAttribute("defaultEntryFee", 3000000);
+		model.addAttribute("defaultEntCalDate", 20);
 		
 		return "admin/enterprise/enterpriseAddContractView";
 	}
