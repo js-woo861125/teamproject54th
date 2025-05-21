@@ -30,8 +30,64 @@
 		<result column="state_transition_date" 		property="memberStateTransitionDate" />
 	</resultMap>
 	
+	
+	<update id="deactivateCommonMember" parameterType="string">
+  		/* 공통정보 테이블 탈퇴처리 */
+		UPDATE members
+		<set>
+			revision_date = CURDATE(),	
+			withdraw_status = 'Y'
+		</set>		 
+		WHERE 
+			members_id = #{memberId};
+  	</update>
+  	
+	<update id="deactivateCorpMember" parameterType="CustomerMember">
+  		/* 기업고객(추가정보테이블) 탈퇴 */
+		UPDATE corp_customer
+		<set>
+			revision_date = CURDATE()	
+		</set>		 
+		WHERE 
+			cust_id = #{memberId};
+  	</update>
+	
+	<update id="deactivateCustomerMember" parameterType="CustomerMember">
+  		/* 회원 탈퇴 */
+		UPDATE customer
+		<set>
+			revision_date = CURDATE()	
+		</set>		 
+		WHERE 
+			cust_id = #{memberId};
+  	</update>
+	
+	
+	<select id="resultCountById" parameterType="string" resultType="int">
+		/* 처리 진행중인 상태 여부 조회(탈퇴) */
+		SELECT
+		   COUNT(*) 
+		FROM
+		   (
+		      SELECT cust_id FROM delivery_information
+		      WHERE delivery_progress IN ('1.상품준비중', '2.배송중')
+		      UNION
+		      SELECT cust_id FROM payment_cancel
+		      WHERE cancel_status = '처리중'
+		      UNION
+		      SELECT cust_id FROM rental_cancel_request
+		      WHERE request_processing_status = '검토중'
+		      UNION
+		      SELECT cust_id FROM rental_refund_request
+		      WHERE request_status = '입점업체검토중'
+		   ) a
+		WHERE
+		   a.cust_id = #{memberId};
+	</select>
+	
+	
   	<update id="modifyCorpInfo" parameterType="CustomerMember">
-  		/* 회원정보 수정 */
+  		/* 기업회원 추가정보 수정 */
 		UPDATE corp_customer
 		<set>
 			<if test="corpBrno != null and corpBrno != ''">
@@ -135,5 +191,4 @@
 	    WHERE 
 	    	memberId = #{memberId}
 	</select>
-	
   </mapper>

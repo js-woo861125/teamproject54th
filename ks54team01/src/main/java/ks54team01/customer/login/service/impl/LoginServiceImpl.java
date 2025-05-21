@@ -23,7 +23,7 @@ public class LoginServiceImpl implements LoginService{
 	private final LoginMapper loginMapper;
 
     @Override
-    public Map<String, Object> login(String memberId, String memberPw) {
+    public Map<String, Object> matchMember(String memberId, String memberPw) {
         Map<String, Object> result = new HashMap<>();
 
         

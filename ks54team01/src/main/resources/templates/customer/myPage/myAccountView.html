@@ -103,12 +103,12 @@
 		                                <input type="password" class="form-control" id="newPwConfirm" name="newPwConfirm" placeholder="새 비밀번호 확인 (**변경시)" />
 		                            </div>
 	                            </div>
-	                            <div class="d-flex justify-content-end mb-2">
-								    <a th:href="@{#}" onclick="confirmWithdrawal()" class="text-danger small text-decoration-underline">회원탈퇴</a>
-								</div>
                             	<div class="d-flex justify-content-end">
                                 	<button type="submit" id="customerModifyBtn" name="customerModifyBtn" class="btn btn-primary w-auto">수정하기</button>
                                 </div>
+	                            <div class="d-flex justify-content-left mb-2">
+								    <a th:href="@{#}" onclick="confirmWithdrawal()" class="text-danger small text-decoration-underline">회원탈퇴</a>
+								</div>
 	                        </form>
 	                    </div>
 	                </div>
@@ -426,9 +426,7 @@
 			 * 회원탈퇴
 			 */	
 		    function confirmWithdrawal() {
-		        if (confirm("정말로 회원 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.")) {
-		            window.location.href = "/customer/main";
-		        }
+		            window.location.href = "/customer/member/customerLeave";
 		    }
 		</script>
 	</th:block>

@@ -1,5 +1,6 @@
 package ks54team01.customer.member.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -46,9 +47,60 @@ public class MemberController {
 		
 	}
 	
-	@GetMapping("/customerLeave")
-	public String getcustomerLeave(Model model) {
+	@PostMapping("/customerLeave")
+	@ResponseBody
+	public Map<String, Object> customerLeave(@RequestParam String memberId,
+	                                         @RequestParam String memberPw,
+	                                         HttpSession session) {
 		
+		
+		log.info("탈퇴 요청회원 아이디: {}, 비밀번호: {}", memberId, memberPw);
+		
+	    Map<String, Object> resultMap = new HashMap<>();
+
+	    
+	    
+	    
+	    boolean isMatched = memberService.isPwCheck(memberId, memberPw);
+	    
+	    if (!isMatched) {
+	    	resultMap.put("status", "invalid_password");
+	        return resultMap;
+	    }
+	    log.info("비밀번호 일치 조회 결과: {}", isMatched);
+
+	    // 처리 진행중인 상태 여부 조회
+	    boolean checkStatus = memberService.checkStatus(memberId);
+	    if (checkStatus) {
+	    	resultMap.put("status", "in_progress_order");
+	        return resultMap;
+	    }
+	    log.info("처리중 조회 결과: {}", checkStatus);
+	    
+		
+		// 탈퇴 처리 
+	    CommonMember member = (CommonMember) session.getAttribute("loginMember");
+	    String memberType = member.getMemberType();
+	    String memberIdFromSession = member.getMemberId();
+	    
+	    boolean customerLeave = memberService.customerLeave(memberType, memberId);
+		resultMap.put("status", customerLeave ? "success" : "fail");
+		log.info("탈퇴 성공 아이디: {}, 유형: {}", memberIdFromSession, memberType);
+
+	    return resultMap;
+	}
+
+	
+	@GetMapping("/customerLeave")
+	public String getcustomerLeave(HttpSession session, Model model) {
+		
+		CommonMember loginMember  = (CommonMember) session.getAttribute("loginMember");
+
+	    if (loginMember == null) {
+	        return "redirect:/customer/login/memberLogin";
+	    }
+
+	    model.addAttribute("memberId", loginMember .getMemberId());
 		model.addAttribute("title", "회원탈퇴");
 		
 		return "customer/myPage/customerLeaveView";
@@ -84,12 +136,14 @@ public class MemberController {
 	
 	@PostMapping("/pwCheck")
 	@ResponseBody
-	public Map<String, Boolean> pwCheck(@RequestParam String memberId, @RequestParam String memberPw){
+	public Map<String, Boolean> pwCheck(@RequestParam String memberId, 
+										@RequestParam String memberPw){
+		
 		log.info("비밀번호 체크 시도 :memberId={}, memberPw={}", memberId, memberPw);
 		
-	    boolean isMatch = memberService.isPwCheck(memberId, memberPw);
+	    boolean isMatched = memberService.isPwCheck(memberId, memberPw);
 	    
-	    return Map.of("match", isMatch);
+	    return Map.of("match", isMatched);
 	}
 	
 	@GetMapping("/myAccount")
