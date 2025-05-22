@@ -2,17 +2,23 @@ package ks54team01.customer.payment.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 import ks54team01.customer.member.domain.CommonMember;
 import ks54team01.customer.payment.domain.CustomerDelivery;
+import ks54team01.customer.payment.domain.CustomerDeliveryInfo;
 import ks54team01.customer.payment.domain.CustomerPayment;
 import ks54team01.customer.payment.service.CustomerPaymentService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +31,41 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomerPaymentController {
 	
 	private final CustomerPaymentService customerPaymentService;
+	
 
+	@GetMapping("/regularPayment")
+	public String getRegularPayment() {
+		return "customer/payment/regularPaymentView";
+	}
+	
+	
+	@PostMapping("/cancel")
+	@ResponseBody
+	public ResponseEntity<?> cancelPayment(@RequestParam("orderId") String orderId
+										 , @RequestParam("paymentCompletedNo") String paymentCompletedNo) {
+		try {
+			
+			String paymentKey = customerPaymentService.getPaymentKeyByOrderId(orderId);
+			
+			if(paymentKey == null) {
+				return ResponseEntity.badRequest().body("결제 정보가 존재하지 않습니다.");
+			}
+			
+			customerPaymentService.cancelPayment(paymentKey, "고객 요청 취소");
+			
+			customerPaymentService.modifyPaymentStatus(orderId, "주문취소");
+			
+			customerPaymentService.removeDeliveryInfo(paymentCompletedNo);
+			
+			
+			return ResponseEntity.ok("주문이 취소되었습니다.");
+			
+		} catch(Exception e) {
+
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+			
+		}
+	}
 	
 	
 	
@@ -44,7 +84,6 @@ public class CustomerPaymentController {
 		List<CustomerPayment> PaymentList = customerPaymentService.getPaymentList(custId);
 		
 		
-		
 		model.addAttribute("title", "주문 목록");
 		model.addAttribute("PaymentList", PaymentList);
 		
@@ -55,7 +94,9 @@ public class CustomerPaymentController {
 	
 	@GetMapping("/addPayment")
 	public String addPayment(CustomerPayment customerPayment, @RequestParam("delNo") String delNo
-							, @RequestParam("quantity") Integer quantity, @RequestParam("prodNo") String prodNo, Model model) {
+							, @RequestParam("quantity") Integer quantity, @RequestParam("prodNo") String prodNo
+							, @RequestParam("delRecipientNm") String delRecipientNm, @RequestParam("delRecipientPhone") String delRecipientPhone
+							, @RequestParam("delRequest") String delRequest, Model model) {
 		
 		int orderQuantity = customerPayment.getPaymentCount();
 		String entCeoNo = customerPayment.getEntCeoNo();
@@ -64,6 +105,29 @@ public class CustomerPaymentController {
 		
 		
 		customerPaymentService.addPayment(customerPayment);
+		
+		String paymentCompletedNo = customerPayment.getPaymentCompletedNo();
+		String empId = customerPayment.getEntEmpId();
+		String ceoNo = customerPayment.getEntCeoNo();
+		String custId = customerPayment.getCustId();
+		String sellProdNo = customerPayment.getSellProdNo();
+		
+		CustomerDeliveryInfo customerDeliveryInfo = new CustomerDeliveryInfo();
+		
+		String delInfoNo = "del_info_" + UUID.randomUUID().toString().replace("-", "").substring(0, 10);
+		customerDeliveryInfo.setDelInfoNo(delInfoNo);
+		
+		customerDeliveryInfo.setDelNo(delNo);
+		customerDeliveryInfo.setPaymentCompletedNo(paymentCompletedNo);
+		customerDeliveryInfo.setEntCeoNo(ceoNo);
+		customerDeliveryInfo.setEntEmpId(empId);
+		customerDeliveryInfo.setCustId(custId);
+		customerDeliveryInfo.setSellProdNo(sellProdNo);
+		customerDeliveryInfo.setRecipientNm(delRecipientNm);
+		customerDeliveryInfo.setRecipientPhone(delRecipientPhone);
+		customerDeliveryInfo.setDelRequest(delRequest);
+		
+		customerPaymentService.addDeliveryInfo(customerDeliveryInfo);
 		
 		return "redirect:/customer/payment/paymentList";
 	}
@@ -112,7 +176,9 @@ public class CustomerPaymentController {
 					            , @RequestParam("prodUnitPrice") Integer prodUnitPrice, @RequestParam("orderQuantity") Integer orderQuantity
 					            , @RequestParam("entCeoNo") String entCeoNo, @RequestParam("entEmpId") String entEmpId
 					            , @RequestParam("managerId") String managerId, @RequestParam("delNo") String delNo
-					            , @RequestParam("quantity") Integer quantity, @RequestParam("prodNo") String prodNo, Model model, RedirectAttributes reAttr, HttpSession session){
+					            , @RequestParam("quantity") Integer quantity, @RequestParam("prodNo") String prodNo
+					            , @RequestParam("delRecipientNm") String delRecipientNm, @RequestParam("delRecipientPhone") String delRecipientPhone
+					            , @RequestParam("delRequest") String delRequest, Model model, RedirectAttributes reAttr, HttpSession session){
 
         log.info("paymentKey: {} ", paymentKey);
         log.info("orderId: {} ", orderId);
@@ -148,6 +214,12 @@ public class CustomerPaymentController {
         reAttr.addAttribute("managerId", managerId);
         reAttr.addAttribute("delNo", delNo);
         reAttr.addAttribute("quantity", quantity);
+        reAttr.addAttribute("paymentKey", paymentKey);
+        reAttr.addAttribute("orderId", orderId);
+        reAttr.addAttribute("delRecipientNm", delRecipientNm);
+        reAttr.addAttribute("delRecipientPhone", delRecipientPhone);
+        reAttr.addAttribute("delRequest", delRequest);
+        
         return "redirect:/customer/payment/addPayment";
 	}
 }

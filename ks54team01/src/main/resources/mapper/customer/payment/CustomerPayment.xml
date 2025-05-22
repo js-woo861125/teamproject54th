@@ -24,6 +24,8 @@
   		<result column="payment_status"	property="paymentStatus" />
   		<result column="revision_date"	property="revDate" />
   		<result column="products_nm"	property="prodNm" />
+  		<result column="payment_key"	property="paymentKey" />
+  		<result column="order_id"	property="orderId" />
   	</resultMap>
   	
   	
@@ -55,13 +57,70 @@
 		<result column="revision_date" 		property="revDate" />
 			
 	</resultMap>
+	
+	<resultMap type="CustomerDeliveryInfo" id="deliveryInfoResultMap">
+	
+		<id 	column="del_info_no" 			property="delInfoNo" />
+		<result column="cust_id" 				property="custId" />
+		<result column="ent_ceo_no" 			property="entCeoNo" />
+		<result column="ent_emp_id" 			property="entEmpId" />
+		<result column="payment_completed_no" 	property="paymentCompletedNo" />
+		<result column="sell_products_no" 		property="sellProdNo" />
+		<result column="delivery_location_no" 	property="delNo" />
+		<result column="recipient_nm" 			property="recipientNm" />
+		<result column="recipient_phone" 		property="recipientPhone" />
+		<result column="delivery_company" 		property="delCompany" />
+		<result column="delivery_request" 		property="delRequest" />
+		<result column="delivery_progress" 		property="delProgress" />
+		<result column="depart_date" 			property="departDate" />
+		<result column="arrive_date" 			property="arriveDate" />
+		<result column="register_date" 			property="regDate" />
+			
+	</resultMap>
+	
+	
+	<delete id="removeDeliveryInfo" parameterType="CustomerDeliveryInfo">
+		delete from delivery_information
+		where payment_completed_no = #{paymentCompletedNo}
+	</delete>
+	
+	
+	<insert id="addDeliveryInfo" parameterType="CustomerDeliveryInfo">
+		INSERT INTO delivery_information
+		(del_info_no, cust_id, ent_ceo_no, ent_emp_id, payment_completed_no, sell_products_no, delivery_location_no, recipient_nm, 
+		 recipient_phone, delivery_company, delivery_request, delivery_progress, depart_date, arrive_date, register_date)
+		VALUES
+			(#{delInfoNo}, #{custId}, #{entCeoNo}, #{entEmpId}, #{paymentCompletedNo}, #{sellProdNo}, #{delNo}, #{recipientNm},
+			 #{recipientPhone}, NULL, #{delRequest}, '상품준비중', NULL, NULL, NOW())
+	</insert>
+	
+	<update id="modifyPaymentStatus" parameterType="CustomerPayment">
+		update payment p
+		<set>
+			p.payment_status = #{paymentStatus},
+			p.revision_date = NOW()
+		</set>
+		where
+			p.order_id = #{orderId};
+	</update>
+	
+
+	<select id="getPaymentKeyByOrderId" resultType="String">
+		
+		select
+			p.payment_key
+		from
+			payment p
+		where
+			p.order_id = #{orderId};
+	</select>
 
 	
 	<update id="modifyQuantity" parameterType="CustomerQuantity">
 		UPDATE quantity q
 		<set>
 				q.quantity = q.quantity - #{orderQuantity},	
-				revision_date = NOW()
+				q.revision_date = NOW()
 		</set>		 
 		WHERE 
 			q.products_no = #{prodNo} and q.ent_ceo_no = #{entCeoNo};
@@ -86,7 +145,9 @@
 			dl.delivery_nm,
 			dl.primary_location,
 			dl.delivery_addr,
-			dl.delivery_daddr
+			dl.delivery_daddr,
+			dl.recipient_phone,
+			dl.delivery_request
 		from
 			delivery_list dl
 		where
@@ -98,10 +159,10 @@
 		/* 결제시 payment테이블에 값 등록 */
 		insert into payment
 			(payment_completed_no, cust_id, sell_products_no, rental_contract_no, pay_info_no, ent_ceo_no, ent_emp_id, manager_id, payment_type, contract_details, 
-			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date)
+			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, order_id)
 		values
 			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, '일시불판매', 'pay_info_3', #{entCeoNo}, #{entEmpId}, #{managerId}, #{paymentType}, '일시불판매',
-			 '일시불판매', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), '정상결제상태', NOW())
+			 '일시불판매', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), '정상결제상태', NOW(), #{paymentKey}, #{orderId})
 	</insert>
 	
 	
@@ -111,7 +172,9 @@
 			p.total_price,
 			p.rental_contract_no,
 			p.payment_completed_date,
-			p.payment_status
+			p.payment_status,
+			p.order_id,
+			p.payment_completed_no
 		from
 			payment p inner join sell_products sp 
 			on p.sell_products_no = sp.sell_products_no
