@@ -90,7 +90,7 @@
 									<td th:text="${l.payCount}">1</td>
 									<td th:text="|₩${#numbers.formatInteger(l.totalPrice, 3, 'COMMA')}|">$9.00</td>
 									<td><a href="#" th:data-rental-contract-no="${l.rentalContractNo}" th:text="${#strings.contains(l.rentalContractNo, 'rental') ? '렌탈' : (l.rentalContractNo == '일시불판매' ? '일반판매' : l.rentalContractNo)}" class="contractDetailLink">링크</a></td>
-									<td><span class="badge rounded-pill" th:text="${l.payStatus}" th:classappend="${l.payStatus} == '1.정상결제상태(환불이아닌상태)' ? ' alert-success' : (${l.payStatus} == '3.배송후환불(환불)' ? ' alert-danger' : ' alert-warning')">취소</span></td>
+									<td><span class="badge rounded-pill" th:text="${l.payStatus}" th:classappend="${l.payStatus} == '정상결제상태' ? ' alert-success' : (${l.payStatus} == '3.배송후환불(환불)' ? ' alert-danger' : ' alert-warning')">취소</span></td>
 									<td th:text="${l.payCompDate}">03.12.2020</td>
 								</tr>
 								

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{customer/layout/default}">
+
+	<head>
+		<script src="https://js.tosspayments.com/v2/standard"></script>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+	
+	</th:block>
+
+
+
+
+	<th:block layout:fragment="jsScript">
+		<script type="text/javascript" th:inline="javascript">
+			// ------  SDK 초기화 ------
+			// @docs https://docs.tosspayments.com/sdk/v2/js#토스페이먼츠-초기화
+			const clientKey = "test_ck_GePWvyJnrKvyQXaXB74bVgLzN97E";
+			const customerKey = "HmlyAcIAxrRn2xp0NeaOe";
+			const tossPayments = TossPayments(clientKey);
+			// 회원 결제
+			// @docs https://docs.tosspayments.com/sdk/v2/js#tosspaymentspayment
+			const payment = tossPayments.payment({ customerKey });
+			// 비회원 결제
+			// const payment = tossPayments.payment({customerKey: TossPayments.ANONYMOUS})
+			// ------ '카드 등록하기' 버튼 누르면 결제창 띄우기 ------
+			// @docs https://docs.tosspayments.com/sdk/v2/js#paymentrequestpayment
+			async function requestBillingAuth() {
+				await payment.requestBillingAuth({
+					method: "CARD", // 자동결제(빌링)는 카드만 지원합니다
+					successUrl: window.location.origin + "/success", // 요청이 성공하면 리다이렉트되는 URL
+					failUrl: window.location.origin + "/fail", // 요청이 실패하면 리다이렉트되는 URL
+					customerEmail: "customer123@gmail.com",
+					customerName: "김토스",
+				});
+			}
+		</script>
+
+
+	</th:block>
+
+
+
+	<th:block layout:fragment="customContents">
+		<div class="container mb-80 mt-50">
+			<div class="row justify-content-center">
+				<div class="col-lg-8 mb-40">
+					<h1 class="heading-2 mb-10">주문/결제</h1>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-lg-8">
+					<div class="table-responsive shopping-summery">
+						<table class="table table-wishlist">
+							<thead>
+								<tr class="main-heading text-center">
+									<th scope="col">상품</th>
+									<th scope="col">가격</th>
+									<th scope="col">수량</th>
+									<th scope="col">총액</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="pt-30 text-center">
+									<td class="product-des product-name">
+										<h6 class="product-name text-heading">라온 저상형 침대</h6>
+									</td>
+									<td class="price" data-title="Price">
+										<h4 class="text-body">$2.51 </h4>
+									</td>
+
+									<td class="product-des product-name">
+										<h6 class="product-name">n개</h6>
+									</td>
+
+									<td class="price" data-title="Price">
+										<h4 class="text-brand" id="totalPrice">$2.51 </h4>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="row mt-50">
+						<div class="col-lg-7">
+							<div class="calculate-shiping p-40 border-radius-15 border">
+								<h4 class="mb-10">배송지</h4>
+
+								<div class="product-list mb-50">
+									<div class="overflow-auto" style="height: 200px;">
+										<th:block>
+											<!-- 상품1 -->
+											<div class="product-cart-wrap border col-12" style="box-shadow: 0 6px 12px 0 rgba(0, 0, 0, .04);">
+												<div class="product-content-wrap mt-50 mb-30 col-8">
+													<h4>배송지명</h4>
+													<div>
+														<span style="color: black; font-size: 20px;">기본배송지여부</span>
+													</div>
+													<div>
+														<span style="color: black;">주소</span>
+														<span style="color: black;">|</span> 
+														<span style="color: black;">상세주소</span>
+													</div>
+												</div>
+												<div class="product-price d-flex col-4">
+													<div class=" text-center">
+														<a href="#" class="btn btn-xl">선택</a>
+													</div>
+												</div>
+											</div>
+										</th:block>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-5">
+							<div class="calculate-shiping p-40 border-radius-15 border">
+								<div class="product-list mb-50">
+									<div class="form-group">
+										<input type="text" id="delName" name="delNm" placeholder="선택한 주소" readonly>
+										<input type="text" id="delRecipientNm" name="delRecipientNm" class="mt-15" placeholder="수령인명">
+										<input type="hidden" id="delSelected" name="delNo">
+										<input type="hidden" id="delRecipientPhone" name="delRecipientPhone">
+										<input type="hidden" id="delRequest" name="delRequest">
+									</div>
+								</div>
+							</div>
+							<div>
+								<button type="button" id="paymentBtn" class="btn mt-20 col-md-12" onclick="requestBillingAuth()">결제</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	<th:block>
+</html>

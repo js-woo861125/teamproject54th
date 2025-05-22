@@ -11,7 +11,6 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
-		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</th:block>
 	
@@ -19,124 +18,88 @@
 	<th:block layout:fragment="jsScript">
 		<script type="text/javascript">
 
-
-
-
-		    $('.removeDeliveryBtn').click( e => {
-				e.preventDefault();
-				const delNo = $(e.target).data('delNo');
-				const swalWithBootstrapButtons = Swal.mixin({
-					  customClass: {
-						  	actions: 'w-50 justify-content-around',
-					    	confirmButton: "btn btn-success",
-					    	cancelButton: "btn btn-danger"
-					  },
-					  buttonsStyling: false
-				});
-				swalWithBootstrapButtons.fire({
-					  title: "배송지 삭제",
-					  text: "배송지를 삭제하시겠습니까?",
-					  icon: "warning",
-					  showCancelButton: true,
-					  confirmButtonText: "삭제",
-					  cancelButtonText: "취소",
-					  reverseButtons: true
-				}).then((result) => {
-					 if (result.isConfirmed) {
-						const request = $.ajax({
-							url : '/customer/delivery/removeDeliveryList',
-							method : 'post',
-							data : { 'delNo' : delNo },
-							dataType : 'json',
-							async : false
-						});
-						request.done(isDel => {
-							if(isDel){
-							 	swalWithBootstrapButtons.fire({
-								  title: "배송지 삭제",
-								  text: "삭제되었습니다.",
-								  icon: "success"
-								}).then(result => {
-								 	location.reload();
-								});
-							}else{
-								swalWithBootstrapButtons.fire({
-								  title: "사용중인 배송지여서 삭제 불가합니다.",
-								  icon: "error"
-								});
-							}
-						});
-					} else if (
-						/* Read more about handling dismissals below */
-						result.dismiss === Swal.DismissReason.cancel
-					) {
-						swalWithBootstrapButtons.fire({
-						  title: "삭제취소",
-						  icon: "error"
-						});
-					}
-				});
+			document.addEventListener('DOMContentLoaded', function () {
+			    document.querySelectorAll('.cancelBtn').forEach(function (btn) {
+			        btn.addEventListener('click', function () {
+			            const orderId = this.getAttribute('data-order-id');
+			            const paymentCompletedNo = this.getAttribute('data-payment-completed-no');
+	
+			            if (!orderId) {
+			                Swal.fire("오류", "orderId가 없습니다.", "error");
+			                return;
+			            }
+	
+			            const swalWithBootstrapButtons = Swal.mixin({
+			                customClass: {
+			                    actions: 'w-50 justify-content-around',
+			                    confirmButton: "btn btn-success",
+			                    cancelButton: "btn btn-danger"
+			                },
+			                buttonsStyling: false
+			            });
+	
+			            swalWithBootstrapButtons.fire({
+			                title: "주문취소",
+			                text: "정말로 주문을 취소하시겠습니까?",
+			                icon: "warning",
+			                showCancelButton: true,
+			                confirmButtonText: "취소 진행",
+			                cancelButtonText: "아니요",
+			                reverseButtons: true
+			            }).then((result) => {
+			                if (result.isConfirmed) {
+			                    fetch('/customer/payment/cancel', {
+			                        method: 'POST',
+			                        headers: {
+			                            'Content-Type': 'application/x-www-form-urlencoded'
+			                        },
+			                        body: new URLSearchParams({ orderId: orderId,
+			                        	 						paymentCompletedNo: paymentCompletedNo
+			                        	 					  })
+			                    })
+			                    .then(async res => {
+								    const text = await res.text();
+								
+								    if (res.ok) {
+								        swalWithBootstrapButtons.fire({
+								            title: "처리 완료",
+								            text: text,
+								            icon: "success"
+								        }).then(() => {
+								            location.reload();
+								        });
+								    } else {
+								        swalWithBootstrapButtons.fire({
+								            title: "처리 실패",
+								            text: text,
+								            icon: "error"
+								        });
+								    }
+								})
+			                    .catch(err => {
+			                        console.error("에러:", err);
+			                        Swal.fire("오류", "주문취소 중 오류가 발생했습니다.", "error");
+			                    });
+			                } else if (result.dismiss === Swal.DismissReason.cancel) {
+			                    swalWithBootstrapButtons.fire({
+			                        title: "취소됨",
+			                        text: "주문 취소가 중단되었습니다.",
+			                        icon: "info"
+			                    });
+			                }
+			            });
+			        });
+			    });
 			});
-			
-			
+
+
 		
 		</script>
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
 	<th:block layout:fragment="customContents">
-		<!-- Modal -->
-		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content">
-					<form id="addDeliveryForm" th:action="@{/customer/delivery/addDeliveryList}" method="post">
-						<div class="modal-header">
-							<h5 class="modal-title" id="staticBackdropLabel">배송지 등록수정</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<div class="row">
-								<div class="form-group col-md-6">
-									<input placeholder="배송지명" class="form-control" id="delNm" name="delNm" type="text">
-								</div>
-								<div class="form-group col-md-6 mt-10">
-						        	<button type="button" id="daumPostBtn" class="btn col-12">주소찾기</button>
-						    	</div>
-								<div class="form-group col-md-12 d-flex">
-									<div class="col-sm-8">
-										<input placeholder="주소" class="form-control" id="delAddr" name="delAddr" type="text" readonly>
-									</div>
-									<div class="col-sm-4 pl-10">
-										<input placeholder="우편번호" class="form-control" id="delZipNo" name="delZipNo" type="text" readonly>
-									</div>
-								</div>
-								<div class="form-group col-md-12">
-									<input placeholder="상세주소" class="form-control" id="delDaddr" name="delDaddr" type="text">
-								</div>
-								<div class="form-group col-md-12">
-					       			<input placeholder="연락처" class="form-control" id="recipientPhone" name="recipientPhone" type="text" maxlength="13">
-					   				</div>
-					   			<div class="form-group col-md-12">
-					      			<input placeholder="요청사항" class="form-control" id="delRequest" name="delRequest" type="text">
-					  			</div>
-					   			<div class="form-group col-md-12">
-									<div class="custome-checkbox">
-	                  					<input class="form-check-input" type="checkbox" id="agreeCheckbox" name="agreeCheckbox">
-	                   					<label class="form-check-label mr-10" for="agreeCheckbox"><span>기본배송지로 설정</span></label>
-										<input type="hidden" name="primaryLocation" id="primaryLocationChk">
-									</div>
-									<input type="hidden" name="custId" id="custId" value="personalcustid2">
-									<input type="hidden" name="delNo" id="delNo">
-					  			</div>
-							</div>
-						</div>
-		 				<div class="modal-footer">
-			     			<button id="addDeliveryBtn" type="submit" class="btn btn-primary">등록</button>
-			   			</div>
-					</form>
-		  		</div>
-			</div>
-		</div>
+		
 		
 		
 		<div class="product-list mb-50">
@@ -160,8 +123,8 @@
 						<div class="product-price d-flex col-4">
 							<div class="ml-100 text-center">
 								<p style="font-weight:bold; color: black;font-size: 25px; padding-right: 10px;">주문취소/환불</p>
-								<a href="#" class="btn btn-xl">취소</a>
-								<a href="#" class="btn btn-xl">환불</a>
+								<button class="btn btn-xl cancelBtn" th:data-order-id="${l.orderId}" th:data-payment-completed-no="${l.paymentCompletedNo}">취소</button>
+								<button class="btn btn-xl">환불</button>
 							</div>
 						</div>
 					</div>
