@@ -64,7 +64,7 @@
   		<id column="products_no" property="productsNum" />
 		<result column="manager_id" property="managerId" />
 		<result column="model_no" property="modelNum" />
-		<result column="item_no" property="itemName" />
+		<result column="item_no" property="itemNum" />
 		<result column="product_category_no" property="productCategoryNum" />
 		<result column="products_nm" property="productsName" />
 		<result column="products_status" property="productsStatus" />		

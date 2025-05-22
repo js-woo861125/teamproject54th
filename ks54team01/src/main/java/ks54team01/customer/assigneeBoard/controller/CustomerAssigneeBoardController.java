@@ -47,7 +47,6 @@ public class CustomerAssigneeBoardController {
 	@PostMapping("/getProduct")
 	@ResponseBody
 	public List<CustomerAssigneeBoard> getProduct(@RequestParam(name="productCategoryNum", required = false) String productCategoryNum) {
-		
 		List<CustomerAssigneeBoard> productList = customerAssigneeBoardMapper.getProduct(productCategoryNum);
 		
 		return productList;
