@@ -86,7 +86,7 @@
 			tb.rental_fee ,
 			tb.individual_grants ,
 			tb.transfer_rental_processing_status ,
-			tb.register_date 
+			DATE(tb.register_date) AS register_date 
 		 FROM 
 			customer c RIGHT JOIN transfer_board tb 
 			USING (cust_id)
@@ -156,7 +156,7 @@
 			tb.rental_fee ,
 			tb.individual_grants ,
 			tb.transfer_rental_processing_status ,
-			tb.register_date 
+			DATE(tb.register_date) AS register_date 
 		 FROM 
 			customer c RIGHT JOIN transfer_board tb 
 			USING (cust_id)

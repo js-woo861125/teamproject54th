@@ -13,6 +13,8 @@ public interface CustomerAssigneeBoardMapper {
 	// 양수 게시글 등록
 	int addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard);
 	
+	List<CustomerAssigneeBoard> getProduct(String productCategoryNum);
+	
 	List<CustomerAssigneeBoard> getMiddleCategory(String mdCategoryNo);	
 	
 	// 내 양수 게시글 목록 조회

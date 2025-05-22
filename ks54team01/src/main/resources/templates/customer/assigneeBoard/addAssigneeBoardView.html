@@ -63,8 +63,38 @@
 	            }
 	        }).open();
 		});
-        
-        
+		
+		$('.searchProduct').click(function() {
+        	/* const data = $(this).data('productCategoryNum'); */
+        	const value = $('#productCategoryNum').value();
+        	console.log(value);
+        	
+        	const request = $.ajax({
+                 url : '/customer/assigneeBoard/getProduct',
+                 method : 'post',
+                 data : { 'productCategoryNum' : data},
+                 dataType : 'json'
+             });
+             request.done(response => {
+                 console.log(response); // 요청 성공 시 수행
+                 const appendElements = response.map((cateInfo, idx) => {
+                	const $div = $('<div />', { class : 'col-6 col-md-4'});
+                	const $subDiv = $('<div />', { class : 'form-check'});
+                	const $radio = $('<input />', { class : 'form-check-input', type: 'radio', name : 'product', id : `product${idx+1}`,  value: cateInfo.categoryNo});
+                	const $label = $('<label />', { class : 'form-check-label', for: `product${idx+1}`}).text(cateInfo.itemName);
+                	$subDiv.append($radio, $label);
+                	$div.append($subDiv);
+                	return $div; 
+                 });
+                 console.log(appendElements);
+                 $('#smallCategoryList').empty();
+                 $('#smallCategoryList').append(...appendElements);
+             });
+             request.fail((jqXHR, textStatus, error) => {
+                 console.log(jqXHR, textStatus, error); // 요청 실패 시 수행
+             }); 
+        });
+		
         $('.mdCategory').click(function() {
         	const data = $(this).data('mdCategoryNo');
         	console.log(data);
@@ -113,7 +143,6 @@
         	  //$('#selectedItem').val(selectedValue); 
         	  $('#staticBackdrop').modal('hide');
         	});
-        
         
         $('#addAssigneeBoardBtn').click(e => {
 			e.preventDefault();
@@ -210,29 +239,28 @@
 	  		</div>
 		</div>
         <!-- modal end -->
-        <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade" id="selectProductModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="selectProductModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered modal-lg">
 				<div class="modal-content">
-			    	<form id="selectCategoryForm" th:action="@{/customer/assigneeBoard/addAssigneeBoard}" method="get">
+			    	<form id="selectProductForm" th:action="@{/customer/assigneeBoard/addAssigneeBoard}" method="get">
 			        	<div class="modal-header">
-			          		<h5 class="modal-title" id="staticBackdropLabel">필요한 상품을 선택해주세요.</h5>
+			          		<h5 class="modal-title" id="selectProductModalLabel">필요한 상품을 선택해주세요.</h5>
 			          		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalCloseBtn"></button>
 			        	</div>
 			        	<div class="modal-body d-flex">
-		          			<!-- 우측 품목 리스트 -->
-				          		<div class="modalRight ps-4 flex-grow-1">
-				            		<div id="smallCategoryList" class="row g-3">
-					              		<!-- 품목 -->
-			            			</div>
-			          			</div>
+			          		<div class="modalRight ps-4 flex-grow-1">
+			            		<div id="productList" class="row g-3">
+				              		품목
+		            			</div>
+		          			</div>
 		        		</div>
 			        	<div class="modal-footer">
-			          		<button id="selectItemBtn" type="button" class="btn btn-primary">선택</button>
+			          		<button id="selectProductBtn" type="button" class="btn btn-primary">선택</button>
 			        	</div>
 		      		</form>
 		    	</div>
 	  		</div>
-		</div>
+		</div> -->
         <div class="container mb-80 mt-50">
             <div class="row justify-content-center">
                 <div class="col-lg-8 mb-40">
@@ -249,7 +277,7 @@
                                     <input id="selectedItem" type="text" placeholder="*상품 카테고리 선택" required readonly>
                                 </div>
                                 <div class="col-2">
-									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardCategory}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
+									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardCategory}" class="openModal btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 										품목찾기
 									</a>									
 	                            </div>                        		
@@ -257,10 +285,10 @@
 	                        <div class="row">
 	                        	<div class="form-group col-lg-6">
 	                        		<input id="productNum" type="hidden" name="productNum" required readonly>
-	                            	<input id="selectedProduct" type="text" name="productName" placeholder="상품명 입력 (선택사항)"/>
+	                            	<input id="selectedProduct" type="text" name="productName" placeholder="상품명 입력 (선택사항)" readonly />
 	                        	</div>
 	                        	<div class="col-2">
-									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardProduct}" class="openModal btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
+									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardProduct}" class="searchProduct btn btn-primary" data-bs-toggle="modal" data-bs-target="#selectProductModal">
 										상품찾기
 									</a>									
 	                            </div>

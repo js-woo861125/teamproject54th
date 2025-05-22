@@ -30,6 +30,14 @@ public class CustomerAssigneeBoardServiceImpl implements CustomerAssigneeBoardSe
 		customerAssigneeBoardMapper.addAssigneeBoard(customerAssigneeBoard);
 	}
 	
+	@Override
+	public List<CustomerAssigneeBoard> selectAssigneeBoardProduct(String productCategoryNum) {
+
+		List<CustomerAssigneeBoard> productList = customerAssigneeBoardMapper.getProduct(productCategoryNum);
+		
+		return productList;
+	}
+	
 	/**
 	 *  양수 게시글 등록 시 카테고리 선택
 	 */

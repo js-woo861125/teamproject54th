@@ -58,7 +58,17 @@
 		<result column="register_date" property="itemRegDate" />
 		<result column="revision_date" property="itemRevDate" />
 		<result column="use_status" property="useStatus" />		
-  	</resultMap>	
+  	</resultMap>
+  	
+  	<resultMap type="CustomerProduct" id="productResultMap">
+  		<id column="products_no" property="productsNum" />
+		<result column="manager_id" property="managerId" />
+		<result column="model_no" property="modelNum" />
+		<result column="item_no" property="itemName" />
+		<result column="product_category_no" property="productCategoryNum" />
+		<result column="products_nm" property="productsName" />
+		<result column="products_status" property="productsStatus" />		
+  	</resultMap>
   	
   	<insert id="addAssigneeBoard" parameterType="CustomerAssigneeBoard">
   		<selectKey keyProperty="assigneeBoardNum" resultType="string" order="BEFORE">
@@ -77,6 +87,22 @@
 		(assignee_no, cust_id, product_category_no, products_nm, rental_fee, remaining_months, desired_install_area, quantity, assignee_content, board_valid_date, register_date, revision_date)
 		VALUES(#{assigneeBoardNum}, 'personalcustid2', #{productCategoryNum}, #{productName}, #{rentalFee}, #{remainingMonths}, #{desiredInstallArea}, 1, #{assigneeContent}, DATE_ADD(NOW(), INTERVAL 1 MONTH), NOW(), NOW());
   	</insert>
+  	
+  	<select id="getProduct" parameterType="string" resultMap="productResultMap">
+		/* 양수 게시글 등록 시 상품 선택 */
+		SELECT 
+			p.product_category_no ,
+			p.item_no,
+			p.products_no,
+			p.products_nm
+		FROM
+			products p
+		<where>
+			<if test="productCategoryNum != null and productCategoryNum != ''">
+				 p.product_category_no = #{productCategoryNum}
+			</if>
+		</where>
+ 	</select>
   	
  	<select id="getMiddleCategory" parameterType="string" resultMap="itemResultMap">
 		/* 양수 게시글 등록 시 카테고리 선택 */
