@@ -25,87 +25,71 @@
             <div class="row flex-row-reverse">
                 <div class="col-lg-12">
                     <div class="section-title">
-                        <h1 class="heading-2 mb-50">내 양수 게시글</h1>
+                        <h3 class="mb-0" >내 양수 게시글</h3>
                     </div>
-                    <!-- <div class="w-50 widget_search mb-50">
-                        <div class="search-form">
-                            <form action="#">
-                                <input type="text" placeholder="게시글 검색어를 입력해주세요." />
-                                <button type="submit"><i class="fi-rs-search"></i></button>
-                            </form>
-                        </div>
-                    </div>  -->
                     <div class="shop-product-fillter">
 						<div class="totall-product">
 							<h5 class="text-body">
-								내가 쓴 글<span class="text-brand">5</span> 
+								내가 쓴 글
+								<span class="text-brand">&emsp;
+									<span th:text="${myAssigneeBoardList.size()}">5</span>
+								</span>
 								<span>개</span>
 							</h5>
 						</div>
-						<!-- <div class="sort-by-product-area">
-							<div class="sort-by-cover mr-10">
-								<div class="sort-by">
-									<a th:href="@{#}" th:data-sort-value="recentReg">
-										<span>최신등록순</span>
-									</a>
-								</div>
-							</div>
-							<div class="sort-by-cover mr-10">
-								<div class="sort-by">
-									<a th:href="@{#}" th:data-sort-value="deadline">
-										<span>마감임박순</span>
-									</a>
-								</div>
-							</div>
-						</div> -->
 					</div>
-                    <div class="product-list mb-50">
-                        <th:block th:if="${!#lists.isEmpty(myAssigneeBoardList)}"
-								  th:each="l : ${myAssigneeBoardList}">
-	                        <!-- 상품1 -->
-	                        <div class="product-cart-wrap border">
-	                            <div class="product-content-wrap mt-50 mb-30 ml-50">
-	                                <h4><a th:text="${l.productName}" th:href="@{/customer/assigneeBoard/assigneeBoardDetail(assigneeBoardNum=${l.assigneeBoardNum})}">그램 프로 노트북 16인치 (옵시디안 블랙)</a></h4>
-                                	<div class="dropdown">
-                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="#">게시글 삭제</a>
-                                            <button class="dropdown-item" type="submit">게시글 삭제</button>
-                                        </div>
-                                    </div>
-	                                <div class="product-rate-cover">
-	                                    <span th:text="${l.productInfoCategory.smCategory}" class="font-small ml-5 text-muted">TV/디지털</span>
-	                                </div>
-	                                <p class="mt-15 mb-15">급구</p>
-	                                <div class="product-price d-flex">
-	                                     <div>
-	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">희망렌탈료</span>
-	                                        <span th:text="|₩${#numbers.formatInteger(l.rentalFee, 3, 'COMMA')}" 
-	                                        	  style="color: black; font-size: 20px;">상관없음</span>
-	                                     </div>
-	                                     <div>
-	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">희망계약기간</span>
-	                                        <span th:text="${l.remainingMonths} + '개월'" style="color: black; font-size: 20px;">상관없음</span>
-	                                     </div>
-	                                     <div>
-	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">희망설치지역</span>
-	                                        <span th:text="${l.desiredInstallArea}" style="color: black; font-size: 20px;">전주</span>
-	                                     </div>
-	                                     <div>
-	                                        <span style="font-weight:150; color: black;font-size: 20px; padding-right: 10px;">마감일</span>
-	                                        <span th:text="${l.boardValidDate}" style="color: black; font-size: 20px;">2025-04-10</span>
-	                                     </div>
-	                                </div>
-	                                <div class = "board">
-	                                    <p>등록일</p>
-										<p th:text="${l.registerDate}">2025-04-09</p>
-	                                    <div></div>
-	                                    <p th:text="${l.customerMember.custName}">personalcustid3</p>
-	                                </div>
-	                            </div>
-	                        </div>
-                        </th:block>
-                    </div>
+                    <div class="overflow-auto" style="height: 700px;">
+	                    <div class="product-list mb-50 col-lg-12">
+	                        <th:block th:if="${!#lists.isEmpty(myAssigneeBoardList)}"
+									  th:each="l : ${myAssigneeBoardList}">
+		                        <div class="product-cart-wrap border col-12" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
+		                            <div class="product-content-wrap mt-40 mb-2 ml-50">
+		                                <h4>
+		                                	<a th:text="${#strings.isEmpty(l.productName) ? '상관없음' : l.productName}" th:href="@{/customer/assigneeBoard/assigneeBoardDetail(assigneeBoardNum=${l.assigneeBoardNum})}">
+		                                		그램 프로 노트북 16인치 (옵시디안 블랙)
+		                                	</a>
+		                               	</h4>
+	                                	<!-- <div class="dropdown">
+	                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+	                                        <div class="dropdown-menu">
+	                                            <a class="dropdown-item" href="#">게시글 삭제</a>
+	                                            <button class="dropdown-item" type="submit">게시글 삭제</button>
+	                                        </div>
+	                                    </div> -->
+		                                <div class="product-rate-cover">
+		                                    <span th:text="${l.productInfoCategory.smCategory}" class="font-small ml-5 text-muted">TV/디지털</span>
+		                                </div>
+		                                <!-- <p class="mt-15 mb-15">급구</p> -->
+		                                <div class="product-price d-flex gap-4 mt-3 mb-4">
+	                                    	<div>
+	                                        	<span style="font-weight:400; color: blue;font-size: 18px; padding-right: 10px;">희망렌탈료</span>
+	                                        	<span th:text="|₩${#numbers.formatInteger(l.rentalFee, 3, 'COMMA') + ' 이하'}" 
+	                                        	      style="color: black; font-size: 20px;">상관없음</span>
+	                                     	</div>
+		                                    <div>
+		                                        <span style="font-weight:400; color: blue;font-size: 18px; padding-right: 10px;">희망계약기간</span>
+		                                        <span th:text="${l.remainingMonths} + '개월 이하'" style="color: black; font-size: 20px;">상관없음</span>
+		                                    </div>
+	                                     	<div>
+	                                     		<span style="font-weight:400; color: blue;font-size: 18px; padding-right: 10px;">희망설치지역</span>
+	                                     		<span th:text="${l.desiredInstallArea}" style="color: black; font-size: 20px;">전주</span>
+	                                     	</div>
+	                                	</div>
+		                                <div class="board d-flex gap-5">
+										    <div class="d-flex">
+										        <p class="mb-0 me-2 fw-semibold">등록일</p>
+										        <p class="mb-0 fw-bold" th:text="${l.registerDate}">2025-04-09</p>
+										    </div>
+										    <div class="d-flex">
+										        <p class="mb-0 me-2 fw-semibold">마감일</p>
+										        <p class="mb-0 fw-bold" th:text="${l.boardValidDate}">2025-04-09</p>
+										    </div>
+										</div>
+		                            </div>
+		                        </div>
+	                        </th:block>
+	                    </div>
+                	</div>
                 </div>
             </div>
         </div>

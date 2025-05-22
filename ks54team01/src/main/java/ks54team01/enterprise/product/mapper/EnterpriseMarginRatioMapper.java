@@ -9,6 +9,8 @@ import ks54team01.enterprise.product.domain.EnterpriseMarginRatio;
 @Mapper
 public interface EnterpriseMarginRatioMapper {
 
+	int existMarginRatioByPeriod(EnterpriseMarginRatio enterpriseMarginRatio);
+	
 	int addEnterpriseMarginRatio(EnterpriseMarginRatio enterpriseMarginRatio);
 	
 	// 업체별 마진율 사용유무 설정 (사실상 삭제 기능도 포함)

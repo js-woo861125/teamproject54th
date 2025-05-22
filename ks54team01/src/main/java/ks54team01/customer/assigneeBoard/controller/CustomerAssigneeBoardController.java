@@ -35,13 +35,22 @@ public class CustomerAssigneeBoardController {
 	private final AdminProductInfoService adminProductInfoService; 
 	private final CustomerAssigneeBoardMapper customerAssigneeBoardMapper;
 	
-	
 	@PostMapping("/addAssigneeBoard")
 	public String addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard) {
 		
 		customerAssigneeBoardService.addAssigneeBoard(customerAssigneeBoard);
 		
 		return "redirect:/customer/assigneeBoard/assigneeBoardList";
+	}
+	
+	
+	@PostMapping("/getProduct")
+	@ResponseBody
+	public List<CustomerAssigneeBoard> getProduct(@RequestParam(name="productCategoryNum", required = false) String productCategoryNum) {
+		
+		List<CustomerAssigneeBoard> productList = customerAssigneeBoardMapper.getProduct(productCategoryNum);
+		
+		return productList;
 	}
 	
 	@PostMapping("/getMiddleCategory")
@@ -70,15 +79,12 @@ public class CustomerAssigneeBoardController {
 														    		 map -> new ArrayList<>(map.values())
 														    		 ));
 		
-//		List<CustomerAssigneeBoard> cateItemList = customerAssigneeBoardService.selectAssigneeBoardCategory(mdCategoryNo);
 		
 		log.info("카테고리 목록: {}", categoryList);
 		log.info("실제 랜더링될 중분류 목록: {}", mdCategoryList);
-//		log.info("실제 랜더링될 품목 목록: {}", cateItemList);
 		
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("mdCategoryList", mdCategoryList);
-//		model.addAttribute("cateItemList", cateItemList);
 		
 		
 		return "customer/assigneeBoard/addAssigneeBoardView";

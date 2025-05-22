@@ -24,10 +24,13 @@ public class EnterpriseMarginRatioServiceImpl implements EnterpriseMarginRatioSe
 	@Override
 	public void addEnterpriseMarginRatio(EnterpriseMarginRatio enterpriseMarginRatio) {
 		
-		String marginRatioNum =  "margin_ratio_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
-		enterpriseMarginRatio.setMarginRatioNum(marginRatioNum);
+		int isAdd = enterpriseMarginRatioMapper.existMarginRatioByPeriod(enterpriseMarginRatio);
 		
-		enterpriseMarginRatioMapper.addEnterpriseMarginRatio(enterpriseMarginRatio);
+		if(isAdd != 1) {
+			String marginRatioNum =  "margin_ratio_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+			enterpriseMarginRatio.setMarginRatioNum(marginRatioNum);		
+			enterpriseMarginRatioMapper.addEnterpriseMarginRatio(enterpriseMarginRatio);
+		}
 	}
 	
 	/**
