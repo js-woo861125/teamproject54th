@@ -35,7 +35,7 @@
                             <div class="col-2 ml-5">
                                 <button type="button" class="form-control btn btn-outline-dark center-text" style="font-size: 1.2rem;"
                                 th:onclick="'javascript:openEnterPricseList(\'' + @{/admin/enterprise/searchPopup} + '\'); return false;'">
-                                <i class="bi bi-list-ul ml-30">📚업체조회</i>
+                                <i class="bi bi-list-ul ml-40">📚업체조회</i>
                             </button>
                         </div>
                     
@@ -127,9 +127,34 @@
             </div>
         </div>
         <div class="card mb-4">
-            <header class="card-header">
+           <header class="card-header d-flex justify-content-lg-between">
                 <h4 class="card-title">매출상세</h4>
-                
+                <form th:action="@{/admin/payment/calculateDeadline}" method="POST">
+                    <input type="hidden" name="settlementMonth" th:value="${settlementMonth}" id="hiddenSettlementMonth"/>
+                    <input type="hidden" name="searchValue" th:value="${searchValue}" id="hiddenSearchValue"/>
+
+            <th:block th:if="${!#lists.isEmpty(adminFeeList)}" th:each="l, i : ${adminFeeList}">
+                <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].feeNo'" th:value="${l.feeNo}" />
+                <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].paymentCompletedNo'" th:value="${l.paymentCompletedNo}" />
+                <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].entCeoNo'" th:value="${l.entCeoNo}" />
+                <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].entEmpId'" th:value="${l.entEmpId}" />
+                <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].managerId'" th:value="${l.managerId}" />
+                <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].paymentDetils'" th:value="${l.paymentDetils}" />
+                <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].platFormFee'" th:value="${l.platFormFee}" />
+                <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].entSales'" th:value="${l.entSales}" />
+                <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].provisionScheduleDate'" th:value="${l.provisionScheduleDate}" />
+                <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].provisionDate'" th:value="${l.provisionDate}" />
+                <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].settlementMonth'" th:value="${l.settlementMonth}" />
+                <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].closingSttelement'" th:value="${l.closingSttelement}" />
+                <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].paymentStatus'" th:value="${l.paymentStatus}" />
+                <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].revisionDate'" th:value="${l.revisionDate}" />
+            </th:block>
+
+                    <button type="submit" id="deadline" 
+                        class="form-control btn-icon btn mr-10" 
+                        style="font-size: 1.2rem;">📔마감
+                    </button>
+                </form>
             </header>
             <div class="card-body">
                 <div class="table-responsive">
@@ -140,7 +165,7 @@
                                     <th class="align-middle" scope="col">수수료관리코드</th>
                                     <th class="align-middle" scope="col">업체코드</th>
                                     <th class="align-middle" scope="col">매출구분</th>
-                                    <th class="align-middle" scope="col">입점업체 매출</th>
+                                    <th class="align-middle" scope="col">매출금액</th>
                                     <th class="align-middle" scope="col">플랫폼수수료</th>
                                     <th class="align-middle" scope="col">지급예정일</th>
                                     <th class="align-middle" scope="col">지급일</th>
@@ -152,27 +177,25 @@
                             <!-- monthly_fee 테이블처럼 월별/업체별로 고유한 하나의 집계 데이터를 유지해야 하는 경우에는
                              ON DUPLICATE KEY UPDATE와 같은 "없으면 삽입, 있으면 갱신" 로직이 매우 유용 -->
                             <tbody>
-                                <tr class="text-center" th:if="${!#lists.isEmpty(adminFeeList)}" th:each="l : ${adminFeeList}">
-                                    <th class="align-middle" scope="col" th:text="${l.feeNo}">수수료관리 코드</th>
-                                    <th class="align-middle" scope="col" th:text="${l.entCeoNo}">업체코드</th>
-                                    <th class="align-middle" scope="col" th:text="${l.paymentDetils}">매출구분</th>
-                                    <th class="align-middle" scope="col" th:text="${#numbers.formatDecimal(l.entSales, 0, 'COMMA', 0, 'POINT')}">입점업체 매출</th>
-                                    <th class="align-middle" scope="col" th:text="${#numbers.formatDecimal(l.platFormFee, 0, 'COMMA', 0, 'POINT')}">플렛폼수수료</th>
-                                    <th class="align-middle" scope="col" th:text="${l.provisionScheduleDate}">지급예정일</th>
-                                    <th class="align-middle" scope="col" th:text="${l.provisionDate}">지급일</th>
-                                    <th class="align-middle" scope="col" th:text="${l.settlementMonth}">정산연월</th>
-                                    <th class="align-middle" scope="col" th:text="${l.closingSttelement}">마감구분</th>
-                                    <th class="align-middle" scope="col" th:text="${l.paymentStatus}">상태</th>
-                                </tr>
-                                <!-- "|₩ ${#numbers.formatDecimal(ll.entFee, 0, 'COMMA', 0, 'POINT')}|" -->
+                            <tr class="text-center" th:if="${!#lists.isEmpty(adminFeeList)}" th:each="l : ${adminFeeList}">
+                                <td class="align-middle" scope="row" th:text="${l.feeNo}"></td>
+                                <td class="align-middle" th:text="${l.entCeoNo}"></td>                            
+                                <td class="align-middle" th:text="${l.paymentDetils}"></td> <td class="align-middle" th:text="${#numbers.formatDecimal(l.platFormFee, 0, 'COMMA', 0, 'POINT')}"></td>
+                                <td class="align-middle" th:text="${#numbers.formatDecimal(l.entSales, 0, 'COMMA', 0, 'POINT')}"></td>
+                                <td class="align-middle" th:text="${l.provisionScheduleDate}"></td>
+                                <td class="align-middle" th:text="${l.provisionDate}"></td>
+                                <td class="align-middle" th:text="${l.settlementMonth}"></td> <td class="align-middle" th:text="${l.closingSttelement}"></td>
+                                <td class="align-middle" th:text="${l.paymentStatus}"></td>    
+                            </tr>
                                 <tr th:unless="${!#lists.isEmpty(adminFeeList)}">
-                                    <td class="text-center" colspan="12">조회된 매출 내역이 없습니다.</td>
+                                    <td class="text-center" colspan="14">조회된 매출 내역이 없습니다.</td>
                                 </tr>
-                            </tbody>
+                        </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+          
         </div>
 
         <div class="pagination-area mt-30 mb-50">

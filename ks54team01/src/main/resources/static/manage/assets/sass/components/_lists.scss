@@ -12,6 +12,10 @@
   dt{  width: 150px;  font-weight:normal;}
   dd{ margin-left:30px; vertical-align: baseline; flex-grow:1; margin-bottom: 0; text-align:right; }
 }
+.dlist2{  display:flex;
+  dt{  width: 200px;  font-weight:normal;}
+  dd{ margin-left:1px; vertical-align: baseline; flex-grow:1; margin-bottom: 0; text-align:center; }
+}
 /* -------------------- list.row--------------------- */
 ul.row, ul.row-sm{ list-style:none; padding:0; }
 
