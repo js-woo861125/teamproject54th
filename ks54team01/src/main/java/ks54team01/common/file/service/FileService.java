@@ -26,6 +26,8 @@ public interface FileService {
 
 		List<FileMetaData> getFileList(String refId, String fileType);
 		
-		// 파일 삭제
-		 void deleteFiles(String refId, String fileType);
+		// 다중 파일 삭제
+		 void deleteFiles(String fileIdx);
+		 
+	
 }
