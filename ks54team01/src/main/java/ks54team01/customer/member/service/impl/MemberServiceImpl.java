@@ -25,6 +25,7 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public boolean customerLeave(String memberType, String memberId) {
 		 int result = 0;
+		 log.info("탈퇴시작: {}",memberId);
 
 		    switch (memberType) {
 		        case "개인고객":
