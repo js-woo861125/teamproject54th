@@ -15,4 +15,5 @@ public class ProductInfoCategory {
 	private String categoryRegDate;
 	private String categoryRevDate;
 	private String useStatus;
+	
 }

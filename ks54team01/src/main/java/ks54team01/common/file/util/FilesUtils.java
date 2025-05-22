@@ -148,7 +148,7 @@ public class FilesUtils {
 		 
 		// os별 루트 설정
 		String osName = System.getProperty("os.name").toLowerCase();
-		String osRoot = osName.contains("win") ? "d:" : "";
+		String osRoot = osName.contains("win") ? "c:" : "";
 		String rootFilePath = osRoot + fileRealPath;
 		
 		// 디렉토리 폴더 경로 설정

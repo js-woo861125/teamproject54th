@@ -40,7 +40,7 @@
 			products p INNER JOIN model m 
 			ON p.model_no = m.model_no 
 			LEFT JOIN files f
-			ON m.model_no = f.ref_id AND f.file_type = 'main';	
+			ON m.model_no = f.ref_id AND f.file_type = 'mainImage';	
 	</select>
 	
 		
@@ -92,6 +92,35 @@
 		#{revisionDate}
 		)
 	</insert>
+	
+	 <update id="modifyProduct" parameterType="ks54team01.admin.product.domain.AdminProduct">
+   		 UPDATE
+   		 	 products
+    <set>
+        <if test="categoryNo != null and categoryNo != ''">
+            product_category_no = #{categoryNo},
+        </if>
+        <if test="itemNo != null and itemNo != ''">
+            item_no = #{itemNo},
+        </if>
+        <if test="modelNo != null and modelNo != ''">
+            model_no = #{modelNo},
+        </if>
+        <if test="productName != null and productName != ''">
+            products_nm = #{productName},
+        </if>
+        <if test="productDetail != null and productDetail != ''">
+        	products_detail = #{productDetail},
+        </if>
+        <if test="revisionDate != null and revisionDate != ''">
+            revision_date = #{revisionDate},
+        </if>
+    </set>
+   		 WHERE 
+   		 	products_no = #{productNo}
+	</update>
+	
+	
 	<select id="getItemListByCategory" resultType="ProductInfoItem">
 		SELECT
 		DISTINCT item_no AS itemNo,
@@ -216,29 +245,7 @@
 	        	use_status = '사용중'
     </select>
     
-    <update id="modifyProduct" parameterType="ks54team01.admin.product.domain.AdminProduct">
-   		 UPDATE
-   		 	 products
-    <set>
-        <if test="categoryNo != null and categoryNo != ''">
-            product_category_no = #{categoryNo},
-        </if>
-        <if test="itemNo != null and itemNo != ''">
-            item_no = #{itemNo},
-        </if>
-        <if test="modelNo != null and modelNo != ''">
-            model_no = #{modelNo},
-        </if>
-        <if test="productName != null and productName != ''">
-            product_nm = #{productName},
-        </if>
-        <if test="revisionDate != null and revisionDate != ''">
-            revision_date = #{revisionDate},
-        </if>
-    </set>
-   		 WHERE 
-   		 	products_no = #{productNo}
-	</update>
+   
     
     <select id="getProduct" parameterType="string" resultType="ks54team01.admin.product.domain.AdminProduct">
 	   SELECT

@@ -22,6 +22,9 @@ public interface AdminProductMapper {
 	// 플랫폼 상품 조회
 	List<AdminProduct>getProductList();
 	
+
+	
+	// 상품 조회
 	AdminProduct getProduct(@Param("productNo") String productNo);
 	
 	ProductInfoModel getModelInfoByNo(@Param("modelNo") String modelNo);

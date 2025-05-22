@@ -246,7 +246,7 @@
 
    	// X버튼 클릭 시 썸네일 파일 삭제
    	$(document).on('click', '.delete-img1', function(){
-   	    const input = document.getElementById('files1');
+   	    const input = document.getElementById('mainImage');
    	    const files = input.files;
    	    const dataTransfer = new DataTransfer();
    	    const removeTargetId = $(this).attr('data-remove-key');
@@ -259,7 +259,7 @@
 
    	// X버튼 클릭 시 상세 이미지 파일 삭제
    	$(document).on('click', '.delete-img2', function(){
-   	    const input = document.getElementById('files2');
+   	    const input = document.getElementById('thumbnails');
    	    const files = input.files;
    	    const dataTransfer = new DataTransfer();
    	    const removeTargetId = $(this).attr('data-remove-key');

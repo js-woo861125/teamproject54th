@@ -23,12 +23,16 @@
 		            e.preventDefault();
 
 		            const card = btn.closest(".product-cart-wrap");
-		            const delNo = card.getAttribute("data-delno");
-		            const delNm = card.getAttribute("data-delnm");
+		            const delNo = card.getAttribute("data-del-no");
+		            const delNm = card.getAttribute("data-del-nm");
+		            const delRecipientPhone = card.getAttribute("data-recipient-phone");
+		            const delRequest = card.getAttribute("data-del-request");
 
 		            // 선택한 값 input에 채우기
 		            document.getElementById("delSelected").value = delNo;
 		            document.getElementById("delName").value = delNm;
+		            document.getElementById("delRecipientPhone").value = delRecipientPhone;
+		            document.getElementById("delRequest").value = delRequest;
 		        });
 		    });
 
@@ -69,6 +73,9 @@
 		        const prodUnitPrice = /*[[${prodUnitPrice}]]*/"";
 		        const quantity = /*[[${quantity}]]*/"";
 		        const delNo = document.getElementById("delSelected").value;
+		        const delRecipientNm = document.getElementById("delRecipientNm").value;
+		        const delRecipientPhone = document.getElementById("delRecipientPhone").value;
+		        const delRequest = document.getElementById("delRequest").value;
 		        
 		        // 회원 결제
 		        const customerKey = "3g3Cca_AwBjjg837BM8Bv";
@@ -99,7 +106,8 @@
 						'orderId': orderId,
 						orderName: "토스 티셔츠 외 2건",
 						successUrl: window.location.origin + "/customer/payment/success?sellProductsNo=" + sellProductsNo +'&prodNo='+prodNo +'&entCeoNo=' +entCeoNo + '&entEmpId=' + entEmpId
-									+ '&managerId='+managerId+'&prodUnitPrice='+prodUnitPrice+'&delNo='+delNo+'&orderQuantity='+orderQuantity+'&quantity='+quantity,
+									+ '&managerId='+managerId+'&prodUnitPrice='+prodUnitPrice+'&delNo='+delNo+'&orderQuantity='+orderQuantity+'&quantity='+quantity+'&delRecipientNm='+delRecipientNm
+									+'&delRecipientPhone='+delRecipientPhone+'&delRequest='+delRequest,
 						failUrl: window.location.origin + "/fail.html",
 						customerEmail: "customer123@gmail.com",
 						customerName: "김토스",
@@ -185,7 +193,8 @@
 									<div class="overflow-auto" style="height: 200px;">
 										<th:block th:if="${!#lists.isEmpty(DeliveryList)}" th:each="l : ${DeliveryList}">
 											<!-- 상품1 -->
-											<div class="product-cart-wrap border col-12" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);" th:data-delno="${l.delNo}" th:data-delnm="${l.delNm}">
+											<div class="product-cart-wrap border col-12" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);"
+												 th:data-del-no="${l.delNo}" th:data-del-nm="${l.delNm}" th:data-recipient-phone="${l.recipientPhone}" th:data-del-request="${l.delRequest}">
 												<div class="product-content-wrap mt-50 mb-30 col-8">
 													<h4 th:text="${l.delNm}">배송지명</h4>
 													<div>
@@ -217,7 +226,10 @@
 	                        	<div class="product-list mb-50">
 									<div class="form-group">
 										<input type="text" id="delName" name="delNm" placeholder="선택한 주소" readonly>
+										<input type="text" id="delRecipientNm" name="delRecipientNm" class="mt-15" placeholder="수령인명">
 										<input type="hidden" id="delSelected" name="delNo">
+										<input type="hidden" id="delRecipientPhone" name="delRecipientPhone">
+										<input type="hidden" id="delRequest" name="delRequest">
 									</div>	                        	
 								</div>
                         	</div>

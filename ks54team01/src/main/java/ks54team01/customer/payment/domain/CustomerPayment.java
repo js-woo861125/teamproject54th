@@ -22,6 +22,8 @@ public class CustomerPayment {
 	private String paymentCompletedDate;
 	private String paymentStatus;
 	private String revDate;
+	private String paymentKey;
+	private String orderId;
 		
 	private String prodNm;
 }

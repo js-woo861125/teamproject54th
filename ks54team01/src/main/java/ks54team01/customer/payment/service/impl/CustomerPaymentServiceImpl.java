@@ -18,6 +18,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ks54team01.customer.payment.domain.CustomerDelivery;
+import ks54team01.customer.payment.domain.CustomerDeliveryInfo;
 import ks54team01.customer.payment.domain.CustomerPayment;
 import ks54team01.customer.payment.mapper.CustomerPaymentMapper;
 import ks54team01.customer.payment.service.CustomerPaymentService;
@@ -35,6 +36,64 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 	private final ObjectMapper objectMapper;
 	
 	private final CustomerPaymentMapper customerPaymentMapper;
+	
+	
+	@Override
+	public void removeDeliveryInfo(String paymentCompletedNo) {
+
+		customerPaymentMapper.removeDeliveryInfo(paymentCompletedNo);
+		
+	}
+	
+	
+	@Override
+	public void addDeliveryInfo(CustomerDeliveryInfo customerDeliveryInfo) {
+
+		customerPaymentMapper.addDeliveryInfo(customerDeliveryInfo);
+	}
+	
+	
+	@Override
+	public void cancelPayment(String paymentKey, String cancelReason) {
+
+		try {
+            String url = "https://api.tosspayments.com/v1/payments/" + paymentKey + "/cancel";
+            String encodedKey = Base64.getEncoder().encodeToString((SECRET_KEY + ":").getBytes());
+            String body = String.format("{\"cancelReason\": \"%s\"}", cancelReason);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Authorization", "Basic " + encodedKey)
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(body))
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+                throw new RuntimeException(response.body());
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+	}
+	
+	
+	@Override
+	public String getPaymentKeyByOrderId(String orderId) {
+		
+		return customerPaymentMapper.getPaymentKeyByOrderId(orderId);
+	}
+	
+	@Override
+	public void modifyPaymentStatus(String orderId, String paymentStatus) {
+		
+		customerPaymentMapper.modifyPaymentStatus(orderId, paymentStatus);
+		
+	}
+	
 	
 	@Override
 	public void modifyQuantity(Integer orderQuantity, String prodNo, String entCeoNo) {

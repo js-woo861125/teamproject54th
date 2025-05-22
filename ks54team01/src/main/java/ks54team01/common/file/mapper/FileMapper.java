@@ -24,4 +24,6 @@ public interface FileMapper {
 		List<FileMetaData> getFileListByRefId(@Param("refId") String refId, @Param("fileType") String fileType);
 		
 		void deleteFilesByRefIdAndType(@Param("refId") String refId, @Param("fileType") String fileType);
+
+		void deleteFiles(String fileIdx);
 }
