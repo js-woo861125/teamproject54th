@@ -4,38 +4,14 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="ks54team01.customer.member.mapper.MemberMapper">
-  	<resultMap type="CustomerMember" id="corpMemberResultMap">
-		<!-- id : 테이블 pk 컬럼 -->
-		<id 	column="members_id" 				property="memberId" />
-		<!-- result : 테이블 일반 컬럼 -->
-		<result column="members_pw" 				property="memberPw" />
-		<result column="members_type" 				property="memberType" />
-		<result column="state_transition_date" 		property="memberStateTransitionDate" />
-		<result column="cust_nm" 					property="custName" />
-		<result column="cust_brdt" 					property="custBrdt" />
-		<result column="cust_addr" 					property="custAddr" />
-		<result column="cust_daddr" 				property="custDaddr" />
-		<result column="cust_email" 				property="custEmail" />
-		<result column="cust_phone" 				property="custPhone" />
-		<result column="corp_brno" 					property="corpBrno" />
-		<result column="corp_nm" 					property="corpName" />
-	</resultMap>
-
-  	<resultMap type="CommonMember" id="commonMemberResultMap">
-		<!-- id : 테이블 pk 컬럼 -->
-		<id 	column="members_id" 				property="memberId" />
-		<!-- result : 테이블 일반 컬럼 -->
-		<result column="members_pw" 				property="memberPw" />
-		<result column="members_type" 				property="memberType" />
-		<result column="state_transition_date" 		property="memberStateTransitionDate" />
-	</resultMap>
+  
 	
-	
-	<update id="deactivateCommonMember" parameterType="string">
+	<update id="deactivateCommonMember" parameterType="CommonMember">
   		/* 공통정보 테이블 탈퇴처리 */
 		UPDATE members
 		<set>
-			revision_date = CURDATE(),	
+			revision_date = CURDATE(),
+			state_transition_date = CURDATE(),
 			withdraw_status = 'Y'
 		</set>		 
 		WHERE 

@@ -111,7 +111,53 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	}
 	
 	// 상품정보 삭제
+	@Override
+	public boolean removeModelSpecSpecInfoByNo(String modelSpecNo) {
+		
+		int delCount = 0;
+		
+		delCount += adminProductInfoMapper.removeModelSpecSpecInfoByNo(modelSpecNo);
+		
+		boolean isDel = delCount > 0 ? true : false;
+		
+		return isDel;
+	}
 	
+	@Override
+	public boolean removeCategorySpecInfoByNo(String specNo) {
+		
+		int delCount = 0;
+		
+		delCount += adminProductInfoMapper.removeCategorySpecInfoByNo(specNo);
+		
+		boolean isDel = delCount > 0 ? true : false;
+		
+		return isDel;
+	}
+	
+	@Override
+	public boolean removeBenefitInfoByNo(String benefitNo) {
+		
+		int delCount = 0;
+		
+		delCount += adminProductInfoMapper.removeBenefitInfoByNo(benefitNo);
+		
+		boolean isDel = delCount > 0 ? true : false;
+		
+		return isDel;
+	}
+	
+	@Override
+	public boolean removeModelInfoByNo(String modelNo) {
+		
+		int delCount = 0;
+		
+		delCount += adminProductInfoMapper.removeModelInfoByNo(modelNo);
+		
+		boolean isDel = delCount > 0 ? true : false;
+		
+		return isDel;
+	}
 	@Override
 	public boolean removeItemInfoByNo(String itemNo) {
 		
@@ -378,6 +424,19 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	/**
 	 *  상품정보 목록 조회
 	 */
+	// 등록되어있는 카테고리 중분류 목록 조회(카테고리 등록)	
+	@Override
+	public List<ProductInfoCategory> getMdCategory() {
+		
+		return adminProductInfoMapper.getMdCategory();
+	}
+	// 등록되어있는 카테고리 대분류 목록 조회(카테고리 등록)	
+	@Override
+	public List<ProductInfoCategory> getLgCategory() {
+		
+		return adminProductInfoMapper.getLgCategory();
+	}
+	
 	// 카테고리코드로 스펙 목록 조회 (모델별/상세스펙 등록)
 	@Override
 	public List<ProductInfoCategorySpec> getSpecListByCategoryNo(String categoryNo) {

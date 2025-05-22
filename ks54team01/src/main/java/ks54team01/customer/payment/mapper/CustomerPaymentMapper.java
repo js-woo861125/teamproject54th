@@ -5,10 +5,19 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import ks54team01.customer.payment.domain.CustomerDelivery;
+import ks54team01.customer.payment.domain.CustomerDeliveryInfo;
 import ks54team01.customer.payment.domain.CustomerPayment;
 
 @Mapper
 public interface CustomerPaymentMapper {
+
+	void removeDeliveryInfo(String paymentCompletedNo);
+	
+	int addDeliveryInfo(CustomerDeliveryInfo customerDeliveryInfo);
+	
+	String getPaymentKeyByOrderId(String orderId);
+
+    void modifyPaymentStatus(String orderId,String paymentStatus);
 	
 	void modifyQuantity( Integer orderQuantity, String prodNo, String entCeoNo);
 	

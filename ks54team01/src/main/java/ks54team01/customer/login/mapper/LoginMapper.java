@@ -1,7 +1,9 @@
 package ks54team01.customer.login.mapper;
 
+
 import org.apache.ibatis.annotations.Mapper;
 
+import ks54team01.customer.member.domain.CommonMember;
 import ks54team01.customer.member.domain.CustomerMember;
 import ks54team01.customer.member.domain.EntMember;
 
@@ -16,8 +18,8 @@ public interface LoginMapper {
 	// 개인고객정보 조회
 	CustomerMember getCustomerMemberInfoById(String memberId);
 	
-	// 고객공통정보 조회 
-	String getMemberTypeById(String memberId);
+	// 회원 조회(로그인, 탈퇴) 
+	CommonMember getMemberInfoById(String memberId);
 	 
 		
 }
