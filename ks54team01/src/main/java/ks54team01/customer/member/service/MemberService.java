@@ -25,9 +25,4 @@ public interface MemberService {
 	// 비밀번호 일치여부 체크
 	boolean isPwCheck(String memberId, String memberPw);
 
-
-
-	
-
-
 }

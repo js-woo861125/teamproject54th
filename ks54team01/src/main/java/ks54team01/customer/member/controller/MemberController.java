@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
-import ks54team01.customer.member.domain.CommonMember;
 import ks54team01.customer.member.domain.CustomerMember;
 import ks54team01.customer.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -54,11 +53,9 @@ public class MemberController {
 	                                         HttpSession session) {
 		
 		
-		log.info("탈퇴 요청회원 아이디: {}, 비밀번호: {}", memberId, memberPw);
+		log.info("탈퇴 요청회원: {}, 비밀번호: {}", memberId, memberPw);
 		
 	    Map<String, Object> resultMap = new HashMap<>();
-
-	    
 	    
 	    
 	    boolean isMatched = memberService.isPwCheck(memberId, memberPw);
@@ -73,19 +70,17 @@ public class MemberController {
 	    boolean checkStatus = memberService.checkStatus(memberId);
 	    if (checkStatus) {
 	    	resultMap.put("status", "in_progress_order");
+	    	log.info("처리중 조회 결과: {}", checkStatus);
 	        return resultMap;
 	    }
-	    log.info("처리중 조회 결과: {}", checkStatus);
 	    
-		
-		// 탈퇴 처리 
-	    CommonMember member = (CommonMember) session.getAttribute("loginMember");
-	    String memberType = member.getMemberType();
-	    String memberIdFromSession = member.getMemberId();
+	    // 세션에서 정보 꺼내오기
+	    String memberType = (String) session.getAttribute("memberType");
+	    Object loginMemberObj = session.getAttribute("loginMember");
 	    
 	    boolean customerLeave = memberService.customerLeave(memberType, memberId);
 		resultMap.put("status", customerLeave ? "success" : "fail");
-		log.info("탈퇴 성공 아이디: {}, 유형: {}", memberIdFromSession, memberType);
+		log.info("탈퇴 성공: {}", loginMemberObj);
 
 	    return resultMap;
 	}
@@ -94,13 +89,15 @@ public class MemberController {
 	@GetMapping("/customerLeave")
 	public String getcustomerLeave(HttpSession session, Model model) {
 		
-		CommonMember loginMember  = (CommonMember) session.getAttribute("loginMember");
+		Object loginMember = session.getAttribute("loginMember");
 
 	    if (loginMember == null) {
 	        return "redirect:/customer/login/memberLogin";
 	    }
 
-	    model.addAttribute("memberId", loginMember .getMemberId());
+	    CustomerMember memberInfo = (CustomerMember) loginMember;
+	    
+	    model.addAttribute("memberId", memberInfo.getMemberId());
 		model.addAttribute("title", "회원탈퇴");
 		
 		return "customer/myPage/customerLeaveView";
@@ -113,12 +110,15 @@ public class MemberController {
 	                              HttpSession session,
 	                              RedirectAttributes redirectAttributes) {
 
-	    Object loginObj = session.getAttribute("loginMember");
-	    if (loginObj == null || !(loginObj instanceof CommonMember)) {
-	        return "redirect:/customer/login/memberLogin";
+		Object loginMember = session.getAttribute("loginMember");
+		
+	    if (loginMember == null || !(loginMember instanceof CustomerMember)) {
+	        return "redirect:/customer/login/memberLogin"; 
 	    }
 
-	    String loginId = ((CommonMember) loginObj).getMemberId();
+	    CustomerMember memberInfo = (CustomerMember) loginMember;
+	    String loginId = memberInfo.getMemberId();
+	    
 	    modifyMember.setMemberId(loginId);
 
 	    log.info("회원수정 시작: {}", loginId);
@@ -152,15 +152,15 @@ public class MemberController {
 		model.addAttribute("title", "내 프로필");
 		
 		Object loginObj = session.getAttribute("loginMember");
-	    if (loginObj == null || !(loginObj instanceof CommonMember)) {
-	        
+		
+	    if (loginObj == null || !(loginObj instanceof CustomerMember)) {
 	        return "redirect:/customer/login/memberLogin"; 
 	    }
 	    
-	    String loginId = ((CommonMember) loginObj).getMemberId();
+	    CustomerMember memberInfo = (CustomerMember) loginObj;
+	    String loginId = memberInfo.getMemberId();
 	    
-	    CustomerMember memberInfo = memberService.getCustomerInfoById(loginId);
-	    log.info("개인고객정보 :{}", memberInfo);
+	    log.info("회원정보 :{}", memberInfo);
 	    
 	    String custPhone = memberInfo.getCustPhone();
 	    String custEmail = memberInfo.getCustEmail();

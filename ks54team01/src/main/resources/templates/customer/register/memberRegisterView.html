@@ -11,6 +11,81 @@
 	
 	</th:block>
 	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+       <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a th:href="@{#}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                    <span></span> Pages <span></span> My Account
+                </div>
+            </div>
+        </div>
+        <div class="page-content pt-150 pb-150">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-10 col-md-12 m-auto">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-6 col-md-8">
+                                <div class="login_wrap widget-taber-content background-white">
+                                    <div class="padding_eight_all bg-white">
+                                        <div class="heading_s1">
+                                            <h1 class="mb-5" th:text="${title}"></h1>
+                                            <p class="mb-30">이미 회원이신가요? <a href="page-login.html">로그인</a></p>
+                                        </div>
+                                        <form id="memberRegisterForm" th:action="@{/customer/register/memberRegister}" method="post"> 
+                                        	 <!-- 아이디 입력 및 중복 확인 -->                                        
+                                            <div class="form-group d-flex">
+                                            	<input type="hidden" id="isIdChecked" value="false" />
+                                                <input type="text" id="memberId" name="memberId" placeholder="아이디(6-12자 이내, 영문/숫자 사용 가능)" value="corpcustid5" required />
+                                                <button type="button" id="idCheckBtn" class="btn btn-heading btn-block p-10 ml-10" style="width:70px;">중복확인</button>
+                                            </div>     
+                                            <!-- 비밀번호 입력 -->      
+                                            <div class="form-group">
+	                                        	<input type="password" id="memberPw" name="memberPw" placeholder="비밀번호(8자 이상, 특수문자 포함)" value="111111!!" readonly required />
+												<small id="pwFeedback" style="color:red;"></small>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="password" id="memberPwConfirm" name="memberPwConfirm" placeholder="비밀번호 확인"  value="111111!!" readonly required />
+                                                <span id="passwordMatchMessage"></span>
+                                            </div>
+                                        	<!-- 회원 유형 선택 -->
+                                            <div class="custome-radio type-radio d-flex justify-content-evenly mb-30">
+                                                <div class="custome-radio">
+												    <input class="form-check-input" type="radio" id="memberTypeCustomer" name="memberType" value="customer" checked="checked" required />
+												    <label class="form-check-label" for="memberTypeCustomer">일반/기업회원</label>
+												</div>
+												<div class="custome-radio">
+												    <input class="form-check-input" type="radio" id="memberTypeEnt" name="memberType" value="입점업체 대표" required />
+												    <label class="form-check-label" for="memberTypeEnt">입점업체</label>
+												</div>
+                                            </div>
+                                            <!-- 약관 동의 -->
+                                            <div class="login_footer form-group justify-content-end">
+                                                <div class="chek-form">
+                                                    <div class="custome-checkbox">
+                                                        <input class="form-check-input" type="checkbox" id="agreeCheckbox" name="agreeCheckbox"  value="agree" required />
+                                                        <label class="form-check-label mr-10" for="agreeCheckbox"><span>약관 동의</span></label>
+                                                    </div>
+                                                </div>
+                                                <a th:href="@{#}"><i class="fi-rs-book-alt mr-5 text-muted"></i>자세히 보기</a>
+                                            </div>
+                                            <!-- 다음 버튼 -->
+                                            <div class="form-group">
+                                                <button type="submit" id="goNextBtn" name="goNextBtn" class="btn btn-heading btn-block hover-up">다음</button>
+                                            </div>
+                                            <p class="font-xs text-muted"><strong>참고:</strong>귀하의 개인 데이터는 이 웹사이트 전체에서 귀하의 경험을 지원하고, 귀하의 계정에 대한 액세스를 관리하고, 당사의 개인 정보 보호 정책에 설명된 기타 목적을 위해 사용됩니다.</p>
+                                        </form>
+                                    </div>
+                                </div> 
+                            </div>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</th:block>
 	<th:block layout:fragment="jsScript">
 		<script>
 			/**
@@ -152,82 +227,6 @@
 			    }
 			});
 		</script>
-	</th:block>
-	
-	<!-- 페이지 삽입공간 -->
-	<th:block layout:fragment="customContents">
-       <div class="page-header breadcrumb-wrap">
-            <div class="container">
-                <div class="breadcrumb">
-                    <a th:href="@{#}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
-                    <span></span> Pages <span></span> My Account
-                </div>
-            </div>
-        </div>
-        <div class="page-content pt-150 pb-150">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-8 col-lg-10 col-md-12 m-auto">
-                        <div class="row justify-content-center">
-                            <div class="col-lg-6 col-md-8">
-                                <div class="login_wrap widget-taber-content background-white">
-                                    <div class="padding_eight_all bg-white">
-                                        <div class="heading_s1">
-                                            <h1 class="mb-5" th:text="${title}"></h1>
-                                            <p class="mb-30">이미 회원이신가요? <a href="page-login.html">로그인</a></p>
-                                        </div>
-                                        <form id="memberRegisterForm" th:action="@{/customer/register/memberRegister}" method="post"> 
-                                        	 <!-- 아이디 입력 및 중복 확인 -->                                        
-                                            <div class="form-group d-flex">
-                                            	<input type="hidden" id="isIdChecked" value="false" />
-                                                <input type="text" id="memberId" name="memberId" placeholder="아이디(6-12자 이내, 영문/숫자 사용 가능)" value="corpcustid5" required />
-                                                <button type="button" id="idCheckBtn" class="btn btn-heading btn-block p-10 ml-10" style="width:70px;">중복확인</button>
-                                            </div>     
-                                            <!-- 비밀번호 입력 -->      
-                                            <div class="form-group">
-	                                        	<input type="password" id="memberPw" name="memberPw" placeholder="비밀번호(8자 이상, 특수문자 포함)" value="111111!!" readonly required />
-												<small id="pwFeedback" style="color:red;"></small>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="password" id="memberPwConfirm" name="memberPwConfirm" placeholder="비밀번호 확인"  value="111111!!" readonly required />
-                                                <span id="passwordMatchMessage"></span>
-                                            </div>
-                                        	<!-- 회원 유형 선택 -->
-                                            <div class="custome-radio type-radio d-flex justify-content-evenly mb-30">
-                                                <div class="custome-radio">
-												    <input class="form-check-input" type="radio" id="memberTypeCustomer" name="memberType" value="customer" checked="checked" required />
-												    <label class="form-check-label" for="memberTypeCustomer">일반/기업회원</label>
-												</div>
-												<div class="custome-radio">
-												    <input class="form-check-input" type="radio" id="memberTypeEnt" name="memberType" value="입점업체 대표" required />
-												    <label class="form-check-label" for="memberTypeEnt">입점업체</label>
-												</div>
-                                            </div>
-                                            <!-- 약관 동의 -->
-                                            <div class="login_footer form-group justify-content-end">
-                                                <div class="chek-form">
-                                                    <div class="custome-checkbox">
-                                                        <input class="form-check-input" type="checkbox" id="agreeCheckbox" name="agreeCheckbox"  value="agree" required />
-                                                        <label class="form-check-label mr-10" for="agreeCheckbox"><span>약관 동의</span></label>
-                                                    </div>
-                                                </div>
-                                                <a th:href="@{#}"><i class="fi-rs-book-alt mr-5 text-muted"></i>자세히 보기</a>
-                                            </div>
-                                            <!-- 다음 버튼 -->
-                                            <div class="form-group">
-                                                <button type="submit" id="goNextBtn" name="goNextBtn" class="btn btn-heading btn-block hover-up">다음</button>
-                                            </div>
-                                            <p class="font-xs text-muted"><strong>참고:</strong>귀하의 개인 데이터는 이 웹사이트 전체에서 귀하의 경험을 지원하고, 귀하의 계정에 대한 액세스를 관리하고, 당사의 개인 정보 보호 정책에 설명된 기타 목적을 위해 사용됩니다.</p>
-                                        </form>
-                                    </div>
-                                </div> 
-                            </div>
-                        
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 	</th:block>
 	
 </html>
