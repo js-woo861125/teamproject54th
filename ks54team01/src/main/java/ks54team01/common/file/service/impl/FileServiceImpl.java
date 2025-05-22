@@ -23,10 +23,12 @@ public class FileServiceImpl implements FileService {
 	
 
 	@Override
-	public void deleteFiles(String refId, String fileType) {
-		fileMapper.deleteFilesByRefIdAndType(refId, fileType);
+	public void deleteFiles(String fileIdx) {
+		fileMapper.deleteFiles(fileIdx);
+		
 	}
 	
+
 	
 	@Override
 	public List<FileMetaData> getFileList(String refId, String fileType) {

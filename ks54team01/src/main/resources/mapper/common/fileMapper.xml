@@ -82,15 +82,12 @@
         	</foreach>
    	</insert>
    	
-   	<delete id="deleteFiles" >
+   	<delete id="deleteFiles" parameterType="string">
     DELETE 
     FROM 
     	files 
     WHERE 
-    	ref_id = #{refId} 
-    AND 
-    	file_type = #{fileType}
+    	file_idx = #{fileIdx}
 	</delete>
-   	
-   		
+ 
 </mapper>

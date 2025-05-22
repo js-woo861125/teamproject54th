@@ -57,7 +57,7 @@ public class FileController {
 		FileMetaData fileMetaData = fileMapper.getFileInfoByIdx(fileIdx);
 		
 		String osName = System.getProperty("os.name").toLowerCase();
-		String rootFilePath = osName.contains("win") ? "d:" + fileRealPath : fileRealPath;
+		String rootFilePath = osName.contains("win") ? "c:" + fileRealPath : fileRealPath;
 		
 		Path filePath = Paths.get(rootFilePath, fileMetaData.getFilePath());
 		Resource resource;
@@ -106,4 +106,5 @@ public class FileController {
 		
 		return "admin/file/fileUpload";
 	}
+ 
 }
