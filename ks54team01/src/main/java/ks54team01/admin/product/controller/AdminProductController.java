@@ -57,13 +57,10 @@ public class AdminProductController {
 	    List<ProductInfoItem> itemList = adminProductService.loadItemList(product.getCategoryNo());
 	    List<ProductInfoBrand> brandList = adminProductService.loadBrandList(product.getCategoryNo(), product.getItemNo());
 	    List<ProductInfoModel> modelList = adminProductService.loadModelList(product.getCategoryNo(), product.getItemNo(), product.getBrandNo());
-	    List<FileMetaData> mainImageList = fileService.getFileList(productNo, "mainImage");
-	    List<FileMetaData> thumbnailList = fileService.getFileList(productNo, "thumbnail");
+	    List<FileMetaData> mainImageList = fileService.getFileList(product.getModelNo(), "mainImage");
+	    List<FileMetaData> thumbnailList = fileService.getFileList(product.getModelNo(), "thumbnail");
 	    List<AdminProductSpecContent> specContentList = adminProductMapper.loadSpecContent(product.getModelNo());
 	    
-	   
-	    System.out.println("categoryNo=" + product.getCategoryNo() + ", itemNo=" + product.getItemNo());
-	    System.out.println("brandList size=" + brandList.size());
 	    
 	    model.addAttribute("titlt", "상품수정");
 	    model.addAttribute("product", product);
@@ -83,9 +80,10 @@ public class AdminProductController {
 	public String modifyProduct(
 	    AdminProduct product,
 	    @RequestParam(value = "mainImage", required = false) MultipartFile[] mainImage,
-	    @RequestParam(value = "thumbnails", required = false) MultipartFile[] thumbnails) {
+	    @RequestParam(value = "thumbnails", required = false) MultipartFile[] thumbnails,
+	    @RequestParam(value = "deleteFileIdxs", required = false) String deleteFileIdxs) {
 
-		adminProductService.modifyProduct(product, mainImage, thumbnails);
+		adminProductService.modifyProduct(product, mainImage, thumbnails, deleteFileIdxs);
 		
 	    return "redirect:/admin/product/productList";
 	}
@@ -154,7 +152,7 @@ public class AdminProductController {
 		
 		return response;
 	}
-	
+
 	
 	@GetMapping("/categoryList")
 	@ResponseBody
@@ -189,7 +187,7 @@ public class AdminProductController {
 	    return adminProductMapper.loadSpecContent(modelNo);
 	}
 	
-
+	
 	
 	
 }

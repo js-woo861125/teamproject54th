@@ -31,25 +31,40 @@ public class AdminProductServiceImpl implements AdminProductService{
 		private final FileServiceImpl fileServiceImpl;	
 		private final AdminProductMapper adminProductMapper;
 		private final FileService fileService;
-
+		
+		
 		@Override
-		public void modifyProduct(AdminProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails) {
+		public List<AdminProduct> getSearchProduct(String searchKey, String searchValue) {
+		switch (searchKey) {
+		
+		
+		}
+		return null;
+		}
+		
+		
+		
+		@Override
+		public void modifyProduct(AdminProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails, String deleteFileIdxs) {
 		 
 		    adminProductMapper.modifyProduct(product);
 
-		    // 수정시 사진 변경있다면 기존 데이터 삭제
-		    if (mainImage != null && mainImage.length > 0 && !mainImage[0].isEmpty()) {
-		        
-		        fileService.deleteFiles(product.getProductNo(), "mainImage");
-		      
-		        fileService.addFiles(mainImage, "mainImage", product.getProductNo());
+
+		    if (deleteFileIdxs != null && !deleteFileIdxs.isEmpty()) {
+		        String[] idxArr = deleteFileIdxs.split(",");
+		        for (String idx : idxArr) {
+		            fileService.deleteFiles(idx); // 실제 row 삭제
+		        }
 		    }
-		   
+
+
+		    if (mainImage != null && mainImage.length > 0 && !mainImage[0].isEmpty()) {
+		        fileService.addFiles(mainImage, "mainImage", product.getModelNo());
+		    }
+
+
 		    if (thumbnails != null && thumbnails.length > 0 && !thumbnails[0].isEmpty()) {
-		      
-		        fileService.deleteFiles(product.getProductNo(), "thumbnail");
-		       
-		        fileService.addFiles(thumbnails, "thumbnail", product.getProductNo());
+		        fileService.addFiles(thumbnails, "thumbnail", product.getModelNo());
 		    }
 		}
 		
@@ -114,7 +129,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 	        adminProductMapper.insertProduct(product);
 	
 	        //  파일 메타데이터 DB에 등록   
-	        fileService.addFiles(mainImage, "main", product.getModelNo());
+	        fileService.addFiles(mainImage, "mainImage", product.getModelNo());
 	        fileService.addFiles(thumbnails, "thumbnail", product.getModelNo());
 		}
 }

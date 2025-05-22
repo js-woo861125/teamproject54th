@@ -72,7 +72,7 @@ public class AdminEntController {
 		return "admin/enterprise/enterpriseListView";
 	}
 	
-	// 팝업검색
+	// 검색
 	@GetMapping("/searchPopupEnt")
 	public String searchPopupEnt(@RequestParam(name="searchKey", required = false, defaultValue = "ceoCode") String searchKey,
 								@RequestParam(name="searchValue", required = false) String searchValue,

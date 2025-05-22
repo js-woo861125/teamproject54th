@@ -14,14 +14,18 @@ import ks54team01.admin.productInfo.domain.ProductInfoItem;
 import ks54team01.admin.productInfo.domain.ProductInfoModel;
 
 public interface AdminProductService {
-
+	
+	// 상품 검색 조회
+	List<AdminProduct> getSearchProduct(String searchKey, String searchValue);
+	
+	
 	// 상품 목록 조회
 	public List<AdminProduct> getProductList();
 	
 	AdminProduct getProduct(String productNo);
 
 	// 상품 수정
-	void modifyProduct(AdminProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails);
+	void modifyProduct(AdminProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails, String deleteFileIdxs);
 	
 	// 상품 등록
 	public void addProduct(AdminAddProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails);
