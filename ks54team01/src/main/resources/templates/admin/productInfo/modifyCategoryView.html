@@ -92,44 +92,27 @@
 
 								<!-- 수정 영역 -->
 								<div class="row mb-4">
-									<label class="form-label fs-6" for="lgCategoryNo">대분류코드</label>
-									<input type="text" id="lgCategoryNo" name="lgCategoryNo" th:value="*{lgCategoryNo}" 
-										   class="form-control" placeholder="대분류코드를 입력해주세요" />
-								</div>
-								<div class="row mb-4">
-									<label class="form-label fs-6" for="lgCategory">대분류</label>
+	                                <label class="form-label fs-6" for="lgCategory">대분류</label>
 									<input type="text" id="lgCategory" name="lgCategory" th:value="*{lgCategory}" 
 										   class="form-control" placeholder="대분류를 입력해주세요" />
+	                            </div>
+								<div class="row mb-4">
+									<label class="form-label fs-6" for="lgCategoryNo">대분류코드</label>
+									<input type="text" id="lgCategoryNo" name="lgCategoryNo" th:value="*{lgCategoryNo}" class="form-control" readonly/>
 								</div>
 								<div class="row mb-4">
-									<label class="form-label fs-6" for="mdCategoryNo">중분류코드</label>
-									<input type="text" id="mdCategoryNo" name="mdCategoryNo" th:value="*{mdCategoryNo}" 
-										   class="form-control" placeholder="중분류코드를 입력해주세요" />
-								</div>
-								<div class="row mb-4">
-									<label class="form-label fs-6" for="mdCategory">중분류</label>
+	                                <label class="form-label fs-6" for="mdCategory">중분류</label>
 									<input type="text" id="mdCategory" name="mdCategory" th:value="*{mdCategory}" 
 										   class="form-control" placeholder="중분류를 입력해주세요" />
+	                            </div>
+								<div class="row mb-4">
+									<label class="form-label fs-6" for="mdCategoryNo">중분류코드</label>
+									<input type="text" id="mdCategoryNo" name="mdCategoryNo" th:value="*{mdCategoryNo}" class="form-control"readonly/>
 								</div>
 								<div class="row mb-4">
 									<label class="form-label fs-6" for="smCategory">소분류</label>
 									<input type="text" id="smCategory" name="smCategory" th:value="*{smCategory}" 
 										   class="form-control" placeholder="소분류를 입력해주세요" />
-								</div>
-								
-								<!-- 사용유무 -->
-								<div class="mb-4">
-									<label class="form-label fs-6">사용유무</label>
-									<div class="form-check">
-										<input class="form-check-input" type="radio" id="useStatusY" name="useStatus" value="사용중"
-											   th:checked="*{useStatus} == '사용중'" />
-										<label class="form-check-label" for="useStatusY">사용중</label>
-									</div>
-									<div class="form-check">
-										<input class="form-check-input" type="radio" id="useStatusN" name="useStatus" value="사용불가"
-											   th:checked="*{useStatus} == '사용불가'" />
-										<label class="form-check-label" for="useStatusN">사용불가</label>
-									</div>
 								</div>
 								<br />
 								<!-- 버튼 -->
