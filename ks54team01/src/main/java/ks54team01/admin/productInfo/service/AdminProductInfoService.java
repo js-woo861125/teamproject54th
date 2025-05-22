@@ -34,6 +34,14 @@ public interface AdminProductInfoService {
 	/**
 	 * 상품정보 삭제
 	 */
+	// 모델별/상세스펙 삭제
+	boolean removeModelSpecSpecInfoByNo(String modelSpecNo);	
+	// 카테고리별/상세스펙 삭제
+	boolean removeCategorySpecInfoByNo(String specNo);	
+	// 전체혜택 삭제
+	boolean removeBenefitInfoByNo(String benefitNo);	
+	// 모델 삭제
+	boolean removeModelInfoByNo(String modelNo);
 	// 품목 삭제
 	boolean removeItemInfoByNo(String itemNo);	
 	// 브랜드 삭제
@@ -118,6 +126,10 @@ public interface AdminProductInfoService {
 	/**
 	 * 상품정보 목록 조회
 	 */
+	// 등록되어있는 카테고리 중분류 목록 조회(카테고리 등록)
+	List<ProductInfoCategory> getMdCategory();
+	// 등록되어있는 카테고리 대분류 목록 조회(카테고리 등록)
+	List<ProductInfoCategory> getLgCategory();
 	// 카테고리코드로 스펙 목록 조회 (모델별/상세스펙 등록)
 	List<ProductInfoCategorySpec> getSpecListByCategoryNo(String categoryNo);
 	// 카테고리코드로 품목 목록 조회 (모델 등록)

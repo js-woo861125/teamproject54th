@@ -1,6 +1,7 @@
 package ks54team01.admin.productInfo.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.stereotype.Controller;
@@ -131,6 +132,46 @@ public class AdminProductInfoController {
 	/**
 	 * 상품정보 삭제
 	 */
+	@PostMapping("/removeModelSpec")
+	@ResponseBody
+	public boolean removeModelSpec(String modelSpecNo) {
+		log.info("삭제 할 모델스펙코드 : {}", modelSpecNo);
+		
+		boolean isDel = adminProductInfoService.removeModelSpecSpecInfoByNo(modelSpecNo);
+		
+		return isDel;
+	}	
+	
+	@PostMapping("/removeCategorySpec")
+	@ResponseBody
+	public boolean removeCategorySpec(String specNo) {
+		log.info("삭제 할 스펙코드 : {}", specNo);
+		
+		boolean isDel = adminProductInfoService.removeCategorySpecInfoByNo(specNo);
+		
+		return isDel;
+	}	
+	
+	@PostMapping("/removeBenefit")
+	@ResponseBody
+	public boolean removeBenefit(String benefitNo) {
+		log.info("삭제 할 혜택코드 : {}", benefitNo);
+		
+		boolean isDel = adminProductInfoService.removeBenefitInfoByNo(benefitNo);
+		
+		return isDel;
+	}	
+	
+	@PostMapping("/removeModel")
+	@ResponseBody
+	public boolean removeModel(String modelNo) {
+		log.info("삭제 할 모델코드 : {}", modelNo);
+		
+		boolean isDel = adminProductInfoService.removeModelInfoByNo(modelNo);
+		
+		return isDel;
+	}
+	
 	@PostMapping("/removeItem")
 	@ResponseBody
 	public boolean removeItem(String itemNo) {
@@ -423,9 +464,11 @@ public class AdminProductInfoController {
 	public String modifyCategory(String categoryNo, Model model) {		
 		
 		ProductInfoCategory categoryInfo = adminProductInfoService.getCategoryInfoByNo(categoryNo);
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
 		
 		model.addAttribute("title", "카테고리 수정");
 		model.addAttribute("categoryInfo", categoryInfo);
+		model.addAttribute("categoryList", categoryList);
 		
 		return "admin/productInfo/modifyCategoryView";
 	}
@@ -686,6 +729,8 @@ public class AdminProductInfoController {
 	public String addCategory(Model model) {
 		
 		model.addAttribute("title", "카테고리 등록");
+		model.addAttribute("lgCategoryList", adminProductInfoService.getLgCategory());
+		model.addAttribute("mdCategoryList", adminProductInfoService.getMdCategory());
 		
 		return "admin/productInfo/addCategoryView";
 	}

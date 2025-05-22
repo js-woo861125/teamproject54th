@@ -8,6 +8,11 @@
 	</th:block>
 	
 	<th:block layout:fragment="jsScript">
+		<!-- 사용유무 변경 -->
+		<script>
+		
+		</script>
+	
 		<!-- 브랜드 삭제 -->
 		<script>
 			$('.remove-btn').click(e => {
@@ -52,6 +57,7 @@
 	    </div>
 		<div class="card mb-4 col-12">
 			<header class="card-header">
+				<!-- 검색 기능 -->
 				<form th:action="@{/admin/productInfo/searchBrand}" method="get">
 					<div class="row gx-3">
 	                   <div class="col-lg-2 col-md-3 col-12">
@@ -105,9 +111,14 @@
 	                                        <td th:text="${l.brandNo}">brand_1</td>
 	                                        <td th:text="${l.brandName}">삼성</td>
 	                                        <td>
-	                                            <span class="badge rounded-pill"
-	                                                  th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'"
-	                                                  th:text="${l.useStatus}">사용중</span>
+	                                        	<div class="d-flex align-items-center justify-content-center gap-2">
+	                                        		<div class="form-check form-switch m-0">
+	                                        			<input class="form-check-input toggle-use-status" type="checkbox" th:checked="${l.useStatus == '사용중'}" th:data-brand-no="${l.brandNo}" />
+													</div>
+		                                            <span class="badge rounded-pill"
+		                                                  th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'"
+		                                                  th:text="${l.useStatus}">사용중</span>
+	                                        	</div>          
 	                                        </td>
 	                                        <td th:text="${l.brandRegDate}">2023-01-01 10:00:00</td>
 	                                        <td th:text="${l.brandRevDate}">2023-01-01 10:00:00</td>
