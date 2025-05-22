@@ -4,18 +4,18 @@
 	layout:decorate="~{admin/layout/default}">
 <!-- head 삽입공간 -->
 <head>
-		<style type="text/css">
-			.ck-editor__editable[role="textbox"] {
-			    min-height: 300px;
-		    }
-			
-			.ck-content .image {
-			  max-width: 80%;
-			  margin: 20px auto;
-			}
-		</style>
-		
-	</head>
+<style type="text/css">
+.ck-editor__editable[role="textbox"] {
+	min-height: 300px;
+}
+
+.ck-content .image {
+	max-width: 80%;
+	margin: 20px auto;
+}
+</style>
+
+</head>
 
 
 <th:block layout:fragment="jsFile">
@@ -198,22 +198,42 @@
 		  });
 
 	  });
-	
+	let deleteFileIdxArr = []; // 삭제할 fileIdx 모음
+
+	// 대표 이미지 X
+	$(document).on('click', '.delete-db-img1', function(){
+	    const fileIdx = $(this).data('file-idx');
+	    deleteFileIdxArr.push(fileIdx);
+	    $('#deleteFileIdxs').val(deleteFileIdxArr.join(','));
+	    $(this).closest('.img-box1').remove();
+	});
+
+	// 썸네일 X
+	$(document).on('click', '.delete-db-img2', function(){
+	    const fileIdx = $(this).data('file-idx');
+	    deleteFileIdxArr.push(fileIdx);
+	    $('#deleteFileIdxs').val(deleteFileIdxArr.join(','));
+	    $(this).closest('.img-box2').remove();
+	});
 	
 	// 대표사진 미리보기
 	$('#mainImage').change(function(){
-	    $('#mainImagePreview').empty();
-	    const files = this.files;
-	    if (files.length > 0) {
-	        const reader = new FileReader();
-	        reader.onload = function (e) {
-	            const img = $('<img />', {src: e.target.result, alt: '대표사진'});
-	            $('#mainImagePreview').append(img);
-	        }
-	        reader.readAsDataURL(files[0]);
-	    }
+    $('#mainImagePreview').empty();
+    const files = this.files;
+    if (files.length > 0) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            // img-box1으로 감싸줌
+            const div = $('<div class="img-box1"></div>');
+            const img = $('<img />', {src: e.target.result, alt: '대표사진'});
+            // 대표사진은 한 장만이므로 lastModified 속성을 data-remove-key로 사용
+            const span = $('<span class="delete-img1" data-remove-key="' + files[0].lastModified + '">X</span>');
+            div.append(img).append(span);
+            $('#mainImagePreview').append(div);
+        }
+        reader.readAsDataURL(files[0]);
+    }
 	});
-	
  // 썸네일 미리보기 & 삭제
    	$('#thumbnails').change(function(){
    	    $('#previewThumnail').empty();
@@ -245,22 +265,16 @@
    	    });
    	});
 
-   	// X버튼 클릭 시 썸네일 파일 삭제
-   	$(document).on('click', '.delete-img1', function(){
-   	    const input = document.getElementById('files1');
-   	    const files = input.files;
-   	    const dataTransfer = new DataTransfer();
-   	    const removeTargetId = $(this).attr('data-remove-key');
-   	    Array.from(files)
-   	        .filter(file => file.lastModified != removeTargetId)
-   	        .forEach(file => dataTransfer.items.add(file));
-   	    input.files = dataTransfer.files;
-   	    $(this).closest('.img-box1').remove();
-   	});
+   	// X버튼 클릭 시 메인 파일 삭제
+	 $(document).on('click', '.delete-img1', function(){
+	    const input = document.getElementById('mainImage');
+	    input.value = ""; // 파일 선택창 비움
+	    $(this).closest('.img-box1').remove(); // 미리보기 영역 삭제
+	});
 
-   	// X버튼 클릭 시 상세 이미지 파일 삭제
+   	// X버튼 클릭 시 썸네일 파일 삭제
    	$(document).on('click', '.delete-img2', function(){
-   	    const input = document.getElementById('files2');
+   	    const input = document.getElementById('thumbnails');
    	    const files = input.files;
    	    const dataTransfer = new DataTransfer();
    	    const removeTargetId = $(this).attr('data-remove-key');
@@ -271,7 +285,7 @@
    	    $(this).closest('.img-box2').remove();
    	});
    		
-   	$(document).ready(function(){
+
 
    	    // ========== [1] 카테고리 셀렉트 옵션이 없으면 최초 AJAX로 채움 ==========
    	 $(document).ready(function(){
@@ -398,15 +412,16 @@
    	            });
    	        }
    	    }); 
-   	});
+
 
 		
    	</script>
 </th:block>
 <th:block layout:fragment="content">
 	<form class="user" th:action="@{/admin/product/modifyProduct}"
-				method="post" enctype="multipart/form-data">
-				<input type="hidden" name="productNo" th:value="${product.productNo}" />
+		method="post" enctype="multipart/form-data">
+		<input type="hidden" name="productNo" th:value="${product.productNo}" />
+		<input type="hidden" name="deleteFileIdxs" id="deleteFileIdxs" value="" />
 		<div class="row">
 			<div class="col-9">
 				<div class="content-header">
@@ -428,13 +443,13 @@
 						<div class="row">
 							<div class="col-lg-10">
 								<div class="mb-4">
-									<label class="form-label">카테고리</label> 
-									<select name="categoryNo" class="form-select" id="categorySelect">
-									<option value="">카테고리 선택</option>
-									<option th:each="category : ${categoryList}"
-										th:value="${category.categoryNo}"
-										th:text="${category.lgCategory + ' > ' + category.mdCategory + ' > ' + category.smCategory}"
-										th:selected="${product.categoryNo} == ${category.categoryNo}"></option>
+									<label class="form-label">카테고리</label> <select
+										name="categoryNo" class="form-select" id="categorySelect">
+										<option value="">카테고리 선택</option>
+										<option th:each="category : ${categoryList}"
+											th:value="${category.categoryNo}"
+											th:text="${category.lgCategory + ' > ' + category.mdCategory + ' > ' + category.smCategory}"
+											th:selected="${product.categoryNo} == ${category.categoryNo}"></option>
 									</select>
 								</div>
 							</div>
@@ -443,33 +458,33 @@
 							<div class="col-lg-4">
 								<div class="mb-4">
 									<label class="form-label">품목</label> <select name="itemNo"
-									class="form-select" id="itemSelect">
-									<option value="">품목 선택</option>
-									<option th:each="item : ${itemList}" th:value="${item.itemNo}"
-										th:text="${item.itemName}"
-										th:selected="${product.itemNo} == ${item.itemNo}"></option>
+										class="form-select" id="itemSelect">
+										<option value="">품목 선택</option>
+										<option th:each="item : ${itemList}" th:value="${item.itemNo}"
+											th:text="${item.itemName}"
+											th:selected="${product.itemNo} == ${item.itemNo}"></option>
 									</select>
 								</div>
 							</div>
 							<div class="col-lg-4">
 								<div class="mb-4">
 									<label class="form-label">브랜드</label> <select name="brandNo"
-									class="form-select" id="brandSelect">
-									<option value="">브랜드 선택</option>
-									<option th:each="brand : ${brandList}"
-										th:value="${brand.brandNo}" th:text="${brand.brandName}"
-										th:selected="${product.brandNo} == ${brand.brandNo}"></option>
+										class="form-select" id="brandSelect">
+										<option value="">브랜드 선택</option>
+										<option th:each="brand : ${brandList}"
+											th:value="${brand.brandNo}" th:text="${brand.brandName}"
+											th:selected="${product.brandNo} == ${brand.brandNo}"></option>
 									</select>
 								</div>
 							</div>
 						</div>
 						<div class="col-lg-10">
 							<label class="form-label">모델</label> <select name="modelNo"
-									class="form-select" id="modelSelect">
-									<option value="">모델 선택</option>
-									<option th:each="model : ${modelList}"
-										th:value="${model.modelNo}" th:text="${model.modelNm}"
-										th:selected="${product.modelNo} == ${model.modelNo}"></option>
+								class="form-select" id="modelSelect">
+								<option value="">모델 선택</option>
+								<option th:each="model : ${modelList}"
+									th:value="${model.modelNo}" th:text="${model.modelNm}"
+									th:selected="${product.modelNo} == ${model.modelNo}"></option>
 							</select>
 						</div>
 					</div>
@@ -482,27 +497,28 @@
 					<div class="card-body">
 						<div class="row">
 							<div id="specArea" class="mb-3">
-							<div th:if="${#lists.isEmpty(specContentList)}">등록된 상세옵션이
-								없습니다.</div>
-							<div th:each="spec : ${specContentList}">
-								<span th:text="${spec.specNm}"></span>: 
-								<span th:text="${spec.specContent != null ? spec.specContent : '-'}"></span>
+								<div th:if="${#lists.isEmpty(specContentList)}">등록된 상세옵션이
+									없습니다.</div>
+								<div th:each="spec : ${specContentList}">
+									<span th:text="${spec.specNm}"></span>: <span
+										th:text="${spec.specContent != null ? spec.specContent : '-'}"></span>
+								</div>
 							</div>
 						</div>
+						<!-- card end// -->
+						<!-- card end// -->
 					</div>
-					<!-- card end// -->
-					<!-- card end// -->
-				</div>
-				<div class="card-header">
-							<h4>2. 상세페이지 작성</h4>
+					<div class="card-header">
+						<h4>2. 상세페이지 작성</h4>
 						<div class="card-body">
-						<div class="row">
-							<div class="col-12">
-								<textarea id="editor" name="productDetail"  th:utext="${product.productDetail != null ? product.productDetail : ''}"></textarea>
-								
+							<div class="row">
+								<div class="col-12">
+									<textarea id="editor" name="productDetail"
+										th:utext="${product.productDetail != null ? product.productDetail : ''}"></textarea>
+
+								</div>
 							</div>
 						</div>
-					</div>
 						<!-- row.// -->
 
 					</div>
@@ -515,6 +531,13 @@
 					</div>
 					<div class="card-body">
 						<div class="mb-3" id="mainImagePreview"></div>
+						<th:block th:each="img : ${mainImageList}">
+							<div class="img-box1">
+								<img th:src="@{${img.filePath}}" alt="대표이미지">
+								<button type="button" class="delete-db-img1"
+									th:attr="data-file-idx=${img.fileIdx}">X</button>
+							</div>
+						</th:block>
 						<div>
 							<input type="file" id="mainImage" name="mainImage"
 								class="form-control">
@@ -527,12 +550,17 @@
 					</div>
 					<div class="card-body">
 						<div id="previewThumnail" class="mb-2"></div>
-						<div class="input-group">
-							<input type="file" id="thumbnails" name="thumbnails"
-								class="form-control" multiple>
-						</div>
+						<th:block th:each="img : ${thumbnailList}">
+							<div class="img-box2">
+								<img th:src="@{${img.filePath}}" alt="썸네일">
+								<button type="button" class="delete-db-img2"
+									th:attr="data-file-idx=${img.fileIdx}">X</button>
+							</div>
+						</th:block>
 					</div>
-				</div>
+					<input type="file" id="thumbnails" name="thumbnails"
+						class="form-control" multiple>
+				</div>		
 			</div>
 		</div>
 		<button class="btn btn-primary" type="submit">상품등록</button>

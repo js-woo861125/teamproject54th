@@ -61,10 +61,19 @@
             </div>
         </div>
 		<script>
-		 const params = new URLSearchParams(window.location.search);
-		  if (params.get('error') === 'true') {
-		    alert('아이디 또는 비밀번호가 올바르지 않습니다.');
-		  }
+		
+			/**
+		 	 * 아이디 비밀번호 불일치 / 탈퇴회원
+		 	 */	
+		 	const params = new URLSearchParams(window.location.search);
+
+		 	if (params.get('error') === 'true') {
+		 	  alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+		 	}
+
+		 	if (params.get('withdrawn') === 'true') {
+		 	  alert('탈퇴한 회원입니다. 로그인할 수 없습니다.');
+		 	}
 		</script>
 	</th:block>
 	

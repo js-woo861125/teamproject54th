@@ -37,6 +37,14 @@ public interface AdminProductInfoMapper {
 	/**
 	 * 상품정보 삭제
 	 */
+	// 모델별/상세스펙 삭제
+	int removeModelSpecSpecInfoByNo(String modelSpecNo);
+	// 카테고리별/상세스펙 삭제
+	int removeCategorySpecInfoByNo(String specNo);
+	// 전체혜택 삭제
+	int removeBenefitInfoByNo(String benefitNo);
+	// 모델 삭제
+	int removeModelInfoByNo(String modelNo);
 	// 품목 삭제
 	int removeItemInfoByNo(String itemNo);
 	// 브랜드 삭제
@@ -47,19 +55,19 @@ public interface AdminProductInfoMapper {
 	/**
 	 * 상품정보 중복체크
 	 */
-	// 모델+스펙+상세스펙내용 중복체크
+	// 모델별/상세스펙(모델 + 스펙 + 상세스펙내용) 중복체크
 	boolean isSpecContentCheck(Map<String, Object> params);
-	// 카테고리+스펙명 중복체크
+	// 카테고리별/상세스펙(카테고리 + 스펙명) 중복체크
 	boolean isSpecNameCheck(Map<String, Object> params);
-	// 혜택명 중복체크
+	// 전체혜택(혜택명) 중복체크
 	boolean isBenefitNameCheck (String benefitName);
-	// 카테고리+브랜드+품목+모델명 중복체크
+	// 모델(카테고리 + 브랜드 + 품목 + 모델명) 중복체크
 	boolean isModelNameCheck (Map<String, Object> params);
-	// 카테고리+품목명 중복체크
+	// 품목(카테고리 + 품목명) 중복체크
 	boolean isItemNameCheck(Map<String, Object> params);
-	// 브랜드명 중복체크
+	// 브랜드(브랜드명) 중복체크
 	boolean isBrandNameCheck (String brandName);
-	// 대분류+중분류+소분류 중복체크
+	// 카테고리(대분류+중분류+소분류) 중복체크
 	boolean isCategoryCheck (Map<String, Object> params);
 	
 	/**
@@ -125,6 +133,10 @@ public interface AdminProductInfoMapper {
 	List<ProductInfoCategorySpec> getSpecListByCategoryNo(String categoryNo);
 	// 카테고리코드로 품목 목록 조회 (모델 등록)
 	List<ProductInfoItem> getItemListByCategoryNo(String categoryNo);
+	// 등록되어있는 카테고리 중분류 목록 조회 (카테고리 등록)
+	List<ProductInfoCategory> getMdCategory();
+	// 등록되어있는 카테고리 대분류 목록 조회 (카테고리 등록)
+	List<ProductInfoCategory> getLgCategory();
 	// 모델별/상세스펙 목록 조회
 	List<ProductInfoModelSpec> getModelSpecList();
 	// 카테고리별/상세스펙 목록 조회

@@ -9,13 +9,14 @@
 		</div>
 		<nav>
 		    <ul class="menu-aside">
-		        <li class="menu-item border-bottom">
+		    	<!-- 로그인 O 상태 -->
+		        <li class="menu-item border-bottom" th:if="${session.memberId != null}">
 		            <div class="menu-link ">
 		                <img class="img-xs rounded-circle mr-10" th:src="@{/manage/assets/imgs/people/avatar-2.png}" alt="User" />
-		                <span class="text">OOO님</span>
+		                <span th:text="${session.memberId} + '님'">OOO님</span>
 		            </div>
 		        </li>
-		         <li class="menu-item has-submenu">
+		        <li class="menu-item has-submenu">
 		            <a class="menu-link" href="#">
 		                <i class="icon material-icons md-person"></i>
 		                <span class="text">회원관리</span>

@@ -134,7 +134,7 @@
 										<select th:field="*{categoryNo}" class="form-select text-center fs-7" id="categoryNo" name="categoryNo">
 											<option value="">카테고리를 선택해주세요</option>
 											<th:block th:if="${not #lists.isEmpty(categoryList)}" th:each="l : ${categoryList}">
-												<option th:value="${l.categoryNo}" th:text="${l.smCategory}"></option>
+												<option th:value="${l.categoryNo}" th:text="${l.lgCategory + ' > ' + l.mdCategory + ' > ' + l.smCategory}"></option>
 											</th:block>
 										</select>
 									</div>
