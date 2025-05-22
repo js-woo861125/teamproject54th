@@ -126,16 +126,14 @@ public class AdminPaymentController {
 
 		        Map<String, Map<String, Object>> summaryMap = new HashMap<>();
 
-		        // 총계 계산을 위한 변수들 (전체 요약)
-		        // 총계 계산을 위한 변수들 (전체 요약)
-		        long totalPaymentCount = 0L;        // 2. 총 결제 건수 (모든 거래 건수)
-		        long totalCancellationCount = 0L;   // 4. 총 취소 건수 (입점업체 매출 기준)
-		        long totalCancelledAmount = 0L;     // 총 취소 금액 (입점업체 매출 기준 - 이 값은 현재 플랫폼수수료 행에 직접 표시되진 않음)
-		        long totalApprovedAmount = 0L;      // 3. 총 승인 금액 (모든 입점업체 매출의 총 승인 금액)
-		        long totalPlatformFeeCancelledAmount = 0L; // 5. 플랫폼 수수료 취소 금액
+		     // 총계 계산을 위한 변수들 (전체 요약)
+		        long totalPaymentCount = 0L;        // 총 결제 건수 (모든 거래 건수)
+		        long totalCancellationCount = 0L;   // 총 취소 건수 (입점업체 매출 기준)
+		        long totalCancelledAmount = 0L;     // 총 취소 금액 (입점업체 매출 기준)
+		        long totalApprovedAmount = 0L;      // 총 승인 금액 (매출금액 + 플랫폼수수료)
+		        long totalPlatformFeeCancelledAmount = 0L; // 플랫폼 수수료 취소 금액
 		        long totalPlatformFeeAll = 0L; // 모든 거래의 platFormFee 총합 (정상/취소 무관)
 		        long totalNetPlatformFee = 0L; // 플랫폼 수수료 최종 합계 (totalPlatformFeeAll - totalPlatformFeeCancelledAmount)
-		    
 
 		        if (adminFeeList != null) {
 		            for (AdminFee fee : adminFeeList) {
@@ -153,8 +151,8 @@ public class AdminPaymentController {
 
 		                // 각 매출 구분별 집계 초기화 또는 업데이트
 		                currentSummary.put("count", ((Long) currentSummary.getOrDefault("count", 0L)) + 1L); // 총 결제 건수
-		                currentSummary.put("totalEntSales", ((Long) currentSummary.getOrDefault("totalEntSales", 0L)) + entSales); // 총 승인 금액
-		                currentSummary.put("totalPlatformFee", ((Long) currentSummary.getOrDefault("totalPlatformFee", 0L)) + platFormFee); // 이 값은 원래 발생한 수수료 총합 (개별 매출 구분용)
+		                currentSummary.put("totalEntSales", ((Long) currentSummary.getOrDefault("totalEntSales", 0L)) + entSales); // 총 입점업체 순매출 
+		                currentSummary.put("totalPlatformFee", ((Long) currentSummary.getOrDefault("totalPlatformFee", 0L)) + platFormFee); // 매출 구분별 플랫폼 수수료 총합
 
 		                // 각 매출 구분별 취소 정보 초기화 (첫 추가 시)
 		                currentSummary.putIfAbsent("cancellationCount", 0L);
@@ -170,28 +168,31 @@ public class AdminPaymentController {
 		                    totalCancellationCount++;
 		                    totalCancelledAmount += entSales;
 		                    
-		                    // 5. 플랫폼 수수료 취소 금액 업데이트
-		                    totalPlatformFeeCancelledAmount += platFormFee; 
+		                    // 플랫폼 수수료 취소 금액 업데이트
+		                    totalPlatformFeeCancelledAmount += platFormFee;
 		                }
 		                
 		                // 모든 거래의 platFormFee를 무조건 더하여 총합을 계산 (정상/취소 무관)
-		                totalPlatformFeeAll += platFormFee; 
+		                totalPlatformFeeAll += platFormFee;
 
-		                // 2. 전체 총 결제 건수 증가
-		                totalPaymentCount++; 
-		                // 3. 전체 총 승인 금액 증가
-		                totalApprovedAmount += entSales;
+		                // 전체 총 결제 건수 증가
+		                totalPaymentCount++;
+		                // 총 승인 금액 증가: 매출 금액 (entSales) + 플랫폼 수수료 (platFormFee)
+		                totalApprovedAmount += (entSales + platFormFee); // <-- 이 부분이 핵심 변경
 		            }
 		        }
 		        
-		        // 6. 정상 결제 건수 = 총 결제 건수 - 총 취소 건수 (전체)
+		        // 정상 결제 건수 = 총 결제 건수 - 총 취소 건수 (전체)
 		        long totalNormalPaymentCount = totalPaymentCount - totalCancellationCount;
 		        // 정상 결제 금액 = 총 승인 금액 - 총 취소 금액 (전체 - 이 값은 현재 플랫폼수수료 행에 직접 표시되진 않음)
+		        // totalNormalPaymentAmount는 입점업체 매출 기준이므로, 변경된 totalApprovedAmount와 별개로 계산
+		        // 필요하다면 totalNetApprovedAmount = totalApprovedAmount - (취소된 매출 + 취소된 수수료) 등으로 계산해야 합니다.
+		        // 현재는 totalNormalPaymentAmount가 사용되지 않으므로 그대로 둡니다.
 		        long totalNormalPaymentAmount = totalApprovedAmount - totalCancelledAmount;
 
-		        // 최종 플랫폼 수수료 합계 계산
-		        // totalPlatformFeeAll (모든 수수료) - totalPlatformFeeCancelledAmount (취소된 수수료)
-		        totalNetPlatformFee = totalPlatformFeeAll - totalPlatformFeeCancelledAmount; // <-- 이 부분 계산
+
+		        // 최종 플랫폼 수수료 합계 계산: (모든 수수료 총합) - (취소된 수수료 금액)
+		        totalNetPlatformFee = totalPlatformFeeAll - totalPlatformFeeCancelledAmount;
 
 		        List<Map<String, Object>> paymentSummaryList = summaryMap.entrySet().stream()
 		            .map(entry -> {
@@ -205,6 +206,8 @@ public class AdminPaymentController {
 		                long cancelledAmount = (Long) item.getOrDefault("cancelledAmount", 0L);
 
 		                item.put("normalCount", count - cancellationCount);
+		                // 각 매출 구분별 '총 매출' 계산 (정상 매출 + 총 수수료 + 취소 금액)
+		                item.put("totalSales", (totalEntSales - cancelledAmount) + (Long) item.getOrDefault("totalPlatformFee", 0L) + cancelledAmount);
 		                item.put("normalEntSales", totalEntSales - cancelledAmount);
 
 		                return item;
@@ -227,10 +230,11 @@ public class AdminPaymentController {
 		            ", 총 건수: " + summary.get("count") +
 		            ", 취소 건수: " + summary.get("cancellationCount") +
 		            ", 정상 건수: " + summary.get("normalCount") +
-		            ", 총 매출: " + summary.get("totalEntSales") +
+		            ", 순매출: " + summary.get("totalEntSales") + // 기존 '총 매출'
 		            ", 취소 금액: " + summary.get("cancelledAmount") +
 		            ", 정상 매출: " + summary.get("normalEntSales") +
-		            ", 총 수수료: " + summary.get("totalPlatformFee")
+		            ", 총 수수료: " + summary.get("totalPlatformFee") +
+		            ", 수정된 총 매출: " + summary.get("totalSales") // <-- 추가된 '수정된 총 매출'
 		        ));
 		        System.out.println("-------------------------");
 
@@ -240,15 +244,15 @@ public class AdminPaymentController {
 		        model.addAttribute("adminFeeList", adminFeeList); // 뷰에서 상세 내역을 다시 보여줄 때 사용
 
 		        // 총계 변수들을 모델에 추가 (전체 합계용)
-		        model.addAttribute("totalPaymentCount", totalPaymentCount);          // 2. 총 결제 건수
-		        model.addAttribute("totalCancellationCount", totalCancellationCount); // 4. 총 취소 건수
+		        model.addAttribute("totalPaymentCount", totalPaymentCount);          // 총 결제 건수
+		        model.addAttribute("totalCancellationCount", totalCancellationCount); // 총 취소 건수
 		        model.addAttribute("totalCancelledAmount", totalCancelledAmount);     // 입점업체 매출 기준 총 취소 금액
-		        model.addAttribute("totalNormalPaymentCount", totalNormalPaymentCount); // 6. 정상 결제 건수
-		        model.addAttribute("totalApprovedAmount", totalApprovedAmount);      // 3. 총 승인 금액
+		        model.addAttribute("totalNormalPaymentCount", totalNormalPaymentCount); // 정상 결제 건수(총결제건수 - 총취소건수)
+		        model.addAttribute("totalApprovedAmount", totalApprovedAmount);      // 총 승인 금액 (매출금액 + 플랫폼수수료)
 		        model.addAttribute("totalNormalPaymentAmount", totalNormalPaymentAmount); // 입점업체 매출 기준 정상 결제 금액
-		        model.addAttribute("totalPlatformFeeCancelledAmount", totalPlatformFeeCancelledAmount); // 5. 플랫폼 수수료 취소 금액
+		        model.addAttribute("totalPlatformFeeCancelledAmount", totalPlatformFeeCancelledAmount); // 플랫폼 수수료 취소 금액
 		        model.addAttribute("totalPlatformFeeAll", totalPlatformFeeAll); // 모든 플랫폼 수수료의 총합
-		        model.addAttribute("totalNetPlatformFee", totalNetPlatformFee); // <-- 모델에 추가: 최종 플랫폼 수수료 합계
+		        model.addAttribute("totalNetPlatformFee", totalNetPlatformFee); // 최종 플랫폼 수수료 합계 (총합 - 취소금액)
 
 
 		        return "admin/payment/calculateDetail";

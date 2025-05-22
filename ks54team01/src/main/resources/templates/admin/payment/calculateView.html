@@ -180,11 +180,13 @@
                             <tr class="text-center" th:if="${!#lists.isEmpty(adminFeeList)}" th:each="l : ${adminFeeList}">
                                 <td class="align-middle" scope="row" th:text="${l.feeNo}"></td>
                                 <td class="align-middle" th:text="${l.entCeoNo}"></td>                            
-                                <td class="align-middle" th:text="${l.paymentDetils}"></td> <td class="align-middle" th:text="${#numbers.formatDecimal(l.platFormFee, 0, 'COMMA', 0, 'POINT')}"></td>
+                                <td class="align-middle" th:text="${l.paymentDetils}"></td> 
                                 <td class="align-middle" th:text="${#numbers.formatDecimal(l.entSales, 0, 'COMMA', 0, 'POINT')}"></td>
+                                <td class="align-middle" th:text="${#numbers.formatDecimal(l.platFormFee, 0, 'COMMA', 0, 'POINT')}"></td>
                                 <td class="align-middle" th:text="${l.provisionScheduleDate}"></td>
                                 <td class="align-middle" th:text="${l.provisionDate}"></td>
-                                <td class="align-middle" th:text="${l.settlementMonth}"></td> <td class="align-middle" th:text="${l.closingSttelement}"></td>
+                                <td class="align-middle" th:text="${l.settlementMonth}"></td> 
+                                <td class="align-middle" th:text="${l.closingSttelement}"></td>
                                 <td class="align-middle" th:text="${l.paymentStatus}"></td>    
                             </tr>
                                 <tr th:unless="${!#lists.isEmpty(adminFeeList)}">

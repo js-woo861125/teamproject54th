@@ -13,12 +13,14 @@
     border-bottom: 1px solid #333; /* 2px 두께의 진한 회색 선 */
     padding-bottom: 5px; /* 선 아래에 여백을 주어 텍스트와 분리 */
   }
-
-
+  .bottom-border-row2 dl {
+    border-bottom: 1px solid #333; /* 2px 두께의 진한 회색 선 */
+    padding-bottom: 5px; /* 선 아래에 여백을 주어 텍스트와 분리 */
+  }
 </style>
 
-      <div class="card">
-        <header class="card-header">
+        <div class="card">
+         <header class="card-header">
             <div class="row align-items-center">
                 <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
                     <span> <i class="material-icons md-calendar_today"></i> <b id="current-time"></b> </span> <br />
@@ -47,12 +49,12 @@
                             <thead>
                                 <tr class="text-center font-xl">
                                     <th width="10%">매출 구분</th>
-                                    <th width="5%">총 결제 건수</th>
-                                    <th width="10%">총 승인 금액</th>
+                                    <th width="5%">항목별 건수</th>
+                                    <th width="10%">항목목별 합계 금액</th>
                                     <th width="5%">취소(환불)건</th>
                                     <th width="10%">취소 금액</th>
                                     <th width="5%">정상 결제 건수</th>
-                                    <th width="15%">합계(총 승인 금액-취소 금액)</th>
+                                    <th width="15%">항목별 합계금액 - 취소 금액</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -64,7 +66,7 @@
                                         th:text="${#lists.isEmpty(data) ? 0 : data[0].count}">
                                     </td>
                                     <td th:with="data=${paymentSummaryList.?[paymentDetails == '1.월렌탈요금']}" 
-                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : data[0].totalEntSales, 0, 'COMMA', 0, 'POINT')}|">
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].totalEntSales + data[0].totalPlatformFee), 0, 'COMMA', 0, 'POINT')}|">
                                     </td>
                                     <td th:with="data=${paymentSummaryList.?[paymentDetails == '1.월렌탈요금']}" 
                                         th:text="${#lists.isEmpty(data) ? 0 : data[0].cancellationCount}">
@@ -77,7 +79,7 @@
                                     </td>
                                     <td class="font-xl text-success" 
                                         th:with="data=${paymentSummaryList.?[paymentDetails == '1.월렌탈요금']}" 
-                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : data[0].normalEntSales, 0, 'COMMA', 0, 'POINT')}|">
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].normalEntSales + data[0].totalPlatformFee), 0, 'COMMA', 0, 'POINT')}|">
                                     </td>
                                 </tr>
                                 <tr class="text-center">
@@ -88,7 +90,7 @@
                                         th:text="${#lists.isEmpty(data) ? 0 : data[0].count}">
                                     </td>
                                     <td th:with="data=${paymentSummaryList.?[paymentDetails == '2.일시불판매']}" 
-                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : data[0].totalEntSales, 0, 'COMMA', 0, 'POINT')}|">
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].totalEntSales + data[0].totalPlatformFee), 0, 'COMMA', 0, 'POINT')}|">
                                     </td>
                                     <td th:with="data=${paymentSummaryList.?[paymentDetails == '2.일시불판매']}" 
                                         th:text="${#lists.isEmpty(data) ? 0 : data[0].cancellationCount}">
@@ -101,18 +103,17 @@
                                     </td>
                                     <td class="font-xl text-success" 
                                         th:with="data=${paymentSummaryList.?[paymentDetails == '2.일시불판매']}" 
-                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : data[0].normalEntSales, 0, 'COMMA', 0, 'POINT')}|">
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].normalEntSales + data[0].totalPlatformFee), 0, 'COMMA', 0, 'POINT')}|">
                                     </td>
                                 </tr>
-                                <tr class="text-center">
-                                    <td class="font-lg fw-bold">
+                                <tr class="text-center bottom-border-row"> <td class="font-lg fw-bold">
                                         <div>위약금</div>
                                     </td>
                                     <td th:with="data=${paymentSummaryList.?[paymentDetails == '3.위약금']}" 
                                         th:text="${#lists.isEmpty(data) ? 0 : data[0].count}">
                                     </td>
                                     <td th:with="data=${paymentSummaryList.?[paymentDetails == '3.위약금']}" 
-                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : data[0].totalEntSales ?: 0, 0, 'COMMA', 0, 'POINT')}|">
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].totalEntSales + data[0].totalPlatformFee), 0, 'COMMA', 0, 'POINT')}|">
                                     </td>
                                     <td th:with="data=${paymentSummaryList.?[paymentDetails == '3.위약금']}"
                                         th:text="${#lists.isEmpty(data) ? 0 : data[0].cancellationCount}">
@@ -125,54 +126,48 @@
                                     </td>
                                     <td class="font-xl text-success" 
                                         th:with="data=${paymentSummaryList.?[paymentDetails == '3.위약금']}" 
-                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : data[0].normalEntSales, 0, 'COMMA', 0, 'POINT')}|">
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].normalEntSales + data[0].totalPlatformFee), 0, 'COMMA', 0, 'POINT')}|">
                                     </td>
                                 </tr>
-                                <!-- 여백  -->
-                                <tr>
-                                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                             
+
+                                <tr class="text-center">
+                                    <td class="font-lg fw-bold">
+                                        <div>플랫폼수수료</div>
+                                    </td>
+                                    <td th:text="${totalPaymentCount}"></td> 
+                                    <td th:text="|₩ ${#numbers.formatDecimal(totalPlatformFeeAll, 0, 'COMMA', 0, 'POINT')}|"></td> 
+                                    <td th:text="${totalCancellationCount}"></td>
+                                    <td th:text="|₩ ${#numbers.formatDecimal(totalPlatformFeeCancelledAmount, 0, 'COMMA', 0, 'POINT')}|"></td>
+                                    <td th:text="${totalNormalPaymentCount}"></td>
+                                    <td class="font-xl text-success"
+                                        th:text="|₩ ${#numbers.formatDecimal(totalNetPlatformFee, 0, 'COMMA', 0, 'POINT')}|">
+                                    </td> 
                                 </tr>
 
-                              <tr class="text-center bottom-border-row">
-                            <td class="font-lg fw-bold">
-                                <div>플랫폼수수료</div> </td>
-                            <td th:text="${totalPaymentCount}"></td> 
-                            <td th:text="|₩ ${#numbers.formatDecimal(totalPlatformFeeAll, 0, 'COMMA', 0, 'POINT')}|"></td> 
-                            <td th:text="${totalCancellationCount}"></td>
-                            <td th:text="|₩ ${#numbers.formatDecimal(totalPlatformFeeCancelledAmount, 0, 'COMMA', 0, 'POINT')}|"></td>
-                            <td th:text="${totalNormalPaymentCount}"></td>
-                            <td class="font-xl text-success"
-                                th:text="|₩ ${#numbers.formatDecimal(totalNetPlatformFee, 0, 'COMMA', 0, 'POINT')}|"></td> </tr>
-
-                        <tr>
-                            </tr>
-                                <!-- 여백  -->
                                 <tr>
-                                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                    <td colspan="7"></td>
                                 </tr>
 
                                 <tr>
                                     <td colspan="6"></td>
-                                    <td colspan="5">
+                                    <td colspan="1">
                                         <article class="float-ent">
                                             <dl class="dlist">
-                                                <dt class="h6">합 계 : <br>
-                                                    (월렌탈+일시불판매+위약금)
-                                                </dt>
-                                                <dd class="h6" th:text="|₩ ${#numbers.formatDecimal(
-                                                (#lists.isEmpty(paymentSummaryList) ? 0 : #aggregates.sum(paymentSummaryList.![totalEntSales])) + 
-                                                (#lists.isEmpty(paymentSummaryList) ? 0 : #aggregates.sum(paymentSummaryList.![totalPlatformFee])), 
-                                                0, 'COMMA', 0, 'POINT')}|"></dd>
+                                                <dt class="h6"> 매출총합 :</dt>
+                                                <dd class="h6" th:text="|₩ ${#numbers.formatDecimal(totalApprovedAmount, 0, 'COMMA', 0, 'POINT')}|"></dd>
                                             </dl>
                                             <dl class="dlist">
-                                                <dt class="h6">플랫폼수수료:</dt>
+                                                <dt class="h6">취소(환불):</dt>
+                                                <dd class="h6" th:text="|₩ ${#numbers.formatDecimal(totalCancelledAmount, 0, 'COMMA', 0, 'POINT')}|"></dd>
+                                            </dl>
+                                            <dl class="dlist bottom-border-row2">
+                                                <dt class="h6 ">플랫폼수수료:</dt>
                                                 <dd class="h6" th:text="|₩ ${#numbers.formatDecimal(totalNetPlatformFee, 0, 'COMMA', 0, 'POINT')}|"></dd>
                                             </dl>
                                             <dl class="dlist">
                                                 <dt class="h5">총 계:</dt>
-                                                <dd><b class="h5" th:text="|₩ ${#numbers.formatDecimal(
-                                                (#lists.isEmpty(paymentSummaryList) ? 0 : #aggregates.sum(paymentSummaryList.![totalEntSales])), 
-                                                0, 'COMMA', 0, 'POINT')}|"></b></dd>
+                                                <dd><b class="h5" th:text="|₩ ${#numbers.formatDecimal(totalApprovedAmount-(totalCancelledAmount +totalNetPlatformFee ), 0, 'COMMA', 0, 'POINT')}|"></b></dd>
                                             </dl>
                                         </article>
                                     </td> 
@@ -180,9 +175,9 @@
                             </tbody>
                         </table>
                     </div>
-                    </div>
-                <div class="col-lg-1"></div>
                 </div>
+                <div class="col-lg-1"></div>
+            </div>
         </div>
         </div>
             
