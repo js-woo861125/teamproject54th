@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
 import ks54team01.customer.login.service.LoginService;
-import ks54team01.customer.member.domain.CommonMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,50 +24,56 @@ public class LoginController {
 	
 	 @GetMapping("/logout")
 	    public String logout(HttpSession session) {
-		 CommonMember loginMember  = (CommonMember) session.getAttribute("loginMember");
-		 String memberId = loginMember.getMemberId();
-		 String memberType = loginMember.getMemberType();
 		 
 	        session.invalidate(); 
-	        log.info("로그아웃 성공: memberId={}, memberType={}", memberId, memberType);
+	        
 	        return "redirect:/";  
 	    }
 	 
 	
 	 @PostMapping("/memberLogin")
-	 public String login(@RequestParam String memberId, @RequestParam String memberPw, HttpSession session) {
+	 public String memberLoginPro(@RequestParam String memberId,
+	                              @RequestParam String memberPw,
+	                              HttpSession session) {
 
 	     log.info("로그인 시도: memberId={}", memberId);
 
 	     Map<String, Object> loginResult = loginService.matchMember(memberId, memberPw);
 
 	     if (loginResult == null || loginResult.get("memberInfo") == null) {
-	         log.warn("로그인 실패: 존재하지 않거나 비밀번호 불일치 - memberId={}", memberId);
+	         log.warn("로그인 실패: 존재하지 않거나 비밀번호 불일치: {}", memberId);
 	         return "redirect:/customer/login/memberLogin?error=true";
 	     }
-	     
-	     CommonMember memberInfo = new CommonMember();
-	     memberInfo.setMemberId(memberId);
-	     memberInfo.setMemberType((String) loginResult.get("memberType"));
 
-	     session.setAttribute("loginMember", memberInfo);
-	     session.setAttribute("memberType", memberInfo.getMemberType());
-
-	     if ("입점업체 대표".equals(memberInfo.getMemberType()) || "입점업체 직원".equals(memberInfo.getMemberType())) {
-	         return "redirect:/enterprise";
+	     if ("Y".equals(loginResult.get("memberWithdrawStatus"))) {
+	         log.warn("탈퇴 회원 로그인 시도: {}", memberId);
+	         return "redirect:/customer/login/memberLogin?withdrawn=true";
 	     }
 
-	     log.info("로그인 성공: memberId={} memberType={}", memberId, memberInfo.getMemberType());
+	     Object memberInfo = loginResult.get("memberInfo");
+	     String memberType = (String) loginResult.get("memberType");
+
+	     // 세션 저장
+	     session.setAttribute("loginMember", memberInfo);
+	     session.setAttribute("memberType", memberType);
+	     
+
+	     log.info("로그인 성공: memberId={} memberType={}", memberId, memberType);
+
+	     if ("입점업체 대표".equals(memberType) || "입점업체 직원".equals(memberType)) {
+	         return "redirect:/enterprise";
+	     }
 
 	     return "redirect:/";
 	 }
 
 
 
+
 	
 	
 	@GetMapping("/memberLogin")
-	public String getMemberLogin(Model model) {
+	public String memberLogin(Model model) {
 		
 		model.addAttribute("title", "Login");
 		
