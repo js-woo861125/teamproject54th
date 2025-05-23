@@ -54,39 +54,35 @@
                     <table class="table table-hover">
                         <thead>
                             <tr class=text-center>
-                                <th>카테고리</th>
-                                <th>브랜드</th>
-                                <th>모델</th>
-                                <th>상품이미지</th>                            
-                                <th>상품</th>
+                                <th>상품명</th>
+                                <th>이미지</th>
+                                <th>모델명</th>
+                                <th>판매상태</th>                            
                                 <th>기간(개월)</th>
                                 <th>판매금액</th>
-                                <th>혜택</th>
-                                <th>사용유무</th>
                                 <th>수정/삭제</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr class=text-center>
-                             	<td>침대</td>
-                                <td>인홈</td>
-                                <td>27LX5QKNA</td>
+                             <tbody class="text-center">
+                        <th:block th:if="${!#lists.isEmpty(sellProductList)}" th:each="sl : ${sellProductList}">
+                             <tr>	 
+                             	<td><a class="fw-bold" th:text="${sl.productName}"></a></td>
                                 <td>
-                                    <a class="item" href="#">
-                                        <div class="img">
-                                            <img src="https://storage.bilrigo.com/data/thumbnails/230421/QXWVYba3s51p1vlpZVXnKF3dd8JYAC.jpg" class="img-sm img-thumbnail" alt="Item" />
-                                        </div>
-                                    </a>
+                                	 <a class="item" href="#">
+								        <div class="img">
+								            <img th:if="${sl.productImage != null}" 
+								                 th:src="${sl.productImage}" 
+								                 class="img-sm img-main" 
+								                 alt="상품이미지" />
+								                 
+								            <div th:if="${sl.productImage == null}" 
+								                 class="img-sm img-main bg-light d-inline-block" 
+								                 style="width: 100px; height: 100px;"></div>
+								        </div>							       
+								    </a>
                                 </td>
-                                <td>
-                                    <div class="info">
-                                        <h6 class="mb-0">라온 LED 저상형 침대 SS</h6>
-                                    </div>
-                                </td>
-                                <td>60</td>
-                                <td>28,000</td>
-                                <td>배송비 무료</td>
-                                <td class="col-lg-2 col-sm-2 col-4 col-status">
+                                <td th:text="${sl.modelName}">모델명</td>
+                                 <td class="col-lg-2 col-sm-2 col-4 col-status">
                                     <span class="badge rounded-pill alert-success">사용중</span>
                                     <div class="dropdown">
                                         <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
@@ -96,11 +92,14 @@
                                         </div>
                                     </div>
                                 </td>
+                                <td th:text="${sl.period}">12개월</td>
+                                <td th:text="${sl.finalPrice}">60,000</td> 
                                 <td class="col-lg-2 col-sm-2 col-4 col-action">
                                     <a href="#" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
                                     <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
                                 </td>
-                            </tr>
+                           </tr>
+                          </th:block>
                         </tbody>
                     </table>
                 </div>

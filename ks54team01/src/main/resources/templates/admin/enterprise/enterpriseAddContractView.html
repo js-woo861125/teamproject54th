@@ -11,7 +11,9 @@
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+	</th:block>
 	
+	<th:block layout:fragment="jsScript">
 		<script>
 			/**
 			* 계약일자 & 계약만료일자 달력 및 계약일 계산하기
@@ -92,91 +94,114 @@
 			<div class="col-6">
 				<div class="content-header">
 					<h2 class="content-title" th:text="${title}"></h2>
-					<div>
-						<button type="submit" id="addContract" class="btn btn-md rounded font-sm hover-up">등록</button>
-						<button type="reset" onclick="location.href='/admin/enterprise/List'" 
-								class="btn btn-light rounded font-sm mr-5 text-body hover-up">등록취소</button>
-					</div>
+
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-lg-6">
-				<div class="card mb-4">
-					<div class="card-body">
-						<div class="row">
-							<div class="col-md-3">
-								<h6>1. 입점업체 정보</h6>
+				<form th:action="@{/admin/enterprise/addContract}" method="post" id="addContractForm">
+					<div class="card mb-4">
+						<div class="card-body">
+							<div class="row">
+							    <div class="col-md-3">
+							        <h6>1. 계약 정보</h6>
+							    </div>
+							    <div class="col-md-9">
+							        <div class="d-flex justify-content-between align-items-center flex-wrap">
+							            <!-- 라디오 버튼 -->
+							            <div class="d-flex align-items-center gap-3">
+							                <div class="form-check mb-3">
+							                    <input class="form-check-input" type="radio" name="contractType" id="newContract" value="new" checked>
+							                    <label class="form-check-label" for="newContract">신규계약</label>
+							                </div>
+							                <div class="form-check mb-3">
+							                    <input class="form-check-input" type="radio" name="contractType" id="renewalContract" value="renewal">
+							                    <label class="form-check-label" for="renewalContract">재계약</label>
+							                </div>
+							            </div>
+							            <!-- 등록 버튼 -->
+							            <div class="d-flex gap-2 mb-3">
+							                <button type="submit" class="btn btn-md rounded font-lg hover-up">등록</button>
+							                <button type="reset" onclick="location.href='/admin/enterprise/List'" class="btn btn-light rounded font-lg text-body hover-up">등록취소</button>
+							            </div>
+							        </div>
+							    </div>
 							</div>
-							<div class="col-md-9">
-								<div class="mb-4">
-									<label class="form-label" for="entCeoNo">대표코드</label> 
-									<select class="form-select" id="entCeoNo" name="entCeoNo">
-										<option value="">대표코드를 선택하세요</option>
-										<option th:each="e : ${entList}" th:value="${e.ceoCode}" th:text="${e.ceoCode}">
-										</option>
-									</select>
+							<hr class="mb-4 mt-0">
+							<div class="row">
+								<div class="col-md-3">
+									<h6>2. 입점업체 정보</h6>
 								</div>
-								<div class="mb-4">
-									<label class="form-label" for="memberId">대표아이디</label> 
-									<input type="text" id="memberId" name="memberId" class="form-control" placeholder="대표코드 넣으면 자동완성" />
-								</div>
-								<div class="mb-4">
-									<label class="form-label" for="entName">업체명</label>
-									<input type="text" id="entName" name="entName" class="form-control" placeholder="대표코드 넣으면 자동완성" />
-								</div>
-								<div class="mb-4">
-									<label class="form-label" for="entBrno">사업자번호</label>
-									<input type="text" id="entBrno" name="entBrno" class="form-control" placeholder="대표코드 넣으면 자동완성" />
-								</div>
-								<div class="mb-4">
-									<label class="form-label" for="entCeoName">대표명</label>
-									<input type="text" id="entCeoName" name="entCeoName" class="form-control" placeholder="대표코드 넣으면 자동완성" />
+								<div class="col-md-9">
+									<div class="mb-4">
+										<label class="form-label" for="entCeoNo">대표코드</label> 
+										<select class="form-select" id="entCeoNo" name="entCeoNo">
+											<option value="">대표코드를 선택하세요</option>
+											<option th:each="e : ${entList}" th:if="${#strings.isEmpty(e.entContractStatus)}" th:value="${e.ceoCode}" th:text="${e.ceoCode}"></option>
+										</select>
+									</div>
+									<div class="mb-4">
+										<label class="form-label" for="memberId">대표아이디</label> 
+										<input type="text" id="memberId" name="memberId" class="form-control" placeholder="대표코드 넣으면 자동완성" />
+									</div>
+									<div class="mb-4">
+										<label class="form-label" for="entName">업체명</label>
+										<input type="text" id="entName" name="entName" class="form-control" placeholder="대표코드 넣으면 자동완성" />
+									</div>
+									<div class="mb-4">
+										<label class="form-label" for="entBrno">사업자번호</label>
+										<input type="text" id="entBrno" name="entBrno" class="form-control" placeholder="대표코드 넣으면 자동완성" />
+									</div>
+									<div class="mb-4">
+										<label class="form-label" for="entCeoName">대표명</label>
+										<input type="text" id="entCeoName" name="entCeoName" class="form-control" placeholder="대표코드 넣으면 자동완성" />
+									</div>
 								</div>
 							</div>
-						</div>
-						<hr class="mb-4 mt-0">
-						<div class="row">
-							<div class="col-md-3">
-								<h6>2. 계약 정보</h6>
-							</div>
-							<div class="col-md-9">
-								<div class="mb-4">
-									<label class="form-label" for="managerId">플랫폼 직원 아이디</label>
-									<input type="text" id="managerId" name="managerId" class="form-control" placeholder="플랫폼 직원 아이디를 입력해주세요" />
+							<hr class="mb-4 mt-0">
+							<div class="row">
+								<div class="col-md-3">
+									<h6>3. 계약 내용</h6>
 								</div>
-								<div class="mb-4">
-									<label class="form-label" for="feeRateSales">플랫폼 수수료율(일반판매)</label>
-									<input type="text" id="feeRateSales" name="feeRateSales" class="form-control" th:value="${defaultFeeRateSales}" placeholder="일반판매 수수료율을 입력해주세요" />
-								</div>
-								<div class="mb-4">
-									<label class="form-label" for="feeRateRental">플랫폼 수수료율(렌탈)</label>
-									<input type="text" id="feeRateRental" name="feeRateRental" class="form-control" th:value="${defaultFeeRateRental}" placeholder="렌탈 수수료율을 입력해주세요" />
-								</div>
-								<div class="mb-4">
-									<label class="form-label" for="feeRatePenalty">플랫폼 수수료율(위약금)</label>
-									<input type="text" id="feeRatePenalty" name="feeRatePenalty" class="form-control" th:value="${defaultFeeRatePenalty}" placeholder="위약금 수수료율을 입력해주세요" />
-								</div>
-								<div class="mb-4">
-									<label class="form-label" for="entryFee">입점비</label>
-									<input type="text" id="entryFee" name="entryFee" class="form-control" th:value="${defaultEntryFee}" placeholder="입점비를 입력해주세요" />
-								</div>
-								<div class="mb-4">
-									<label class="form-label datepicker" for="contractDate">계약일자</label>
-									<input type="text" id="contractDate" name="contractDate" class="form-control datepicker" placeholder="계약일자를 입력해주세요" />
-								</div>
-								<div class="mb-4">
-									<label class="form-label" for="contractEndDate">계약만료일자</label>
-									<input type="text" id="contractEndDate" name="contractEndDate" class="form-control" placeholder="계약만료일자를 입력해주세요" />
-								</div>
-								<div class="mb-4">
-									<label class="form-label" for="entCalDate">월정산일자</label>
-									<input type="text" id="entCalDate" name="entCalDate" class="form-control" th:value="${defaultEntCalDate}" placeholder="월정산일자를 입력해주세요" />
+								<div class="col-md-9">
+									<div class="mb-4">
+										<label class="form-label" for="managerId">플랫폼 직원 아이디</label>
+										<input type="text" id="managerId" name="managerId" class="form-control" placeholder="플랫폼 직원 아이디를 입력해주세요" />
+									</div>
+									<div class="mb-4">
+										<label class="form-label" for="feeRateSales">플랫폼 수수료율(일반판매)</label>
+										<input type="text" id="feeRateSales" name="feeRateSales" class="form-control" th:value="${defaultFeeRateSales}" placeholder="일반판매 수수료율을 입력해주세요" />
+									</div>
+									<div class="mb-4">
+										<label class="form-label" for="feeRateRental">플랫폼 수수료율(렌탈)</label>
+										<input type="text" id="feeRateRental" name="feeRateRental" class="form-control" th:value="${defaultFeeRateRental}" placeholder="렌탈 수수료율을 입력해주세요" />
+									</div>
+									<div class="mb-4">
+										<label class="form-label" for="feeRatePenalty">플랫폼 수수료율(위약금)</label>
+										<input type="text" id="feeRatePenalty" name="feeRatePenalty" class="form-control" th:value="${defaultFeeRatePenalty}" placeholder="위약금 수수료율을 입력해주세요" />
+									</div>
+									<div class="mb-4">
+										<label class="form-label" for="entryFee">입점비</label>
+										<input type="text" id="entryFee" name="entryFee" class="form-control" th:value="${defaultEntryFee}" placeholder="입점비를 입력해주세요" />
+									</div>
+									<div class="mb-4">
+										<label class="form-label datepicker" for="contractDate">계약일자</label>
+										<input type="text" id="contractDate" name="contractDate" class="form-control datepicker" placeholder="계약일자를 입력해주세요" />
+									</div>
+									<div class="mb-4">
+										<label class="form-label" for="contractEndDate">계약만료일자</label>
+										<input type="text" id="contractEndDate" name="contractEndDate" class="form-control" placeholder="계약만료일자를 입력해주세요" />
+									</div>
+									<div class="mb-4">
+										<label class="form-label" for="entCalDate">월정산일자</label>
+										<input type="text" id="entCalDate" name="entCalDate" class="form-control" th:value="${defaultEntCalDate}" placeholder="월정산일자를 입력해주세요" />
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 	</th:block>

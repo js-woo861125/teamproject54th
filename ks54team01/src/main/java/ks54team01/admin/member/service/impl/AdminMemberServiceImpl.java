@@ -21,7 +21,24 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	// DI 의존성 주입
 	private final AdminMemberMapper adminMemberMapper;
 	
-	// 회원 로그인 이력 조회
+	/**
+	 * 회원 검색
+	 */	
+	@Override
+	public List<AdminMember> getSearchMember(String searchKey, String searchValue) {
+		switch (searchKey) {
+			case "memberId" 	-> searchKey = "m.members_id"; 
+			case "memberName" 	-> searchKey = "m.mbr_name"; 
+			case "memberEmail" 	-> searchKey = "m.mbr_email"; 			
+		}
+		List<AdminMember> memberList = adminMemberMapper.getSearchMember(searchKey, searchValue);
+		return memberList;
+	}
+	
+	
+	/**
+	 * 회원 로그인 이력 조회
+	 */	
 	@Override
 	public List<AdminLoginHistory> getLoginHistoryList() {
 		
@@ -30,7 +47,9 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		return loginHistoryList;
 	}
 	
-	// 회원 목록 조회
+	/**
+	 * 회원 목록 조회
+	 */
 	@Override
 	public List<AdminMember> getMemberList() {
 		

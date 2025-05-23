@@ -3,6 +3,7 @@ package ks54team01.enterprise.product.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import ks54team01.customer.delivery.domain.CustomerDeliveryList;
+import ks54team01.admin.product.domain.AdminProduct;
 import ks54team01.enterprise.product.domain.EnterpriseMarginRatio;
+import ks54team01.enterprise.product.domain.EnterpriseProduct;
 import ks54team01.enterprise.product.domain.EnterpriseProductQuantity;
 import ks54team01.enterprise.product.mapper.EnterpriseMarginRatioMapper;
 import ks54team01.enterprise.product.service.EnterpriseMarginRatioService;
@@ -25,22 +27,34 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/enterprise")
 public class EnterpriseProductController {
 	
+	
+	@Value("${file.path}")
+	private String fileRealPath;
+	
 	private final EnterpriseProductService enterpriseProductService;
 	private final EnterpriseMarginRatioService enterpriseMarginRatioService;
 	private final EnterpriseMarginRatioMapper enterpriseMarginRatioMapper;
 	
+	
+	
+	
+	
 	@GetMapping("/product/sellProductList")
-	public String sellProductList(Model model) {
+	public String getsellProductList(Model model) {
+		List<EnterpriseProduct> sellProductList = enterpriseProductService.getSellProductList();
 		
 		model.addAttribute("title", "판매 상품목록");
+		model.addAttribute("sellProductList", sellProductList);
 		
 		return "enterprise/product/enterpriseProductListView";
 	}
 	
 	@GetMapping("/product/productList")
-	public String productList(Model model) {
+	public String getproductList(Model model) {
+		List<AdminProduct> getProductList = enterpriseProductService.getProductList();
 		
 		model.addAttribute("title", "플랫폼 상품목록");
+		model.addAttribute("getProductList", getProductList);
 		
 		return "enterprise/product/platformProductListView";
 	}
@@ -121,4 +135,13 @@ public class EnterpriseProductController {
 		
 		return "enterprise/product/enterpriseQuantityView";
 	}
+	
+	@GetMapping("/product/addProduct")
+	public String enterpriseAddProduct(Model model) {
+		
+		return "enterprise/product/addSellProductView";
+	}
+	
+	
+	
 }

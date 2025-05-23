@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import ks54team01.admin.enterprise.domain.AdminEntAddContract;
 import ks54team01.admin.enterprise.domain.AdminEntDetail;
 import ks54team01.admin.enterprise.domain.AdminEntList;
 import ks54team01.admin.enterprise.service.AdminEntListService;
@@ -22,16 +24,24 @@ public class AdminEntController {
 	
 	private final AdminEntListService adminEntListService;
 	
+	// 입점업체 대표코드로 입점업체 조회
 	@GetMapping("/entListByNo")
 	@ResponseBody
-	// 입점업체 대표코드로 입점업체 조회
 	public List<EntMember> getEntListByEntCeoNo(@RequestParam String entCeoNo) {
 		
 		return adminEntListService.getEntListByEntCeoNo(entCeoNo);
 	}
+
+	// 입점업체 계약 등록
+	@PostMapping("/addContract")
+	public String addContract(AdminEntAddContract adminEntAddContract) {
+		
+		adminEntListService.addContract(adminEntAddContract);
+		
+		return "redirect:/admin/enterprise/List";
+	}
 	
 	@GetMapping("/addContract")
-	// 입점업체 계약 등록
 	public String addContract(Model model) {
 		List<AdminEntList> entList = adminEntListService.getEntList();
 		

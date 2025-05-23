@@ -6,11 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ks54team01.admin.member.domain.AdminLoginHistory;
 import ks54team01.admin.member.domain.AdminMember;
 import ks54team01.admin.member.service.AdminMemberService;
-import ks54team01.admin.member.service.impl.AdminMemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,6 +22,21 @@ public class AdminMemberController {
 
 	// DI 의존성 주입
 	private final AdminMemberService adminMemberService;
+	
+	@GetMapping("/searchMember")
+	public String getSearchMember(@RequestParam(name="searchKey", required = false, defaultValue = "memberId") String searchKey 
+								 ,@RequestParam(name="searchValue", required = false) String searchValue
+								 ,Model model) {
+		
+		log.info("searchKey: {}, searchValue: {}", searchKey, searchValue);
+		List<AdminMember> memberList = adminMemberService.getSearchMember(searchKey, searchValue);
+		model.addAttribute("title", "회원목록");
+		model.addAttribute("memberList", memberList);
+		model.addAttribute("searchKey", searchKey);
+		model.addAttribute("searchValue", searchValue);
+		
+		return "admin/member/memberListView";
+	}
 	
 	@GetMapping("/loginHistoryList")
 	public String getLoginHistoryList(Model model) {
