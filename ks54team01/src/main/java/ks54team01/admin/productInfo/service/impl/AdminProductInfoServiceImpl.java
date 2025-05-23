@@ -28,6 +28,49 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	// DI 의존성 주입
 	private final AdminProductInfoMapper adminProductInfoMapper;
 	
+	// 사용유무 상태 변경
+	@Override
+	public void updateModelSpecUseStatus(String modelSpecNo, String useStatus) {
+		
+		adminProductInfoMapper.updateModelSpecUseStatus(modelSpecNo, useStatus);	
+	}
+	
+	@Override
+	public void updateCategorySpecUseStatus(String specNo, String useStatus) {
+		
+		adminProductInfoMapper.updateCategorySpecUseStatus(specNo, useStatus);	
+	}
+	
+	@Override
+	public void updateBenefitUseStatus(String benefitNo, String useStatus) {
+		
+		adminProductInfoMapper.updateBenefitUseStatus(benefitNo, useStatus);
+	}
+	
+	@Override
+	public void updateModelUseStatus(String modelNo, String useStatus) {
+		
+		adminProductInfoMapper.updateModelUseStatus(modelNo, useStatus);
+	}
+	
+	@Override
+	public void updateItemUseStatus(String itemNo, String useStatus) {
+		
+		adminProductInfoMapper.updateItemUseStatus(itemNo, useStatus);
+	}
+	
+	@Override
+	public void updateBrandUseStatus(String brandNo, String useStatus) {
+		
+		adminProductInfoMapper.updateBrandUseStatus(brandNo, useStatus);
+	}
+	
+	@Override
+	public void updateCategoryUseStatus(String categoryNo, String useStatus) {
+
+		adminProductInfoMapper.updateCategoryUseStatus(categoryNo, useStatus);	
+	}
+	
 	// 상품정보 검색
 	@Override
 	public List<ProductInfoModelSpec> getSearchModelSpec(String searchKey, String searchValue) {

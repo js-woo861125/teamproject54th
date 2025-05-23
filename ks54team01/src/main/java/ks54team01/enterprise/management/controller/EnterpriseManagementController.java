@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class EnterpriseManagementController {
 	
 	@GetMapping("/contractInfo")
-	public String contractInfo() {
+	public String contractInfo(Model model) {
+		
+		model.addAttribute("title", "계약정보");
 		
 		return "enterprise/management/contractInfoView";
 	}

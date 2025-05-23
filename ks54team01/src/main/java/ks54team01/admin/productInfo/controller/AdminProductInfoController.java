@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +35,93 @@ public class AdminProductInfoController {
 	
 	// DI 의존성 주입
 	private final AdminProductInfoService adminProductInfoService;
+	
+	/**
+	 * 사용유무 상태 변경
+	 */
+	@PostMapping("/updateModelSpec")
+	@ResponseBody
+	public ResponseEntity<String> updateModelSpecUseStatus(@RequestParam("modelSpecNo") String modelSpecNo,
+														   @RequestParam("useStatus") String useStatus) {
+		try {
+			adminProductInfoService.updateModelSpecUseStatus(modelSpecNo, useStatus);
+			return ResponseEntity.ok("success");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
+		}
+	}
+
+	@PostMapping("/updateCategorySpec")
+	@ResponseBody
+	public ResponseEntity<String> updateCategorySpecUseStatus(@RequestParam("specNo") String specNo,
+															  @RequestParam("useStatus") String useStatus) {
+		try {
+			adminProductInfoService.updateCategorySpecUseStatus(specNo, useStatus);
+			return ResponseEntity.ok("success");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
+		}
+	}	
+	
+	@PostMapping("/updateBenefit")
+	@ResponseBody
+	public ResponseEntity<String> updateBenefitUseStatus(@RequestParam("benefitNo") String benefitNo,
+											  			 @RequestParam("useStatus") String useStatus) {
+		try {
+			adminProductInfoService.updateBenefitUseStatus(benefitNo, useStatus);
+			return ResponseEntity.ok("success");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
+		}
+	}	
+	
+	@PostMapping("/updateModel")
+	@ResponseBody
+	public ResponseEntity<String> updateModelUseStatus(@RequestParam("modelNo") String modelNo,
+											  		   @RequestParam("useStatus") String useStatus) {
+		try {
+			adminProductInfoService.updateModelUseStatus(modelNo, useStatus);
+			return ResponseEntity.ok("success");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
+		}
+	}
+	
+	@PostMapping("/updateItem")
+	@ResponseBody
+	public ResponseEntity<String> updateItemUseStatus(@RequestParam("itemNo") String itemNo,
+											  		  @RequestParam("useStatus") String useStatus) {
+		try {
+			adminProductInfoService.updateItemUseStatus(itemNo, useStatus);
+			return ResponseEntity.ok("success");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
+		}
+	}
+	
+	@PostMapping("/updateBrand")
+	@ResponseBody
+	public ResponseEntity<String> updateBrandUseStatus(@RequestParam("brandNo") String brandNo,
+											  		   @RequestParam("useStatus") String useStatus) {
+		try {
+			adminProductInfoService.updateBrandUseStatus(brandNo, useStatus);
+			return ResponseEntity.ok("success");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
+		}
+	}	
+	
+	@PostMapping("/updateCategory")
+	@ResponseBody
+	public ResponseEntity<String> updateCategoryUseStatus(@RequestParam("categoryNo") String categoryNo,
+											  			  @RequestParam("useStatus") String useStatus) {
+		try {
+			adminProductInfoService.updateCategoryUseStatus(categoryNo, useStatus);
+			return ResponseEntity.ok("success");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
+		}
+	}
 	
 	/**
 	 * 상품정보 검색
@@ -299,7 +388,6 @@ public class AdminProductInfoController {
 		
 		return isDuplicate;
 	}
-	
 	
 	/**
 	 * 상품정보 수정

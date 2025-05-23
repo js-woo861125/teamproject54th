@@ -4,12 +4,65 @@
 	  layout:decorate="~{admin/layout/default}">
 	<!-- head 삽입공간 -->
 	<head>
-	    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>	
 	</head>
+
+	<th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</th:block>
 	
 	<th:block layout:fragment="jsScript">
-		<!-- 카테고리 삭제 -->
 		<script>
+			/**
+			* 사용유무 상태 변경
+			*/
+			$(document).on('change', '.toggle-use-status', function() {
+				const $checkbox = $(this);
+				const isChecked = $checkbox.is(':checked');
+				const categoryNo = $checkbox.data('categoryNo');
+				const $badge = $checkbox.closest('td').find('span.badge');				
+	
+				const useStatus = isChecked ? '사용중' : '사용불가';
+				
+				// 변경 시 확인메시지 띄우기
+				const confirmMessage = isChecked
+					? '사용중으로 상태를 변경하시겠습니까?'
+					: '사용불가로 상태를 변경하시겠습니까?'				
+	
+				if(confirm(confirmMessage)) {
+					$.ajax({
+						url: '/admin/productInfo/updateCategory',
+						method: 'post',
+						data: {
+							categoryNo: categoryNo,
+							useStatus: useStatus
+						},
+						success: function(response) {
+							// 상태 변경되었을 경우
+							if(useStatus === '사용중') {
+								$badge.text('사용중')
+									  .removeClass('alert-danger')
+									  .addClass('alert-success');
+							} else {
+								$badge.text('사용불가')
+									  .removeClass('alert-success')
+									  .addClass('alert-danger');
+							}
+						},
+						error: function(jqXHR) {
+							console.log(jqXHR.responseText);
+							alert('상태 변경 중 오류가 발생했습니다');
+							$checkbox.prop('checked', !isChecked);
+						}
+					});
+				// 취소 시 원상 복구
+				} else {
+					$checkbox.prop('checked', !isChecked);	
+				}			
+			});
+			
+			/**
+			* 카테고리 삭제
+			*/
 			$('.remove-btn').click(e => {
 				e.preventDefault();
 				const categoryNo = $(e.target).data('categoryNo');
@@ -117,11 +170,16 @@
 											<td th:text="${l.mdCategoryNo}">M1</td>
 											<td th:text="${l.mdCategory}">TV/디지털</td>
 											<td th:text="${l.smCategory}">TV</td>
-											<td>
-												<span class="badge rounded-pill"
-													  th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'"
-													  th:text="${l.useStatus}">사용중</span>
-											</td>
+	                                        <td>
+	                                        	<div class="d-flex align-items-center justify-content-center gap-2">
+	                                        		<div class="form-check form-switch m-0">
+	                                        			<input class="form-check-input toggle-use-status" type="checkbox" th:checked="${l.useStatus == '사용중'}" th:data-category-no="${l.categoryNo}" />
+													</div>
+		                                            <span class="badge rounded-pill"
+		                                                  th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'"
+		                                                  th:text="${l.useStatus}">사용중</span>
+	                                        	</div>          
+	                                        </td>
 											<td th:text="${l.categoryRegDate}">2023-01-01 10:00:00</td>
 											<td th:text="${l.categoryRevDate}">2023-01-01 10:00:00</td>
 											<td>
