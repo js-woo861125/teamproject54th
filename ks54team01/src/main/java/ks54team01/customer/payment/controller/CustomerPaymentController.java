@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
-import ks54team01.customer.member.domain.CommonMember;
+import ks54team01.customer.member.domain.CustomerMember;
 import ks54team01.customer.payment.domain.CustomerDelivery;
 import ks54team01.customer.payment.domain.CustomerDeliveryInfo;
 import ks54team01.customer.payment.domain.CustomerPayment;
@@ -34,7 +34,41 @@ public class CustomerPaymentController {
 	
 
 	@GetMapping("/regularPayment")
-	public String getRegularPayment() {
+	public String getRegularPayment(@RequestParam("prodUnitPrice") int prodUnitPrice, @RequestParam("totalPrice") int totalPrice,
+								    @RequestParam("managerId") String managerId, @RequestParam("period") int period,
+								    @RequestParam("entCeoNo") String entCeoNo,  @RequestParam("entEmpId") String entEmpId,
+								    @RequestParam("orderQuantity") int orderQuantity, @RequestParam("productsName") String productsName,
+								    @RequestParam("sellProductsNo") String sellProductsNo, @RequestParam("productsNum") String productsNum, HttpSession session, Model model) {
+		
+		CustomerMember loginMember = (CustomerMember) session.getAttribute("loginMember");
+		
+		String custId = loginMember.getMemberId();
+		
+		
+		model.addAttribute("prodUnitPrice", prodUnitPrice);
+	    model.addAttribute("totalPrice", totalPrice);
+	    model.addAttribute("managerId", managerId);
+	    model.addAttribute("period", period);
+	    model.addAttribute("entCeoNo", entCeoNo);
+	    model.addAttribute("entEmpId", entEmpId);
+	    model.addAttribute("productsName", productsName);
+	    model.addAttribute("orderQuantity", orderQuantity);
+	    model.addAttribute("sellProductsNo", sellProductsNo);
+	    model.addAttribute("productsNum", productsNum);
+	    model.addAttribute("custId", custId);
+		
+		
+        List<CustomerDelivery> DeliveryList = customerPaymentService.getDeliveryListById(custId);
+        
+        int quantity = customerPaymentService.getQuantity(productsNum, entCeoNo);
+        
+        model.addAttribute("DeliveryList", DeliveryList);
+        model.addAttribute("quantity", quantity);
+        
+        log.info("quantity: {}", quantity);
+		
+		
+		
 		return "customer/payment/regularPaymentView";
 	}
 	
@@ -72,7 +106,7 @@ public class CustomerPaymentController {
 	@GetMapping("/paymentList")
 	public String getPaymentList(HttpSession session, Model model) {
 		
-		CommonMember loginMember = (CommonMember) session.getAttribute("loginMember");
+		CustomerMember loginMember = (CustomerMember) session.getAttribute("loginMember");
 		
 		if(loginMember == null) {
 			return "redirect:/customer/login/memberLogin";
@@ -141,6 +175,10 @@ public class CustomerPaymentController {
 						    @RequestParam("orderQuantity") int orderQuantity, @RequestParam("productsName") String productsName,
 						    @RequestParam("sellProductsNo") String sellProductsNo, @RequestParam("productsNum") String productsNum, HttpSession session, Model model) {
 		
+		CustomerMember loginMember = (CustomerMember) session.getAttribute("loginMember");
+		
+		String custId = loginMember.getMemberId();
+		
 		model.addAttribute("prodUnitPrice", prodUnitPrice);
 	    model.addAttribute("totalPrice", totalPrice);
 	    model.addAttribute("managerId", managerId);
@@ -151,9 +189,8 @@ public class CustomerPaymentController {
 	    model.addAttribute("orderQuantity", orderQuantity);
 	    model.addAttribute("sellProductsNo", sellProductsNo);
 	    model.addAttribute("productsNum", productsNum);
+	    model.addAttribute("custId", custId);
 		
-	    CommonMember loginMember = (CommonMember) session.getAttribute("loginMember");
-        String custId = loginMember.getMemberId();
 		
         List<CustomerDelivery> DeliveryList = customerPaymentService.getDeliveryListById(custId);
         
@@ -187,7 +224,7 @@ public class CustomerPaymentController {
         log.info("prodUnitPrice: {} ", prodUnitPrice);
         log.info("orderQuantity: {} ", orderQuantity);
         
-        CommonMember loginMember = (CommonMember) session.getAttribute("loginMember");
+        CustomerMember loginMember = (CustomerMember) session.getAttribute("loginMember");
         String custId = loginMember.getMemberId();
         
         

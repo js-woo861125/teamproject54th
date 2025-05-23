@@ -3,13 +3,14 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{customer/layout/default}">
 
-<head>
-<script src="https://js.tosspayments.com/v2/standard"></script>
-</head>
-
-<th:block layout:fragment="jsFile">
-
-</th:block>
+	<head>
+		<script src="https://js.tosspayments.com/v2/standard"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+	
+	</th:block>
 
 
 
@@ -42,12 +43,19 @@
 		
 			$('#paymentBtn').click(async () => {
 				
-				const delChk = document.getElementById("delName").value;
+				const delNameChk = document.getElementById("delName").value;
+				const delRecipientNmChk = document.getElementById("delRecipientNm").value;
 				
-				if(!delChk) {
-					alert('배송지를 선택해주세요');
+				if (!delNameChk) {
+					Swal.fire('입력 오류', '배송지를 선택해주세요.', 'warning');
 					return;
 				}
+				
+				if (!delRecipientNmChk) {
+				    Swal.fire('입력 오류', '수령인명을 입력해주세요.', 'warning');
+				    return;
+				}
+
 				
 				$('#payment-method').empty();
 				$('#agreement').empty();
@@ -78,7 +86,7 @@
 		        const delRequest = document.getElementById("delRequest").value;
 		        
 		        // 회원 결제
-		        const customerKey = "3g3Cca_AwBjjg837BM8Bv";
+		        const customerKey = /*[[${custId}]]*/ "";
 		        const widgets = tossPayments.widgets({
 		          customerKey,
 		        });

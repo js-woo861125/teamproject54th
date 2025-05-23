@@ -152,6 +152,8 @@
 			delivery_list dl
 		where
 			dl.cust_id = #{custId}
+		order by
+			dl.primary_location
 	</select>
 	
 	

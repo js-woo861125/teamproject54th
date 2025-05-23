@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.servlet.http.HttpSession;
 import ks54team01.customer.delivery.domain.CustomerDeliveryList;
 import ks54team01.customer.delivery.service.CustomerDeliveryService;
-import ks54team01.customer.member.domain.CommonMember;
+import ks54team01.customer.member.domain.CustomerMember;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/customer/delivery")
 @RequiredArgsConstructor
+@Slf4j
 public class CustomerDeliveryController {
 
 	private final CustomerDeliveryService customerDeliveryService;
@@ -47,7 +49,12 @@ public class CustomerDeliveryController {
 	
 	
 	@PostMapping("/addDeliveryList")
-	public String addDeliveryList(CustomerDeliveryList customerDeliveryList) {
+	public String addDeliveryList(CustomerDeliveryList customerDeliveryList, HttpSession session) {
+		
+		CustomerMember loginMember = (CustomerMember) session.getAttribute("loginMember");
+		String custId = loginMember.getMemberId();
+		
+		customerDeliveryList.setCustId(custId);
 		
 		customerDeliveryService.addDeliveryList(customerDeliveryList);
 		
@@ -59,13 +66,15 @@ public class CustomerDeliveryController {
 	@GetMapping("/deliveryList")
 	public String getDeliveryList(HttpSession session, Model model) {
 		
-		CommonMember loginMember = (CommonMember) session.getAttribute("loginMember");
+		CustomerMember loginMember = (CustomerMember) session.getAttribute("loginMember");
 		
 		if(loginMember == null) {
 			return "redirect:/customer/login/memberLogin";
 		}
 		
 		String custId = loginMember.getMemberId();
+		
+		log.info("회원아이디 : {}", custId);
 		
 		List<CustomerDeliveryList> DeliveryList = customerDeliveryService.getDeliveryList(custId);
 		
