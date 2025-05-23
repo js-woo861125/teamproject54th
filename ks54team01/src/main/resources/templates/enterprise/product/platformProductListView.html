@@ -13,16 +13,18 @@
     <th:block layout:fragment="content">
         <div class="content-header">
             <div>
-                <h2 class="content-title card-title" th:text="${title}"></h2>
+                <h2 class="content-title card-title" th:text="@{#}"></h2>
+            </div>
+            <div>
+                <a th:href="@{/enterprise/product/addProduct}" class="btn btn-primary btn-sm rounded">등록하기</a>
             </div>
          </div>
-        <div class="card mb-4">
+         <div class="card mb-4">
             <header class="card-header">
                 <div class="row align-items-center">
 					   <div class="col-lg-1 col-md-3 col-12">
 	                       <select class="form-select" name="searchKey">
-	                           <option>브랜드</option>
-	                           <option>상품</option>
+	                           <option>상품명</option>
 	                       </select>
 	                   </div>
 	                   <div class="col-lg-3 col-md-5">
@@ -43,6 +45,14 @@
                             <option>침대</option>
                         </select>
                     </div>
+                    <div class="col-lg-2">
+                        <select class="form-select">
+                            <option>판매상태</option>
+                            <option>활성화</option>
+                            <option>비활성화</option>
+                            <option>판매중단</option>
+                        </select>
+                    </div>
                 </div>
             </header>
             <!-- card-header end// -->
@@ -51,35 +61,43 @@
                     <table class="table table-hover">
                         <thead>
                             <tr class=text-center>
-                                <th>카테고리</th>
-                                <th>브랜드</th>
-                                <th>모델</th>
+                                <th>상품명</th>
                                 <th>상품이미지</th>                            
-                                <th>상품</th>
+                                <th>모델명</th>
+                                <th>등록일자</th>
+                                <th>수정일자</th>
                                 <th>상품등록</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr class=text-center>
-                                <td>침대</td>
-                                <td>인홈</td>
-                                <td>27LX5QKNA</td>
-                                <td>
-                                    <a class="item" href="#">
-                                        <div class="img">
-                                            <img src="https://storage.bilrigo.com/data/thumbnails/230421/QXWVYba3s51p1vlpZVXnKF3dd8JYAC.jpg" class="img-sm img-thumbnail" alt="Item" />
-                                        </div>
-                                    </a>
-                                </td>
-                                <td>
-                                    <div class="info">
-                                        <h6 class="mb-0">라온 LED 저상형 침대 SS</h6>
-                                    </div>
-                                </td>
+                        <tbody class="text-center">
+                        <th:block th:if="${!#lists.isEmpty(getProductList)}" th:each="l : ${getProductList}">
+                            <tr>
+                                <td><a class="fw-bold" th:text="${l.productName}"></a></td>
+                               <td>
+								    <a class="item" href="#">
+								        <div class="img">
+								            <img th:if="${l.productImage != null}" 
+								                 th:src="${l.productImage}" 
+								                 class="img-sm img-main" 
+								                 alt="상품이미지" />
+								               
+								            <div th:if="${l.productImage == null}" 
+								                 class="img-sm img-main bg-light d-inline-block" 
+								                 style="width: 100px; height: 100px;"></div>
+								        </div>							       
+								    </a>
+								</td>
+                                <td th:text="${l.modelName}">모델명</td>                               
+                                <td th:text="${l.registerDate}">2023-01-01 13:00:00</td>
+                                <td th:text="${l.revisionDate}">2023-01-01 13:00:00</td>
                                 <td class="col-lg-2 col-sm-2 col-4 col-action">
-                                    <a href="#" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 등록 </a>
+                                    <a th:href="@{/enterprise/product/addProduct(productNo=${l.productNo})}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 등록 </a>
                                 </td>
                             </tr>
+                          </th:block>
+                          	 <tr th:unless="${!#lists.isEmpty(entList)}">
+							 	<td colspan="11">등록없음</td>
+							 </tr>  
                         </tbody>
                     </table>
                 </div>
@@ -87,22 +105,10 @@
             </div>
             <!-- card-body end// -->
         </div>
-   </th:block>    
+   </th:block> 
         <!-- card end// -->
-        <div class="pagination-area mt-15 mb-50">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-start">
-                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                    <li class="page-item"><a class="page-link" href="#">02</a></li>
-                    <li class="page-item"><a class="page-link" href="#">03</a></li>
-                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                    <li class="page-item"><a class="page-link" href="#">16</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+        
+ 
     <!-- content-main end// -->
 
         <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
