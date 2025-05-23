@@ -25,6 +25,25 @@
 		<result column="logout_date" 	property="logoutDate"/>
 	</resultMap>
 	
+	<!-- <select id="getSearchMember" parameterType="string" resultMap="memberResultMap">
+		/* 회원 검색 조회 */
+		SELECT
+			m.members_id,
+			m.members_pw,
+			m.members_type,
+			m.dormant_status,
+			m.withdraw_status,
+			m.register_date,
+			m.revision_date,
+			m.state_transition_date
+		FROM 
+			members m
+		<where>
+			<if test="searchValue != null and searchValue != ''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')			
+			</if>
+		</where>
+	</select> -->
 	
 	<select id="getLoginHistoryList" resultMap="loginHistoryResultMap">
 		/* 회원 로그인 이력 조회 */

@@ -12,7 +12,24 @@
 	</th:block>
 	
 	<th:block layout:fragment="jsScript">
-		
+		<script>
+			/**
+			 * 전화번호 조합
+			 */
+			function setPhoneValue() {
+			    const phone = `${$('#managerPhone1').val()}-${$('#managerPhone2').val()}-${$('#managerPhone3').val()}`;
+			    $('#managerPhone').val(phone);
+			}
+			
+			
+			$('#modifyMemberBtn').click(function(e) {
+		        e.preventDefault();
+		        
+		        setPhoneValue();
+	                  $('#modifyMemberForm').submit();
+		    });
+			
+		</script>
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
@@ -42,18 +59,18 @@
 	                        <div class="col-md-2">
 	                            <h4>1. 수정 항목</h4>
 	                        </div>
-	                        <div class="col-md-10" th:object="${memberInfo}">
+	                        <div class="col-md-10" th:object="${adminInfo}">
 	                        	<div class="row align-items-end ">
 	                        		<div class="col-6">
 			                            <div class="mb-4">
-			                                <label class="form-label fs-6" for="memberId">회원아이디</label>
+			                                <label class="form-label fs-6" for="memberId">아이디</label>
 			                                <input type="text" id="memberId" name="memberId" th:value="*{memberId}" 
 			                                	   placeholder="회원의 아이디를 입력해주세요" class="form-control col-8 fs-6" readonly />
 			                            </div>                        		
 	                        		</div>                        		
 	                        		<div class="col-6">	                        		
 			                            <div class="mb-4">
-			                                <label class="form-label fs-6" for="memberPw">회원비밀번호</label>
+			                                <label class="form-label fs-6" for="memberPw">비밀번호</label>
 			                                <input type="text" id="memberPw" name="memberPw" th:value="*{memberPw}"
 			                                	   placeholder="회원의 비밀번호를 입력해주세요" class="form-control fs-6" />
 			                            </div>
@@ -62,8 +79,8 @@
 	                        	<div class="row">
 	                        		<div class="col-6">
 			                            <div class="mb-4">
-			                                <label class="form-label fs-6" for="managerName">회원이름</label>
-			                                <input type="text" id="memberName" name="memberName" th:value="*{memberName}"
+			                                <label class="form-label fs-6" for="managerName">이름</label>
+			                                <input type="text" id="managerName" name="managerName" th:value="*{managerName}"
 			                                	   placeholder="회원의 이름을 입력해주세요" class="form-control fs-6" />
 			                            </div>
 	                        		</div>
@@ -74,8 +91,8 @@
 	                            			<input type="hidden" id="managerPhone" name="managerPhone" class="form-control " />
 	                            			<div class="col-4">
 					                            <div class="mb-4">
-					                                <label class="form-label fs-6" for="managerPhone">회원연락처</label>
-					                            	<input type="text" class="form-control" id ="custPhone1" name="custPhone1" th:value="${custPhone1}" readonly />
+					                                <label class="form-label fs-6" for="managerPhone">연락처</label>
+					                            	<input type="text" class="form-control" id ="managerPhone1" name="managerPhone1" th:value="${managerPhone1}" readonly />
 					                            </div>
 	                            			</div>
 	                            			<div class="col-4">
@@ -103,4 +120,5 @@
         	</form>
         </div>
 	</th:block>	
+			
 </html>
