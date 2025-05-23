@@ -103,8 +103,6 @@ public class CustomerAssigneeBoardController {
 	public String getAssigneeBoardDetail(@RequestParam(name="assigneeBoardNum", required = false) String assigneeBoardNum
 										, Model model) {
 		
-		log.info("게시글조회 코드: {}", assigneeBoardNum);
-		
 		CustomerAssigneeBoard assigneeBoardInfo = customerAssigneeBoardService.getAssigneeBoardInfoByCode(assigneeBoardNum);
 		
 		model.addAttribute("title", "양수 게시글 상세 조회");

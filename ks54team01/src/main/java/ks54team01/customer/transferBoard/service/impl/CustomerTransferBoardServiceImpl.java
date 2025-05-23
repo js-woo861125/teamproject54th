@@ -2,6 +2,7 @@ package ks54team01.customer.transferBoard.service.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,26 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 
 	// DI 의존성주입
 	private final CustomerTransferBoardMapper customerTransferBoardMapper;
+	
+	
+	@Override
+	public CustomerTransferBoard getMyContractInfo(String rentalContractNum) {
+		
+		CustomerTransferBoard myRentalInfo = customerTransferBoardMapper.getMyContractInfo(rentalContractNum);
+		
+		return myRentalInfo;
+	}
+	
+	/**
+	 * 양도 게시글 등록
+	 */
+	@Override
+	public void addTransferBoard(CustomerTransferBoard customerTransferBoard) {
+		
+		String transferBoardNum =  "transfer_board_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+		customerTransferBoard.setTransferBoardNum(transferBoardNum);	
+		customerTransferBoardMapper.addTransferBoard(customerTransferBoard);
+	}
 	
 	/**
 	 * 내 양도 게시글 목록 조회
