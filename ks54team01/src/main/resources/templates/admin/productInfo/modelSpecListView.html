@@ -4,12 +4,65 @@
 	  layout:decorate="~{admin/layout/default}">
 	<!-- head 삽입공간 -->
 	<head>
-		 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>	
 	</head>
-	
+
 	<th:block layout:fragment="jsFile">
-		<!-- 모델별/상세스펙 삭제 -->
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
 		<script>
+			/**
+			* 사용유무 상태 변경
+			*/
+			$(document).on('change', '.toggle-use-status', function() {
+				const $checkbox = $(this);
+				const isChecked = $checkbox.is(':checked');
+				const modelSpecNo = $checkbox.data('modelSpecNo');
+				const $badge = $checkbox.closest('td').find('span.badge');				
+
+				const useStatus = isChecked ? '사용중' : '사용불가';
+				
+				// 변경 시 확인메시지 띄우기
+				const confirmMessage = isChecked
+					? '사용중으로 상태를 변경하시겠습니까?'
+					: '사용불가로 상태를 변경하시겠습니까?'				
+
+				if(confirm(confirmMessage)) {
+					$.ajax({
+						url: '/admin/productInfo/updateModelSpec',
+						method: 'post',
+						data: {
+							modelSpecNo: modelSpecNo,
+							useStatus: useStatus
+						},
+						success: function(response) {
+							// 상태 변경되었을 경우
+							if(useStatus === '사용중') {
+								$badge.text('사용중')
+									  .removeClass('alert-danger')
+									  .addClass('alert-success');
+							} else {
+								$badge.text('사용불가')
+									  .removeClass('alert-success')
+									  .addClass('alert-danger');
+							}
+						},
+						error: function(jqXHR) {
+							console.log(jqXHR.responseText);
+							alert('상태 변경 중 오류가 발생했습니다');
+							$checkbox.prop('checked', !isChecked);
+						}
+					});
+				// 취소 시 원상 복구
+				} else {
+					$checkbox.prop('checked', !isChecked);	
+				}			
+			});
+			
+			/**
+			* 모델별/상세스펙 삭제
+			*/
 			$('.remove-btn').click(e => {
 				e.preventDefault();
 				const modelSpecNo = $(e.target).data('modelSpecNo');
@@ -112,9 +165,16 @@
 											<td th:text="${l.modelInfo.modelName}">라온 LED 저상형 침대 SS</td>
 											<td th:text="${l.specInfo.specName}">침대사이즈</td>
 											<td th:text="${l.modelSpecName}">1220x2220x610 mm</td>
-											<td>
-												<span class="badge rounded-pill" th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'" th:text="${l.useStatus}">사용중</span>
-											</td>
+	                                        <td>
+	                                        	<div class="d-flex align-items-center justify-content-center gap-2">
+	                                        		<div class="form-check form-switch m-0">
+	                                        			<input class="form-check-input toggle-use-status" type="checkbox" th:checked="${l.useStatus == '사용중'}" th:data-model-spec-no="${l.modelSpecNo}" />
+													</div>
+		                                            <span class="badge rounded-pill"
+		                                                  th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'"
+		                                                  th:text="${l.useStatus}">사용중</span>
+	                                        	</div>          
+	                                        </td>
 											<td th:text="${l.modelSpecRegDate}">2023-01-01 10:00:00</td>
 											<td th:text="${l.modelSpecRevDate}">2023-01-01 10:00:00</td>
 											<td>

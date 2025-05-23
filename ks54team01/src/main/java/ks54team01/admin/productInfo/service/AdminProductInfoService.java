@@ -14,6 +14,24 @@ import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
 public interface AdminProductInfoService {
 	
 	/**
+	 * 사용유무 상태 변경
+	 */
+	// 모델별/상세스펙 상태 변경
+	void updateModelSpecUseStatus(String modelSpecNo, String useStatus);
+	// 카테고리별/상세스펙 상태 변경
+	void updateCategorySpecUseStatus(String specNo, String useStatus);
+	// 전체혜택 상태 변경
+	void updateBenefitUseStatus(String benefitNo, String useStatus);		
+	// 모델 상태 변경	
+	void updateModelUseStatus(String modelNo, String useStatus);
+	// 품목 상태 변경
+	void updateItemUseStatus(String itemNo, String useStatus);		
+	// 브랜드 상태 변경
+	void updateBrandUseStatus(String brandNo, String useStatus);	
+	// 카테고리 상태 변경
+	void updateCategoryUseStatus(String categoryNo, String useStatus);	
+	
+	/**
 	 * 상품정보 검색 
 	 */
 	// 모델별/상세스펙 검색
