@@ -21,6 +21,7 @@ import ks54team01.admin.payment.domain.AdminFee;
 import ks54team01.admin.payment.domain.AdminFeeListWrapper;
 import ks54team01.admin.payment.domain.AdminMonthlyFee;
 import ks54team01.admin.payment.domain.AdminPayment;
+import ks54team01.admin.payment.domain.SettlementConfirmRequest;
 import ks54team01.admin.payment.service.AdminPaymentService;
 import lombok.RequiredArgsConstructor;
 
@@ -103,11 +104,12 @@ public class AdminPaymentController {
 		return "admin/payment/calculateView";
 	}
 	
-	// 마감상세
+	// 마감정산 상세
 	 @PostMapping("/calculateDeadline")
 	    public String getAdminPaymentCalcDetail(
 	            @RequestParam(name = "settlementMonth", required = false) String settlementMonth, // 조회 조건: 정산 연월
-	            @RequestParam(name = "searchValue", required = false) String searchValue,       // 조회 조건: 검색 값 (업체)          
+	            @RequestParam(name = "searchValue", required = false) String searchValue,       // 조회 조건: 검색 값 (업체)  
+	            @RequestParam(name = "entEmpId", required = false) String entEmpId,
 	            // @ModelAttribute를 사용하여 AdminFee 객체 리스트를 한 번에 받습니다!
 	            @ModelAttribute("adminFeeListWrapper") AdminFeeListWrapper adminFeeListWrapper, // 폼의 'adminFeeList[i].필드명' 데이터가 AdminFee 리스트로 바인딩됩니다.   
 	            Model model, // 집계 결과를 다음 뷰(HTML)로 보내기 위해 Model 객체 추가
@@ -242,7 +244,9 @@ public class AdminPaymentController {
 		        model.addAttribute("settlementMonth", settlementMonth);
 		        model.addAttribute("searchValue", searchValue);
 		        model.addAttribute("adminFeeList", adminFeeList); // 뷰에서 상세 내역을 다시 보여줄 때 사용
-
+		        model.addAttribute("entEmpId", entEmpId);
+		        
+		        
 		        // 총계 변수들을 모델에 추가 (전체 합계용)
 		        model.addAttribute("totalPaymentCount", totalPaymentCount);          // 총 결제 건수
 		        model.addAttribute("totalCancellationCount", totalCancellationCount); // 총 취소 건수
@@ -257,7 +261,34 @@ public class AdminPaymentController {
 
 		        return "admin/payment/calculateDetail";
 		    }
-		
+		//마감등록
+	 @PostMapping("/confirmSettlement")
+	    public String confirmSettlement(@ModelAttribute SettlementConfirmRequest request, 
+							            RedirectAttributes redirectAttributes) {
+
+	        System.out.println("\n--- 새로운 메서드: 정산 확정 (confirmSettlement) 호출 ---");
+	        System.out.println("정산 연월: " + request.getSettlementMonth());
+	        System.out.println("검색 업체코드: " + request.getSearchValue());
+	        System.out.println("업체 직원 ID: " + request.getEntEmpId());
+	        System.out.println("플랫폼 직원 ID: " + request.getPlatformEmpId());
+	        System.out.println("매출총합 (전달됨): " + request.getTotalApprovedAmount());
+	        System.out.println("취소/환불 (전달됨): " + request.getTotalCancelledAmount());
+	        System.out.println("플랫폼 수수료 (전달됨): " + request.getTotalNetPlatformFee());
+	        System.out.println("최종 정산 총계 (전달됨): " + request.getFinalSettlementAmount());
+
+	        List<AdminMonthlyFee> adminMonthlyFeeList = request.getAdminMonthlyFeeList();
+	        System.out.println("전달된 상세 매출 건수: " + (adminMonthlyFeeList != null ? adminMonthlyFeeList.size() : 0) + "건");
+
+	        // ⭐️ 중요: 이 부분에서 실제 정산 DB 저장 로직을 구현합니다.
+	        // adminFeeService.saveSettlement(request); // 예시: DTO 전체를 서비스로 넘길 수 있습니다.
+
+	        // 정산 완료 후, 성공 메시지와 함께 다른 페이지로 리다이렉트
+	        redirectAttributes.addFlashAttribute("message", "정산이 성공적으로 확정되었습니다.");
+	        
+	        return "redirect:/admin/payment/searchEnterprise"; // 정산 목록 페이지 등으로 리다이렉트
+	    }
+	 
+	
 
 	
 }

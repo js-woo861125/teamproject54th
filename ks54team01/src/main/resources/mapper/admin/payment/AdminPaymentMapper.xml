@@ -67,6 +67,7 @@
 			ec.ent_ceo_nm AS entCeoName,
 			ec.ent_ceo_phone AS ceoTelNo,
 			ec.ent_brno AS entBrNo,
+			ct.ent_emp_id AS entEmpId,
 			ct.contract_status AS entContractStatus,
 			ct.contract_expiry_date AS contractEndDate
 		FROM 

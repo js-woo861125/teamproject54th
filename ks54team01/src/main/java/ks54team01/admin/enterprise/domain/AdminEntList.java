@@ -13,6 +13,7 @@ public class AdminEntList {
 	private String entName;
 	private String entBrno;
 	private String ceoTelNo;
+	private String entEmpId;
 	private String entContractStatus;
 	private LocalDate contractEndDate;
 	
