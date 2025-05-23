@@ -10,66 +10,67 @@
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	</th:block>
 	
+	<!-- 페이지 삽입공간 -->
     <th:block layout:fragment="content">
-	<div class="content-header">
-         <div class="row gx-3">
-			  <div class="col">
-			    <h2 class="content-title card-title" th:text="${title}"></h2>
-			  </div>
-			  <div class="col-auto">
-			    <a href="#" class="btn btn-primary">
-			      <i class="material-icons md-plus"></i>회원 등록
-			    </a>
-			  </div>
+		<div class="content-header">
+			<div>
+				<h2 class="content-title card-title" th:text="${title}"></h2>
+			</div>
 		</div>
-    </div>
         <div class="card mb-4">
             <header class="card-header">
-            	<form th:action="@{/admin/member/searchMember}">
-            	
+            	<form th:action="@{/admin/member/searchMember}" method="get">
+            		<div class="row gx-3">
+	                    	<div class="col-lg-2 col-md-3 col-6">
+		                        <select class="form-select">
+		                            <option>회원유형</option>
+		                            <option>플랫폼직원</option>
+		                            <option>개인고객</option>
+		                            <option>기업고객</option>
+		                            <option>입점업체 대표</option>
+		                            <option>입점업체 직원</option>
+		                        </select>
+	                    	</div>
+		                    <div class="col-lg-2 col-md-3 col-6">
+		                        <select class="form-select">
+		                            <option>회원상태</option>
+		                            <option>휴면회원</option>
+		                            <option>탈퇴회원</option>
+		                        </select>
+		                    </div>
+	               		<div class="col-lg-4 col-md-5">
+	                       <input type="text" name="searchValue" th:value ="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
+	                   	</div>
+	                   	<div class="col-lg-1 col-md-1 me-auto">
+						   <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
+	                   	</div>
+	                   	<div class="col-lg-2 col-md-3 col-12">
+	                       <select class="form-select">
+	                           <option>Show 20</option>
+	                           <option>Show 30</option>
+	                           <option>Show 40</option>
+	                       </select>
+	                   	</div>
+	               </div>          	
             	</form>
-                <div class="row gx-3">
-                    <div class="col-lg-4 col-md-6 me-auto">
-                        <input type="text" placeholder="검색어를 입력해주세요" class="form-control" />
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-6">
-                        <select class="form-select">
-                            <option>회원유형</option>
-                            <option>플랫폼직원</option>
-                            <option>개인고객</option>
-                            <option>기업고객</option>
-                            <option>입점업체 대표</option>
-                            <option>입점업체 직원</option>
-                        </select>
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-6">
-                        <select class="form-select">
-                            <option>회원상태</option>
-                            <option>휴면회원</option>
-                            <option>탈퇴회원</option>
-                        </select>
-                    </div>
-                </div>
-            </header>
-            <!-- card-header end// -->
+           	</header>    
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr class=text-center>
-                                <th>회원아이디</th>
-                                <th>회원비밀번호</th>
-                                <th>회원유형</th>
-                                <th>휴면상태</th>
-                                <th>탈퇴상태</th>
-                                <th>등록일시</th>
-                                <th>수정일시</th>
-                                <th>상태전환일시</th>
+                    <table class="table align-middle table-nowrap mb-0">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th class="align-middle" scope="col">회원아이디</th>
+                                <th class="align-middle" scope="col">회원비밀번호</th>
+                                <th class="align-middle" scope="col">회원유형</th>
+                                <th class="align-middle" scope="col">휴면상태</th>
+                                <th class="align-middle" scope="col">탈퇴상태</th>
+                                <th class="align-middle" scope="col">등록일시</th>
+                                <th class="align-middle" scope="col">수정일시</th>
+                                <th class="align-middle" scope="col">상태전환일시</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr class=text-center
-                            	th:if="${!#lists.isEmpty(memberList)}"
+                        <tbody class="text-center">
+                            <tr th:if="${!#lists.isEmpty(memberList)}"
                           	  	th:each="l : ${memberList}">
                                 <td th:text="${l.memberId}">corpcustid1></td>
                                 <td th:text="${l.memberPw}">corpcustpw1</td>
@@ -102,6 +103,7 @@
             </div>
             <!-- card-body end// -->
         </div>
+    </div>
                 <!-- card end// -->
                 <div class="pagination-area mt-15 mb-50">
                     <nav aria-label="Page navigation example">

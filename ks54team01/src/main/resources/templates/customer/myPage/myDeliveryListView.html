@@ -19,16 +19,39 @@
 	<th:block layout:fragment="jsScript">
 		<script type="text/javascript">
 
-			
-			document.getElementById('addDeliveryForm').addEventListener('submit', function(e) {
-			  // 체크박스 체크 상태 확인
-			  const isChecked = document.getElementById('agreeCheckbox').checked;
-			  // hidden input에 값 넣기
-			  document.getElementById('primaryLocationChk').value = isChecked ? '기본배송지' : '추가배송지';
-			  // 폼이 이대로 전송됩니다.
+				
+			document.getElementById('addDeliveryBtn').addEventListener('click', function (e) {
+				  const form = document.getElementById('addDeliveryForm');
+	
+				  const requiredFields = [
+				    { id: 'delNm', name: '배송지명' },
+				    { id: 'delAddr', name: '주소' },
+				    { id: 'delZipNo', name: '우편번호' },
+				    { id: 'delDaddr', name: '상세주소' },
+				    { id: 'recipientPhone', name: '연락처' },
+				    { id: 'delRequest', name: '요청사항' }
+				  ];
+	
+				  for (const field of requiredFields) {
+				    const el = document.getElementById(field.id);
+				    if (!el.value.trim()) {
+				      e.preventDefault(); // submit 막기
+				      Swal.fire('입력 오류', `"${field.name}"을(를) 입력해주세요.`, 'warning');
+				      el.focus();
+				      return;
+				    }
+				  }
+	
+				  // 기본배송지 체크 반영
+				  const isChecked = document.getElementById('agreeCheckbox').checked;
+				  document.getElementById('primaryLocationChk').value = isChecked ? '기본배송지' : '추가배송지';
+	
+				  // 모든 조건 통과 시 폼 제출
+				  form.submit();
 			});
+
 			
-			
+
 			
 			
 			
@@ -50,7 +73,7 @@
 			// 수정 버튼
 			document.querySelectorAll('.modifyDeliveryBtn').forEach(function(btn) {
 				btn.addEventListener('click', function() {
-					resetModalForm();
+					
 					// 데이터 세팅
 					document.getElementById('delNo').value = btn.getAttribute('data-del-no');
 					document.getElementById('delNm').value = btn.getAttribute('data-del-nm');
@@ -79,6 +102,10 @@
 		        document.getElementById('delNo').value = '';
 		        document.getElementById('primaryLocationChk').value = '';
 		    }
+			
+			
+		    
+			
 
 
 		    $('.removeDeliveryBtn').click( e => {
@@ -249,7 +276,7 @@
 	                   					<label class="form-check-label mr-10" for="agreeCheckbox"><span>기본배송지로 설정</span></label>
 										<input type="hidden" name="primaryLocation" id="primaryLocationChk">
 									</div>
-									<input type="hidden" name="custId" id="custId" value="personalcustid2">
+									<input type="hidden" name="custId" id="custId">
 									<input type="hidden" name="delNo" id="delNo">
 					  			</div>
 							</div>
