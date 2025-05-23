@@ -7,6 +7,95 @@
 	</head>
 
 	<th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+		<script>
+			/**
+			* 사용유무 상태 변경
+			*/
+			$(document).on('change', '.toggle-use-status', function() {
+				const $checkbox = $(this);
+				const isChecked = $checkbox.is(':checked');
+				const itemNo = $checkbox.data('itemNo');
+				const $badge = $checkbox.closest('td').find('span.badge');				
+
+				const useStatus = isChecked ? '사용중' : '사용불가';
+				
+				// 변경 시 확인메시지 띄우기
+				const confirmMessage = isChecked
+					? '사용중으로 상태를 변경하시겠습니까?'
+					: '사용불가로 상태를 변경하시겠습니까?'				
+
+				if(confirm(confirmMessage)) {
+					$.ajax({
+						url: '/admin/productInfo/updateItem',
+						method: 'post',
+						data: {
+							itemNo: itemNo,
+							useStatus: useStatus
+						},
+						success: function(response) {
+							// 상태 변경되었을 경우
+							if(useStatus === '사용중') {
+								$badge.text('사용중')
+									  .removeClass('alert-danger')
+									  .addClass('alert-success');
+							} else {
+								$badge.text('사용불가')
+									  .removeClass('alert-success')
+									  .addClass('alert-danger');
+							}
+						},
+						error: function(jqXHR) {
+							console.log(jqXHR.responseText);
+							alert('상태 변경 중 오류가 발생했습니다');
+							$checkbox.prop('checked', !isChecked);
+						}
+					});
+				// 취소 시 원상 복구
+				} else {
+					$checkbox.prop('checked', !isChecked);	
+				}			
+			});
+			
+			/**
+			* 품목 삭제
+			*/
+			$('.remove-btn').click(e => {
+				e.preventDefault();
+				const itemNo = $(e.target).data('itemNo');
+				
+				Swal.fire({
+					  title: "품목 삭제",
+					  text: "품목을 삭제하시겠습니까?",
+					  icon: "warning",
+					  showCancelButton: true,
+					  confirmButtonColor: "#3085d6",
+					  cancelButtonColor: "#d33",
+					  confirmButtonText: "삭제"
+					}).then((result) => {
+					  if (result.isConfirmed) {
+						$.ajax({  
+				            url: '/admin/productInfo/removeItem',
+				            method: 'post',
+				            data: { 'itemNo': itemNo },
+				            dataType: 'json',
+				            success: function(response) {
+							    Swal.fire({
+							      title: "삭제 완료",
+							      text: "삭제되었습니다.",
+							      icon: "success"
+							    }).then(() => {
+							    	location.reload();
+		                        });
+		                    }
+		                });
+		            }
+		        });
+		    });	
+		</script>	
 	</th:block>
 	
 	<th:block layout:fragment="content">
@@ -73,11 +162,16 @@
 											<td th:text="${l.itemNo}">item_1</td>
 											<td th:text="${l.categoryInfo.smCategory}">침대</td>
 											<td th:text="${l.itemName}">건강돌침대</td>
-											<td>
-												<span class="badge rounded-pill"
-													  th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'"
-													  th:text="${l.useStatus}">사용중</span>
-											</td>
+	                                        <td>
+	                                        	<div class="d-flex align-items-center justify-content-center gap-2">
+	                                        		<div class="form-check form-switch m-0">
+	                                        			<input class="form-check-input toggle-use-status" type="checkbox" th:checked="${l.useStatus == '사용중'}" th:data-item-no="${l.itemNo}" />
+													</div>
+		                                            <span class="badge rounded-pill"
+		                                                  th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'"
+		                                                  th:text="${l.useStatus}">사용중</span>
+	                                        	</div>          
+	                                        </td>
 											<td th:text="${l.itemRegDate}">2023-01-01 10:00:00</td>
 											<td th:text="${l.itemRevDate}">2023-01-01 10:00:00</td>
 											<td>
@@ -87,7 +181,7 @@
 													</a>
 													<div class="dropdown-menu">
 														<a class="dropdown-item" th:href="@{/admin/productInfo/modifyItem(itemNo=${l.itemNo})}">수정</a>
-														<a class="dropdown-item text-danger" href="#">삭제</a>
+	                                                    <a class="dropdown-item text-danger remove-btn" href="#" th:data-item-no=${l.itemNo}>삭제</a>
 													</div>
 												</div> 
 											</td>

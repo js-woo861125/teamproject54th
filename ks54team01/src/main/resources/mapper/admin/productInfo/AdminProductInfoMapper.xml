@@ -113,6 +113,83 @@
 		</association>			
 	</resultMap>
 
+	<update id="updateModelSpecUseStatus">
+		/* 모델별/상세스펙 상태 변경 */
+		UPDATE
+			model_spec_content
+		SET
+			use_status = #{useStatus},
+			revision_date = NOW()
+		WHERE
+			spec_content_no = #{modelSpecNo}
+	</update>
+
+	<update id="updateCategorySpecUseStatus">
+		/* 카테고리별/상세스펙 상태 변경 */
+		UPDATE
+			products_spec
+		SET
+			use_status = #{useStatus},
+			revision_date = NOW()
+		WHERE
+			spec_no = #{specNo}
+	</update>	
+
+	<update id="updateBenefitUseStatus">
+		/* 전체혜택 상태 변경 */
+		UPDATE
+			benefit
+		SET
+			use_status = #{useStatus},
+			revision_date = NOW()
+		WHERE
+			benefit_no = #{benefitNo}
+	</update>
+
+	<update id="updateModelUseStatus">
+		/* 모델 상태 변경 */
+		UPDATE
+			model
+		SET
+			use_status = #{useStatus},
+			revision_date = NOW()
+		WHERE
+			model_no = #{modelNo}
+	</update>
+	
+	<update id="updateItemUseStatus">
+		/* 품목 상태 변경 */
+		UPDATE
+			item
+		SET
+			use_status = #{useStatus},
+			revision_date = NOW()
+		WHERE
+			item_no = #{itemNo}
+	</update>	
+	
+	<update id="updateBrandUseStatus">
+		/* 브랜드 상태 변경 */
+		UPDATE
+			brand
+		SET
+			use_status = #{useStatus},
+			revision_date = NOW()
+		WHERE
+			brand_no = #{brandNo}
+	</update>	
+	
+	<update id="updateCategoryUseStatus">
+		/* 카테고리 상태 변경 */
+		UPDATE
+			products_category
+		SET
+			use_status = #{useStatus},
+			revision_date = NOW()
+		WHERE
+			product_category_no = #{categoryNo}	
+	</update>
+
 	<select id="getSearchModelSpec" parameterType="String" resultMap="modelSpecResultMap">
 		/* 모델별/상세스펙 검색 */
 		SELECT

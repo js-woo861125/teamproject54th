@@ -4,12 +4,65 @@
 	  layout:decorate="~{admin/layout/default}">
 	<!-- head 삽입공간 -->
 	<head>
-		 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</head>
-	
+
 	<th:block layout:fragment="jsFile">
-		<!-- 모델 삭제 -->
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
 		<script>
+			/**
+			* 사용유무 상태 변경
+			*/
+			$(document).on('change', '.toggle-use-status', function() {
+				const $checkbox = $(this);
+				const isChecked = $checkbox.is(':checked');
+				const modelNo = $checkbox.data('modelNo');
+				const $badge = $checkbox.closest('td').find('span.badge');				
+
+				const useStatus = isChecked ? '사용중' : '사용불가';
+				
+				// 변경 시 확인메시지 띄우기
+				const confirmMessage = isChecked
+					? '사용중으로 상태를 변경하시겠습니까?'
+					: '사용불가로 상태를 변경하시겠습니까?'				
+
+				if(confirm(confirmMessage)) {
+					$.ajax({
+						url: '/admin/productInfo/updateModel',
+						method: 'post',
+						data: {
+							modelNo: modelNo,
+							useStatus: useStatus
+						},
+						success: function(response) {
+							// 상태 변경되었을 경우
+							if(useStatus === '사용중') {
+								$badge.text('사용중')
+									  .removeClass('alert-danger')
+									  .addClass('alert-success');
+							} else {
+								$badge.text('사용불가')
+									  .removeClass('alert-success')
+									  .addClass('alert-danger');
+							}
+						},
+						error: function(jqXHR) {
+							console.log(jqXHR.responseText);
+							alert('상태 변경 중 오류가 발생했습니다');
+							$checkbox.prop('checked', !isChecked);
+						}
+					});
+				// 취소 시 원상 복구
+				} else {
+					$checkbox.prop('checked', !isChecked);	
+				}			
+			});
+			
+			/**
+			* 모델 삭제
+			*/
 			$('.remove-btn').click(e => {
 				e.preventDefault();
 				const modelNo = $(e.target).data('modelNo');
@@ -116,9 +169,16 @@
 											<td th:text="${l.brandInfo.brandName}">인홈</td>
 											<td th:text="${l.itemInfo.itemName}">침대</td>
 											<td th:text="${l.modelName}">라온 LED 저상형 침대 SS</td>
-											<td>
-												<span class="badge rounded-pill" th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'" th:text="${l.useStatus}">사용중</span>
-											</td>
+	                                        <td>
+	                                        	<div class="d-flex align-items-center justify-content-center gap-2">
+	                                        		<div class="form-check form-switch m-0">
+	                                        			<input class="form-check-input toggle-use-status" type="checkbox" th:checked="${l.useStatus == '사용중'}" th:data-model-no="${l.modelNo}" />
+													</div>
+		                                            <span class="badge rounded-pill"
+		                                                  th:classappend="${l.useStatus == '사용중'} ? 'alert-success' : 'alert-danger'"
+		                                                  th:text="${l.useStatus}">사용중</span>
+	                                        	</div>          
+	                                        </td>
 											<td th:text="${l.modelRegDate}">2023-01-01 10:00:00</td>
 											<td th:text="${l.modelRevDate}">2023-01-01 10:00:00</td>
 											<td>

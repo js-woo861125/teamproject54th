@@ -2,19 +2,67 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/layout/default}">
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
 
 	<th:block layout:fragment="jsFile">
-	    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</th:block>
 	
 	<th:block layout:fragment="jsScript">
-		<!-- 사용유무 변경 -->
 		<script>
-		
-		</script>
+			/**
+			* 사용유무 상태 변경
+			*/
+			$(document).on('change', '.toggle-use-status', function() {
+				const $checkbox = $(this);
+				const isChecked = $checkbox.is(':checked');
+				const brandNo = $checkbox.data('brandNo');
+				const $badge = $checkbox.closest('td').find('span.badge');				
 	
-		<!-- 브랜드 삭제 -->
-		<script>
+				const useStatus = isChecked ? '사용중' : '사용불가';
+				
+				// 변경 시 확인메시지 띄우기
+				const confirmMessage = isChecked
+					? '사용중으로 상태를 변경하시겠습니까?'
+					: '사용불가로 상태를 변경하시겠습니까?'				
+	
+				if(confirm(confirmMessage)) {
+					$.ajax({
+						url: '/admin/productInfo/updateBrand',
+						method: 'post',
+						data: {
+							brandNo: brandNo,
+							useStatus: useStatus
+						},
+						success: function(response) {
+							// 상태 변경되었을 경우
+							if(useStatus === '사용중') {
+								$badge.text('사용중')
+									  .removeClass('alert-danger')
+									  .addClass('alert-success');
+							} else {
+								$badge.text('사용불가')
+									  .removeClass('alert-success')
+									  .addClass('alert-danger');
+							}
+						},
+						error: function(jqXHR) {
+							console.log(jqXHR.responseText);
+							alert('상태 변경 중 오류가 발생했습니다');
+							$checkbox.prop('checked', !isChecked);
+						}
+					});
+				// 취소 시 원상 복구
+				} else {
+					$checkbox.prop('checked', !isChecked);	
+				}			
+			});
+			
+			/**
+			* 브랜드 삭제
+			*/
 			$('.remove-btn').click(e => {
 				e.preventDefault();
 				const brandNo = $(e.target).data('brandNo');
