@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
+import ks54team01.admin.manage.interceptor.AdminLoginInterceptor;
 import ks54team01.common.interceptor.AccessLogInterceptor;
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +18,8 @@ public class WebConfig implements WebMvcConfigurer{
 	private String fileRealPath;
 	
 	private final AccessLogInterceptor accessLogInterceptor;
+	private final AdminLoginInterceptor adminLoginInterceptor;
+	
 	/**
 	 * addInterceptors : bean으로 등록한 interceptor를 webproject에 추가하는 메소드
 	 */
@@ -34,6 +37,14 @@ public class WebConfig implements WebMvcConfigurer{
 				.excludePathPatterns("/user/**")
 				.excludePathPatterns("/favicon.ico")
 				.excludePathPatterns("/error");
+		
+		registry.addInterceptor(adminLoginInterceptor)
+			.addPathPatterns("/admin/**")
+			.excludePathPatterns("/admin/login")
+			.excludePathPatterns("/admin/logout")
+			.excludePathPatterns("/manage/**")
+			.excludePathPatterns("/favicon.ico")
+			.excludePathPatterns("/error");
 		
 		WebMvcConfigurer.super.addInterceptors(registry);
 	}
