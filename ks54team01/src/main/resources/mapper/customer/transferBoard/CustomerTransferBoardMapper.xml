@@ -73,6 +73,36 @@
 		</association>
   	</resultMap>	
 
+	<insert id="addTransferBoard" parameterType="CustomerTransferBoard">
+  		/* 등록 */
+  		INSERT INTO transfer_board
+		(transfer_board_no, cust_id, rental_contract_no, sell_products_no, model_no, item_no, product_category_no, del_info_no, transfer_title, transfer_content, rental_fee, remaining_months, contract_end_date, individual_grants, board_valid_date, transfer_rental_processing_status, register_date, revision_date)
+		VALUES(#{transferBoardNum}, 'personalcustid3', #{rentalContractNum}, #{sellProductsNum}, #{modelNum}, #{itemNum}, #{productCategoryNum}, #{deliveryInfoNum}, #{transferTitle}, #{transferContent}, #{rentalFee}, #{remainingMonths}, #{contractEndDate}, #{individualGrants}, DATE_ADD(NOW(), INTERVAL 1 MONTH), '대기중', NOW(), NOW());
+  	</insert>
+
+	<select id="getMyContractInfo" parameterType="string" resultMap="transferBoardResultMap">
+  		/* 양도 게시글 등록 시 진행 중인 계약 정보 조회 */
+  		SELECT 
+			rc.rental_contract_no ,
+			p.products_nm ,
+			rc.sell_products_no ,
+			rc.contract_quantity ,
+			rc.contract_period,
+			rc.rental_start_date ,
+			rc.rental_end_date AS contractEndDate,
+			CEIL(DATEDIFF(rental_end_date, NOW()) / 30) AS remainingMonths,
+			sp.final_price AS rentalFee
+		FROM 
+			rental_contract rc LEFT JOIN sell_products sp
+			ON rc.sell_products_no = sp.sell_products_no 
+			INNER JOIN products p
+			ON sp.products_no = p.products_no 
+		WHERE 
+			rc.cust_id = 'corpcustid4'
+			AND rc.rental_contract_no = 'rental_contract_7';
+  	</select>
+	
+
 	<select id="getMyTransferBoardList" parameterType="string" resultMap="transferBoardResultMap">
   		/* 내 양도 게시글 목록 조회 (제목, 작성자, 상품명, 이미지)*/
 	   SELECT 

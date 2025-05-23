@@ -65,7 +65,7 @@
 		        }).open();
 			});
 			
-			/* 상품 검색 */
+			/* 상품 찾기 */
 			$('.searchProduct').click(function() {
 	        	/* const data = $(this).data('productCategoryNum'); */
 	        	const value = $('#productCategoryNum').val();
@@ -97,7 +97,7 @@
 	             }); 
 	        });
 			
-			/* 품목 검색 */
+			/* 품목 찾기 */
 	        $('.mdCategory').click(function() {
 	        	const data = $(this).data('mdCategoryNo');
 	        	console.log(data);
@@ -275,7 +275,7 @@
 		      		</form>
 		    	</div>
 	  		</div>
-		</div> -->
+		</div>
         <div class="container mb-80 mt-50">
             <div class="row justify-content-center">
                 <div class="col-lg-8 mb-40">
@@ -315,7 +315,7 @@
                                 <div class="col-2">
 		                            <div>
 		                            	<button type="button" id="daumPostBtn" 
-		                            			class="btn btn-info w-100 rounded text-white justify-content-center" >주소찾기
+		                            			class="btn btn-info w-80 rounded text-white justify-content-center" >주소찾기
 		                            	</button>
 		                            </div>                        		
 	                        	</div>
@@ -331,17 +331,21 @@
                             <div class="form-group mb-30">
                                 <textarea name="assigneeContent" rows="5" placeholder="기타 상세 설명을 입력해주세요."></textarea>
                             </div>
-                            <div class="row align-items-end">
-			                    <div class="col-md-2 col-2 ms-auto">
-			                        <button type="submit" id="addAssigneeBoardBtn"
-			                        		class="btn btn-warning w-20 rounded font-lg hover-up text-white justify-content-center fs-6" >등록</button>
-			                    </div>
-			                    <div class="col-md-2 col-2">
-			                        <button type="reset" 
-			                        		class="btn btn-warning w-20 rounded font-lg hover-up text-white justify-content-center fs-6" >취소</button>
-			                    </div>
-        					</div>
-                		</form>
+							<div class="row justify-content-end">
+							    <div class="col-auto">
+							        <button type="submit" id="addAssigneeBoardBtn"
+							            class="btn btn-warning rounded font-lg hover-up text-white px-3 py-2 fs-6">
+							            등록
+							        </button>
+							    </div>
+							    <div class="col-auto">
+							        <a href="javascript:history.back();"
+							           class="btn btn-warning rounded font-lg hover-up text-white px-3 py-2 fs-6 text-center">
+							            취소
+							        </a>
+							    </div>
+							</div>
+               			</form>
                 	</div>
             	</div>
         	</div>
