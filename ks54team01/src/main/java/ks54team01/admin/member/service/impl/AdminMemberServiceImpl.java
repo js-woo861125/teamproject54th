@@ -25,15 +25,34 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	 * 회원 검색
 	 */	
 	@Override
-	public List<AdminMember> getSearchMember(String searchKey, String searchValue) {
-		switch (searchKey) {
-			case "memberId" 	-> searchKey = "m.members_id"; 
-			case "memberName" 	-> searchKey = "m.mbr_name"; 
-			case "memberEmail" 	-> searchKey = "m.mbr_email"; 			
-		}
-		List<AdminMember> memberList = adminMemberMapper.getSearchMember(searchKey, searchValue);
-		return memberList;
+	public List<AdminMember> getSearchMember(String searchKey, String searchValue, 
+	                                         String memberType, String withdrawStatus, String dormantStatus) {
+
+	    if (searchKey == null || (!searchKey.equals("memberId") && !searchKey.equals("memberName"))) {
+	        searchKey = "memberId";
+	    }
+
+	    if (searchValue != null && searchValue.trim().isEmpty()) {
+	        searchValue = null;
+	    }
+
+	    if (memberType != null && memberType.trim().isEmpty()) {
+	        memberType = null;
+	    }
+
+	    if (withdrawStatus != null && withdrawStatus.trim().isEmpty()) {
+	        withdrawStatus = null;
+	    }
+	    if (dormantStatus != null && dormantStatus.trim().isEmpty()) {
+	        dormantStatus = null;
+	    }
+
+	    List<AdminMember> memberList = adminMemberMapper.getSearchMember(searchKey, searchValue, 
+	    																 memberType, withdrawStatus, dormantStatus);
+
+	    return memberList;
 	}
+
 	
 	
 	/**

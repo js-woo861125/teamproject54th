@@ -24,19 +24,39 @@ public class AdminMemberController {
 	private final AdminMemberService adminMemberService;
 	
 	@GetMapping("/searchMember")
-	public String getSearchMember(@RequestParam(name="searchKey", required = false, defaultValue = "memberId") String searchKey 
-								 ,@RequestParam(name="searchValue", required = false) String searchValue
-								 ,Model model) {
+	public String getSearchMember(@RequestParam(name="searchKey", required = false, defaultValue = "memberId") String searchKey,
+								  @RequestParam(name="searchValue", required = false) String searchValue,
+								  @RequestParam(name="memberType", required = false) String memberType,
+								  @RequestParam(name="status", required = false) String status,
+								  Model model) {
 		
-		log.info("searchKey: {}, searchValue: {}", searchKey, searchValue);
-		List<AdminMember> memberList = adminMemberService.getSearchMember(searchKey, searchValue);
-		model.addAttribute("title", "회원목록");
-		model.addAttribute("memberList", memberList);
-		model.addAttribute("searchKey", searchKey);
-		model.addAttribute("searchValue", searchValue);
-		
-		return "admin/member/memberListView";
+	    String withdrawStatus = null;
+	    String dormantStatus = null;
+
+	    if ("WITHDRAWN".equals(status)) {
+	        withdrawStatus = "Y";
+	    } else if ("DORMANT".equals(status)) {
+	        dormantStatus = "Y";
+	    } else if ("ACTIVE".equals(status)) {
+	        withdrawStatus = "N";
+	        dormantStatus = "N";
+	    }
+
+	    log.info("searchKey: {}, searchValue: {}, memberType: {}, status: {}", searchKey, searchValue, memberType, status);
+
+	    List<AdminMember> memberList = adminMemberService.getSearchMember(searchKey, searchValue, memberType, 
+	    																  withdrawStatus, dormantStatus);
+
+	    model.addAttribute("title", "회원목록");
+	    model.addAttribute("memberList", memberList);
+	    model.addAttribute("searchKey", searchKey);
+	    model.addAttribute("searchValue", searchValue);
+	    model.addAttribute("memberType", memberType);
+	    model.addAttribute("status", status);
+
+	    return "admin/member/memberListView";
 	}
+
 	
 	@GetMapping("/loginHistoryList")
 	public String getLoginHistoryList(Model model) {

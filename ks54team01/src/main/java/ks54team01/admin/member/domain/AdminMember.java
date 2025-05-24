@@ -8,6 +8,7 @@ public class AdminMember {
 	private String memberId;
 	private String memberPw;
 	private String memberType;
+	private String memberName;
 	private String dormantStatus;
 	private String withdrawStatus;
 	private String memberRegDate;
