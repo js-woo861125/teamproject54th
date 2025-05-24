@@ -28,4 +28,6 @@ public interface CustomerPaymentMapper {
 	List<CustomerPayment> getPaymentList(String custId);
 
 	int addPayment(CustomerPayment customerPayment);
+	
+	int addBlillingPayment(CustomerPayment customerPayment);
 }

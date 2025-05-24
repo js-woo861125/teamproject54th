@@ -7,25 +7,27 @@
   
   	<resultMap type="CustomerPayment" id="paymentResultMap">
   		<id 	column="payment_completed_no" 	property="paymentCompletedNo" />
-  		<result column="cust_id"	property="custId" />
-  		<result column="sell_products_no"	property="sellProdNo" />
-  		<result column="rental_contract_no"	property="rentalContractNo" />
-  		<result column="pay_info_no"	property="paymentInfoNo" />
-  		<result column="ent_ceo_no"	property="entCeoNo" />
-  		<result column="ent_emp_id"	property="entEmpId" />
-  		<result column="manager_id"	property="managerId" />
-  		<result column="payment_type"	property="paymentType" />
-  		<result column="contract_details"	property="contractDetail" />
-  		<result column="payment_details"	property="paymentDetail" />
-  		<result column="payment_count"	property="paymentCount" />
-  		<result column="product_unit_price"	property="prodUnitPrice" />
-  		<result column="total_price"	property="totalPrice" />
+  		<result column="cust_id"				property="custId" />
+  		<result column="sell_products_no"		property="sellProdNo" />
+  		<result column="rental_contract_no"		property="rentalContractNo" />
+  		<result column="pay_info_no"			property="paymentInfoNo" />
+  		<result column="ent_ceo_no"				property="entCeoNo" />
+  		<result column="ent_emp_id"				property="entEmpId" />
+  		<result column="manager_id"				property="managerId" />
+  		<result column="payment_type"			property="paymentType" />
+  		<result column="contract_details"		property="contractDetail" />
+  		<result column="payment_details"		property="paymentDetail" />
+  		<result column="payment_count"			property="paymentCount" />
+  		<result column="product_unit_price"		property="prodUnitPrice" />
+  		<result column="total_price"			property="totalPrice" />
   		<result column="payment_completed_date"	property="paymentCompletedDate" />
-  		<result column="payment_status"	property="paymentStatus" />
-  		<result column="revision_date"	property="revDate" />
-  		<result column="products_nm"	property="prodNm" />
-  		<result column="payment_key"	property="paymentKey" />
-  		<result column="order_id"	property="orderId" />
+  		<result column="payment_status"			property="paymentStatus" />
+  		<result column="revision_date"			property="revDate" />
+  		<result column="products_nm"			property="prodNm" />
+  		<result column="payment_key"			property="paymentKey" />
+  		<result column="order_id"				property="orderId" />
+  		<result column="customer_key"			property="customerKey" />
+  		<result column="billing_key"			property="billingKey" />
   	</resultMap>
   	
   	
@@ -158,13 +160,24 @@
 	
 	
 	<insert id="addPayment" parameterType="CustomerPayment">
-		/* 결제시 payment테이블에 값 등록 */
+		/* 일반결제시 payment테이블에 값 등록 */
 		insert into payment
 			(payment_completed_no, cust_id, sell_products_no, rental_contract_no, pay_info_no, ent_ceo_no, ent_emp_id, manager_id, payment_type, contract_details, 
-			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, order_id)
+			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, customer_key, order_id, billing_key)
 		values
 			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, '일시불판매', 'pay_info_3', #{entCeoNo}, #{entEmpId}, #{managerId}, #{paymentType}, '일시불판매',
-			 '일시불판매', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), '정상결제상태', NOW(), #{paymentKey}, #{orderId})
+			 '일시불판매', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), '정상결제상태', NOW(), #{paymentKey}, #{customerKey}, #{orderId}, #{billingKey})
+	</insert>
+	
+	
+	<insert id="addBlillingPayment" parameterType="CustomerPayment">
+		/* 정기결제시 payment테이블에 값 등록 */
+		insert into payment
+			(payment_completed_no, cust_id, sell_products_no, rental_contract_no, pay_info_no, ent_ceo_no, ent_emp_id, manager_id, payment_type, contract_details, 
+			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, customer_key, order_id, billing_key)
+		VALUES
+			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, #{rentalContractNo}, 'pay_info_3', #{entCeoNo}, #{entEmpId}, #{managerId}, '카드결제', '렌탈계약상세',
+			 '월렌탈요금', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), '정상결제상태', NOW(), NULL, #{customerKey}, #{orderId}, #{billingKey});
 	</insert>
 	
 	

@@ -24,6 +24,8 @@ public class CustomerPayment {
 	private String revDate;
 	private String paymentKey;
 	private String orderId;
+	private String customerKey;
+	private String billingKey;
 		
 	private String prodNm;
 }
