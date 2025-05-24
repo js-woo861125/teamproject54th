@@ -33,6 +33,8 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 
 	private final String SECRET_KEY = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
 	
+	private final String SECRET_BILLING_KEY = "test_sk_Gv6LjeKD8a9q1PdGzbPN8wYxAdXy";
+	
 	private final ObjectMapper objectMapper;
 	
 	private final CustomerPaymentMapper customerPaymentMapper;
@@ -141,6 +143,22 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 	
 	
 	
+	@Override
+	public void addBillingPayment(CustomerPayment customerPayment, String rentalContractNo) {
+		
+		String paymentCompletedNo = "payCompleteNo_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+		customerPayment.setPaymentCompletedNo(paymentCompletedNo);
+		
+		customerPayment.setRentalContractNo(rentalContractNo);
+		
+		String orderId = "orderId_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+		customerPayment.setOrderId(orderId);
+		
+		customerPaymentMapper.addBlillingPayment(customerPayment);
+	}
+	
+	
+	
 	@Transactional(timeout = 300, rollbackFor = Exception.class)
 	@Override
 	public Map<String, Object> confirmPaymemt(String paymentKey, String orderId, Long amount) {
@@ -175,4 +193,36 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 		}
 		return responseMap;
 	}
+	
+	
+	@Transactional(timeout = 300, rollbackFor = Exception.class)
+	@Override
+	public Map<String, Object> getBillingKey(String authKey, String customerKey) {
+		
+		String testSecretApiKey = SECRET_BILLING_KEY + ":";
+		String encodeAuthKey = new String(Base64.getEncoder().encode(testSecretApiKey.getBytes(StandardCharsets.UTF_8)));
+		
+		Map<String, Object> responseMap = null;
+		
+		HttpRequest request = HttpRequest.newBuilder()
+			    .uri(URI.create("https://api.tosspayments.com/v1/billing/authorizations/issue"))
+			    .header("Authorization", "Basic " + encodeAuthKey)
+			    .header("Content-Type", "application/json")
+			    .method("POST", HttpRequest.BodyPublishers.ofString("{\"authKey\":\"" + authKey + "\",\"customerKey\":\"" + customerKey + "\"}"))
+			    .build();
+		
+		try {
+			HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+			responseMap = objectMapper.readValue(response.body(), new TypeReference<>() {});
+			log.info("결제 후 상세내용: {}", responseMap);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return responseMap;		
+	}
+	
 }

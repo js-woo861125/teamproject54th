@@ -89,10 +89,12 @@
 			
 			
 		    document.getElementById("paymentBtn").addEventListener("click", function (e) {
-	            const delNameChk = document.getElementById("delName").value.trim();
-	            const delRecipientNmChk = document.getElementById("delRecipientNm").value.trim();
-	            const rentalContractNo = document.getElementById("rentalContractNo").value.trim();
-	            
+		    	
+		    	const rentalContractNo = document.getElementById("rentalContractNo").value.trim();
+		        const delNameChk = document.getElementById("delName").value.trim();
+		        const delRecipientNmChk = document.getElementById("delRecipientNm").value.trim();
+		    	
+		    	
 	            if (!rentalContractNo) {
 	                Swal.fire('계약 필요', '먼저 계약을 진행해주세요.', 'warning');
 	                return;
@@ -147,11 +149,18 @@
 			// ------ '카드 등록하기' 버튼 누르면 결제창 띄우기 ------
 			// @docs https://docs.tosspayments.com/sdk/v2/js#paymentrequestpayment
 			async function requestBillingAuth() {
+								
+				const rentalContractNo = encodeURIComponent(document.getElementById("rentalContractNo").value);
+				const delNo = encodeURIComponent(document.getElementById("delSelected").value);
+			    const delRecipientNm = encodeURIComponent(document.getElementById("delRecipientNm").value.trim());
+			    const delRecipientPhone = encodeURIComponent(document.getElementById("delRecipientPhone").value);
+			    const delRequest = encodeURIComponent(document.getElementById("delRequest").value);
+				
 				await payment.requestBillingAuth({
 					method: "CARD", // 자동결제(빌링)는 카드만 지원합니다
 					successUrl: window.location.origin + "/customer/payment/billing/success?sellProductsNo=" + sellProductsNo +'&prodNo='+prodNo +'&entCeoNo=' +entCeoNo + '&entEmpId=' + entEmpId
 													   + '&managerId='+managerId+'&prodUnitPrice='+prodUnitPrice+'&delNo='+delNo+'&orderQuantity='+orderQuantity+'&quantity='+quantity+'&delRecipientNm='+delRecipientNm
-													   + '&delRecipientPhone='+delRecipientPhone+'&delRequest='+delRequest, // 요청이 성공하면 리다이렉트되는 URL
+													   + '&delRecipientPhone='+delRecipientPhone+'&delRequest='+delRequest+'&rentalContractNo='+rentalContractNo+'&totalPrice='+totalPrice, // 요청이 성공하면 리다이렉트되는 URL
 					failUrl: window.location.origin + "/fail", // 요청이 실패하면 리다이렉트되는 URL
 					customerEmail: "customer123@gmail.com",
 					customerName: "김토스",

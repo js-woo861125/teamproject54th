@@ -126,6 +126,8 @@ public class CustomerPaymentController {
 	}
 	
 	
+	
+	
 	@GetMapping("/addPayment")
 	public String addPayment(CustomerPayment customerPayment, @RequestParam("delNo") String delNo
 							, @RequestParam("quantity") Integer quantity, @RequestParam("prodNo") String prodNo
@@ -168,6 +170,49 @@ public class CustomerPaymentController {
 	
 	
 
+	@GetMapping("/addBillingPayment")
+	public String addBillingPaymnet(CustomerPayment customerPayment, @RequestParam("delNo") String delNo
+								  , @RequestParam("quantity") Integer quantity, @RequestParam("prodNo") String prodNo
+								  , @RequestParam("delRecipientNm") String delRecipientNm, @RequestParam("delRecipientPhone") String delRecipientPhone
+								  , @RequestParam("delRequest") String delRequest, @RequestParam("rentalContractNo") String rentalContractNo, Model model) {
+		
+		int orderQuantity = customerPayment.getPaymentCount();
+		String entCeoNo = customerPayment.getEntCeoNo();
+		
+		customerPaymentService.modifyQuantity(orderQuantity, prodNo, entCeoNo);
+		
+		customerPaymentService.addBillingPayment(customerPayment, rentalContractNo);
+		
+		
+		String paymentCompletedNo = customerPayment.getPaymentCompletedNo();
+		String empId = customerPayment.getEntEmpId();
+		String ceoNo = customerPayment.getEntCeoNo();
+		String custId = customerPayment.getCustId();
+		String sellProdNo = customerPayment.getSellProdNo();
+		
+		CustomerDeliveryInfo customerDeliveryInfo = new CustomerDeliveryInfo();
+		
+		String delInfoNo = "del_info_" + UUID.randomUUID().toString().replace("-", "").substring(0, 10);
+		customerDeliveryInfo.setDelInfoNo(delInfoNo);
+		
+		customerDeliveryInfo.setDelNo(delNo);
+		customerDeliveryInfo.setPaymentCompletedNo(paymentCompletedNo);
+		customerDeliveryInfo.setEntCeoNo(ceoNo);
+		customerDeliveryInfo.setEntEmpId(empId);
+		customerDeliveryInfo.setCustId(custId);
+		customerDeliveryInfo.setSellProdNo(sellProdNo);
+		customerDeliveryInfo.setRecipientNm(delRecipientNm);
+		customerDeliveryInfo.setRecipientPhone(delRecipientPhone);
+		customerDeliveryInfo.setDelRequest(delRequest);
+		
+		customerPaymentService.addDeliveryInfo(customerDeliveryInfo);
+		
+		return "redirect:/customer/payment/paymentList";
+	}
+	
+	
+	
+	
 	@GetMapping("/order")
 	public String getOrder( @RequestParam("prodUnitPrice") int prodUnitPrice, @RequestParam("totalPrice") int totalPrice,
 						    @RequestParam("managerId") String managerId, @RequestParam("period") int period,
@@ -259,4 +304,49 @@ public class CustomerPaymentController {
         
         return "redirect:/customer/payment/addPayment";
 	}
+	
+	
+	@GetMapping("/billing/success")
+	public String billingPaymentSuccess( @RequestParam("sellProductsNo") String sellProductsNo, @RequestParam("prodUnitPrice") Integer prodUnitPrice
+						               , @RequestParam("orderQuantity") Integer orderQuantity, @RequestParam("entCeoNo") String entCeoNo
+						               , @RequestParam("entEmpId") String entEmpId , @RequestParam("managerId") String managerId, @RequestParam("delNo") String delNo
+						               , @RequestParam("quantity") Integer quantity, @RequestParam("prodNo") String prodNo
+						               , @RequestParam("delRecipientNm") String delRecipientNm, @RequestParam("delRecipientPhone") String delRecipientPhone
+						               , @RequestParam("delRequest") String delRequest, @RequestParam("customerKey") String customerKey
+						               , @RequestParam("authKey") String authKey, @RequestParam("rentalContractNo") String rentalContractNo
+						               , @RequestParam("totalPrice") String totalPrice, Model model, RedirectAttributes reAttr, HttpSession session) {
+
+        
+        CustomerMember loginMember = (CustomerMember) session.getAttribute("loginMember");
+        String custId = loginMember.getMemberId();
+        
+        Map<String, Object> responseMap = customerPaymentService.getBillingKey(authKey, customerKey);
+        
+        String billingKey = (String) responseMap.get("billingKey");
+        
+        log.info("billingKey: {}", billingKey);
+       
+        reAttr.addAttribute("sellProdNo", sellProductsNo);
+        reAttr.addAttribute("prodNo", prodNo);
+        reAttr.addAttribute("custId", custId);
+        reAttr.addAttribute("paymentCount", orderQuantity);
+        reAttr.addAttribute("prodUnitPrice", prodUnitPrice);
+        reAttr.addAttribute("totalPrice", totalPrice);
+        reAttr.addAttribute("entCeoNo", entCeoNo);
+        reAttr.addAttribute("entEmpId", entEmpId);
+        reAttr.addAttribute("managerId", managerId);
+        reAttr.addAttribute("delNo", delNo);
+        reAttr.addAttribute("quantity", quantity);
+        reAttr.addAttribute("delRecipientNm", delRecipientNm);
+        reAttr.addAttribute("delRecipientPhone", delRecipientPhone);
+        reAttr.addAttribute("delRequest", delRequest);
+        reAttr.addAttribute("billingKey", billingKey);
+        reAttr.addAttribute("customerKey", customerKey);
+        reAttr.addAttribute("rentalContractNo", rentalContractNo);
+        
+        
+        return "redirect:/customer/payment/addBillingPayment";
+	}
+	
+	
 }
