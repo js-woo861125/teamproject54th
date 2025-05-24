@@ -16,6 +16,7 @@ public class AdminLoginInterceptor implements HandlerInterceptor{
 			throws Exception {
 		
 		HttpSession session = request.getSession();
+		
 		String adminId = (String) session.getAttribute("adminId");
 		
 		boolean isProcess = true;

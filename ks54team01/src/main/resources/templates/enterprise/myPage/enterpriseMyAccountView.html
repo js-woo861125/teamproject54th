@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+		<script>
+			/**
+			 * 전화번호 조합
+			 */
+			function setPhoneValue() {
+			    const phone = `${$('#managerPhone1').val()}-${$('#managerPhone2').val()}-${$('#managerPhone3').val()}`;
+			    $('#managerPhone').val(phone);
+			}
+			
+			
+			$('#modifyMemberBtn').click(function(e) {
+		        e.preventDefault();
+		        
+		        setPhoneValue();
+	                  $('#modifyMemberForm').submit();
+		    });
+			
+		</script>
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="content">
+		<div class="content-header">
+            <div>
+                <h2 class="content-title card-title" th:text="${title}"></h2>
+            </div>
+        </div>
+        <div class="card mb-4 col-10">
+        	<form id="modifyMemberForm" th:action="@{/admin/myAccount}" method="post">
+	            <header class="card-header">
+	                <div class="row align-items-end">
+	                    <div class="col-md-2 col-2 ms-auto">
+	                        <button type="submit" id="modifyMemberBtn"
+	                        		class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6">수정완료</button>
+	                    </div>
+	                    <div class="col-md-2 col-2">
+	                        <button type="button" onclick="location.href='/admin/member/memberList';" 
+	                        		class="btn btn-warning w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >수정취소</button>
+	                    </div>
+	                </div>
+	            </header>
+	            <div class="card-body">
+	                <div class="card-body">
+	                    <div class="row">
+	                        <div class="col-md-2">
+	                            <h4>1. 수정 항목</h4>
+	                        </div>
+	                        <div class="col-md-10" th:object="${adminInfo}">
+	                        	<div class="row align-items-end ">
+	                        		<div class="col-6">
+			                            <div class="mb-4">
+			                                <label class="form-label fs-6" for="memberId">아이디</label>
+			                                <input type="text" id="memberId" name="memberId" th:value="*{memberId}" 
+			                                	   placeholder="회원의 아이디를 입력해주세요" class="form-control col-8 fs-6" readonly />
+			                            </div>                        		
+	                        		</div>                        		
+	                        		<div class="col-6">	                        		
+			                            <div class="mb-4">
+			                                <label class="form-label fs-6" for="memberPw">비밀번호</label>
+			                                <input type="text" id="memberPw" name="memberPw" th:value="*{memberPw}"
+			                                	   placeholder="회원의 비밀번호를 입력해주세요" class="form-control fs-6" />
+			                            </div>
+	                        		</div>
+	                        	</div>
+	                        	<div class="row">
+	                        		<div class="col-6">
+			                            <div class="mb-4">
+			                                <label class="form-label fs-6" for="managerName">이름</label>
+			                                <input type="text" id="managerName" name="managerName" th:value="*{managerName}"
+			                                	   placeholder="회원의 이름을 입력해주세요" class="form-control fs-6" />
+			                            </div>
+	                        		</div>
+	                        	</div>
+	                            <div class="row">
+	                            	<div class="col-6">
+	                            		<div class="row align-items-end">
+	                            			<input type="hidden" id="managerPhone" name="managerPhone" class="form-control " />
+	                            			<div class="col-4">
+					                            <div class="mb-4">
+					                                <label class="form-label fs-6" for="managerPhone">연락처</label>
+					                            	<input type="text" class="form-control" id ="managerPhone1" name="managerPhone1" th:value="${managerPhone1}" readonly />
+					                            </div>
+	                            			</div>
+	                            			<div class="col-4">
+	                            				<div class="mb-4">
+					                                <input type="text" id="managerPhone2" name="managerPhone2" th:value="${managerPhone2}"
+					                                	   placeholder="중간 연락처" class="form-control fs-6" />
+	                            				</div>
+	                            			</div>
+	                            			<div class="col-4">
+	                            				<div class="mb-4">
+					                                <input type="text" id="managerPhone3" name="managerPhone3" th:value="${managerPhone3}"
+					                                	   placeholder="마지막 연락처" class="form-control fs-6" />
+	                            				</div>
+	                            			</div>
+	                            		</div>
+	                            	</div>
+	                            </div>
+	                            
+	                        </div> <!-- col.// -->
+	                    </div> <!-- row.// -->
+	                    
+	                </div>
+	                <!-- table-responsive end// -->
+	            </div>
+        	</form>
+        </div>
+	</th:block>	
+			
+</html>
