@@ -314,7 +314,7 @@ public class CustomerPaymentController {
 						               , @RequestParam("delRecipientNm") String delRecipientNm, @RequestParam("delRecipientPhone") String delRecipientPhone
 						               , @RequestParam("delRequest") String delRequest, @RequestParam("customerKey") String customerKey
 						               , @RequestParam("authKey") String authKey, @RequestParam("rentalContractNo") String rentalContractNo
-						               , @RequestParam("totalPrice") String totalPrice, Model model, RedirectAttributes reAttr, HttpSession session) {
+						               , @RequestParam("totalPrice") String totalPrice, @RequestParam("period") Integer period, Model model, RedirectAttributes reAttr, HttpSession session) {
 
         
         CustomerMember loginMember = (CustomerMember) session.getAttribute("loginMember");
@@ -343,6 +343,7 @@ public class CustomerPaymentController {
         reAttr.addAttribute("billingKey", billingKey);
         reAttr.addAttribute("customerKey", customerKey);
         reAttr.addAttribute("rentalContractNo", rentalContractNo);
+        reAttr.addAttribute("contractPeriod", period);
         
         
         return "redirect:/customer/payment/addBillingPayment";

@@ -133,6 +133,7 @@
 	        const orderQuantity = /*[[${orderQuantity}]]*/"";
 	        const prodUnitPrice = /*[[${prodUnitPrice}]]*/"";
 	        const quantity = /*[[${quantity}]]*/"";
+	        const period = /*[[${period}]]*/"";
 	        const delNo = document.getElementById("delSelected").value;
 	        const delRecipientNm = document.getElementById("delRecipientNm").value;
 	        const delRecipientPhone = document.getElementById("delRecipientPhone").value;
@@ -160,7 +161,7 @@
 					method: "CARD", // 자동결제(빌링)는 카드만 지원합니다
 					successUrl: window.location.origin + "/customer/payment/billing/success?sellProductsNo=" + sellProductsNo +'&prodNo='+prodNo +'&entCeoNo=' +entCeoNo + '&entEmpId=' + entEmpId
 													   + '&managerId='+managerId+'&prodUnitPrice='+prodUnitPrice+'&delNo='+delNo+'&orderQuantity='+orderQuantity+'&quantity='+quantity+'&delRecipientNm='+delRecipientNm
-													   + '&delRecipientPhone='+delRecipientPhone+'&delRequest='+delRequest+'&rentalContractNo='+rentalContractNo+'&totalPrice='+totalPrice, // 요청이 성공하면 리다이렉트되는 URL
+													   + '&delRecipientPhone='+delRecipientPhone+'&delRequest='+delRequest+'&rentalContractNo='+rentalContractNo+'&totalPrice='+totalPrice+'&period='+period, // 요청이 성공하면 리다이렉트되는 URL
 					failUrl: window.location.origin + "/fail", // 요청이 실패하면 리다이렉트되는 URL
 					customerEmail: "customer123@gmail.com",
 					customerName: "김토스",
