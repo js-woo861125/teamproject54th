@@ -10,7 +10,6 @@
   		<result column="cust_id"				property="custId" />
   		<result column="sell_products_no"		property="sellProdNo" />
   		<result column="rental_contract_no"		property="rentalContractNo" />
-  		<result column="pay_info_no"			property="paymentInfoNo" />
   		<result column="ent_ceo_no"				property="entCeoNo" />
   		<result column="ent_emp_id"				property="entEmpId" />
   		<result column="manager_id"				property="managerId" />
@@ -28,6 +27,8 @@
   		<result column="order_id"				property="orderId" />
   		<result column="customer_key"			property="customerKey" />
   		<result column="billing_key"			property="billingKey" />
+  		<result column="payment_count_period"	property="paymentCountPeriod" />
+  		<result column="contract_period"		property="contractPeriod" />
   	</resultMap>
   	
   	
@@ -79,6 +80,57 @@
 		<result column="register_date" 			property="regDate" />
 			
 	</resultMap>
+	
+	
+	
+	<insert id="addNextScheduledPayment" parameterType="CustomerPayment">
+		/* 달마다 결제시 payment 테이블에 값 등록 */
+		insert into payment
+			(payment_completed_no, cust_id, sell_products_no, rental_contract_no, ent_ceo_no, ent_emp_id, manager_id, payment_type, contract_details, 
+			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, customer_key, order_id, billing_key, payment_count_period, contract_period)
+		VALUES
+			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, #{rentalContractNo}, #{entCeoNo}, #{entEmpId}, #{managerId}, '정기결제', '렌탈계약상세',
+			 '월렌탈요금', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), #{paymentStatus}, NOW(), #{paymentKey}, #{customerKey}, #{orderId}, #{billingKey}, #{paymentCountPeriod}, #{contractPeriod});
+	</insert>
+	
+	
+	
+	
+	
+	<select id="getPaymentTargets" resultMap="paymentResultMap">
+		/* 정기결제 대상자 조회 */
+		select
+			payment_completed_no, 
+			cust_id, 
+			sell_products_no, 
+			rental_contract_no, 
+			ent_ceo_no, 
+			ent_emp_id, 
+			manager_id, 
+			payment_type, 
+			contract_details, 
+			payment_details, 
+			payment_count,
+			product_unit_price, 
+			total_price, 
+			payment_completed_date, 
+			payment_status, 
+			revision_date,
+			payment_key, 
+			customer_key, 
+			order_id, 
+			billing_key, 
+			payment_count_period, 
+			contract_period
+		from
+			payment
+		WHERE 
+			payment_type = '정기결제' AND payment_status = '정상결제상태' AND billing_key IS NOT NULL 
+							AND customer_key IS NOT NULL AND payment_count_period IS NOT NULL 
+							AND contract_period IS NOT NULL AND payment_count_period &lt; contract_period
+	</select>
+	
+	
 	
 	
 	<delete id="removeDeliveryInfo" parameterType="CustomerDeliveryInfo">
@@ -162,22 +214,22 @@
 	<insert id="addPayment" parameterType="CustomerPayment">
 		/* 일반결제시 payment테이블에 값 등록 */
 		insert into payment
-			(payment_completed_no, cust_id, sell_products_no, rental_contract_no, pay_info_no, ent_ceo_no, ent_emp_id, manager_id, payment_type, contract_details, 
-			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, customer_key, order_id, billing_key)
+			(payment_completed_no, cust_id, sell_products_no, rental_contract_no, ent_ceo_no, ent_emp_id, manager_id, payment_type, contract_details, 
+			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, customer_key, order_id, billing_key, payment_count_period, contract_period)
 		values
-			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, '일시불판매', 'pay_info_3', #{entCeoNo}, #{entEmpId}, #{managerId}, #{paymentType}, '일시불판매',
-			 '일시불판매', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), '정상결제상태', NOW(), #{paymentKey}, #{customerKey}, #{orderId}, #{billingKey})
+			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, '일시불판매', #{entCeoNo}, #{entEmpId}, #{managerId}, #{paymentType}, '일시불판매',
+			 '일시불판매', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), '정상결제상태', NOW(), #{paymentKey}, #{customerKey}, #{orderId}, #{billingKey}, NULL, NULL)
 	</insert>
 	
 	
 	<insert id="addBlillingPayment" parameterType="CustomerPayment">
-		/* 정기결제시 payment테이블에 값 등록 */
+		/* 첫 정기결제시 payment테이블에 값 등록 */
 		insert into payment
-			(payment_completed_no, cust_id, sell_products_no, rental_contract_no, pay_info_no, ent_ceo_no, ent_emp_id, manager_id, payment_type, contract_details, 
-			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, customer_key, order_id, billing_key)
+			(payment_completed_no, cust_id, sell_products_no, rental_contract_no, ent_ceo_no, ent_emp_id, manager_id, payment_type, contract_details, 
+			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, customer_key, order_id, billing_key, payment_count_period, contract_period)
 		VALUES
-			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, #{rentalContractNo}, 'pay_info_3', #{entCeoNo}, #{entEmpId}, #{managerId}, '카드결제', '렌탈계약상세',
-			 '월렌탈요금', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), '정상결제상태', NOW(), NULL, #{customerKey}, #{orderId}, #{billingKey});
+			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, #{rentalContractNo}, #{entCeoNo}, #{entEmpId}, #{managerId}, '정기결제', '렌탈계약상세',
+			 '월렌탈요금', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), #{paymentStatus}, NOW(), #{paymentKey}, #{customerKey}, #{orderId}, #{billingKey}, 1, #{contractPeriod});
 	</insert>
 	
 	

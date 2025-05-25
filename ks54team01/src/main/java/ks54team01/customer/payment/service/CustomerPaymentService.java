@@ -9,6 +9,8 @@ import ks54team01.customer.payment.domain.CustomerPayment;
 
 public interface CustomerPaymentService {
 	
+	void autoBillingPayments();
+	
 	void removeDeliveryInfo(String paymentCompletedNo);
 	
 	void addDeliveryInfo(CustomerDeliveryInfo customerDeliveryInfo);
