@@ -75,12 +75,13 @@ public class MemberController {
 	    }
 	    
 	    // 세션에서 정보 꺼내오기
+	    String loginMember = (String) session.getAttribute("loginMember");
 	    String memberType = (String) session.getAttribute("memberType");
-	    Object loginMemberObj = session.getAttribute("loginMember");
+	    
 	    
 	    boolean customerLeave = memberService.customerLeave(memberType, memberId);
 		resultMap.put("status", customerLeave ? "success" : "fail");
-		log.info("탈퇴 성공: {}", loginMemberObj);
+		log.info("탈퇴 성공: {}", loginMember);
 
 	    return resultMap;
 	}
@@ -89,15 +90,14 @@ public class MemberController {
 	@GetMapping("/customerLeave")
 	public String getcustomerLeave(HttpSession session, Model model) {
 		
-		Object loginMember = session.getAttribute("loginMember");
+		String loginId = (String) session.getAttribute("loginId");
 
-	    if (loginMember == null) {
+	    if (loginId == null) {
 	        return "redirect:/customer/login/memberLogin";
 	    }
 
-	    CustomerMember memberInfo = (CustomerMember) loginMember;
 	    
-	    model.addAttribute("memberId", memberInfo.getMemberId());
+	    model.addAttribute("loginId", loginId);
 		model.addAttribute("title", "회원탈퇴");
 		
 		return "customer/myPage/customerLeaveView";
@@ -109,15 +109,11 @@ public class MemberController {
 			 					  @RequestParam(value = "newPw", required = false) String newPw,
 	                              HttpSession session,
 	                              RedirectAttributes redirectAttributes) {
-
-		Object loginMember = session.getAttribute("loginMember");
+		String loginId = (String) session.getAttribute("loginId");
 		
-	    if (loginMember == null || !(loginMember instanceof CustomerMember)) {
+	    if (loginId == null) {
 	        return "redirect:/customer/login/memberLogin"; 
 	    }
-
-	    CustomerMember memberInfo = (CustomerMember) loginMember;
-	    String loginId = memberInfo.getMemberId();
 	    
 	    modifyMember.setMemberId(loginId);
 
@@ -151,17 +147,18 @@ public class MemberController {
 		
 		model.addAttribute("title", "내 프로필");
 		
-		Object loginObj = session.getAttribute("loginMember");
+		String loginId = (String) session.getAttribute("loginId");
+	    String loginType = (String) session.getAttribute("loginMemberType");
 		
-	    if (loginObj == null || !(loginObj instanceof CustomerMember)) {
+	    if (loginId == null || loginType == null) {
 	        return "redirect:/customer/login/memberLogin"; 
 	    }
 	    
-	    CustomerMember memberInfo = (CustomerMember) loginObj;
-	    String loginId = memberInfo.getMemberId();
-	    
+	    CustomerMember memberInfo = memberService.getCustomerInfoById(loginId);
+
 	    log.info("회원정보 :{}", memberInfo);
 	    
+	   
 	    String custPhone = memberInfo.getCustPhone();
 	    String custEmail = memberInfo.getCustEmail();
 		String[] custPhoneArray = custPhone.split("-");
@@ -170,8 +167,8 @@ public class MemberController {
 	    model.addAttribute("custPhone1", custPhoneArray[0]);
 		model.addAttribute("custPhone2", custPhoneArray[1]);
 		model.addAttribute("custPhone3", custPhoneArray[2]);
-		model.addAttribute("custEmail", custEmail);
-
+		model.addAttribute("custEmail", custEmail); 
+		
 	    if ("기업고객".equals(memberInfo.getMemberType())) {
 	    	CustomerMember corpInfo = memberService.getCorpInfoById(loginId);
 	    	memberInfo.setCorpName(corpInfo.getCorpName());
