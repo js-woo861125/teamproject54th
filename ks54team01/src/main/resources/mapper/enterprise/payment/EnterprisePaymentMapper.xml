@@ -10,7 +10,6 @@
 		<result column="cust_id" 					property="custId" />
 		<result column="sell_products_no" 			property="sellProdNo" />
 		<result column="rental_contract_no" 		property="rentalContractNo" />
-		<result column="pay_info_no" 				property="payInfoNo" />
 		<result column="ent_ceo_no" 				property="entCeoNo" />
 		<result column="ent_emp_id" 				property="entEmpId" />
 		<result column="manager_id" 				property="managerId" />
