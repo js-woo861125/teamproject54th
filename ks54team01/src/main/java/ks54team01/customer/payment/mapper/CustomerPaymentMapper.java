@@ -12,6 +12,10 @@ import ks54team01.customer.payment.domain.CustomerPayment;
 public interface CustomerPaymentMapper {
 	
 	
+	CustomerPayment getLastBillingPayment(String custId);
+	
+	int modifyBillingKey(CustomerPayment customerPayment);
+	
 	int addNextScheduledPayment(CustomerPayment payment);
 	
 	// 정기결제할 사람 조회

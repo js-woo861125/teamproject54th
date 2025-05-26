@@ -12,6 +12,7 @@
 	
 	<th:block layout:fragment="jsFile">
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<script src="https://js.tosspayments.com/v1/billing"></script>
 	</th:block>
 	
 	
@@ -19,6 +20,7 @@
 		<script type="text/javascript">
 
 			document.addEventListener('DOMContentLoaded', function () {
+				
 			    document.querySelectorAll('.cancelBtn').forEach(function (btn) {
 			        btn.addEventListener('click', function () {
 			            const orderId = this.getAttribute('data-order-id');
@@ -82,7 +84,7 @@
 			                    });
 			                } else if (result.dismiss === Swal.DismissReason.cancel) {
 			                    swalWithBootstrapButtons.fire({
-			                        title: "취소됨",
+			                        title: "중단됨",
 			                        text: "주문 취소가 중단되었습니다.",
 			                        icon: "info"
 			                    });
@@ -93,6 +95,19 @@
 			});
 
 
+			document.addEventListener("DOMContentLoaded", function () {
+			    document.querySelectorAll('.modifyCardBtn').forEach(function (btn) {
+			        btn.addEventListener('click', function () {
+			            const customerKey = this.getAttribute('data-customer-key');
+			            const tossPayments = TossPayments("test_ck_GePWvyJnrKvyQXaXB74bVgLzN97E"); 
+
+			            tossPayments.requestBillingAuth({
+			                customerKey: customerKey,
+			                redirectUrl: window.location.origin + "/customer/payment/modifyBilling/success"
+			            });
+			        });
+			    });
+			});
 		
 		</script>
 	</th:block>
@@ -122,9 +137,9 @@
 						</div>
 						<div class="product-price d-flex col-4">
 							<div class="ml-100 text-center">
-								<p style="font-weight:bold; color: black;font-size: 25px; padding-right: 10px;">주문취소/환불</p>
+								<p style="font-weight:bold; color: black;font-size: 25px; padding-right: 10px;">주문취소/카드변경</p>
 								<button class="btn btn-xl cancelBtn" th:data-order-id="${l.orderId}" th:data-payment-completed-no="${l.paymentCompletedNo}">취소</button>
-								<button class="btn btn-xl">환불</button>
+								<button class="btn btn-xl modifyCardBtn" th:data-customer-key="${l.customerKey}">변경</button>
 							</div>
 						</div>
 					</div>

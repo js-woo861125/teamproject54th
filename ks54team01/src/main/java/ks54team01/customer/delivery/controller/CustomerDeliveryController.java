@@ -51,8 +51,7 @@ public class CustomerDeliveryController {
 	@PostMapping("/addDeliveryList")
 	public String addDeliveryList(CustomerDeliveryList customerDeliveryList, HttpSession session) {
 		
-		CustomerMember loginMember = (CustomerMember) session.getAttribute("loginMember");
-		String custId = loginMember.getMemberId();
+		String custId = (String) session.getAttribute("loginId");
 		
 		customerDeliveryList.setCustId(custId);
 		
@@ -66,13 +65,7 @@ public class CustomerDeliveryController {
 	@GetMapping("/deliveryList")
 	public String getDeliveryList(HttpSession session, Model model) {
 		
-		CustomerMember loginMember = (CustomerMember) session.getAttribute("loginMember");
-		
-		if(loginMember == null) {
-			return "redirect:/customer/login/memberLogin";
-		}
-		
-		String custId = loginMember.getMemberId();
+		String custId = (String) session.getAttribute("loginId");
 		
 		log.info("회원아이디 : {}", custId);
 		
