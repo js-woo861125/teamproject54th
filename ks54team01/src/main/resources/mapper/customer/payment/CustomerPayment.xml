@@ -29,6 +29,7 @@
   		<result column="billing_key"			property="billingKey" />
   		<result column="payment_count_period"	property="paymentCountPeriod" />
   		<result column="contract_period"		property="contractPeriod" />
+  		<result column="next_payment_date"		property="nextPaymentDate" />
   	</resultMap>
   	
   	
@@ -82,15 +83,63 @@
 	</resultMap>
 	
 	
+	<select id="getLatestRecurringPayment" resultType="CustomerPayment">
+		SELECT 
+			payment_completed_no, 
+			cust_id, 
+			sell_products_no, 
+			rental_contract_no, 
+			ent_ceo_no, 
+			ent_emp_id, 
+			manager_id, 
+			payment_type, 
+			contract_details, 
+			payment_details, 
+			payment_count, 
+			product_unit_price, 
+			total_price, 
+			payment_completed_date, 
+			payment_status, 
+			revision_date, 
+			payment_key, 
+			customer_key, 
+			order_id, 
+			billing_key, 
+			payment_count_period, 
+			contract_period, 
+			next_payment_date
+		FROM 
+			payment
+		WHERE 
+			cust_id = #{custId} 
+			AND payment_type = '정기결제'
+			AND payment_status = '정상결제상태'
+			ORDER BY 
+				next_payment_date DESC
+			LIMIT 1
+	</select>
+	
+	
+	<update id="modifyBillingKey" parameterType="CustomerPayment">
+		update payment
+		<set>
+			billing_key = #{billingKey}
+		</set>
+		where
+			payment_completed_no = #{paymentCompletedNo}
+			
+	</update>
+	
+	
 	
 	<insert id="addNextScheduledPayment" parameterType="CustomerPayment">
 		/* 달마다 결제시 payment 테이블에 값 등록 */
 		insert into payment
 			(payment_completed_no, cust_id, sell_products_no, rental_contract_no, ent_ceo_no, ent_emp_id, manager_id, payment_type, contract_details, 
-			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, customer_key, order_id, billing_key, payment_count_period, contract_period)
+			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, customer_key, order_id, billing_key, payment_count_period, contract_period, next_payment_date)
 		VALUES
 			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, #{rentalContractNo}, #{entCeoNo}, #{entEmpId}, #{managerId}, '정기결제', '렌탈계약상세',
-			 '월렌탈요금', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), #{paymentStatus}, NOW(), #{paymentKey}, #{customerKey}, #{orderId}, #{billingKey}, #{paymentCountPeriod}, #{contractPeriod});
+			 '월렌탈요금', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), #{paymentStatus}, NOW(), #{paymentKey}, #{customerKey}, #{orderId}, #{billingKey}, #{paymentCountPeriod}, #{contractPeriod}, #{nextPaymentDate});
 	</insert>
 	
 	
@@ -113,21 +162,24 @@
 			payment_count,
 			product_unit_price, 
 			total_price, 
-			payment_completed_date, 
 			payment_status, 
 			revision_date,
-			payment_key, 
 			customer_key, 
-			order_id, 
 			billing_key, 
-			payment_count_period, 
-			contract_period
+			MAX(payment_count_period) AS payment_count_period,
+			contract_period,
+			MAX(next_payment_date) AS next_payment_date
 		from
 			payment
 		WHERE 
-			payment_type = '정기결제' AND payment_status = '정상결제상태' AND billing_key IS NOT NULL 
-							AND customer_key IS NOT NULL AND payment_count_period IS NOT NULL 
-							AND contract_period IS NOT NULL AND payment_count_period &lt; contract_period
+			payment_type = '정기결제' 
+			AND payment_status = '정상결제상태' 
+			AND billing_key IS NOT NULL 
+			AND customer_key IS NOT NULL 
+			AND payment_count_period IS NOT NULL 
+			AND contract_period IS NOT NULL
+		GROUP BY billing_key
+		HAVING MAX(next_payment_date) = CURDATE() AND MAX(payment_count_period) <![CDATA[ < ]]> contract_period;
 	</select>
 	
 	
@@ -215,10 +267,10 @@
 		/* 일반결제시 payment테이블에 값 등록 */
 		insert into payment
 			(payment_completed_no, cust_id, sell_products_no, rental_contract_no, ent_ceo_no, ent_emp_id, manager_id, payment_type, contract_details, 
-			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, customer_key, order_id, billing_key, payment_count_period, contract_period)
+			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, customer_key, order_id, billing_key, payment_count_period, contract_period, next_payment_date)
 		values
 			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, '일시불판매', #{entCeoNo}, #{entEmpId}, #{managerId}, #{paymentType}, '일시불판매',
-			 '일시불판매', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), '정상결제상태', NOW(), #{paymentKey}, #{customerKey}, #{orderId}, #{billingKey}, NULL, NULL)
+			 '일시불판매', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), '정상결제상태', NOW(), #{paymentKey}, #{customerKey}, #{orderId}, #{billingKey}, NULL, NULL, NULL)
 	</insert>
 	
 	
@@ -226,10 +278,10 @@
 		/* 첫 정기결제시 payment테이블에 값 등록 */
 		insert into payment
 			(payment_completed_no, cust_id, sell_products_no, rental_contract_no, ent_ceo_no, ent_emp_id, manager_id, payment_type, contract_details, 
-			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, customer_key, order_id, billing_key, payment_count_period, contract_period)
+			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, customer_key, order_id, billing_key, payment_count_period, contract_period, next_payment_date)
 		VALUES
 			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, #{rentalContractNo}, #{entCeoNo}, #{entEmpId}, #{managerId}, '정기결제', '렌탈계약상세',
-			 '월렌탈요금', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), #{paymentStatus}, NOW(), #{paymentKey}, #{customerKey}, #{orderId}, #{billingKey}, 1, #{contractPeriod});
+			 '월렌탈요금', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), #{paymentStatus}, NOW(), #{paymentKey}, #{customerKey}, #{orderId}, #{billingKey}, 1, #{contractPeriod}, #{nextPaymentDate});
 	</insert>
 	
 	
@@ -241,7 +293,9 @@
 			p.payment_completed_date,
 			p.payment_status,
 			p.order_id,
-			p.payment_completed_no
+			p.payment_completed_no,
+			p.customer_key,
+			p.cust_id
 		from
 			payment p inner join sell_products sp 
 			on p.sell_products_no = sp.sell_products_no

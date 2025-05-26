@@ -32,6 +32,27 @@ public class CustomerPaymentController {
 	
 	private final CustomerPaymentService customerPaymentService;
 	
+	
+	@GetMapping("/modifyBilling/success")
+	public String modifyBillingPayment(@RequestParam("authKey") String authKey
+									 , @RequestParam("customerKey") String customerKey, HttpSession session) {
+		
+		String custId = (String) session.getAttribute("loginId");
+		
+		Map<String, Object> responseMap = customerPaymentService.getBillingKey(authKey, customerKey);
+	    String billingKey = (String) responseMap.get("billingKey");
+	    
+	    
+	    customerPaymentService.modifyBillingKey(custId, billingKey);
+		
+		
+		
+		return "redirect:/customer/payment/paymentList";
+	}
+	
+	
+	
+	
 
 	@GetMapping("/regularPayment")
 	public String getRegularPayment(@RequestParam("prodUnitPrice") int prodUnitPrice, @RequestParam("totalPrice") int totalPrice,
@@ -40,11 +61,9 @@ public class CustomerPaymentController {
 								    @RequestParam("orderQuantity") int orderQuantity, @RequestParam("productsName") String productsName,
 								    @RequestParam("sellProductsNo") String sellProductsNo, @RequestParam("productsNum") String productsNum, HttpSession session, Model model) {
 		
-		CustomerMember loginMember = (CustomerMember) session.getAttribute("loginMember");
-		
-		String custId = loginMember.getMemberId();
-		
-		
+				
+		String custId = (String) session.getAttribute("loginId");
+				
 		model.addAttribute("prodUnitPrice", prodUnitPrice);
 	    model.addAttribute("totalPrice", totalPrice);
 	    model.addAttribute("managerId", managerId);
@@ -106,13 +125,8 @@ public class CustomerPaymentController {
 	@GetMapping("/paymentList")
 	public String getPaymentList(HttpSession session, Model model) {
 		
-		CustomerMember loginMember = (CustomerMember) session.getAttribute("loginMember");
+		String custId = (String) session.getAttribute("loginId");
 		
-		if(loginMember == null) {
-			return "redirect:/customer/login/memberLogin";
-		}
-		
-		String custId = loginMember.getMemberId();
 		
 		
 		List<CustomerPayment> PaymentList = customerPaymentService.getPaymentList(custId);
@@ -220,9 +234,7 @@ public class CustomerPaymentController {
 						    @RequestParam("orderQuantity") int orderQuantity, @RequestParam("productsName") String productsName,
 						    @RequestParam("sellProductsNo") String sellProductsNo, @RequestParam("productsNum") String productsNum, HttpSession session, Model model) {
 		
-		CustomerMember loginMember = (CustomerMember) session.getAttribute("loginMember");
-		
-		String custId = loginMember.getMemberId();
+		String custId = (String) session.getAttribute("loginId");
 		
 		model.addAttribute("prodUnitPrice", prodUnitPrice);
 	    model.addAttribute("totalPrice", totalPrice);
@@ -269,8 +281,7 @@ public class CustomerPaymentController {
         log.info("prodUnitPrice: {} ", prodUnitPrice);
         log.info("orderQuantity: {} ", orderQuantity);
         
-        CustomerMember loginMember = (CustomerMember) session.getAttribute("loginMember");
-        String custId = loginMember.getMemberId();
+        String custId = (String) session.getAttribute("loginId");
         
         
         Map<String, Object> responseMap = customerPaymentService.confirmPaymemt(paymentKey, orderId, amount);
@@ -317,8 +328,7 @@ public class CustomerPaymentController {
 						               , @RequestParam("totalPrice") String totalPrice, @RequestParam("period") Integer period, Model model, RedirectAttributes reAttr, HttpSession session) {
 
         
-        CustomerMember loginMember = (CustomerMember) session.getAttribute("loginMember");
-        String custId = loginMember.getMemberId();
+		String custId = (String) session.getAttribute("loginId");
         
         Map<String, Object> responseMap = customerPaymentService.getBillingKey(authKey, customerKey);
         

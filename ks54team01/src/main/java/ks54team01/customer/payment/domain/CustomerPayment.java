@@ -27,6 +27,7 @@ public class CustomerPayment {
 	private String billingKey;
 	private Integer paymentCountPeriod;
 	private Integer contractPeriod;
+	private String nextPaymentDate;
 		
 	private String prodNm;
 }

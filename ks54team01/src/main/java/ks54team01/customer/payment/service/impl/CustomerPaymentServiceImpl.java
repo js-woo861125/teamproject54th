@@ -6,6 +6,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +41,22 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 	private final ObjectMapper objectMapper;
 	
 	private final CustomerPaymentMapper customerPaymentMapper;
+	
+	
+	
+	@Override
+	public void modifyBillingKey(String custId, String billingKey) {
+
+		CustomerPayment lastest = customerPaymentMapper.getLastBillingPayment(custId);
+		
+		if (lastest != null) {
+			lastest.setBillingKey(billingKey);
+	        customerPaymentMapper.modifyBillingKey(lastest);
+	    }
+		
+	}
+	
+	
 	
 	
 	
@@ -92,6 +110,7 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 
 		 List<CustomerPayment> targets = customerPaymentMapper.getPaymentTargets();
 		 
+		 log.info("targets: {}", targets);
 		 
 		for (CustomerPayment payment : targets) {
 			Integer nowPeriod = payment.getPaymentCountPeriod();
@@ -101,16 +120,24 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 				log.info("정기결제 종료 대상 제외: rentalContractNo={}, custId={}", payment.getRentalContractNo(), payment.getCustId());
 				continue;
 			}
+			log.info("결제전: {}",payment );
 			
 			boolean success = requestAutoBilling(payment);
-			
 			if (success) {
 				// 새 결제 데이터 준비
 				payment.setPaymentCountPeriod(nowPeriod + 1); // 회차 +1
 				payment.setPaymentCompletedNo("payCompletedNo_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12));
 				payment.setOrderId("orderId_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12));
 				payment.setPaymentStatus("정상결제상태");
+				payment.setNextPaymentDate(null);
+				if(maxPeriod > nowPeriod + 1) {					
+					LocalDate nextDate = LocalDate.now().plusMonths(1);
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+					payment.setNextPaymentDate(nextDate.format(formatter));
+				}
 				
+				
+				log.info("결제 후 : {}", payment);
 				customerPaymentMapper.addNextScheduledPayment(payment);
 				
 			} else {
@@ -276,6 +303,10 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 				String paymentCompletedNo = "payCompletedNo_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
 				customerPayment.setPaymentCompletedNo(paymentCompletedNo);
 				customerPayment.setRentalContractNo(rentalContractNo);
+				
+				LocalDate nextDate = LocalDate.now().plusMonths(1);
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				customerPayment.setNextPaymentDate(nextDate.format(formatter));
 			
 			    customerPaymentMapper.addBlillingPayment(customerPayment);
 			

@@ -30,8 +30,7 @@ public class CustomerContractController {
 							, @RequestParam("entEmpId") String entEmpId, @RequestParam("period") Integer period
 							, @RequestParam("orderQuantity") Integer orderQuantity, Model model, HttpSession session) {
 		
-		CustomerMember loginMember = (CustomerMember) session.getAttribute("loginMember");
-        String custId = loginMember.getMemberId();
+		String custId = (String) session.getAttribute("loginId");
         
         CustomerContract customerContract = new CustomerContract();
         

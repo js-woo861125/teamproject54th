@@ -206,10 +206,7 @@
 								<div class="detail-info pr-30 pl-30 d-flex mb-30">
 	
 									<h2 class="title-detail" th:text="${productDetailByProd[0].productsName}">LG 그램 Pro</h2>
-									<div class="product-extra-link2">
-										<a aria-label="Add To Wishlist" class="action-btn hover-up"
-											href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
-									</div>
+								
 	
 	
 	
@@ -217,11 +214,11 @@
 								<!-- Detail Info -->
 	
 								<!--  -->
-								<div class="overflow-auto" style="height: 400px;">
+								<div class="overflow-auto ml-30" style="height: 400px;">
 									<th:block th:each="l : ${productDetailByProd}">
 										<th:block th:each="el : ${l.entCeo}">
 											
-											<div class="card col-sm-12">
+											<div class="card col-sm-12 mb-30">
 												<div class="mt-15 ml-10">
 													<div id="vendorInfo">
 														<div class="vendor-logo d-flex mb-15">
