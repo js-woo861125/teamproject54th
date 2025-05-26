@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{customer/layout/default}">
+
+
+	<!-- head 삽입공간 -->
+	
+	<head>
+	
+	</head>
+	
+	
+	<th:block layout:fragment="jsFile">
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	</th:block>
+	
+	
+	<th:block layout:fragment="jsScript">
+		<script>
+			/* 주소 입력 api */
+			$('#daumPostBtn').click(function(e){
+				new daum.Postcode({
+		            oncomplete: function(data) {
+		                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+	
+		                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+		                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+		                var addr = ''; // 주소 변수
+		                var extraAddr = ''; // 참고항목 변수
+	
+		                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+		                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+		                    addr = data.roadAddress;
+		                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+		                    addr = data.jibunAddress;
+		                }
+	
+		                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+		                if(data.userSelectedType === 'R'){
+		                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+		                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+		                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+		                        extraAddr += data.bname;
+		                    }
+		                    // 건물명이 있고, 공동주택일 경우 추가한다.
+		                    if(data.buildingName !== '' && data.apartment === 'Y'){
+		                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+		                    }
+		                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+		                    if(extraAddr !== ''){
+		                        extraAddr = ' (' + extraAddr + ')';
+		                    }
+		                    // 조합된 참고항목을 해당 필드에 넣는다.
+		                    document.getElementById("hopeArea").value = extraAddr;
+		                
+		                } else {
+		                    document.getElementById("hopeArea").value = '';
+		                }
+	
+		                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+		                /* document.getElementById('memberZip').value = data.zonecode; */
+		                document.getElementById("hopeArea").value = addr;
+		            }
+		        }).open();
+			});
+			
+			/* 상품 찾기 */
+			$('.searchProduct').click(function() {
+	        	/* const data = $(this).data('productCategoryNum'); */
+	        	const value = $('#productCategoryNum').val();
+	        	console.log(value);
+	        	
+	        	const request = $.ajax({
+	                 url : '/customer/assigneeBoard/getProduct',
+	                 method : 'post',
+	                 data : { 'productCategoryNum' : value},
+	                 dataType : 'json'
+	             });
+	             request.done(response => {
+	                 console.log(response); // 요청 성공 시 수행
+	                 const appendElements = response.map((productInfo, idx) => {
+	                	const $div = $('<div />', { class : 'col-6 col-md-4'});
+	                	const $subDiv = $('<div />', { class : 'form-check'});
+	                	const $radio = $('<input />', { class : 'form-check-input', type: 'radio', name : 'product', id : `product${idx+1}`,  value: productInfo.productsNum});
+	                	const $label = $('<label />', { class : 'form-check-label', for: `product${idx+1}`}).text(productInfo.productsName);
+	                	$subDiv.append($radio, $label);
+	                	$div.append($subDiv);
+	                	return $div; 
+	                 });
+	                 console.log(appendElements);
+	                 $('#productList').empty();
+	                 $('#productList').append(...appendElements);
+	             });
+	             request.fail((jqXHR, textStatus, error) => {
+	                 console.log(jqXHR, textStatus, error); // 요청 실패 시 수행
+	             }); 
+	        });
+			
+			/* 품목 찾기 */
+	        $('.mdCategory').click(function() {
+	        	const data = $(this).data('mdCategoryNo');
+	        	console.log(data);
+	        	
+	        	const request = $.ajax({
+	                 url : '/customer/assigneeBoard/getMiddleCategory',
+	                 method : 'post',
+	                 data : { 'mdCategoryNo' : data},
+	                 dataType : 'json'
+	             });
+	             request.done(response => {
+	                 console.log(response); // 요청 성공 시 수행
+	                 const appendElements = response.map((cateInfo, idx) => {
+	                	const $div = $('<div />', { class : 'col-6 col-md-4'});
+	                	const $subDiv = $('<div />', { class : 'form-check'});
+	                	const $radio = $('<input />', { class : 'form-check-input', type: 'radio', name : 'product', id : `product${idx+1}`,  value: cateInfo.categoryNo});
+	                	const $label = $('<label />', { class : 'form-check-label', for: `product${idx+1}`}).text(cateInfo.itemName);
+	                	$subDiv.append($radio, $label);
+	                	$div.append($subDiv);
+	                	return $div; 
+	                 });
+	                 console.log(appendElements);
+	                 $('#smallCategoryList').empty();
+	                 $('#smallCategoryList').append(...appendElements);
+	             });
+	             request.fail((jqXHR, textStatus, error) => {
+	                 console.log(jqXHR, textStatus, error); // 요청 실패 시 수행
+	             }); 
+	        });
+	        
+	        $('.openModal').click(function(e){
+	        	e.preventDefault();
+	        	$('.mdCategory').eq(0).click();
+	        	$('#staticBackdrop').modal('show');
+	        	
+	        });
+	        
+	        
+	        $('#selectItemBtn').click(function () {
+	        	  const productCategoryNum = $('input[name="product"]:checked').val();
+	        	  const itemName = $('input[name="product"]:checked').next().text();
+	        	  $('#selectedItem').val(itemName);
+	        	  if($('#selectedItem').val() != '') {
+	        	  	$('.searchProduct').removeClass('disabled');
+	        	  }
+	        	  $('#productCategoryNum').val(productCategoryNum);
+	        	  $('#staticBackdrop').modal('hide');
+	        	});
+	        
+	        
+	        $('#selectProductBtn').click(function () {
+	      	  const productsNum = $('input[name="product"]:checked').val();
+	      	  const productsName = $('input[name="product"]:checked').next().text();
+	      	  //alert(value);
+	      	  $('#selectedProduct').val(productsName)
+	      	  $('#productNum').val(productNum);
+	      	  //const selectedValue = $(this).prev().val(); 
+	      	  //$('#selectedItem').val(selectedValue); 
+	      	  $('#selectProductModal').modal('hide');
+	      	});
+	        
+	       /*  $('#modifyAssigneeBoardBtn').click(e => {
+				e.preventDefault();
+				const $formTags = $('#modifyAssigneeBoardForm').find('input, select');
+				let isSubmit = true;
+				$formTags.each((idx, element) => {
+					const value = $(element).val();
+					if(!value){
+						$(element).focus();
+						isSubmit = false;
+						return false;
+					}
+				});	
+				if(isSubmit) $('#modifyAssigneeBoardForm').submit();
+			}); */
+	        
+	        /* 유효성 검증 */
+	        $('#periodInput').on("blur",function() {
+	        	let isNumber;
+	        	
+	        	const checkNumber = /^[0-9]*$/;
+	
+	        	if ($(this).val() == '') {
+	        		/* alert("입력하세요."); */
+	        		this.focus();
+	        		testBoolean = false;
+	        		return;
+	        	}
+	        	
+	        	if (checkNumber.test($(this).val())) {
+	        		testBoolean = true;
+	        	} else {
+	        		alert("숫자 입력");
+	        		testBoolean = false;
+	        	}
+	        });
+	        
+	        $('#rentalFeeInput').on("blur",function() {
+	        	let isNumber;
+	        	
+	        	const checkNumber = /^[0-9]*$/;
+	
+	        	if (checkNumber.test($(this).val())) {
+	        		testBoolean = true;
+	        	} else {
+	        		alert("숫자 입력");
+	        		testBoolean = false;
+	        		$(this).val('');
+	        	}
+	        });
+		</script>
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+        <!-- modal start -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+				<div class="modal-content">
+			    	<form id="selectCategoryForm" th:action="@{/customer/assigneeBoard/modifyAssigneeBoard}" method="get">
+			        	<div class="modal-header">
+			          		<h5 class="modal-title" id="staticBackdropLabel">필요한 품목을 선택해주세요.</h5>
+			          		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalCloseBtn"></button>
+			        	</div>
+			        	<div class="modal-body d-flex">
+			          		<!-- 좌측 중분류 리스트 -->
+			          		<div class="modalLeft border-end pe-3" style="width: 220px; max-height: 300px; overflow-y: auto;">
+			            		<ul id="middlCategoryList" class="list-group list-group-flush">
+			              			<th:block th:if="${!#lists.isEmpty(mdCategoryList)}"
+								  			  th:each="mc : ${mdCategoryList}">
+				              			<li class="list-group-item py-2">
+				                			<a th:text="${mc.mdCategory}" th:data-md-category-no="${mc.mdCategoryNo}" th:href="@{#}" class="mdCategory text-decoration-none">
+				                				TV/디지털
+				                			</a>
+				              			</li>
+			              			</th:block>
+		            			</ul>
+		          			</div>
+		          			<!-- 우측 품목 리스트 -->
+			          		<div class="modalRight ps-4 flex-grow-1">
+			            		<div id="smallCategoryList" class="row g-3">
+				              		<!-- 품목 -->
+		            			</div>
+		          			</div>
+		        		</div>
+			        	<div class="modal-footer">
+			          		<button id="selectItemBtn" type="button" class="btn btn-primary">선택</button>
+			        	</div>
+		      		</form>
+		    	</div>
+	  		</div>
+		</div>
+        <!-- modal end -->
+        <div class="modal fade" id="selectProductModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="selectProductModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+				<div class="modal-content">
+			    	<form id="selectProductForm" th:action="@{/customer/assigneeBoard/modifyAssigneeBoard}" method="get">
+			        	<div class="modal-header">
+			          		<h5 class="modal-title" id="selectProductModalLabel">필요한 상품을 선택해주세요.</h5>
+			          		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalCloseBtn"></button>
+			        	</div>
+			        	<div class="modal-body d-flex">
+			          		<div class="modalRight ps-4 flex-grow-1">
+			            		<div id="productList" class="row g-3">
+				              		품목
+		            			</div>
+		          			</div>
+		        		</div>
+			        	<div class="modal-footer">
+			          		<button id="selectProductBtn" type="button" class="btn btn-primary">선택</button>
+			        	</div>
+		      		</form>
+		    	</div>
+	  		</div>
+		</div>
+        <div class="container mb-80 mt-50">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 mb-40">
+                    <h1 class="heading-2 mb-10">양수 게시글 수정</h1>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="row" th:object="${customerAssigneeBoardInfo}">
+                        <form id="modifyAssigneeBoardForm" th:action="@{/customer/assigneeBoard/modifyAssigneeBoard}" method="get">
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <input id="productCategoryNum" type="hidden" th:value="*{productCategoryNum}" name="productCategoryNum" required readonly>
+                                    <input id="selectedItem" type="text" th:value="*{productInfoCategory.smCategory}" placeholder="*상품 카테고리 선택" required readonly>
+                                </div>
+                                <div class="col-2">
+									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardCategory}" class="openModal btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+										품목변경
+									</a>									
+	                            </div>                        		
+                        	</div>
+	                        <div class="row">
+	                        	<div class="form-group col-lg-6">
+	                        		<input id="productNum" type="hidden" th:value="*{customerProduct.productsNum}" name="customerProduct.productsNum" required readonly>
+	                            	<input id="selectedProduct" type="text" th:value="*{productName}" name="productName" placeholder="상품명 입력 (선택사항)" readonly />
+	                        	</div>
+	                        	<div class="col-2">
+									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardProduct}" class="searchProduct btn btn-primary disabled" data-bs-toggle="modal" data-bs-target="#selectProductModal">
+										상품변경
+									</a>									
+	                            </div>
+	                     	</div>
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <input type="text" id="hopeArea" name="desiredInstallArea" th:value="*{desiredInstallArea}" required placeholder="*희망 설치지역 입력" readonly/>
+                                </div>
+                                <div class="col-2">
+		                            <div>
+		                            	<button type="button" id="daumPostBtn" 
+		                            			class="btn btn-info w-80 rounded text-white justify-content-center" >주소변경
+		                            	</button>
+		                            </div>                        		
+	                        	</div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-4">
+                                    <input id="periodInput" type="text" name="remainingMonths" th:value="*{remainingMonths}" placeholder="*최소 희망 계약기간(개월) 입력" />
+                                </div>
+                                <div class="form-group col-lg-4">
+                                    <input id="rentalFeeInput" type="text" name="rentalFee" th:value="*{rentalFee}" placeholder="*최소 희망 렌탈료 입력" />
+                                </div>
+                            </div>
+                            <div class="form-group mb-30">
+                                <textarea name="assigneeContent" rows="5" th:value="*{assigneeContent}" placeholder="기타 상세 설명을 입력해주세요."></textarea>
+                            </div>
+							<div class="row justify-content-end">
+							    <div class="col-auto">
+							        <button type="submit" id="modifyAssigneeBoardBtn"
+							            class="btn btn-warning rounded font-lg hover-up text-white px-3 py-2 fs-6">
+							            수정
+							        </button>
+							    </div>
+							    <div class="col-auto">
+							        <a href="javascript:history.back();"
+							           class="btn btn-warning rounded font-lg hover-up text-white px-3 py-2 fs-6 text-center">
+							            취소
+							        </a>
+							    </div>
+							</div>
+               			</form>
+                	</div>
+            	</div>
+        	</div>
+    	</div>
+	</th:block> 
+</html>
