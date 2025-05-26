@@ -83,7 +83,7 @@
 	</resultMap>
 	
 	
-	<select id="getLatestRecurringPayment" resultType="CustomerPayment">
+	<select id="getLastBillingPayment" resultMap="paymentResultMap">
 		SELECT 
 			payment_completed_no, 
 			cust_id, 
@@ -112,6 +112,7 @@
 			payment
 		WHERE 
 			cust_id = #{custId} 
+			AND rental_contract_no = #{rentalContractNo}
 			AND payment_type = '정기결제'
 			AND payment_status = '정상결제상태'
 			ORDER BY 
@@ -123,10 +124,11 @@
 	<update id="modifyBillingKey" parameterType="CustomerPayment">
 		update payment
 		<set>
-			billing_key = #{billingKey}
+			billing_key = #{billingKey},
+			revision_date = NOW()
 		</set>
 		where
-			payment_completed_no = #{paymentCompletedNo}
+			rental_contract_no = #{rentalContractNo}
 			
 	</update>
 	
