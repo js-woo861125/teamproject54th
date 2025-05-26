@@ -10,6 +10,9 @@ import ks54team01.customer.assigneeBoard.domain.CustomerAssigneeBoard;
 @Mapper
 public interface CustomerAssigneeBoardMapper {
 
+	// 양수 게시글 삭제
+	int removeMyAssigneeBoard(String assigneeBoardNum);
+	
 	// 양수 게시글 수정
 	int modifyAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard);
 	

@@ -11,6 +11,9 @@ import ks54team01.system.util.PageInfo;
 
 public interface CustomerTransferBoardService {
 	
+	// 양도 게시글 수정
+	void modifyTransferBoard(CustomerTransferBoard customerTransferBoard);
+	
 	// 양도 게시글 등록
 	void addTransferBoard(CustomerTransferBoard customerTransferBoard, MultipartFile[] mainImage, MultipartFile[] extraImage);
 	

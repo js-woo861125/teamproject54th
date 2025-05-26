@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpSession;
 import ks54team01.common.file.domain.FileMetaData;
 import ks54team01.common.file.util.FilesUtils;
+import ks54team01.customer.assigneeBoard.domain.CustomerAssigneeBoard;
 import ks54team01.customer.transferBoard.domain.CustomerTransferBoard;
 import ks54team01.customer.transferBoard.service.CustomerTransferBoardService;
 import ks54team01.system.util.PageInfo;
@@ -40,6 +41,27 @@ public class CustomerTransferBoardController {
 	
 	private final CustomerTransferBoardService customerTransferBoardService;
 
+	@PostMapping("modifyTransferBoard")
+	public String modifyTransferBoard(CustomerTransferBoard customerTrnasferBoard) {
+		
+		customerTransferBoardService.modifyTransferBoard(customerTrnasferBoard);
+		
+		return "redirect:/customer/transferBoard/myTransferBoardList";
+	}
+	
+	@GetMapping("/modifyTransferBoard")
+	public String modifyTransferBoard(@RequestParam(name="transferBoardNum") String transferBoardNum,
+									  Model model) {
+		
+		log.info("게시글 수정 코드: {}", transferBoardNum);
+		
+		CustomerTransferBoard customerTransferBoardInfo = customerTransferBoardService.getTransferBoardInfoByCode(transferBoardNum);
+		
+		model.addAttribute("title", "양도 게시글 수정");
+		model.addAttribute("customerTransferBoardInfo", customerTransferBoardInfo);
+		
+		return "customer/transferBoard/modifyTransferBoardView";
+	}
 	
 	@PostMapping("/addTransferBoard") 
 	public String addTransferBoard(CustomerTransferBoard customerTransferBoard
