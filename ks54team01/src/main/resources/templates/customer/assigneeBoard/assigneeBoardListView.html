@@ -17,7 +17,7 @@
 	
 	
 	<th:block layout:fragment="jsScript">
-		<script>
+		<script th:inline="javascript">
 			$('.sort-by a').click(function(e){
 				e.preventDefault();
 				const sortValue = $(this).data('sortValue');
@@ -39,24 +39,35 @@
 				urlParams.set('currentPage', currentPage);
 				location.href = `${url.pathname}?${urlParams.toString()}`;
 			});
+			
+			
+			$('.addAssigneeBoardBtn').click(function(e) {
+				
+				const loginId = /*[[${session.loginId}]]*/"";
+					if(!loginId) {
+						e.preventDefault();
+						location.href = '/customer/login/memberLogin';
+						return false;
+					}
+			});
 		</script>
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
 	<th:block layout:fragment="customContents">
 		<div class="container mb-30">
-            <div class="row flex-row-reverse">
-                <div class="col-lg-10">
-                    <div class="section-title">
-                        <h1 class="heading-2 mb-50">양도 받기!</h1>
-                        <div class="col-md-2 col-2 ms-auto mt-50">
-							<a th:href="@{/customer/assigneeBoard/addAssigneeBoard}" class="btn btn-success w-30 rounded font-lg hover-up text-white justify-content-center fs-6 mb-50">
+            <div class="row justify-content-center">
+                <div class="col-lg-9">
+                    <div class="section-title row align-items-center mt-50 mb-50">
+                        <h1 class="heading-2 col-6 col-lg-6">양도 받기!</h1>
+                        <div class="col-md-6 col-6 col-lg-6 text-end">
+							<a th:href="@{/customer/assigneeBoard/addAssigneeBoard}" class="addAssigneeBoardBtn btn btn-lg btn-success rounded fs-5 hover-up text-whitefs-6">
 								글쓰기
 							</a>
 						</div>
                     </div>
-                    <div class="w-25 widget_search mb-50">
-                        <div class="search-form">
+                    <div class="row mb-50">
+                        <div class="search-form col-4">
                             <form th:action="@{/customer/assigneeBoard/assigneeBoardList}" method="get">
                                 <input type="text" name="searchValue" th:value="${searchValue}" 
                                 	   placeholder="게시글 검색어를 입력해주세요." />
@@ -64,7 +75,7 @@
                             </form>
                         </div>
                     </div> 
-                    <div class="shop-product-fillter d-flex col-lg-10">
+                    <div class="shop-product-fillter d-flex col-lg-12">
 						<div class="totall-product">
 							<h5 class="text-body">
 								양수 상품
@@ -93,7 +104,7 @@
 							</div>
 						</th:block>
 					</div>
-                    <div class="product-list mb-50 col-lg-10">
+                    <div class="product-list mb-50 col-lg-12">
                         <th:block th:if="${!#lists.isEmpty(assigneeBoardList)}"
 								  th:each="l : ${assigneeBoardList}">
 	                        <!-- 상품1 -->

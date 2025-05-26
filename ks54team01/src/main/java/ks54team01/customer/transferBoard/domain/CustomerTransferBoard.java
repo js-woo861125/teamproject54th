@@ -33,6 +33,7 @@ public class CustomerTransferBoard {
 	private String transferRentalProcsssingStatus;
 	private String registerDate;
 	private String revisionDate;
+	private String uploadImage;
 
 	private CustomerMember customerMember;
 	

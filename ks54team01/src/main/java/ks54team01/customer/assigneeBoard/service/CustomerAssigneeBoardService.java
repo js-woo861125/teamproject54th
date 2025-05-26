@@ -9,6 +9,9 @@ import ks54team01.system.util.PageInfo;
 
 public interface CustomerAssigneeBoardService {
 
+	// 양수 게시글 삭제
+	boolean removeMyAssigneeBoard(String assigneeBoardNum);
+	
 	// 양수 게시글 수정
 	void modifyAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard);
 	

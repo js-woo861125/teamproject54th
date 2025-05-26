@@ -28,6 +28,15 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	private final FileService fileService;
 	
 	/**
+	 * 양도 게시글 수정
+	 */
+	@Override
+	public void modifyTransferBoard(CustomerTransferBoard customerTransferBoard) {
+		
+		customerTransferBoardMapper.modifyTransferBoard(customerTransferBoard);
+	}
+	
+	/**
 	 * 양도 게시글 등록
 	 */
 	@Override

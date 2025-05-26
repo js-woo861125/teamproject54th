@@ -7,6 +7,7 @@
   	<!-- resultMap : 조회 결과를 자바 클래스(domain, dto)와 명시적으로 매핑 설정-->
   	<resultMap type="CustomerTransferBoard" id="transferBoardResultMap">
 		<id column="transfer_board_no" property="transferBoardNum" />
+		<result column="upload_image" property="uploadImage" />
 		<result column="cust_id" property="customerId" />
 		<result column="rental_contract_no" property="rentalContractNum" />
 		<result column="sell_products_no" property="sellProductsNum" />
@@ -111,6 +112,25 @@
   		</association>
   	</resultMap>	
 
+	<update id="modifyTransferBoard" parameterType="CustomerTransferBoard">
+  		/* 양도 게시글 수정 */
+  		UPDATE transfer_board
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="individualGrants != null and individualGrants != ''">
+				individual_grants = #{individualGrants} ,
+			</if>
+			<if test="transferTitle != null and transferTitle != ''">
+				transfer_title = #{transferTitle},
+			</if>	
+			<if test="transferContent != null and transferContent != ''">
+				transfer_content = #{transferContent},
+			</if>
+			revision_date = NOW()	
+		</trim>
+		WHERE
+			transfer_board_no = #{transferBoardNum};
+  	</update>
+
 	<insert id="addTransferBoard" parameterType="CustomerTransferBoard">
   		/* 등록 */
   		INSERT INTO transfer_board
@@ -142,7 +162,7 @@
 			INNER JOIN products p
 			ON sp.products_no = p.products_no
 			INNER JOIN delivery_information di
-			ON sp.sell_products_no = di.sell_products_no
+			ON rc.cust_id = di.cust_id 
 			INNER JOIN delivery_list dl
 			ON di.delivery_location_no = dl.delivery_location_no
 		WHERE 
@@ -213,6 +233,7 @@
 	<select id="getTransferBoardInfoByCode" parameterType="string" resultMap="transferBoardResultMap">
   		/* 양도 게시글 정보 조회 */
   		SELECT 
+  			tb.transfer_board_no,
 			tb.transfer_title,
 			tb.transfer_rental_processing_status, 
 			dl.delivery_addr,
@@ -240,7 +261,7 @@
   		/* 양도 게시글 목록 조회 (제목, 작성자, 상품명, 이미지)*/
 	   SELECT 
 	   		tb.transfer_board_no ,
-			p.products_image ,
+			f.file_path AS upload_image ,
 			tb.cust_id ,
 			c.cust_nm ,
 			pc.middle_category ,
@@ -259,6 +280,8 @@
 			USING (products_no)
 			INNER JOIN products_category pc
 			ON p.product_category_no = pc.product_category_no
+			LEFT JOIN files f
+			ON tb.transfer_board_no = f.ref_id AND f.file_type = 'mainImage'
 		<where>
 			<if test="searchValue != null and searchValue != ''">
 				p.products_nm LIKE CONCAT('%', #{searchValue}, '%')

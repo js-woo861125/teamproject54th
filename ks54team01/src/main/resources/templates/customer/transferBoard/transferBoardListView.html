@@ -16,7 +16,7 @@
 	
 	
 	<th:block layout:fragment="jsScript">
-		<script>
+		<script th:inline="javascript">
 			$('.sort-by a').click(function(e){
 				e.preventDefault();
 				const sortValue = $(this).data('sortValue');
@@ -44,32 +44,41 @@
 			$('.addTransferBoardBtn').click(function (e) {
 				  e.preventDefault();
 
+				  const loginId = /*[[${session.loginId}]]*/"";
+				  if (!loginId) {
+				    location.href = '/customer/login/memberLogin';
+				    return false;
+				  }
+
 				  $.ajax({
 				    url: "/customer/transferBoard/getMyContracts",
 				    method: "POST",
 				    success: function (contracts) {
-				      if (!contracts || contracts.length === 0) {
-				        Swal.fire({
-				          icon: "error",
-				          title: "Oops...",
-				          text: "진행 중인 렌탈 계약이 없습니다.",
-				          confirmButtonText: "확인"
-				        });
+				    	console.log("✅ 받은 계약 목록:", contracts); // ← 꼭 추가해서 확인하세요
+				      	if (!contracts || contracts.length === 0) {
+				     	   Swal.fire({
+				       		    icon: "error",
+				    	   		title: "Oops...",
+				   	  		    text: "진행 중인 렌탈 계약이 없습니다.",
+				   	  	     	confirmButtonText: "확인"
+				   	     });
 				        return;
 				      }
 
 				      const contractOptions = {};
 				      contracts.forEach(contract => {
-				        contractOptions[contract.rentalContractNum] = contract.itemName;
+				        // rentalContractNum을 key로, itemName을 value로 넣고 모두 문자열 처리
+				        contractOptions[String(contract.rentalContractNum)] = String(contract.productInfo.productsName);
 				      });
 
 				      Swal.fire({
 				        title: "등록할 상품을 선택하세요.",
 				        input: "select",
-				        inputOptions: {
-				          "내 상품 중 택1": contractOptions
-				        },
+				        inputOptions: contractOptions,
 				        inputPlaceholder: "렌탈 계약 목록",
+				        customClass: {
+				            input: 'custom-swal-select'
+				        },
 				        showCancelButton: true,
 				        confirmButtonText: "확인",
 				        cancelButtonText: "취소"
@@ -78,14 +87,13 @@
 				          const selectedContractNum = result.value;
 
 				          Swal.fire({
-				            title: "이 상품을 등록하시겠습니까?",
+				            title: "선택하신 상품을 등록하시겠습니까?",
 				            text: contractOptions[selectedContractNum],
 				            showCancelButton: true,
 				            confirmButtonText: "등록",
 				            cancelButtonText: "취소"
 				          }).then((confirmResult) => {
 				            if (confirmResult.isConfirmed) {
-				              // 💥 여기서 반드시 requestRentalInfo로 보낸다!!
 				              const form = $('<form>', {
 				                method: 'POST',
 				                action: '/customer/transferBoard/requestRentalInfo'
@@ -98,7 +106,7 @@
 				              }));
 
 				              $('body').append(form);
-				              form.submit();  // 🔥 여기를 통해 컨트롤러가 redirect를 실행할 수 있음
+				              form.submit();
 				            }
 				          });
 				        }
@@ -189,21 +197,15 @@
 									<div class="product-img-action-wrap">
 										<div class="product-img product-img-zoom">
 											<a th:href="@{/customer/transferBoard/transferBoardDetail(transferBoardNum=${l.transferBoardNum})}">
-												<img class="default-img"
-												th:src="@{'/user/assets/imgs/shop/' + ${l.productInfo.productsImage}}"
-												alt="" />
+												<img class="img-main"
+													 th:src="@{${l.uploadImage}}"
+													 alt="" />
 											</a>
 										</div>
 									</div>
 									<div class="product-content-wrap">
 										<div class="product-category d-flex justify-content-between">
 											<a th:text="${l.productInfoCategory.smCategory}" href="shop-grid-right.html">TV</a>
-											<div class="dropdown">
-		                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-		                                        <div class="dropdown-menu">
-		                                            <button class="dropdown-item" type="submit">게시글 삭제</button>
-		                                        </div>
-	                                    	</div>
 										</div>
 										<h2 th:text="${l.transferTitle}">
 											<a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a>
