@@ -71,37 +71,100 @@
 			<result column="small_category" property="smCategory" />
 			<result column="use_status" property="useStatus" />		
 		</association>
+		
+		<association property="customerContract" javaType="CustomerContract">
+			<id 	column="rental_contract_no" 		property="rentalContractNo" />
+			<result column="ent_ceo_no" 				property="entCeoNo" />
+			<result column="ent_emp_id" 				property="entEmpId" />
+			<result column="sell_products_no" 			property="sellProdNo" />
+			<result column="cust_id" 					property="custId" />
+			<result column="rental_contract_status" 	property="rentalContractStatus" />
+			<result column="contract_quantity" 			property="contractQuantity" />
+			<result column="contract_period" 			property="contractPeriod" />		
+			<result column="rental_start_date" 			property="rentalStartDate" />
+			<result column="rental_end_date" 			property="rentalEndDate" />
+			<result column="rental_cancel_date" 		property="rentalCancelDate" />
+			<result column="contract_date" 				property="contractDate" />
+  		</association>
+  		
+  		<association property="customerSellProduct" javaType="CustomerSellProduct">
+			<id 	column="sell_product_no" 		property="sellProductNo" />
+			<result column="final_price" 				property="finalPrice" />
+  		</association>
+  		
+  		<association property="customerDeliveryInfo" javaType="CustomerDeliveryInfo">
+			<id 	column="del_info_no" 			property="delInfoNo" />
+			<result column="cust_id" 				property="custId" />
+			<result column="ent_ceo_no" 			property="entCeoNo" />
+			<result column="ent_emp_id" 			property="entEmpId" />
+			<result column="payment_completed_no" 	property="paymentCompletedNo" />
+			<result column="sell_products_no" 		property="sellProdNo" />
+			<result column="delivery_location_no" 	property="delNo" />
+			<result column="recipient_nm" 			property="recipientNm" />
+			<result column="recipient_phone" 		property="recipientPhone" />
+			<result column="delivery_company" 		property="delCompany" />
+			<result column="delivery_request" 		property="delRequest" />
+			<result column="delivery_progress" 		property="delProgress" />
+			<result column="depart_date" 			property="departDate" />
+			<result column="arrive_date" 			property="arriveDate" />
+			<result column="register_date" 			property="regDate" />
+  		</association>
   	</resultMap>	
 
 	<insert id="addTransferBoard" parameterType="CustomerTransferBoard">
   		/* 등록 */
   		INSERT INTO transfer_board
 		(transfer_board_no, cust_id, rental_contract_no, sell_products_no, model_no, item_no, product_category_no, del_info_no, transfer_title, transfer_content, rental_fee, remaining_months, contract_end_date, individual_grants, board_valid_date, transfer_rental_processing_status, register_date, revision_date)
-		VALUES(#{transferBoardNum}, 'personalcustid3', #{rentalContractNum}, #{sellProductsNum}, #{modelNum}, #{itemNum}, #{productCategoryNum}, #{deliveryInfoNum}, #{transferTitle}, #{transferContent}, #{rentalFee}, #{remainingMonths}, #{contractEndDate}, #{individualGrants}, DATE_ADD(NOW(), INTERVAL 1 MONTH), '대기중', NOW(), NOW());
+		VALUES(#{transferBoardNum}, 'personalcustid3', #{rentalContractNum}, #{sellProductsNum}, #{modelNum}, #{itemNum}, #{productCategoryNum}, #{customerDeliveryInfo.delInfoNo}, #{transferTitle}, #{transferContent}, #{rentalFee}, #{remainingMonths}, #{contractEndDate}, #{individualGrants}, DATE_ADD(NOW(), INTERVAL 1 MONTH), '대기중', NOW(), NOW());
   	</insert>
 
 	<select id="getMyContractInfo" parameterType="string" resultMap="transferBoardResultMap">
-  		/* 양도 게시글 등록 시 진행 중인 계약 정보 조회 */
+  		/* 양도 게시글 등록 시 선택한 계약 정보 조회 */
   		SELECT 
 			rc.rental_contract_no ,
 			p.products_nm ,
+			p.model_no ,
+			p.item_no ,
+			product_category_no ,
+			sp.sell_products_no ,
 			rc.sell_products_no ,
 			rc.contract_quantity ,
 			rc.contract_period,
 			rc.rental_start_date ,
-			rc.rental_end_date AS contractEndDate,
-			CEIL(DATEDIFF(rental_end_date, NOW()) / 30) AS remainingMonths,
-			sp.final_price AS rentalFee
+			rc.rental_end_date ,
+			CEIL(DATEDIFF(rc.rental_end_date, NOW()) / 30) AS remaining_months,
+			sp.final_price ,
+			di.del_info_no ,
+			dl.delivery_addr 
+		FROM 
+			rental_contract rc LEFT JOIN sell_products sp
+			ON rc.sell_products_no = sp.sell_products_no 
+			INNER JOIN products p
+			ON sp.products_no = p.products_no
+			INNER JOIN delivery_information di
+			ON sp.sell_products_no = di.sell_products_no
+			INNER JOIN delivery_list dl
+			ON di.delivery_location_no = dl.delivery_location_no
+		WHERE 
+			rc.cust_id = 'corpcustid4'
+			AND rc.rental_contract_no = #{rentalContractNum};
+  	</select>
+  	
+	<select id="getMyContractListByCustomerId" parameterType="string" resultMap="transferBoardResultMap">
+  		/* 양도 게시글 등록 클릭 시 유효한 렌탈 목록 조회 */
+  		SELECT 
+			rc.rental_contract_no ,
+			p.products_nm ,
+			rc.contract_period
 		FROM 
 			rental_contract rc LEFT JOIN sell_products sp
 			ON rc.sell_products_no = sp.sell_products_no 
 			INNER JOIN products p
 			ON sp.products_no = p.products_no 
 		WHERE 
-			rc.cust_id = 'corpcustid4'
-			AND rc.rental_contract_no = 'rental_contract_7';
+			rc.cust_id = 'corpcustid4';
   	</select>
-	
+
 
 	<select id="getMyTransferBoardList" parameterType="string" resultMap="transferBoardResultMap">
   		/* 내 양도 게시글 목록 조회 (제목, 작성자, 상품명, 이미지)*/

@@ -42,35 +42,73 @@
 			
 			
 			$('.addTransferBoardBtn').click(function (e) {
-			    e.preventDefault();
+				  e.preventDefault();
 
-			    Swal.fire({
-			        title: "등록하고 싶은 상품을 선택해주세요.",
-			        input: "select",
-			        inputOptions: {
-			            "내 상품 중 택1": {
-			                apples: "Apples",
-			                bananas: "Bananas",
-			                grapes: "Grapes",
-			                oranges: "Oranges"
-			            }
-			        },
-			        inputPlaceholder: "렌탈 계약 목록",
-			        showCancelButton: true
-			    }).then((result) => {
-			        if (result.isConfirmed && result.value) {
-			            Swal.fire(`${result.value} 상품 등록하시겠습니까?`);
-			        }
-			    });
-			});
-					
-				/* 렌탈 계약 없을 때 */
-				/* Swal.fire({
-					  icon: "error",
-					  title: "Oops...",
-					  text: "진행 중인 렌탈 계약이 없습니다.",
-					  confirmButtonText: "확인"
-					}); */
+				  $.ajax({
+				    url: "/customer/transferBoard/getMyContracts",
+				    method: "POST",
+				    success: function (contracts) {
+				      if (!contracts || contracts.length === 0) {
+				        Swal.fire({
+				          icon: "error",
+				          title: "Oops...",
+				          text: "진행 중인 렌탈 계약이 없습니다.",
+				          confirmButtonText: "확인"
+				        });
+				        return;
+				      }
+
+				      const contractOptions = {};
+				      contracts.forEach(contract => {
+				        contractOptions[contract.rentalContractNum] = contract.itemName;
+				      });
+
+				      Swal.fire({
+				        title: "등록할 상품을 선택하세요.",
+				        input: "select",
+				        inputOptions: {
+				          "내 상품 중 택1": contractOptions
+				        },
+				        inputPlaceholder: "렌탈 계약 목록",
+				        showCancelButton: true,
+				        confirmButtonText: "확인",
+				        cancelButtonText: "취소"
+				      }).then((result) => {
+				        if (result.isConfirmed && result.value) {
+				          const selectedContractNum = result.value;
+
+				          Swal.fire({
+				            title: "이 상품을 등록하시겠습니까?",
+				            text: contractOptions[selectedContractNum],
+				            showCancelButton: true,
+				            confirmButtonText: "등록",
+				            cancelButtonText: "취소"
+				          }).then((confirmResult) => {
+				            if (confirmResult.isConfirmed) {
+				              // 💥 여기서 반드시 requestRentalInfo로 보낸다!!
+				              const form = $('<form>', {
+				                method: 'POST',
+				                action: '/customer/transferBoard/requestRentalInfo'
+				              });
+
+				              form.append($('<input>', {
+				                type: 'hidden',
+				                name: 'rentalContractNum',
+				                value: selectedContractNum
+				              }));
+
+				              $('body').append(form);
+				              form.submit();  // 🔥 여기를 통해 컨트롤러가 redirect를 실행할 수 있음
+				            }
+				          });
+				        }
+				      });
+				    },
+				    error: function (err) {
+				      console.error("계약 목록 불러오기 실패", err);
+				    }
+				  });
+				});
 		</script>
 	</th:block>
 	
@@ -114,7 +152,6 @@
 							<div class="sort-by-product-area">
 								<div class="sort-by-cover mr-10">
 									<div class="sort-by">
-										<!--/* <a th:href="@{/customer/transferBoard/sortTransferBoardList(sortValue=recentReg)}"> */-->
 										<a th:href="@{#}" th:data-sort-value="recentReg">
 											<span>최신등록순</span>
 										</a>

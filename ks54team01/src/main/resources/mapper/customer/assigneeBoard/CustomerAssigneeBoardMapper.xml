@@ -48,6 +48,16 @@
 			<result column="revision_date" property="itemRevDate" />
 			<result column="use_status" property="useStatus" />		
 		</association>	
+		
+		<association property="customerProduct" javaType="CustomerProduct">
+			<id column="products_no" property="productsNum" />
+		<result column="manager_id" property="managerId" />
+		<result column="model_no" property="modelNum" />
+		<result column="item_no" property="itemNum" />
+		<result column="product_category_no" property="productCategoryNum" />
+		<result column="products_nm" property="productsName" />
+		<result column="products_status" property="productsStatus" />			
+		</association>	
   	</resultMap>
   	
   	<resultMap type="ProductInfoItem" id="itemResultMap">
@@ -69,6 +79,30 @@
 		<result column="products_nm" property="productsName" />
 		<result column="products_status" property="productsStatus" />		
   	</resultMap>
+  	
+  	<update id="modifyAssigneeBoard" parameterType="CustomerAssigneeBoard">
+  		/* 양도 게시글 수정 */
+  		UPDATE assignee_board
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="rentalFee != null and rentalFee != ''">
+				rental_fee = #{rentalFee}, 
+			</if>
+			<if test="remainingMonths != null and remainingMonths != ''">
+				remaining_mi = #{remainingMonths},
+			</if>
+			<if test="desiredInstallArea != null and desiredInstallArea != ''">
+				desired_install_area= #{desiredInstallArea}, 
+			</if>
+			<if test="quantity != null and quantity != ''">
+				quantity = #{quantity} ,
+			</if>	
+			<if test="assigneeContent != null and assigneeContent != ''">
+				assignee_content = #{assigneeContent}	
+			</if>	
+		</trim>
+		WHERE
+			assignee_no = #{assigneeBoardNo};
+  	</update>
   	
   	<insert id="addAssigneeBoard" parameterType="CustomerAssigneeBoard">
   		<selectKey keyProperty="assigneeBoardNum" resultType="string" order="BEFORE">
@@ -157,6 +191,7 @@
 			ab.product_category_no,
 			pc.middle_category ,
 			pc.small_category ,
+			p.products_no ,
 			ab.products_nm, 
 			ab.rental_fee, 
 			ab.remaining_months, 
@@ -171,6 +206,8 @@
 			USING (cust_id)
 			INNER JOIN products_category pc
 			USING (product_category_no)
+			INNER JOIN products p
+			ON pc.product_category_no = p.product_category_no
 		WHERE
 			ab.assignee_no = #{assigneeBoardNum};
   	</select>

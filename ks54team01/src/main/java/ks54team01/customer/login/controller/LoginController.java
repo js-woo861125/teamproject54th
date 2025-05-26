@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import ks54team01.admin.manage.domain.Admin;
 import ks54team01.customer.login.service.LoginService;
 import ks54team01.customer.member.domain.CommonMember;
+import ks54team01.customer.member.domain.EntMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,6 +61,11 @@ public class LoginController {
 	     log.info("로그인 성공: memberId={} memberType={}", memberId, loginMemberType);
 
 	     if ("입점업체 대표".equals(loginMemberType) || "입점업체 직원".equals(loginMemberType)) {
+	    	 EntMember entCeo = (EntMember) loginResult.get("memberInfo");
+	    	 session.setAttribute("entCeoNo", entCeo.getEntCeoNo());
+	    	 session.setAttribute("entBrno", entCeo.getEntBrno());
+	    	 session.setAttribute("entName", entCeo.getEntName());
+	    	 
 	         return "redirect:/enterprise";
 	     }
 
