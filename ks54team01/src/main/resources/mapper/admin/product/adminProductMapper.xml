@@ -112,9 +112,8 @@
         <if test="productDetail != null and productDetail != ''">
         	products_detail = #{productDetail},
         </if>
-        <if test="revisionDate != null and revisionDate != ''">
-            revision_date = #{revisionDate},
-        </if>
+            revision_date = NOW()
+        
     </set>
    		 WHERE 
    		 	products_no = #{productNo}

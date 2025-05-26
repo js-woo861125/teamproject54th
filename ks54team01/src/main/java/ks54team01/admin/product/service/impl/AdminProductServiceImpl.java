@@ -18,7 +18,6 @@ import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.admin.productInfo.domain.ProductInfoItem;
 import ks54team01.admin.productInfo.domain.ProductInfoModel;
 import ks54team01.common.file.service.FileService;
-import ks54team01.common.file.service.impl.FileServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AdminProductServiceImpl implements AdminProductService{
 
-		private final FileServiceImpl fileServiceImpl;	
 		private final AdminProductMapper adminProductMapper;
 		private final FileService fileService;
 		
