@@ -9,6 +9,7 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 
 import ks54team01.admin.manage.interceptor.AdminLoginInterceptor;
 import ks54team01.common.interceptor.AccessLogInterceptor;
+import ks54team01.customer.login.interceptor.CustomerLoginInterceptor;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -19,6 +20,7 @@ public class WebConfig implements WebMvcConfigurer{
 	
 	private final AccessLogInterceptor accessLogInterceptor;
 	private final AdminLoginInterceptor adminLoginInterceptor;
+	private final CustomerLoginInterceptor customerLoginInterceptor;
 	
 	/**
 	 * addInterceptors : bean으로 등록한 interceptor를 webproject에 추가하는 메소드
@@ -42,6 +44,23 @@ public class WebConfig implements WebMvcConfigurer{
 				.addPathPatterns("/admin/**")
 				.excludePathPatterns("/admin/login")
 				.excludePathPatterns("/admin/logout")
+				.excludePathPatterns("/manage/**")
+				.excludePathPatterns("/favicon.ico")
+				.excludePathPatterns("/error");
+		
+		registry.addInterceptor(customerLoginInterceptor)
+				.addPathPatterns("/customer/wishList/**")
+				.addPathPatterns("/customer/member/**")
+				.addPathPatterns("/customer/transferBoard/addTransferBoard")
+				.addPathPatterns("/customer/transferBoard/myTransferBoardList")
+				.addPathPatterns("/customer/assigneeBoard/myAssigneeBoardList")
+				.addPathPatterns("/customer/assigneeBoard/addAssigneeBoard")
+				.addPathPatterns("/customer/payment/**")
+				.addPathPatterns("/customer/delivery/**")
+				.excludePathPatterns("/customer/member/forgotId")
+				.excludePathPatterns("/customer/member/forgotPw")
+				.excludePathPatterns("/customer/login/**")
+				.excludePathPatterns("/customer/register/**")
 				.excludePathPatterns("/manage/**")
 				.excludePathPatterns("/favicon.ico")
 				.excludePathPatterns("/error");

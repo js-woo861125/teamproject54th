@@ -26,6 +26,13 @@ public class CustomerAssigneeBoardServiceImpl implements CustomerAssigneeBoardSe
 	private final AdminProductInfoMapper adminProductInfoMapper;
 	
 	@Override
+	public void modifyAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard) {
+		
+		customerAssigneeBoardMapper.modifyAssigneeBoard(customerAssigneeBoard);
+		
+	}
+	
+	@Override
 	public void addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard) {
 		customerAssigneeBoardMapper.addAssigneeBoard(customerAssigneeBoard);
 	}

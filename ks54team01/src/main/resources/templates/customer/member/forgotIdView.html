@@ -11,8 +11,7 @@
 	
 	</th:block>
 	
-	<th:block layout:fragment="jsScript">
-	</th:block>
+	
 	
 	<!-- 페이지 삽입공간 -->
 	<th:block layout:fragment="customContents">
@@ -35,35 +34,56 @@
                                         <div class="heading_s1 mb-20">
                                             <h1 class="mb-5" th:text="${title}"></h1>                                         
                                         </div>
-                                        <form method="post">
+                                        <form id="forgotIdForm" th:action="@{/customer/member/forgotId}" method="post">
                                             <div class="form-group">
-                                                <input type="text" name="member-name" placeholder="이름" required />
+                                                <input type="text" id="memberName" name="memberName" placeholder="이름" required />
                                             </div>
-                                            <div class="form-group d-flex">
-                                                <select class="w-auto border-1 border-radius-10 mr-10">
-                                                    <option>010</option>
-                                                    <option>02</option>
-                                                    <option>063</option>
-                                                </select>                          
-                                                <input type="text" name="member-phone" placeholder="전화번호" required />
-                                                <button type="submit" class="btn btn-heading btn-block p-10 ml-10">인증요청</button>                                                 
-                                            </div>                                  
-                                            <div class="custome-radio type-radio d-flex justify-content-evenly">
+                                            <div class="form-group">
+												<input type="hidden" id="memberPhone" name="memberPhone"/>
+		                                            <div class="form-group d-flex">
+													   	<input type="text" class="w-10 form-control fs-6" id="phoneFixed" name="phoneFixed" placeholder="010" value="010" readonly />
+													    <input type="text" class="mr-10 ml-10" id="phone1" name="phone1" placeholder="1234" value="0001" required />
+													    <input type="text" placeholder="5678" id="phone2" name="phone2" value="0001" required />
+													</div>
+											</div>
+                                            <div class="form-group">
+                                            	<input type="hidden" id="memberEmail" name="memberEmail"/>
+	                                            	<div class="form-group d-flex">
+		                                                <input type="text" class="w-60" id="emailFirst" name="emailFirst" placeholder="Email" value="snh2520" required />
+		                                                <select class="w-auto border-1 border-radius-10 ml-10" id="emailLast" name="emailLast">
+		                                                    <option value="@naver.com">@naver.com</option>
+		                                                    <option value="@daum.net">@daum.net</option>
+		                                                    <option value="@google.com">@google.com</option>                                                    
+		                                                </select> 
+		                                                <button type="button" class="btn btn-heading btn-block p-10 ml-10" onclick="sendVerificationCode()">인증요청</button>                                               
+		                                            </div>
+													<div class="form-group" id="verify-section" style="display:none;">
+														<div class="form-group d-flex">
+														    <input type="text" id="verifyCode" name="verifyCode" placeholder="인증코드 입력">
+														    <button type="button" class="btn btn-heading btn-block p-10 ml-10"  onclick="verifyCodeSubmit()">확인</button>
+													    </div>
+													</div>
+											</div>   
+											<!-- 회원 유형 선택 -->
+                                            <div class="custome-radio type-radio d-flex justify-content-evenly mb-30">
                                                 <div class="custome-radio">
-                                                    <input class="form-check-input" type="radio" name="payment_option" id="exampleRadios3" checked="checked" required/>
-                                                    <label class="form-check-label" for="exampleRadios3" data-bs-toggle="collapse" data-target="#bankTranfer" aria-controls="bankTranfer">일반회원</label>
-                                                </div>
+												    <input class="form-check-input" type="radio" id="memberTypeCustomer" name="memberType" value="CUSTOMER" checked="checked" required />
+												    <label class="form-check-label" for="memberTypeCustomer">일반회원</label>
+												</div>
                                                 <div class="custome-radio">
-                                                    <input class="form-check-input" type="radio" name="payment_option" id="exampleRadios4" required />
-                                                    <label class="form-check-label" for="exampleRadios4" data-bs-toggle="collapse" data-target="#checkPayment" aria-controls="checkPayment">기업회원</label>
-                                                </div>
+												    <input class="form-check-input" type="radio" id="memberTypeCorp" name="memberType" value="CORP" checked="checked" required />
+												    <label class="form-check-label" for="memberTypeCorp">기업회원</label>
+												</div>
+												<div class="custome-radio">
+												    <input class="form-check-input" type="radio" id="memberTypeEnt" name="memberType" value="ENT" required />
+												    <label class="form-check-label" for="memberTypeEnt">입점업체</label>
+												</div>
                                             </div>
                                             <div class="login_footer form-group mb-50 d-flex jusfity-content-end">
                                                 <a class="text-muted" th:href="@{/customer/member/forgotPw}">비밀번호 찾기</a>
                                             </div>
-                                         
                                             <div class="form-group mb-30">
-                                                <button type="submit" class="btn btn-heading btn-block hover-up" name="login" th:href="@{#}">아이디찾기</button>
+                                                <button type="submit" class="btn btn-heading btn-block hover-up" id="forgotIdBtn" name="forgotIdBtn">아이디찾기</button>
                                             </div>                                           
                                         </form>
                                     </div>
@@ -74,6 +94,146 @@
                 </div>
             </div>
         </div>
+	</th:block>
+	<th:block layout:fragment="jsScript">
+		<script>
+			/**
+			 * 전화번호 조합
+			 */
+			function setPhoneValue() {
+			    const phone = `${$('#phoneFixed').val()}-${$('#phone1').val()}-${$('#phone2').val()}`;
+			    $('#memberPhone').val(phone);
+			}
+			
+			/**
+			 * email 조합
+			 */
+			function getFullEmail() {
+				const emailFirst = $('#emailFirst').val().trim();
+			    const emailLast = $('#emailLast').val().trim();
+			    if (!emailFirst || !emailLast) return null;
+			    return emailFirst + emailLast;
+			}
+		   
+			/**
+		     * email 유효성검증 및 인증코드 전송
+		     */
+		    function sendVerificationCode() {
+		    	const custEmail  = getFullEmail();
+
+		        if (!custEmail) {
+		            alert("이메일을 정확히 입력해주세요.");
+		            return;
+		        }
+		        
+		        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		        
+		        if (!regex.test(custEmail )) {
+		            alert("이메일 형식이 올바르지 않습니다.");
+		            return;
+		        }
+
+		        $('#memberEmail').val(memberEmail);
+		        
+		        $.ajax({
+		            url: '/customer/register/sendCode',
+		            method: 'POST',
+		            data:{
+		                emailFirst: $('#emailFirst').val(),
+		                emailLast: $('#emailLast').val()
+		            },
+		            dataType: 'JSON',
+		            success: function(response) {
+		                if (response.status === 'success') {
+		                    alert(response.message);
+		                    $('#verify-section').show();
+		                } else {
+		                    alert(response.message);
+		                }
+		            },
+		            error: function() {
+		                alert("서버와의 통신 오류입니다.");
+		            }
+		        });
+		    }
+	
+		        
+		   	/**
+		   	 * email 인증코드 확인
+		   	 */
+		   	let isEmailVerified = false;
+		   	
+		   	function verifyCodeSubmit() {
+		        const custEmail = getFullEmail();		       
+		        const code = $('#verifyCode').val();
+		        
+		        if (!code) {
+		            alert("인증코드를 입력하세요.");
+		            return;
+		        }
+
+		        $.ajax({
+		            url: '/customer/register/verifyCode',
+		            method: 'POST',
+		            data: {
+		                email: custEmail,
+		                code: code
+		            },
+		            success: function(response) {
+		            	if (response.status === 'success') {
+		            	    alert("이메일 인증에 성공했습니다.");
+		            		isEmailVerified = true;
+		            	    document.getElementById('verifyCode').disabled = true;
+		            	} else {
+		                    alert("인증코드가 일치하지 않습니다.");
+		                }
+		            },
+		            error: function() {
+		                alert("인증 확인 요청 중 오류가 발생했습니다.");
+		            }
+	       	 	});
+	    	}
+		    
+		    /**
+			 * email 인증여부 검증
+			 */	
+		    function validateEmailVerification() {
+		    	 if (!isEmailVerified) {
+				        if(!isEmailVerified) {
+				            alert("이메일 인증을 완료해주세요.");
+				            return false;
+				        }
+		        }
+		        return true;
+		    }
+		    
+		    /**
+		     *  폼 유효성 검증
+		     */
+		    function validateForm() {
+		        const memberName = $('#memberName').val().trim();
+		        const phone1 = $('#phone1').val().trim();
+		        const phone2 = $('#phone2').val().trim();
+		        const memberEmail = getFullEmail();
+
+		        if (!memberName || !phone1 || !phone2 || !memberEmail) {
+		            alert("모든 항목을 입력해주세요.");
+		            return false;
+		        }
+		    }
+		        
+		    /**
+		     * 폼 제출 및 추가 데이터 조합
+		     */
+		    $('#forgotIdBtn').click(function(e) {
+		        e.preventDefault();
+
+		        if (validateForm()) {
+		            alert("임시 비밀번호가 이메일로 발송되었습니다.");
+		            $('#forgotIdForm').submit();
+		        }
+		    });
+		</script>
 	</th:block>
 	
 </html>

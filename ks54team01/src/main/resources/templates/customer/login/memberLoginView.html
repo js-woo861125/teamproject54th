@@ -74,6 +74,11 @@
 		 	if (params.get('withdrawn') === 'true') {
 		 	  alert('탈퇴한 회원입니다. 로그인할 수 없습니다.');
 		 	}
+		
+			if(params.get('message') === 'unauthorized') {
+			  alert("회원만 이용 가능한 기능입니다. 로그인 후 이용해주세요.");
+			}
+			
 		</script>
 	</th:block>
 	
