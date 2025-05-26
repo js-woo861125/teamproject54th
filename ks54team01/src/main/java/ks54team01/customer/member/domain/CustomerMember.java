@@ -10,6 +10,7 @@ public class CustomerMember {
 	public CustomerMember(CommonMember common) {
 		this.memberId = common.getMemberId();
 		this.memberPw = common.getMemberPw();
+		this.memberType = common.getMemberType();
 	}
 	
 	// 공통정보 (members 테이블)

@@ -59,6 +59,8 @@
 	                        <div class="col-md-2">
 	                            <h4>1. 수정 항목</h4>
 	                        </div>
+	                        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+							<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 	                        <div class="col-md-10" th:object="${entInfo}">
 	                        	<div class="row align-items-end ">
 	                        		<div class="col-6">
