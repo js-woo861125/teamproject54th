@@ -10,7 +10,7 @@ import ks54team01.customer.payment.domain.CustomerPayment;
 public interface CustomerPaymentService {
 	
 	
-	void modifyBillingKey(String custId, String billingKey);
+	void modifyBillingKey(String custId, String billingKey, String rentalContractNo);
 	
 	void autoBillingPayments();
 	
