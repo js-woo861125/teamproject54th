@@ -15,16 +15,16 @@
 				const itemName = $('#itemName').val();
 				const categoryNo = $('#categoryNo').val();
 				
-				if(!itemName){
-					alert('품목명을 입력해주세요');
-					$('#itemName').focus();
-					return ;
-				}
-				
 				if (!categoryNo) {
 					alert('카테고리를 선택해주세요');
 					$('#categoryNo').focus();
 					return;
+				}
+				
+				if(!itemName){
+					alert('품목명을 입력해주세요');
+					$('#itemName').focus();
+					return ;
 				}
 				
 				$.ajax({

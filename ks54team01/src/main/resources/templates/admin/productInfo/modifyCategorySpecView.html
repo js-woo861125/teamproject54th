@@ -15,16 +15,16 @@
 				const specName = $('#specName').val();
 				const categoryNo = $('#categoryNo').val();
 				
-				if(!specName){
-					alert('스펙명을 입력해주세요');
-					$('#specName').focus();
-					return ;
-				}
-				
 				if (!categoryNo) {
 					alert('카테고리를 선택해주세요');
 					$('#categoryNo').focus();
 					return;
+				}
+				
+				if(!specName){
+					alert('스펙명을 입력해주세요');
+					$('#specName').focus();
+					return ;
 				}
 				
 				$.ajax({

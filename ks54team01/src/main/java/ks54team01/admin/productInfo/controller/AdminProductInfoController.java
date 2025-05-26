@@ -127,93 +127,100 @@ public class AdminProductInfoController {
 	 * 상품정보 검색
 	 */
 	@GetMapping("/searchModelSpec")
-	public String getSearchModelSpec(String searchKey, String searchValue, Model model) {
+	public String getSearchModelSpec(String searchKey, String searchValue, String useStatus, Model model) {
 
-		List<ProductInfoModelSpec> modelSpecList = adminProductInfoService.getSearchModelSpec(searchKey, searchValue);
+		List<ProductInfoModelSpec> modelSpecList = adminProductInfoService.getSearchModelSpec(searchKey, searchValue, useStatus);
 		
 		model.addAttribute("title", "모델별/상세스펙 검색결과");
 		model.addAttribute("modelSpecList", modelSpecList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
+		model.addAttribute("useStatus", useStatus);
 		
 		return "admin/productInfo/modelSpecListView";
 		}
 		
 	
 	@GetMapping("/searchCategorySpec")
-	public String getSearchCategorySpec(String searchKey, String searchValue, Model model) {
+	public String getSearchCategorySpec(String searchKey, String searchValue, String useStatus, Model model) {
 
-		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoService.getSearchCategorySpec(searchKey, searchValue);
+		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoService.getSearchCategorySpec(searchKey, searchValue, useStatus);
 		
 		model.addAttribute("title", "카테고리별/상세스펙 검색결과");
 		model.addAttribute("categorySpecList", categorySpecList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
+		model.addAttribute("useStatus", useStatus);
 		
 		return "admin/productInfo/categorySpecListView";
 		}
 	
 	@GetMapping("/searchBenefit")
-	public String getSearchBenefit(String searchKey, String searchValue, Model model) {
+	public String getSearchBenefit(String searchKey, String searchValue, String useStatus, Model model) {
 
-		List<ProductInfoBenefit> benefitList = adminProductInfoService.getSearchBenefit(searchKey, searchValue);
+		List<ProductInfoBenefit> benefitList = adminProductInfoService.getSearchBenefit(searchKey, searchValue, useStatus);
 		
 		model.addAttribute("title", "혜택 검색결과");
 		model.addAttribute("benefitList", benefitList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
+		model.addAttribute("useStatus", useStatus);
 		
 		return "admin/productInfo/benefitListView";
 		}
 	
 	@GetMapping("/searchModel")
-	public String getSearchModel(String searchKey, String searchValue, Model model) {
+	public String getSearchModel(String searchKey, String searchValue, String useStatus, Model model) {
 
-		List<ProductInfoModel> modelList = adminProductInfoService.getSearchModel(searchKey, searchValue);
+		List<ProductInfoModel> modelList = adminProductInfoService.getSearchModel(searchKey, searchValue, useStatus);
 		
 		model.addAttribute("title", "모델 검색결과");
 		model.addAttribute("modelList", modelList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
+		model.addAttribute("useStatus", useStatus);
 		
 		return "admin/productInfo/modelListView";
 		}
 	
 	@GetMapping("/searchItem")
-	public String getSearchItem(String searchKey, String searchValue, Model model) {
+	public String getSearchItem(String searchKey, String searchValue, String useStatus, Model model) {
 
-		List<ProductInfoItem> itemList = adminProductInfoService.getSearchItem(searchKey, searchValue);
+		List<ProductInfoItem> itemList = adminProductInfoService.getSearchItem(searchKey, searchValue, useStatus);
 		
 		model.addAttribute("title", "품목 검색결과");
 		model.addAttribute("itemList", itemList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
+		model.addAttribute("useStatus", useStatus);
 		
 		return "admin/productInfo/itemListView";
 		}
 	
 	@GetMapping("/searchBrand")
-	public String getSearchBrand(String searchKey, String searchValue, Model model) {
+	public String getSearchBrand(String searchKey, String searchValue, String useStatus, Model model) {
 
-		List<ProductInfoBrand> brandList = adminProductInfoService.getSearchBrand(searchKey, searchValue);
+		List<ProductInfoBrand> brandList = adminProductInfoService.getSearchBrand(searchKey, searchValue, useStatus);
 		
 		model.addAttribute("title", "브랜드 검색결과");
 		model.addAttribute("brandList", brandList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
+		model.addAttribute("useStatus", useStatus);
 		
 		return "admin/productInfo/brandListView";
 		}
 	
 	@GetMapping("/searchCategory")
-	public String getSearchCategory(String searchKey, String searchValue, Model model) {
+	public String getSearchCategory(String searchKey, String searchValue, String useStatus, Model model) {
 
-		List<ProductInfoCategory> categoryList = adminProductInfoService.getSearchCategory(searchKey, searchValue);
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getSearchCategory(searchKey, searchValue, useStatus);
 		
 		model.addAttribute("title", "카테고리 검색결과");
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
+		model.addAttribute("useStatus", useStatus);
 		
 		return "admin/productInfo/categoryListView";
 		}
@@ -557,6 +564,7 @@ public class AdminProductInfoController {
 		model.addAttribute("title", "카테고리 수정");
 		model.addAttribute("categoryInfo", categoryInfo);
 		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("activeMenu", "productInfo");
 		
 		return "admin/productInfo/modifyCategoryView";
 	}

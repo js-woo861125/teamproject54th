@@ -17,15 +17,15 @@
 				const brandNo = $('#brandNo').val();
 				const itemNo = $('#itemNo').val();
 				
-				if(!modelName){
-					alert('모델명을 입력해주세요');
-					$('#modelName').focus();
-					return ;
-				}
-				
 				if (!categoryNo) {
 					alert('카테고리를 선택해주세요');
 					$('#categoryNo').focus();
+					return;
+				}
+				
+				if (!itemNo) {
+					alert('품목을 선택해주세요');
+					$('#itemNo').focus();
 					return;
 				}
 				
@@ -35,11 +35,12 @@
 					return;
 				}
 				
-				if (!itemNo) {
-					alert('품목을 선택해주세요');
-					$('#itemNo').focus();
-					return;
+				if(!modelName){
+					alert('모델명을 입력해주세요');
+					$('#modelName').focus();
+					return ;
 				}
+				
 				$.ajax({
 					url : '/admin/productInfo/modelNameCheck',
 					method : 'post',

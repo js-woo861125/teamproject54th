@@ -13,6 +13,15 @@
 	<th:block layout:fragment="jsScript">
 		<script>
 			/**
+			* 사용유무 셀렉트박스 선택 시 자동 필터
+			*/
+			$(document).ready(function() {
+				$('#useStatus').on('change', function() {
+					$(this).closest('form').submit();
+				});
+			});
+				
+			/**
 			* 사용유무 상태 변경
 			*/
 			$(document).on('change', '.toggle-use-status', function() {
@@ -122,6 +131,13 @@
 	                   <div class="col-lg-1 col-md-1 me-auto">
 						   <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
 	                   </div>
+	                   <div class="col-lg-2 col-md-3 col-12">
+	                       <select class="form-select" name="useStatus" id="useStatus">
+	                           <option value="">사용유무</option>
+	                           <option value="사용중"  th:selected="${useStatus eq '사용중'}">사용중</option>
+	                           <option value="사용불가" th:selected="${useStatus eq '사용불가'}">사용불가</option>
+	                       </select>
+	                   </div>	                   
 	               </div>
 				</form>
 			</header>	

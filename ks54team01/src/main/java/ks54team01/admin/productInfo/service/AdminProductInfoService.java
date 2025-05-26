@@ -35,19 +35,19 @@ public interface AdminProductInfoService {
 	 * 상품정보 검색 
 	 */
 	// 모델별/상세스펙 검색
-	List<ProductInfoModelSpec> getSearchModelSpec(String searchKey, String searchValue);
+	List<ProductInfoModelSpec> getSearchModelSpec(String searchKey, String searchValue, String useStatus);
 	// 카테고리별/상세스펙 검색
-	List<ProductInfoCategorySpec> getSearchCategorySpec(String searchKey, String searchValue);
+	List<ProductInfoCategorySpec> getSearchCategorySpec(String searchKey, String searchValue, String useStatus);
 	// 전체혜택 검색
-	List<ProductInfoBenefit> getSearchBenefit(String searchKey, String searchValue);
+	List<ProductInfoBenefit> getSearchBenefit(String searchKey, String searchValue, String useStatus);
 	// 모델 검색
-	List<ProductInfoModel> getSearchModel(String searchKey, String searchValue);
+	List<ProductInfoModel> getSearchModel(String searchKey, String searchValue, String useStatus);
 	// 품목 검색
-	List<ProductInfoItem> getSearchItem(String searchKey, String searchValue);	
+	List<ProductInfoItem> getSearchItem(String searchKey, String searchValue, String useStatus);	
 	// 브랜드 검색 
-	List<ProductInfoBrand> getSearchBrand(String searchKey, String searchValue);
+	List<ProductInfoBrand> getSearchBrand(String searchKey, String searchValue, String useStatus);
 	// 카테고리 검색
-	List<ProductInfoCategory> getSearchCategory(String searchKey, String searchValue);
+	List<ProductInfoCategory> getSearchCategory(String searchKey, String searchValue, String useStatus);
 	
 	/**
 	 * 상품정보 삭제

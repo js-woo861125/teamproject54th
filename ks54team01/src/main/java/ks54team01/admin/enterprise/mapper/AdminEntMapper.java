@@ -8,12 +8,9 @@ import org.apache.ibatis.annotations.Param;
 import ks54team01.admin.enterprise.domain.AdminEntAddContract;
 import ks54team01.admin.enterprise.domain.AdminEntDetail;
 import ks54team01.admin.enterprise.domain.AdminEntList;
-import ks54team01.customer.member.domain.EntMember;
 
 @Mapper
 public interface AdminEntMapper {
-	// 입점업체 대표코드로 입점업체 목록 조회
-	List<EntMember> getEntListByEntCeoNo(String entCeoNo);
 	
 	// 입점업체 계약 등록
 	int addContract(AdminEntAddContract adminEntAddContract);

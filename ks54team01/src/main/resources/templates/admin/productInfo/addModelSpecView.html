@@ -16,12 +16,6 @@
 				const modelNo = $('#modelNo').val();
 				const specNo = $('#specNo').val();
 				
-				if(!modelSpecName){
-					alert('상세스펙내용을 입력해주세요');
-					$('#modelSpecName').focus();
-					return ;
-				}
-				
 				if (!modelNo) {
 					alert('모델을 선택해주세요');
 					$('#modelNo').focus();
@@ -33,6 +27,13 @@
 					$('#specNo').focus();
 					return;
 				}
+				
+				if(!modelSpecName){
+					alert('상세스펙내용을 입력해주세요');
+					$('#modelSpecName').focus();
+					return ;
+				}
+				
 				$.ajax({
 					url : '/admin/productInfo/specContentCheck',
 					method : 'post',
