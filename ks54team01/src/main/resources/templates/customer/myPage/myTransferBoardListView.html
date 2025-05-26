@@ -46,7 +46,7 @@
 									<div class="product-cart-wrap mb-30">
 										<div class="product-img-action-wrap">
 											<div class="product-img product-img-zoom">
-												<a th:href="@{/customer/transferBoard/transferBoardDetail(transferBoardNum=${l.transferBoardNum})}">
+												<a th:href="@{/customer/transferBoard/modifyTransferBoard(transferBoardNum=${l.transferBoardNum})}">
 													<img class="default-img"
 													th:src="@{'/user/assets/imgs/shop/' + ${l.productInfo.productsImage}}"
 													alt="" />
@@ -57,7 +57,9 @@
 											<div class="product-category d-flex justify-content-between">
 												<a th:text="${l.productInfoCategory.smCategory}" href="shop-grid-right.html">TV</a>
 												<div class="dropdown">
-			                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="bi bi-three-dots-vertical text-muted" style="font-size: 0.65rem;"></i> </a>
+			                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> 
+			                                        	<i class="bi bi-three-dots-vertical text-muted" style="font-size: 0.65rem;"></i> 
+			                                        </a>
 			                                        <div class="dropdown-menu">
 			                                            <button class="dropdown-item" type="submit">게시글 삭제</button>
 			                                        </div>

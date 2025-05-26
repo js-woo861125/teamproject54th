@@ -1,0 +1,40 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.enterprise.management.mapper.EnterpriseManagementMapper">
+
+	<insert id="addEntEmpMember" parameterType="EntMember">
+		/* 입점업체직원정보 등록 */
+		INSERT INTO ent_emp
+		(ent_emp_id, ent_ceo_no, ent_brno, ent_nm, ent_position, ent_emp_nm, ent_emp_email, ent_emp_phone, register_date, revision_date)
+		VALUES
+		(#{memberId}, #{entCeoNo}, #{entBrno}, #{entName}, #{entPosition}, #{entEmpName}, #{entEmpEmail}, #{entEmpPhone}, CURDATE(), CURDATE());
+	</insert>
+	
+	<insert id="addCommonMember" parameterType="CommonMember">
+		/* 직원 공통정보 등록 */
+		INSERT INTO members
+		(members_id, members_pw, members_type, register_date, revision_date, state_transition_date)
+		VALUES
+		(#{memberId}, #{memberPw}, #{memberType}, CURDATE(), CURDATE(), #{memberStateTransitionDate});
+	</insert>
+
+	<select id="getEmployeeList" resultType="EntMember">
+		/* 직원 목록 조회 */
+		SELECT
+			memberId,
+			memberType,
+			entEmpName,
+			entEmpPhone,
+			entPosition,
+			entEmpEmail,
+			memberRegDate
+		FROM
+			ent_info_view
+		WHERE 
+			memberType = '입점업체 직원' AND entCeoNo = #{entCeoNo}
+		ORDER BY
+			memberRegDate; 	 
+	</select>
+
+</mapper>

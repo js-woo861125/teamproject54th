@@ -52,7 +52,6 @@
 								 <option value="WITHDRAWN" th:selected="${status == 'WITHDRAWN'}">탈퇴회원</option>
 							</select>
 					    </div>
-	                   	<!-- 검색 버튼 -->
 					    <div class="col-lg-2 col-md-3 col-6">
 					      <button type="submit" class="btn btn-primary">검색</button>
 					    </div>
@@ -84,7 +83,8 @@
                         </thead>
                         <tbody class="text-center">
                             <tr th:if="${!#lists.isEmpty(memberList)}"
-                          	  	th:each="l : ${memberList}">
+                          	  	th:each="l : ${memberList}"
+							    >
                                 <td th:text="${l.memberId}">corpcustid1></td>
                                 <td th:text="${l.memberPw}">corpcustpw1</td>
                                 <td th:text="${l.memberType}">기업고객</td>

@@ -16,4 +16,6 @@ public interface EnterpriseProductService {
 	
 	// 입점업체 플랫폼 등록 상품 조회리스트
 	List<AdminProduct> getProductList();
+	
+	
 }

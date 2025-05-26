@@ -72,24 +72,23 @@
 		   	    $(this).closest('.img-box2').remove();
 		   	});
 		   	
-		   	$('#addTransferBoardBtn').click(e => {
-				e.preventDefault();
-				const $formTags = $('#addTransferBoardForm').find('input, textarea');
-				let isSubmit = true;
-				$formTags.each((idx, element) => {
-					const value = $(element).val();
-					if(!value){
-						/* const id = $(element).attr('id');
-						const cate = $(`label[for="${id}"]`).text();
-						alert(`${cate} 필수 입력항목입니다.`); */
-						$(element).focus();
-						isSubmit = false;
-						return false;
-					}
-				});	
-				if(isSubmit) $('#addTransferBoardForm').submit();
-			});
-	   	
+		   	/* 
+		   	$(document).ready(function() {
+			   	$('#addTransferBoardBtn').click(e => {
+					e.preventDefault();
+					const $formTags = $('#addTransferBoardForm').find('input, select, textarea');
+					let isSubmit = true;
+					$formTags.each((idx, element) => {
+						const value = $(element).val();
+						if(!value){
+							$(element).focus();
+							isSubmit = false;
+							return false;
+						}
+					});	
+					if(isSubmit) $('#addTransferBoardForm').submit();
+				});
+		   	}); */
 		</script>
 	</th:block>
 	
@@ -101,7 +100,8 @@
                     <h1 class="heading-2 mb-10">양도 게시글 등록</h1>
                 </div>
             </div>
-            <form id="addTransferBoardForm" th:action="@{/customer/transferBoard/addTransferBoard}" method="post">
+            <form id="addTransferBoardForm" th:action="@{/customer/transferBoard/addTransferBoard}" 
+            	  enctype="multipart/form-data" method="post">
             	<div class="row justify-content-between">
             		<div class="col-lg-5">
                   	  	<div class="border p-40 cart-totals ml-30 mb-50">
@@ -142,35 +142,36 @@
 	                        <h4 class="mb-30">계약 정보</h4>
 	                            <div class="row">
 	                                <div class="form-group col-lg-6">
-	                                	<input id="rentalContrancNumInput" type="hidden" name="rentalContrancNum">
-	                                	<input id="sellProductsNumInput" type="hidden" name="sellProductsNum">
-	                                	<input id="modelNumInput" type="hidden" name="modelNum">
-	                                	<input id="itemNumInput" type="hidden" name="itemNum">
-	                                	<input id="productCategoryNumInput" type="hidden" name="productCategoryNum">
-	                                    <input id="productNameInput" type="text" name="productName" placeholder="상품명">
+	                                	<input id="rentalContrancNumInput" type="hidden"  th:value="${myRentalInfo.rentalContractNum}" name="rentalContractNum">
+	                                	<input id="sellProductsNumInput" type="hidden" th:value="${myRentalInfo.sellProductsNum}" name="sellProductsNum">
+	                                	<input id="modelNumInput" type="hidden" th:value="${myRentalInfo.modelNum}" name="modelNum">
+	                                	<input id="itemNumInput" type="hidden" th:value="${myRentalInfo.itemNum}" name="itemNum">
+	                                	<input id="productCategoryNumInput" th:value="${myRentalInfo.productCategoryNum}" type="hidden" name="productCategoryNum">
+	                                	<input id="delInfoNoInput" th:value="${myRentalInfo.customerDeliveryInfo.delInfoNo}" type="hidden" name="customerDeliveryInfo.delInfoNo">
+	                                    <input id="productNameInput" th:value="${myRentalInfo.productInfo.productsName}" type="text" name="productsName" placeholder="상품명" readonly>
 	                                </div>
 	                            </div>
 	                            <div class="row">
 	                                <div class="form-group col-lg-6">
-	                                    <input id="contractQuantityInput" type="text" name="contractQuantity" placeholder="계약수량 *">
+	                                    <input id="contractQuantityInput" type="text" th:value="${myRentalInfo.customerContract.contractQuantity}" name="contractQuantity" placeholder="계약수량 *" readonly>
 	                                </div>
 	                            </div>
 	                            <div class="row">
 	                                <div class="form-group col-lg-3">
-	                                    <input id="contractStartDateInput" type="text" name="contractStartDate" placeholder="계약시작일 *">
+	                                    <input id="contractStartDateInput" type="text" th:value="${myRentalInfo.customerContract.rentalEndDate}" name="rentalStartDate" placeholder="계약시작일 *" readonly>
 	                                </div>
 	                                <div class="form-group col-lg-3">
-	                                    <input id="contractEndDateInput" type="text" name="contractEndDate" placeholder="계약종료일 *">
+	                                    <input id="contractEndDateInput" type="text" th:value="${myRentalInfo.customerContract.rentalEndDate}" name="contractEndDate" placeholder="계약종료일 *" readonly>
 	                                </div>
 	                            </div>
 	                            <div class="row">
 	                                <div class="form-group col-lg-6">
-	                                    <input id="remainingMonthsInput" type="text" name="remainingMonths" placeholder="잔여계약일(개월) *">
+	                                    <input id="remainingMonthsInput" type="text" th:value="${myRentalInfo.remainingMonths}" name="remainingMonths" placeholder="잔여계약일(개월) *" >
 	                                </div>
 	                            </div>
 	                            <div class="row">
 	                                <div class="form-group col-lg-6">
-	                                    <input id="rentalFeeInput" type="text" name="rentalFee" placeholder="월렌탈료 *">
+	                                    <input id="rentalFeeInput" type="text" th:value="${myRentalInfo.customerSellProduct.finalPrice}" name="rentalFee" placeholder="월렌탈료 *">
 	                                </div>
 	                            </div>
 	                            <div class="ship_detail">

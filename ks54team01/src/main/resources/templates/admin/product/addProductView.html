@@ -219,7 +219,7 @@
    	    const files = this.files;
    	    const fileList = [...files];
    	    fileList.forEach(function(file, idx){
-   	        const imgDiv = $('<div class="col-md-3 img-box1" style="position:relative"></div>');
+   	        const imgDiv = $('<div class="col-md-6 img-box1" style="position:relative"></div>');
    	        const lastModified = files[idx].lastModified;
    	        const fileFullName = files[idx].name;
    	        const dotIdx = fileFullName.lastIndexOf('.');
@@ -421,6 +421,7 @@
 				<div class="content-header">
 					<h2 class="content-title">제품 등록</h2>
 				</div>
+				<button class="btn btn-primary" type="submit">상품등록</button>
 			</div>
 			<div class="col-lg-6">
 				<div class="card mb-4">
@@ -522,8 +523,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<button class="btn btn-primary" type="submit">상품등록</button>
+		</div>	
 	</form>
 </th:block>
 <!-- card end// -->

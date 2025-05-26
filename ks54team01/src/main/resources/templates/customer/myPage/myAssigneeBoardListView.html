@@ -11,12 +11,57 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
-	
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</th:block>
 	
 	
 	<th:block layout:fragment="jsScript">
-		
+		<script th:inline="javascript">
+		$('.deleteBtn').click(e => {
+			e.preventDefault();
+			const assigneeBoardNum = $(e.currentTarget).data('assigneeBoardNum');
+			Swal.fire({
+			  	text: "선택하신 양수 게시글을 삭제하시겠습니까?",
+			  	icon: "warning",
+			  	showCancelButton: true,
+			  	confirmButtonColor: "#3085d6",
+			  	cancelButtonColor: "#d33",
+			  	confirmButtonText: "삭제",
+			  	cancelButtonText: "취소"
+			}).then(async (result) => {
+					console.log(result);
+					
+					if (result.isDismissed) return ;
+					
+					const optionObj = {
+							title: '',
+							text: '',
+							icon: ''
+						};
+					
+					if (result.isConfirmed) {
+				    	const request = $.ajax({
+							url : '/customer/assigneeBoard/removeMyAssigneeBoard',
+							method : 'post',
+							data : { 'assigneeBoardNum' : assigneeBoardNum},
+							dataType : 'json',
+							async : false
+				    	});
+				    	request.done(isDelete => {
+							if(isDelete) {
+							  	optionObj.title = '';
+								optionObj.text = '선택하신 양수 게시글이 삭제되었습니다.';
+							  	optionObj.icon = 'success';
+							}
+				    	});
+				    	request.fail((jqXHR, textStatus, error) => {
+							console.log(jqXHR, textStatus, error);
+				    	});
+					}
+					Swal.fire(optionObj).then(result => location.reload());
+				});
+			});
+		</script>
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
@@ -44,8 +89,20 @@
 									  th:each="l : ${myAssigneeBoardList}">
 		                        <div class="product-cart-wrap border col-12" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
 		                            <div class="product-content-wrap mt-40 mb-2 ml-50">
+		                                <div class="dropdown">
+	                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> 
+	                                        	<i class="bi bi-three-dots-vertical text-muted" style="font-size: 0.75rem;"></i> 
+	                                        </a>
+	                                        <div class="dropdown-menu">
+	                                            <a th:data-assignee-board-num="${l.assigneeBoardNum}" 
+	                                               class="deleteBtn dropdown-item" href="#">
+                                               		게시글 삭제
+	                                        	</a>
+	                                        </div>
+                                    	</div>
 		                                <h4>
-		                                	<a th:text="${#strings.isEmpty(l.productName) ? '상관없음' : l.productName}" th:href="@{/customer/assigneeBoard/assigneeBoardDetail(assigneeBoardNum=${l.assigneeBoardNum})}">
+		                                	<a th:text="${#strings.isEmpty(l.productName) ? '상관없음' : l.productName}" 
+		                                	   th:href="@{/customer/assigneeBoard/modifyAssigneeBoard(assigneeBoardNum=${l.assigneeBoardNum})}">
 		                                		그램 프로 노트북 16인치 (옵시디안 블랙)
 		                                	</a>
 		                               	</h4>

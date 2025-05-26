@@ -2,6 +2,7 @@ package ks54team01.customer.assigneeBoard.service.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,26 @@ public class CustomerAssigneeBoardServiceImpl implements CustomerAssigneeBoardSe
 	private final AdminProductInfoMapper adminProductInfoMapper;
 	
 	@Override
+	public boolean removeMyAssigneeBoard(String assigneeBoardNum) {
+		
+		int deleted = customerAssigneeBoardMapper.removeMyAssigneeBoard(assigneeBoardNum);
+		
+		boolean isDel = deleted > 0 ? true : false;
+		
+		return isDel;
+	}
+	
+	@Override
+	public void modifyAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard) {
+		
+		customerAssigneeBoardMapper.modifyAssigneeBoard(customerAssigneeBoard);	
+	}
+	
+	@Override
 	public void addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard) {
+		
+		String assigneeBoardNum =  "assignee_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+		customerAssigneeBoard.setAssigneeBoardNum(assigneeBoardNum);	
 		customerAssigneeBoardMapper.addAssigneeBoard(customerAssigneeBoard);
 	}
 	

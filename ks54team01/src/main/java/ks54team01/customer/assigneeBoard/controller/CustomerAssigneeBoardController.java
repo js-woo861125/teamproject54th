@@ -35,6 +35,37 @@ public class CustomerAssigneeBoardController {
 	private final AdminProductInfoService adminProductInfoService; 
 	private final CustomerAssigneeBoardMapper customerAssigneeBoardMapper;
 	
+	@PostMapping("/removeMyAssigneeBoard")
+	@ResponseBody
+	public boolean removeMyAssigneeBoard(@RequestParam(name="assigneeBoardNum") String assigneeBoardNum) {
+		
+		boolean isRemove = customerAssigneeBoardService.removeMyAssigneeBoard(assigneeBoardNum);
+		
+		return isRemove;
+	}
+	
+	@PostMapping("/modifyAssigneeBoard")
+	public String modifyAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard) {
+		
+		customerAssigneeBoardService.modifyAssigneeBoard(customerAssigneeBoard);
+		
+		return "redirect:/customer/assigneeBoard/myAssigneeBoardList";
+	}
+	
+	@GetMapping("/modifyAssigneeBoard")
+	public String modifyAssigneeBoard(@RequestParam(name="assigneeBoardNum") String assigneeBoardNum,
+									  Model model) {
+		
+		log.info("게시글 수정 코드: {}", assigneeBoardNum);
+		
+		CustomerAssigneeBoard customerAssigneeBoardInfo = customerAssigneeBoardService.getAssigneeBoardInfoByCode(assigneeBoardNum);
+		
+		model.addAttribute("title", "양수 게시글 수정");
+		model.addAttribute("customerAssigneeBoardInfo", customerAssigneeBoardInfo);
+		
+		return "customer/assigneeBoard/modifyAssigneeBoardView";
+	}
+	
 	@PostMapping("/addAssigneeBoard")
 	public String addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard) {
 		

@@ -197,6 +197,13 @@
 			$('#goNextBtn').click((e) => {
 			    e.preventDefault();
 			    
+			    // 아이디 중복확인
+			    if ($('#isIdChecked').val() !== 'true') {
+			        alert('아이디 중복확인을 해주세요.');
+			        $('#memberId').focus();
+			        return;
+			    }
+			    
 			    const $formTag = $('#memberRegisterForm').find('input, select');
 			    
 			    let isSubmit = true;
