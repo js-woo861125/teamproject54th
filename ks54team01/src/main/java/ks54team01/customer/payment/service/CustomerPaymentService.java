@@ -9,6 +9,8 @@ import ks54team01.customer.payment.domain.CustomerPayment;
 
 public interface CustomerPaymentService {
 	
+	void autoBillingPayments();
+	
 	void removeDeliveryInfo(String paymentCompletedNo);
 	
 	void addDeliveryInfo(CustomerDeliveryInfo customerDeliveryInfo);
@@ -28,6 +30,11 @@ public interface CustomerPaymentService {
 	List<CustomerPayment> getPaymentList(String custId);
 	
 	void addPayment(CustomerPayment customerPayment);
+	
+	void addBillingPayment(CustomerPayment customerPayment, String rentalContractNo);
 
 	Map<String, Object> confirmPaymemt(String paymentKey, String orderId, Long amount);
+	
+	Map<String, Object> getBillingKey(String authKey, String customerKey);
+	
 }

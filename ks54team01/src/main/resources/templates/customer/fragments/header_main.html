@@ -32,7 +32,7 @@
                                      <ul>
                                          <li><a th:href="@{/customer/member/myAccount}"><i class="fi fi-rs-user mr-10"></i>MyPage</a></li>
 		                                 <!-- 로그인 O 상태 -->
-                                         <li th:if="${session.loginMember != null}">
+                                         <li th:if="${session.loginId != null}">
                                          	<a th:href="@{/customer/login/logout}"><i class="fi fi-rs-sign-out mr-10"></i>Log out</a>
                                          </li>
                                      </ul>

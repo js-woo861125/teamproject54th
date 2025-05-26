@@ -25,7 +25,7 @@ public class AdminManageController {
 	private final AdminManageService adminManageService;
 	
 	@PostMapping("/myAccount")
-	public String modifyMember(Admin admin, RedirectAttributes reAttr) {
+	public String adminModifyMember(Admin admin, RedirectAttributes reAttr) {
 			
 			log.info("회원수정: {}", admin);
 			
@@ -38,7 +38,7 @@ public class AdminManageController {
 		}
 
 	@GetMapping("/myAccount")
-	public String myAccountPage(HttpSession session, Model model) {
+	public String adminMyAccountPage(HttpSession session, Model model) {
 
 	    model.addAttribute("title", "내 프로필");
 
@@ -46,18 +46,18 @@ public class AdminManageController {
 
 	    if (admin == null) return "redirect:/admin/login";
 
-        String[] phoneParts = admin.getManagerPhone().split("-");
+        String[] phoneArray = admin.getManagerPhone().split("-");
         model.addAttribute("adminInfo", admin);
-        model.addAttribute("managerPhone1", phoneParts[0]);
-        model.addAttribute("managerPhone2", phoneParts[1]);
-        model.addAttribute("managerPhone3", phoneParts[2]);
+        model.addAttribute("managerPhone1", phoneArray[0]);
+        model.addAttribute("managerPhone2", phoneArray[1]);
+        model.addAttribute("managerPhone3", phoneArray[2]);
 
         return "admin/myPage/adminMyAccountView";
 	}
 	
 	
 	 @GetMapping("/logout")
-	    public String logout(HttpSession session) {
+	    public String adminLogout(HttpSession session) {
 		 
 	        session.invalidate(); 
 	        

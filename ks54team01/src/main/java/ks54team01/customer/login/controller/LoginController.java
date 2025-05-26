@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
+import ks54team01.admin.manage.domain.Admin;
 import ks54team01.customer.login.service.LoginService;
+import ks54team01.customer.member.domain.CommonMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,17 +52,14 @@ public class LoginController {
 	         return "redirect:/customer/login/memberLogin?withdrawn=true";
 	     }
 
-	     Object memberInfo = loginResult.get("memberInfo");
-	     String memberType = (String) loginResult.get("memberType");
-
 	     // 세션 저장
-	     session.setAttribute("loginMember", memberInfo);
-	     session.setAttribute("memberType", memberType);
-	     
+	     String loginMemberType = (String) loginResult.get("memberType");
+	     session.setAttribute("loginId", memberId);
+	     session.setAttribute("loginMemberType", loginMemberType);
 
-	     log.info("로그인 성공: memberId={} memberType={}", memberId, memberType);
+	     log.info("로그인 성공: memberId={} memberType={}", memberId, loginMemberType);
 
-	     if ("입점업체 대표".equals(memberType) || "입점업체 직원".equals(memberType)) {
+	     if ("입점업체 대표".equals(loginMemberType) || "입점업체 직원".equals(loginMemberType)) {
 	         return "redirect:/enterprise";
 	     }
 

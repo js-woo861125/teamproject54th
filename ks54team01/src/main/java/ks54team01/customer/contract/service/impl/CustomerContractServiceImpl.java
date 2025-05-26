@@ -20,7 +20,7 @@ public class CustomerContractServiceImpl implements CustomerContractService {
 	@Override
 	public void addCustomerContract(CustomerContract customerContract) {
 		
-		String contractNo =  "contractNo_" + UUID.randomUUID().toString().replace("-", "").substring(0, 10);
+		String contractNo =  "rentalContractNo_" + UUID.randomUUID().toString().replace("-", "").substring(0, 10);
 		customerContract.setRentalContractNo(contractNo);
 	
 	

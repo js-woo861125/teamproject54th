@@ -9,7 +9,6 @@ public class CustomerPayment {
 	private String custId;
 	private String sellProdNo;
 	private String rentalContractNo;
-	private String paymentInfoNo;
 	private String entCeoNo;
 	private String entEmpId;
 	private String managerId;
@@ -24,6 +23,10 @@ public class CustomerPayment {
 	private String revDate;
 	private String paymentKey;
 	private String orderId;
+	private String customerKey;
+	private String billingKey;
+	private Integer paymentCountPeriod;
+	private Integer contractPeriod;
 		
 	private String prodNm;
 }

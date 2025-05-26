@@ -1,13 +1,8 @@
 package ks54team01.customer.register.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import ks54team01.customer.member.domain.CustomerMember;
 import ks54team01.customer.member.domain.EntMember;
 
-@Service
-@Transactional
 public interface RegisterService {
 	// 입점업체직원정보 등록
 	int addEntEmpMember(EntMember member);

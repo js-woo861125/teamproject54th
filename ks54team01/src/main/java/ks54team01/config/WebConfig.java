@@ -39,12 +39,12 @@ public class WebConfig implements WebMvcConfigurer{
 				.excludePathPatterns("/error");
 		
 		registry.addInterceptor(adminLoginInterceptor)
-			.addPathPatterns("/admin/**")
-			.excludePathPatterns("/admin/login")
-			.excludePathPatterns("/admin/logout")
-			.excludePathPatterns("/manage/**")
-			.excludePathPatterns("/favicon.ico")
-			.excludePathPatterns("/error");
+				.addPathPatterns("/admin/**")
+				.excludePathPatterns("/admin/login")
+				.excludePathPatterns("/admin/logout")
+				.excludePathPatterns("/manage/**")
+				.excludePathPatterns("/favicon.ico")
+				.excludePathPatterns("/error");
 		
 		WebMvcConfigurer.super.addInterceptors(registry);
 	}

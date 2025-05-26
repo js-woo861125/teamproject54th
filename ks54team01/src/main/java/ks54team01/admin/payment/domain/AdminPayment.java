@@ -10,7 +10,6 @@ public class AdminPayment {
 	private String custId;
 	private String sellProdNo;
 	private String rentalContractNo;
-	private String payInfoNo;
 	private String entCeoNo;
 	private String entEmpId;
 	private String managerId;

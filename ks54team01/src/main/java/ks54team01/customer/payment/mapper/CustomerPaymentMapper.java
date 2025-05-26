@@ -10,6 +10,12 @@ import ks54team01.customer.payment.domain.CustomerPayment;
 
 @Mapper
 public interface CustomerPaymentMapper {
+	
+	
+	int addNextScheduledPayment(CustomerPayment payment);
+	
+	// 정기결제할 사람 조회
+	List<CustomerPayment> getPaymentTargets();
 
 	void removeDeliveryInfo(String paymentCompletedNo);
 	
@@ -28,4 +34,6 @@ public interface CustomerPaymentMapper {
 	List<CustomerPayment> getPaymentList(String custId);
 
 	int addPayment(CustomerPayment customerPayment);
+	
+	int addBlillingPayment(CustomerPayment customerPayment);
 }

@@ -3,16 +3,17 @@
 	<!-- 관리자페이지 aside 메뉴 : 2단메뉴 -->
 	<aside class="navbar-aside" id="offcanvas_aside" th:fragment="asideFragment">
 		<div class="aside-top">
-		    <a th:href="@{/enterprise/}" class="brand-wrap">
+		    <a th:href="@{/enterprise}" class="brand-wrap">
 		        <img th:src="@{/manage/assets/imgs/theme/logo.svg}" class="logo" alt="Nest Dashboard" />
 		    </a>
 		</div>
 		<nav>
 		    <ul class="menu-aside">
-		        <li class="menu-item">
-		            <div class="menu-link">
-		                <i class="icon material-icons md-home"></i>
-		                <span class="text">OOO님</span>
+		        <!-- 로그인 O 상태 -->
+		        <li class="menu-item border-bottom"  th:if="${session.loginId != null}">
+		            <div class="menu-link ">
+		                <img class="img-xs rounded-circle mr-10" th:src="@{/manage/assets/imgs/people/avatar-2.png}" alt="User" />
+		                <span th:text="${session.loginId} + '님'">OOO님</span>
 		            </div>
 		        </li>
 		         <li class="menu-item has-submenu">
@@ -73,20 +74,21 @@
 		    <hr />
 		    <ul class="menu-aside">
 		        <li class="menu-item">
-		            <div class="menu-link">
-		                <i class="icon material-icons md-settings"></i>
-		                <span class="text">정보 수정(해야함)</span>
-		            </div>
-		        </li>
-		        <li class="menu-item">
-		            <a class="menu-link" href="#">
+				    <a th:href="@{/enterprise/myAccount}" class="menu-link">
+				        <i class="icon material-icons md-settings"></i>
+				        <span class="text">정보 수정</span>
+				    </a>
+				</li>
+				<!-- 로그인 O 상태 -->
+		        <li class="menu-item" th:if="${session.loginId != null}">
+		            <a class="menu-link" th:href="@{/customer/login/logout}">
 		                <i class="icon material-icons md-local_offer"></i>
 		                <span class="text">로그아웃</span>
 		            </a>
 		        </li>
-		    </ul>
+		     </ul>
 		    <br />
-		    <br />
+		  <br />
 		</nav>
 	</aside>
 </html>

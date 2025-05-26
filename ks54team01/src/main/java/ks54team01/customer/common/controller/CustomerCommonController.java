@@ -8,7 +8,7 @@ public class CustomerCommonController {
 
 	@GetMapping({"","/"})
 	public String customerHome() {
-		
+	
 		return "customer/main";
 	}
 }
