@@ -12400,6 +12400,7 @@ footer .hotline img {
 }
 /*# sourceMappingURL=main.css.map */
 
+
 .categoryModal{
     position:absolute;
     top: 50% ; /* 가운데 배치  */
@@ -12441,4 +12442,15 @@ footer .hotline img {
   border: none;
   font-size: 24px;
   cursor: pointer;
+}
+
+.custom-swal-select {
+  border: 1px solid #ccc !important;
+  padding: 8px !important;
+  border-radius: 5px;
+  width: 80% !important;
+  margin: 20px auto !important;
+  display: block !important;
+  text-align: center;
+  text-align-last: center;
 }
