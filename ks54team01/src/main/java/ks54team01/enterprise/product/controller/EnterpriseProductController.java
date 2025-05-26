@@ -142,6 +142,14 @@ public class EnterpriseProductController {
 		return "enterprise/product/addSellProductView";
 	}
 	
-	
+	@PostMapping("/product/addproduct")
+	public String enterpriseAddProduct() {
+		
+		
+		
+		
+		
+		return "ridirect:/enterprise/product/productList";
+	}
 	
 }

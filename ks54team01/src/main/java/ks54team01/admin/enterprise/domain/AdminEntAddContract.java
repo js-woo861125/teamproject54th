@@ -1,7 +1,8 @@
 package ks54team01.admin.enterprise.domain;
 
-import ks54team01.customer.member.domain.EntMember;
+import lombok.Data;
 
+@Data
 public class AdminEntAddContract {
 
 	public String entContractNo;
@@ -16,6 +17,5 @@ public class AdminEntAddContract {
 	public String contractEndDate;
 	public String entCalDate;
 	public String contractStatus;
-
-	private EntMember entInfo;
+	
 }

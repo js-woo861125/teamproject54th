@@ -73,40 +73,53 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	
 	// 상품정보 검색
 	@Override
-	public List<ProductInfoModelSpec> getSearchModelSpec(String searchKey, String searchValue) {
+	public List<ProductInfoModelSpec> getSearchModelSpec(String searchKey, String searchValue, String useStatus) {
 		
 		switch (searchKey) {
-		case "modelSpecName" -> searchKey = "spec_content";
+		case "modelSpecName" -> searchKey = "msc.spec_content";
 		case "modelInfo.modelName" -> searchKey = "m.model_nm";
 		case "specInfo.specName" -> searchKey = "ps.spec_nm";
 		}
-		List<ProductInfoModelSpec> modelSpecList = adminProductInfoMapper.getSearchModelSpec(searchKey, searchValue);
+		
+		if (useStatus.isBlank()) {
+			useStatus = null; 
+		}
+		List<ProductInfoModelSpec> modelSpecList = adminProductInfoMapper.getSearchModelSpec(searchKey, searchValue, useStatus);
 		return modelSpecList;
 	}
+	
 	@Override
-	public List<ProductInfoCategorySpec> getSearchCategorySpec(String searchKey, String searchValue) {
+	public List<ProductInfoCategorySpec> getSearchCategorySpec(String searchKey, String searchValue, String useStatus) {
 		
 		switch (searchKey) {
 		case "specName" -> searchKey = "spec_nm";
 		case "categoryInfo.smCategory" -> searchKey = "pc.small_category";
 		}
-		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoMapper.getSearchCategorySpec(searchKey, searchValue);
+		
+		if (useStatus.isBlank()) {
+			useStatus = null; 
+		}		
+		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoMapper.getSearchCategorySpec(searchKey, searchValue, useStatus);
 		
 		return categorySpecList;
 	}
 	@Override
-	public List<ProductInfoBenefit> getSearchBenefit(String searchKey, String searchValue) {
+	public List<ProductInfoBenefit> getSearchBenefit(String searchKey, String searchValue, String useStatus) {
 		
 		switch (searchKey) {
 		case "benefitName" -> searchKey = "benefit_nm";
 		}
-		List<ProductInfoBenefit> benefitList = adminProductInfoMapper.getSearchBenefit(searchKey, searchValue);
+		
+		if (useStatus.isBlank()) {
+			useStatus = null; 
+		}		
+		List<ProductInfoBenefit> benefitList = adminProductInfoMapper.getSearchBenefit(searchKey, searchValue, useStatus);
 		
 		return benefitList;	
 	}
 	
 	@Override
-	public List<ProductInfoModel> getSearchModel(String searchKey, String searchValue) {
+	public List<ProductInfoModel> getSearchModel(String searchKey, String searchValue, String useStatus) {
 		
 		switch (searchKey) {
 		case "modelName" -> searchKey = "model_nm";
@@ -114,41 +127,57 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		case "itemInfo.itemName" -> searchKey ="i.item_nm";
 		case "categoryInfo.smCategory" -> searchKey = "pc.small_category";
 		}
-		List<ProductInfoModel> modelList = adminProductInfoMapper.getSearchModel(searchKey, searchValue);
+		
+		if (useStatus.isBlank()) {
+			useStatus = null; 
+		}		
+		List<ProductInfoModel> modelList = adminProductInfoMapper.getSearchModel(searchKey, searchValue, useStatus);
 		
 		return modelList;
 	}
 	
 	@Override
-	public List<ProductInfoItem> getSearchItem(String searchKey, String searchValue) {
+	public List<ProductInfoItem> getSearchItem(String searchKey, String searchValue, String useStatus) {
 		
 		switch (searchKey) {
 		case "itemName" -> searchKey = "item_nm";
 		case "categoryInfo.smCategory" -> searchKey = "pc.small_category";
 		}
-		List<ProductInfoItem> itemList = adminProductInfoMapper.getSearchItem(searchKey, searchValue);
+		
+		if (useStatus.isBlank()) {
+			useStatus = null; 
+		}		
+		List<ProductInfoItem> itemList = adminProductInfoMapper.getSearchItem(searchKey, searchValue, useStatus);
 				
 		return itemList;
 	}
 	@Override
-	public List<ProductInfoBrand> getSearchBrand(String searchKey, String searchValue) {
+	public List<ProductInfoBrand> getSearchBrand(String searchKey, String searchValue, String useStatus) {
 		
 		switch (searchKey) {
 		case "brandName" -> searchKey = "brand_nm";	
 		}
-		List<ProductInfoBrand> brandList = adminProductInfoMapper.getSearchBrand(searchKey, searchValue);
+		
+		if (useStatus.isBlank()) {
+			useStatus = null; 
+		}		
+		List<ProductInfoBrand> brandList = adminProductInfoMapper.getSearchBrand(searchKey, searchValue, useStatus);
 		
 		return brandList;
 	}
 	@Override
-	public List<ProductInfoCategory> getSearchCategory(String searchKey, String searchValue) {
+	public List<ProductInfoCategory> getSearchCategory(String searchKey, String searchValue, String useStatus) {
 		
 		switch (searchKey) {
 		case "lgCategory" 	-> searchKey = "large_category";
 		case "mdCategory" 	-> searchKey = "middle_category";
 		case "smCategory" 	-> searchKey = "small_category";	
 		}
-		List<ProductInfoCategory> categoryList = adminProductInfoMapper.getSearchCategory(searchKey, searchValue);
+		
+		if (useStatus.isBlank()) {
+			useStatus = null; 
+		}		
+		List<ProductInfoCategory> categoryList = adminProductInfoMapper.getSearchCategory(searchKey, searchValue, useStatus);
 		
 		return categoryList;
 	}

@@ -17,30 +17,7 @@
 		<result column="contract_expiry_date" property="contractEndDate"/>
 		<result column="ent_cal_date" 		  property="entCalDate"/>
 		<result column="contract_status" 	  property="contractStatus"/>
-	
-		<association property="entInfo" javaType="EntMember">
-			<id 	column="ent_ceo_no" property="entCeoNo"/> 
-			<result column="ent_emp_id" property="memberId"/>
-			<result column="ent_nm" 	property="entName"/>
-			<result column="ent_brno" 	property="entBrno"/>
-			<result column="ent_emp_nm" property="entCeoName"/>
-		</association>	
 	</resultMap>
-
-	<select id="getEntListByEntCeoNo" parameterType="string">
-		/* 입점업체 대표코드로 입점업체 조회 */
-		SELECT
-			ent_emp_id AS memberId,
-			ent_nm AS entName,
-			ent_brno AS entBrno,
-			ent_emp_nm AS entCeoName
-		FROM
-			ent_emp
-		WHERE
-			ent_ceo_no = #{entCeoNo}
-			AND ent_position = '대표'
-	</select>
-
 
 	<insert id="addContract" parameterType="AdminEntAddContract">
 		<selectKey keyProperty="entContractNo" resultType="string" order="BEFORE">
@@ -67,6 +44,8 @@
 		 SELECT 
 			ec.ent_ceo_no as ceoCode,
 			ec.ent_nm as entName, 
+			ec.ent_ceo_id as entEmpId, 
+			ec.ent_ceo_nm as entCeoName, 
 			ec.ent_ceo_phone as ceoTelNo,
 			ec.ent_brno as entBrNo,
 			ct.contract_status as entContractStatus,

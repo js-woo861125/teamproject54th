@@ -19,6 +19,9 @@ public class EntMember{
 	private String memberId;
 	private String memberPw;
 	private String memberType;
+	private String memberRegDate;
+	private String memberStateTransitionDate;
+	
 	
 	// 대표 (ent_ceo 테이블)
 	private String entCeoNo;
@@ -37,4 +40,5 @@ public class EntMember{
 	private String entEmpName;
 	private String entEmpEmail;
 	private String entEmpPhone;
+	
 }
