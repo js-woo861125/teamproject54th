@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.servlet.http.HttpSession;
+import ks54team01.common.file.domain.FileMetaData;
+import ks54team01.common.file.util.FilesUtils;
 import ks54team01.customer.transferBoard.domain.CustomerTransferBoard;
 import ks54team01.customer.transferBoard.service.CustomerTransferBoardService;
 import ks54team01.system.util.PageInfo;
@@ -25,33 +32,79 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CustomerTransferBoardController {
 
+	@Value("${file.path}")
+	private String fileRealPath;
+	
+	@Autowired
+	private final FilesUtils filesUtils;
+	
 	private final CustomerTransferBoardService customerTransferBoardService;
 
 	
 	@PostMapping("/addTransferBoard") 
-	public String addTransferBoard(CustomerTransferBoard customerTransferBoard) {
+	public String addTransferBoard(CustomerTransferBoard customerTransferBoard
+								  , @RequestParam("mainImage") MultipartFile[] mainImage,
+								    @RequestParam("extraImage") MultipartFile[] extraImage) {
 		
-		customerTransferBoardService.addTransferBoard(customerTransferBoard);
+		customerTransferBoardService.addTransferBoard(customerTransferBoard, mainImage, extraImage);
 		
 		return "redirect:/customer/transferBoard/transferBoardList"; 
 	}
 	 
 
-	@PostMapping("/")
+	@PostMapping("/uploadImage")
 	@ResponseBody
-	public CustomerTransferBoard getMyContractInfo(@RequestParam(name="rentalContractNum") String rentalContractNum) {
+	public Map<String, Object> uploadImage(@RequestParam("upload") MultipartFile multipartFile){
 		
-		CustomerTransferBoard myRentalInfo = customerTransferBoardService.getMyContractInfo(rentalContractNum);
+		Map<String, Object> response = new HashMap<String, Object>(); 
+		FileMetaData fileInfo = filesUtils.uploadFile(multipartFile);
 		
-		return myRentalInfo;
+		if(fileInfo != null) {	
+			response.put("url", fileInfo.getFilePath());
+			response.put("uploaded", "1");
+			response.put("fileName", fileInfo.getFileOriginalName());
+		}else {
+			Map<String, Object> error = new HashMap<String, Object>();
+			error.put("message", "파일이미지 업로드 실패");
+			response.put("uploaded", "0");
+			response.put("error", error);
+		}
+		
+		return response;
+	}
+	
+	@PostMapping("/requestRentalInfo")
+	public String requestRentalInfo(@RequestParam(name="rentalContractNum")  String rentalContractNum,
+			 						HttpSession session) {
+
+	    // 계약 정보 가져오기
+	    CustomerTransferBoard myRentalInfo = customerTransferBoardService.getMyContractInfo(rentalContractNum);
+
+	    session.setAttribute("myRentalInfo", myRentalInfo);
+	    // 등록 페이지로 이동
+	    return "redirect:/customer/transferBoard/addTransferBoard";
+	}
+
+	
+	@PostMapping("/getMyContracts")
+	@ResponseBody
+	public List<CustomerTransferBoard> getMyContracts(HttpSession session) {
+	    
+		String customerId = (String) session.getAttribute("loginId");
+	    
+		List<CustomerTransferBoard> myRentalList = customerTransferBoardService.getMyContractListByCustomerId(customerId);
+		
+	    return myRentalList;
 	}
 	
 	@GetMapping("/addTransferBoard")
-	public String addTransferBoard(Model model) {
-
-		model.addAttribute("title", "양도 게시글 등록 페이지");
-
-		return "customer/transferBoard/addTransferBoardView";
+	public String addTransferBoard(@SessionAttribute("myRentalInfo") CustomerTransferBoard myRentalInfo
+								 , Model model) {
+	    
+	    model.addAttribute("title", "양도 게시글 등록 페이지");
+	    model.addAttribute("myRentalInfo", myRentalInfo);
+	    
+	    return "customer/transferBoard/addTransferBoardView";
 	}
 
 	@GetMapping("/myTransferBoardList")

@@ -13,7 +13,11 @@ public interface CustomerTransferBoardMapper {
 	// 양도 게시글 등록
 	int addTransferBoard(CustomerTransferBoard customerTransferBoard);
 	
+	// 게시글 등록 시 렌탈계약 정보 조회
 	CustomerTransferBoard getMyContractInfo(String rentalContractNum);
+	
+	// 양도 게시글 등록 버튼 클릭 시 유효한 렌탈 목록 체크
+	List<CustomerTransferBoard> getMyContractListByCustomerId(String customerId);
 	
 	// 내 양도 게시글 목록 조회
 	List<CustomerTransferBoard> getMyTransferBoardList();
