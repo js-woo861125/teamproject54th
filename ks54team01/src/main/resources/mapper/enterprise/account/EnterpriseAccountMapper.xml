@@ -9,8 +9,8 @@
 	  /* 입점업체대표정보 수정 */
 	  UPDATE ent_ceo
 	  <set>
-	    <if test="entCeoNm != null and entCeoNm != ''">
-	      ent_ceo_nm = #{entCeoNm},
+	    <if test="entCeoName != null and entCeoName != ''">
+	      ent_ceo_nm = #{entCeoName},
 	    </if>
 	    <if test="entCeoPhone != null and entCeoPhone != ''">
 	      ent_ceo_phone = #{entEmpPhone},
@@ -35,14 +35,14 @@
 	  /* 입점업체직원정보 수정 */
 	  UPDATE ent_emp
 	  <set>
-	    <if test="entEmpNm != null and entEmpNm != ''">
-	      ent_emp_nm = #{entEmpNm},
+	    <if test="entEmpName != null and entEmpName != ''">
+	      ent_emp_nm = #{entEmpName},
 	    </if>
 	    <if test="entEmpPhone != null and entEmpPhone != ''">
 	      ent_emp_phone = #{entEmpPhone},
 	    </if>
-	    <if test="entEmail != null and entEmail != ''">
-	      ent_emp_email = #{entEmail},
+	    <if test="entEmpEmail != null and entEmpEmail != ''">
+	      ent_emp_email = #{entEmpEmail},
 	    </if>
 	    <if test="entPosition != null and entPosition != ''">
 	      ent_position = #{entPosition},
