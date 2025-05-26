@@ -48,6 +48,8 @@
 							<tr>		
 								<th class="align-middle" scope="col">대표코드</th>
 								<th class="align-middle" scope="col">입점업체명</th>
+								<th class="align-middle" scope="col">대표아이디</th>
+								<th class="align-middle" scope="col">대표자명</th>
 								<th class="align-middle" scope="col">연락처</th>
 								<th class="align-middle" scope="col">사업자번호</th>
 								<th class="align-middle" scope="col">계약상태</th>
@@ -60,6 +62,8 @@
 							 <tr>	
 								<td><a class="fw-bold" th:text="${l.ceoCode}">entCeoNo</a></td>
 								<td th:text="${l.entName}">(주)홍홍상사></td>
+								<td th:text="${l.entEmpId}">(주)홍홍상사></td>
+								<td th:text="${l.entCeoName}">(주)홍홍상사></td>
 								<td th:text="${l.ceoTelNo}">010-0001-0001</td>
 								<td th:text="${l.entBrno}">402-00-00000</td>
 								<td >

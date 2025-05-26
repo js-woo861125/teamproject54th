@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,18 +24,10 @@ import lombok.RequiredArgsConstructor;
 public class AdminEntController {
 	
 	private final AdminEntListService adminEntListService;
-	
-	// 입점업체 대표코드로 입점업체 조회
-	@GetMapping("/entListByNo")
-	@ResponseBody
-	public List<EntMember> getEntListByEntCeoNo(@RequestParam String entCeoNo) {
-		
-		return adminEntListService.getEntListByEntCeoNo(entCeoNo);
-	}
 
 	// 입점업체 계약 등록
 	@PostMapping("/addContract")
-	public String addContract(AdminEntAddContract adminEntAddContract) {
+	public String addContract(@ModelAttribute AdminEntAddContract adminEntAddContract) {
 		
 		adminEntListService.addContract(adminEntAddContract);
 		

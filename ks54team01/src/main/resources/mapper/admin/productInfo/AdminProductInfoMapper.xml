@@ -202,15 +202,16 @@
 			msc.revision_date,
 			msc.use_status
 		FROM
-			model_spec_content msc inner join products p
-			using(products_no)
-			inner join model m
+			model_spec_content msc inner join model m
 			on msc.MODEL_NO = m.MODEL_NO
 			inner join products_spec ps
 			using(spec_no)
 		<where>
 			<if test="searchValue != null and searchValue !=''">
 				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+			<if test="useStatus != null and useStatus != ''">
+				AND msc.use_status = #{useStatus}
 			</if>
 		</where>			
 		ORDER BY CAST(SUBSTRING_INDEX(spec_content_no, '_', -1) AS UNSIGNED);		
@@ -233,6 +234,9 @@
 			<if test="searchValue != null and searchValue !=''">
 				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
 			</if>
+			<if test="useStatus != null and useStatus != ''">
+				AND ps.use_status = #{useStatus}
+			</if>			
 		</where>	
 		ORDER BY CAST(SUBSTRING_INDEX(spec_no, '_', -1) AS UNSIGNED);	
 	</select>
@@ -252,6 +256,9 @@
 			<if test="searchValue != null and searchValue !=''">
 				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
 			</if>
+			<if test="useStatus != null and useStatus != ''">
+				AND use_status = #{useStatus}
+			</if>			
 		</where>
 		ORDER BY CAST(SUBSTRING_INDEX(benefit_no, '_', -1) AS UNSIGNED);	
 	</select>
@@ -279,6 +286,9 @@
 			<if test="searchValue != null and searchValue !=''">
 				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
 			</if>
+			<if test="useStatus != null and useStatus != ''">
+				AND m.use_status = #{useStatus}
+			</if>			
 		</where>
 		ORDER BY CAST(SUBSTRING_INDEX(model_no, '_', -1) AS UNSIGNED);	
 	</select>
@@ -300,6 +310,9 @@
 			<if test="searchValue != null and searchValue !=''">
 				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
 			</if>
+			<if test="useStatus != null and useStatus != ''">
+				AND i.use_status = #{useStatus}
+			</if>			
 		</where>
 		ORDER BY CAST(SUBSTRING_INDEX(item_no, '_', -1) AS UNSIGNED);	
 	</select>
@@ -319,6 +332,9 @@
 			<if test="searchValue != null and searchValue !=''">
 				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
 			</if>
+			<if test="useStatus != null and useStatus != ''">
+				AND use_status = #{useStatus}
+			</if>			
 		</where>
 		ORDER BY CAST(SUBSTRING_INDEX(brand_no, '_', -1) AS UNSIGNED);
 	</select>
@@ -341,6 +357,9 @@
 			<if test="searchValue != null and searchValue !=''">
 				${searchKey} LIKE CONCAT('%', #{searchValue}, '%');
 			</if>
+			<if test="useStatus != null and useStatus != ''">
+				AND use_status = #{useStatus}
+			</if>			
 		</where>				
 	</select>
 	
