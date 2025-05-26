@@ -111,6 +111,16 @@
 			<result column="register_date" 			property="regDate" />
   		</association>
   	</resultMap>	
+	
+	<update id="removeMyTransferBoard" parameterType="string">
+  		/* 양도 게시글 삭제 */
+  		UPDATE transfer_board
+		SET
+			transfer_rental_processing_status = '양도공개전'
+		WHERE
+			transfer_board_no = #{transferBoardNum};
+  	</update>
+
 
 	<update id="modifyTransferBoard" parameterType="CustomerTransferBoard">
   		/* 양도 게시글 수정 */
@@ -210,7 +220,8 @@
 			INNER JOIN products_category pc
 			ON p.product_category_no = pc.product_category_no
 		 WHERE
-		 	tb.cust_id = 'personalcustid4'
+		 	transfer_rental_processing_status != '양도공개전'
+		 	AND tb.cust_id = 'personalcustid4'
 		 ORDER BY tb.register_date DESC;
   	</select>
 
@@ -283,8 +294,9 @@
 			LEFT JOIN files f
 			ON tb.transfer_board_no = f.ref_id AND f.file_type = 'mainImage'
 		<where>
+			transfer_rental_processing_status != '양도공개전'
 			<if test="searchValue != null and searchValue != ''">
-				p.products_nm LIKE CONCAT('%', #{searchValue}, '%')
+				AND p.products_nm LIKE CONCAT('%', #{searchValue}, '%')
 			</if>
 		</where>
 		 ORDER BY

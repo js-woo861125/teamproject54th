@@ -11,6 +11,8 @@ import ks54team01.system.util.PageInfo;
 
 public interface CustomerTransferBoardService {
 	
+	boolean removeMyTransferBoard(String transferBoardNum);
+	
 	// 양도 게시글 수정
 	void modifyTransferBoard(CustomerTransferBoard customerTransferBoard);
 	
