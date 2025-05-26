@@ -41,8 +41,19 @@ public class CustomerTransferBoardController {
 	
 	private final CustomerTransferBoardService customerTransferBoardService;
 
-	@PostMapping("modifyTransferBoard")
-	public String modifyTransferBoard(CustomerTransferBoard customerTrnasferBoard) {
+	@PostMapping("/removeMyTransferBoard")
+	@ResponseBody
+	public boolean removeMyTransferBoard(@RequestParam(name="transferBoardNum") String transferBoard) {
+		
+		boolean isRemove = customerTransferBoardService.removeMyTransferBoard(transferBoard);
+		
+		return isRemove;
+	}
+	
+	@PostMapping("/modifyTransferBoard")
+	public String modifyTransferBoard(CustomerTransferBoard customerTrnasferBoard
+									, @RequestParam("mainImage") MultipartFile[] mainImage
+									, @RequestParam("extraImage") MultipartFile[] extraImage) {
 		
 		customerTransferBoardService.modifyTransferBoard(customerTrnasferBoard);
 		

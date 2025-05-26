@@ -28,6 +28,19 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	private final FileService fileService;
 	
 	/**
+	 * 양도 게시글 삭제
+	 */
+	@Override
+	public boolean removeMyTransferBoard(String transferBoardNum) {
+		
+		int deleted = customerTransferBoardMapper.removeMyTransferBoard(transferBoardNum);
+		
+		boolean isDel = deleted > 0 ? true : false;
+		
+		return isDel;
+	}
+	
+	/**
 	 * 양도 게시글 수정
 	 */
 	@Override

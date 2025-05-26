@@ -12,83 +12,82 @@
 	</th:block>
 	
 	<th:block layout:fragment="jsScript">
-		<script>
-			// 메인 이미지 미리보기
-			$('#mainImage').change(function(){
-			    $('#mainImagePreview').empty();
-			    const files = this.files;
-			    if (files.length > 0) {
-			        const reader = new FileReader();
-			        reader.onload = function (e) {
-			            const img = $('<img />', {src: e.target.result, alt: '대표사진'});
-			            $('#mainImagePreview').append(img);
-			        }
-			        reader.readAsDataURL(files[0]);
-			    }
-			});
-			
-		 	// 추가 이미지 미리보기 & 삭제
-		   	$('#extraImage').change(function(){
-		   	    $('#extraImagePreview').empty();
-		   	    const files = this.files;
-		   	    const fileList = [...files];
-		   	    fileList.forEach(function(file, idx){
-		   	        const imgDiv = $('<div class="col-md-6 img-box1" style="position:relative"></div>');
-		   	        const lastModified = files[idx].lastModified;
-		   	        const fileFullName = files[idx].name;
-		   	        const dotIdx = fileFullName.lastIndexOf('.');
-		   	        const fileName = (dotIdx != -1 &&  dotIdx < fileFullName.length - 1) 
-		   	                            ? fileFullName.substring(0, dotIdx) 
-		   	                            : fileFullName;
-		   	        if(file.type.match('image.*')){
-		   	            const reader = new FileReader(); 
-		   	            reader.onload = function (e) { 
-		   	                const img = $('<img />', {src: e.target.result, id : lastModified, alt: fileName });
-		   	                const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
-		   	                imgDiv.append(img,span);
-		   	                imgDiv.appendTo('#extraImagePreview');
-		   	            } 
-		   	            reader.readAsDataURL(file);
-		   	        }else{
-		   	            const noImage = $('<img />', { src : '/manage/assets/imgs/theme/upload.svg', id : lastModified, alt : fileName});
-		   	            const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
-		   	            imgDiv.append(noImage, span);
-		   	            imgDiv.appendTo('#extraImagePreview');
-		   	        }
-		   	    });
-		   	});
+		<script th:inline="javascript">
+		let existingMainImage = /*[[${mainImagePath}]]*/'';
+		let existingExtraImages = /*[[${extraImagePaths}]]*/'';
 	
 	
-		   	// X버튼 클릭 시 상세 이미지 파일 삭제
-		   	$(document).on('click', '.delete-img2', function(){
-		   	    const input = document.getElementById('thumbnails');
-		   	    const files = input.files;
-		   	    const dataTransfer = new DataTransfer();
-		   	    const removeTargetId = $(this).attr('data-remove-key');
-		   	    Array.from(files)
-		   	        .filter(file => file.lastModified != removeTargetId)
-		   	        .forEach(file => dataTransfer.items.add(file));
-		   	    input.files = dataTransfer.files;
-		   	    $(this).closest('.img-box2').remove();
-		   	});
-		   	
-		   	/* 
-		   	$(document).ready(function() {
-			   	$('#addTransferBoardBtn').click(e => {
-					e.preventDefault();
-					const $formTags = $('#addTransferBoardForm').find('input, select, textarea');
-					let isSubmit = true;
-					$formTags.each((idx, element) => {
-						const value = $(element).val();
-						if(!value){
-							$(element).focus();
-							isSubmit = false;
-							return false;
-						}
-					});	
-					if(isSubmit) $('#addTransferBoardForm').submit();
+		$(document).ready(function () {
+
+			// ✅ 수정 페이지 진입 시 기존 메인 이미지 보여주기
+			if (existingMainImage) {
+				const img = $('<img />', {src: existingMainImage, alt: '기존 대표사진'});
+				$('#mainImagePreview').append(img);
+			}
+
+			// ✅ 수정 페이지 진입 시 기존 추가 이미지 보여주기
+			if (existingExtraImages && existingExtraImages.length > 0) {
+				existingExtraImages.forEach(function (imgPath) {
+					const imgDiv = $('<div class="col-md-6 img-box1" style="position:relative"></div>');
+					const img = $('<img />', {src: imgPath, alt: '기존 추가 이미지'});
+					const span = $('<span />', {'class': 'delete-img1', 'data-remove-key': imgPath}).text('X');
+					imgDiv.append(img, span);
+					$('#extraImagePreview').append(imgDiv);
 				});
-		   	}); */
+			}
+
+			// ✅ 새 메인 이미지 업로드 시 미리보기
+			$('#mainImage').change(function () {
+				$('#mainImagePreview').empty();
+				const files = this.files;
+				if (files.length > 0) {
+					const reader = new FileReader();
+					reader.onload = function (e) {
+						const img = $('<img />', {src: e.target.result, alt: '대표사진'});
+						$('#mainImagePreview').append(img);
+					}
+					reader.readAsDataURL(files[0]);
+				}
+			});
+
+			// ✅ 새 추가 이미지 업로드 시 미리보기 + 삭제버튼
+			$('#extraImage').change(function () {
+				$('#extraImagePreview').empty();
+				const files = this.files;
+				const fileList = [...files];
+				fileList.forEach(function (file, idx) {
+					const imgDiv = $('<div class="col-md-6 img-box1" style="position:relative"></div>');
+					const lastModified = file.lastModified;
+					const fileFullName = file.name;
+					const dotIdx = fileFullName.lastIndexOf('.');
+					const fileName = (dotIdx != -1 && dotIdx < fileFullName.length - 1)
+						? fileFullName.substring(0, dotIdx)
+						: fileFullName;
+					if (file.type.match('image.*')) {
+						const reader = new FileReader();
+						reader.onload = function (e) {
+							const img = $('<img />', {src: e.target.result, id: lastModified, alt: fileName});
+							const span = $('<span />', {'class': 'delete-img1', 'data-remove-key': lastModified}).text('X');
+							imgDiv.append(img, span);
+							imgDiv.appendTo('#extraImagePreview');
+						}
+						reader.readAsDataURL(file);
+					} else {
+						const noImage = $('<img />', {
+							src: '/manage/assets/imgs/theme/upload.svg',
+							id: lastModified,
+							alt: fileName
+						});
+						const span = $('<span />', {'class': 'delete-img1', 'data-remove-key': lastModified}).text('X');
+						imgDiv.append(noImage, span);
+						imgDiv.appendTo('#extraImagePreview');
+					}
+				});
+			});
+
+		});
+		
+		   	
 		</script>
 	</th:block>
 	

@@ -10,6 +10,9 @@ import ks54team01.customer.transferBoard.domain.CustomerTransferBoard;
 @Mapper
 public interface CustomerTransferBoardMapper {
 	
+	// 양도 게시글 삭제
+	int removeMyTransferBoard(String transferBoardNum);
+	
 	// 양도 게시글 수정
 	int modifyTransferBoard(CustomerTransferBoard customerTransferBoard);
 	
