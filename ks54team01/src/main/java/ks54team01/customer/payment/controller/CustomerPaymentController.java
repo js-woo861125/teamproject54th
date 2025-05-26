@@ -35,15 +35,16 @@ public class CustomerPaymentController {
 	
 	@GetMapping("/modifyBilling/success")
 	public String modifyBillingPayment(@RequestParam("authKey") String authKey
-									 , @RequestParam("customerKey") String customerKey, HttpSession session) {
+									 , @RequestParam("customerKey") String customerKey, @RequestParam("rentalContractNo") String rentalContractNo, HttpSession session) {
 		
 		String custId = (String) session.getAttribute("loginId");
 		
 		Map<String, Object> responseMap = customerPaymentService.getBillingKey(authKey, customerKey);
 	    String billingKey = (String) responseMap.get("billingKey");
 	    
+	    log.info("billingKey: {}", billingKey);
 	    
-	    customerPaymentService.modifyBillingKey(custId, billingKey);
+	    customerPaymentService.modifyBillingKey(custId, billingKey, rentalContractNo);
 		
 		
 		
@@ -134,6 +135,7 @@ public class CustomerPaymentController {
 		
 		model.addAttribute("title", "주문 목록");
 		model.addAttribute("PaymentList", PaymentList);
+		model.addAttribute("custId", custId);
 		
 		
 		return "customer/myPage/myPaymentListView";

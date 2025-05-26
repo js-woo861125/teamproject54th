@@ -45,14 +45,23 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 	
 	
 	@Override
-	public void modifyBillingKey(String custId, String billingKey) {
+	public void modifyBillingKey(String custId, String billingKey, String rentalContractNo) {
 
-		CustomerPayment lastest = customerPaymentMapper.getLastBillingPayment(custId);
+		log.info("쿼리 호출 전: custId={}, rentalContractNo={}", custId, rentalContractNo);
+		CustomerPayment lastPayment = customerPaymentMapper.getLastBillingPayment(custId, rentalContractNo);
+		log.info("쿼리 결과: {}", lastPayment);
 		
-		if (lastest != null) {
-			lastest.setBillingKey(billingKey);
-	        customerPaymentMapper.modifyBillingKey(lastest);
-	    }
+		
+		
+		 if (lastPayment == null) {
+		        log.warn("최근 결제 내역을 찾을 수 없습니다. custId={}, rentalContractNo={}", custId, rentalContractNo);
+		        throw new IllegalStateException("최근 결제 정보를 찾을 수 없습니다."); 
+		    }
+		
+		
+		lastPayment.setBillingKey(billingKey);
+        customerPaymentMapper.modifyBillingKey(lastPayment);
+	    
 		
 	}
 	

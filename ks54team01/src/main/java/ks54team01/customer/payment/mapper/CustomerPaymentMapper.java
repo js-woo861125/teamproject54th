@@ -3,6 +3,7 @@ package ks54team01.customer.payment.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import ks54team01.customer.payment.domain.CustomerDelivery;
 import ks54team01.customer.payment.domain.CustomerDeliveryInfo;
@@ -12,9 +13,9 @@ import ks54team01.customer.payment.domain.CustomerPayment;
 public interface CustomerPaymentMapper {
 	
 	
-	CustomerPayment getLastBillingPayment(String custId);
+	CustomerPayment getLastBillingPayment(@Param ("custId")String custId, @Param("rentalContractNo") String rentalContractNo);
 	
-	int modifyBillingKey(CustomerPayment customerPayment);
+	void modifyBillingKey(CustomerPayment customerPayment);
 	
 	int addNextScheduledPayment(CustomerPayment payment);
 	
