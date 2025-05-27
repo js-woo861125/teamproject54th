@@ -30,6 +30,8 @@
   		<result column="payment_count_period"	property="paymentCountPeriod" />
   		<result column="contract_period"		property="contractPeriod" />
   		<result column="next_payment_date"		property="nextPaymentDate" />
+  		<result column="delivery_progress"		property="delProgress" />
+  		<result column="products_no"			property="prodNo" />
   	</resultMap>
   	
   	
@@ -81,6 +83,37 @@
 		<result column="register_date" 			property="regDate" />
 			
 	</resultMap>
+	
+	
+	<resultMap type="CustomerRefund" id="refundResultMap">
+	
+		<id 	column="refund_request_no" 			property="refundRequestNo" />
+		<result column="cust_id" 					property="custId" />
+		<result column="ent_ceo_no" 				property="entCeoNo" />
+		<result column="ent_emp_id" 				property="entEmpId" />
+		<result column="payment_completed_no" 		property="paymentCompletedNo" />
+		<result column="refund_reason" 				property="refundReason" />
+		<result column="refund_date" 				property="refundDate" />
+		<result column="request_status" 			property="requestStatus" />
+		<result column="review_content" 			property="reviewContent" />
+		<result column="review_notification_date" 	property="reviewNotificationDate" />
+		<result column="payment_key" 				property="paymentKey" />
+		<result column="order_id" 					property="orderId" />
+			
+	</resultMap>
+	
+	
+	
+	
+	
+	<insert id="addRefund" parameterType="CustomerRefund">
+		/* 환불요청 등록 */
+		INSERT INTO rental_refund_request
+			(refund_request_no, cust_id, ent_ceo_no, ent_emp_id, payment_completed_no, refund_reason, refund_date, request_status, review_content, review_notification_date, payment_key, order_id)
+		VALUES
+			(#{refundRequestNo}, #{custId}, #{entCeoNo}, #{entEmpId}, #{paymentCompletedNo}, #{refundReason}, NOW(), '입점업체검토중', '입점업체검토중', NULL, #{paymentKey}, #{orderId});
+	</insert>
+	
 	
 	
 	<select id="getLastBillingPayment" resultMap="paymentResultMap">
@@ -223,6 +256,16 @@
 			p.order_id = #{orderId};
 	</select>
 
+	<update id="modifyCancelQuantity" parameterType="CustomerQuantity">
+		update quantity q
+		<set>
+			q.quantity = q.quantity + #{cancelQuantity},	
+			q.revision_date = NOW()
+		</set>
+		where
+			q.ent_ceo_no = #{entCeoNo} and q.products_no = #{ProdNo}
+	</update>
+
 	
 	<update id="modifyQuantity" parameterType="CustomerQuantity">
 		UPDATE quantity q
@@ -245,7 +288,26 @@
 			q.products_no = #{prodNo} and q.ent_ceo_no = #{entCeoNo};
 	</select>
 
+	<select id="getQuantityByOrderId" resultType="int">
+		select
+			payment_count
+		from
+			payment
+		where
+			order_id = #{orderId}
 	
+	</select>
+	
+	<select id="getProductByOrderId" resultMap="paymentResultMap">
+		select
+			p.ent_ceo_no,
+			sp.products_no
+		from
+			payment p inner join sell_products sp
+			on p.sell_products_no = sp.sell_products_no
+		where
+			p.order_id = #{orderId}
+	</select>
 	
 	<select id="getDeliveryListById" resultMap="deliveryResultMap">
 		select
@@ -297,12 +359,18 @@
 			p.order_id,
 			p.payment_completed_no,
 			p.customer_key,
-			p.cust_id
+			p.cust_id,
+			di.delivery_progress,
+			p.payment_key,
+			p.ent_ceo_no,
+			p.ent_emp_id
 		from
 			payment p inner join sell_products sp 
 			on p.sell_products_no = sp.sell_products_no
 			inner join products pd
 			on sp.products_no = pd.products_no
+			inner join delivery_information di
+			on p.payment_completed_no = di.payment_completed_no
 		where
 			p.cust_id = #{custId}
 		group by
@@ -311,7 +379,7 @@
 				ELSE p.rental_contract_no
 			END
 		order by
-			p.payment_completed_date desc
+			p.payment_completed_date DESC;
 	</select>
 	
 	

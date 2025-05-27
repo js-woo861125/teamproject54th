@@ -17,103 +17,186 @@
 	
 	<th:block layout:fragment="jsScript">
 		<script type="text/javascript">
-
-			document.addEventListener('DOMContentLoaded', function () {
-				
-				document.querySelectorAll('.modifyCardBtn').forEach(function (btn) {
-					  btn.addEventListener("click", function () {
-					    const customerKey = document.getElementById("custId").value;
-
-					    // ✅ 이 버튼이 포함된 카드 영역 찾기
-					    const card = btn.closest(".product-cart-wrap");
-					    const contractInput = card.querySelector(".contractType");
-					    const rentalContractNo = contractInput ? contractInput.value : "";
-
-					    const tossPayments = TossPayments("test_ck_GePWvyJnrKvyQXaXB74bVgLzN97E");
-					    const payment = tossPayments.payment({ customerKey });
-
-					    payment.requestBillingAuth({
-					      method: "CARD",
-					      successUrl: window.location.origin + "/customer/payment/modifyBilling/success?rentalContractNo=" + encodeURIComponent(rentalContractNo),
-					      failUrl: window.location.origin + "/customer/payment/modifyBilling/fail"
-					    });
-					  });
-					});
-				
-				
-				  
-			    document.querySelectorAll('.cancelBtn').forEach(function (btn) {
-			        btn.addEventListener('click', function () {
-			            const orderId = this.getAttribute('data-order-id');
-			            const paymentCompletedNo = this.getAttribute('data-payment-completed-no');
+			$(function(){
+				$('.modifyCardBtn').click(function(){
+				    const customerKey = document.getElementById("custId").value;
 	
-			            if (!orderId) {
-			                Swal.fire("오류", "orderId가 없습니다.", "error");
-			                return;
+				    const card = $(this).closest(".product-cart-wrap");
+				    const contractInput = card.find(".contractType");
+				    const rentalContractNo = contractInput ? contractInput.value : "";
+
+				    
+				    const tossPayments = TossPayments("test_ck_GePWvyJnrKvyQXaXB74bVgLzN97E");
+				    const payment = tossPayments.payment({ customerKey });
+	
+				    payment.requestBillingAuth({
+		     			method: "CARD",
+			     		successUrl: window.location.origin + "/customer/payment/modifyBilling/success?rentalContractNo=" + encodeURIComponent(rentalContractNo),
+				     	failUrl: window.location.origin + "/customer/payment/modifyBilling/fail"
+				    }).catch(function (error) {
+			    		if (error.code === "USER_CANCEL") {
+	              			console.log('사용자가 취소했습니다.');
+			            } else {
+		            		console.log(error.message);
 			            }
+		            });
+				});
+				
+			
+				
+				$('.cancelBtn').click(function(){
+					 const card = $(this).closest(".product-cart-wrap");
+		             const delProgress = card.find(".delProgress");
+		             const delStatus = delProgress ? delProgress.text().trim() : "";
+		        	
+		        	if(delStatus !== "상품준비중") {
+		        		Swal.fire("취소 불가", "배송이 이미 시작된 상품은 주문을 취소할 수 없습니다.", "info");
+		        		return;
+		        	}
+		        	
+		            const orderId = this.getAttribute('data-order-id');
+		            const paymentCompletedNo = this.getAttribute('data-payment-completed-no');
+
+		            if (!orderId) {
+		                Swal.fire("오류", "orderId가 없습니다.", "error");
+		                return;
+		            }
+
+		            const swalWithBootstrapButtons = Swal.mixin({
+		                customClass: {
+		                    actions: 'w-50 justify-content-around',
+		                    confirmButton: "btn btn-success",
+		                    cancelButton: "btn btn-danger"
+		                },
+		                buttonsStyling: false
+		            });
+
+		            swalWithBootstrapButtons.fire({
+		                title: "주문취소",
+		                text: "정말로 주문을 취소하시겠습니까?",
+		                icon: "warning",
+		                showCancelButton: true,
+		                confirmButtonText: "취소 진행",
+		                cancelButtonText: "아니요",
+		                reverseButtons: true
+		            }).then((result) => {
+		                if (result.isConfirmed) {
+		                    fetch('/customer/payment/cancel', {
+		                        method: 'POST',
+		                        headers: {
+		                            'Content-Type': 'application/x-www-form-urlencoded'
+		                        },
+		                        body: new URLSearchParams({ orderId: orderId,
+		                        	 						paymentCompletedNo: paymentCompletedNo
+		                        	 					  })
+		                    })
+		                    .then(async res => {
+							    const text = await res.text();
+							
+							    if (res.ok) {
+							        swalWithBootstrapButtons.fire({
+							            title: "처리 완료",
+							            text: text,
+							            icon: "success"
+							        }).then(() => {
+							            location.reload();
+							        });
+							    } else {
+							        swalWithBootstrapButtons.fire({
+							            title: "처리 실패",
+							            text: text,
+							            icon: "error"
+							        });
+							    }
+							})
+		                    .catch(err => {
+		                        console.error("에러:", err);
+		                        Swal.fire("오류", "주문취소 중 오류가 발생했습니다.", "error");
+		                    });
+		                } else if (result.dismiss === Swal.DismissReason.cancel) {
+		                    swalWithBootstrapButtons.fire({
+		                        title: "중단됨",
+		                        text: "주문 취소가 중단되었습니다.",
+		                        icon: "info"
+		                    });
+		                }
+		            });
+				});
+				
+			    
+				$('.refundBtn').click(function() {
+
+					const card = $(this).closest(".product-cart-wrap");
+					const delProgress = card.find(".delProgress");
+					const delStatus = delProgress ? delProgress.text().trim() : "";
+
+					if(delStatus === "배송완료") {
 	
-			            const swalWithBootstrapButtons = Swal.mixin({
-			                customClass: {
-			                    actions: 'w-50 justify-content-around',
-			                    confirmButton: "btn btn-success",
-			                    cancelButton: "btn btn-danger"
-			                },
-			                buttonsStyling: false
-			            });
-	
-			            swalWithBootstrapButtons.fire({
-			                title: "주문취소",
-			                text: "정말로 주문을 취소하시겠습니까?",
-			                icon: "warning",
-			                showCancelButton: true,
-			                confirmButtonText: "취소 진행",
-			                cancelButtonText: "아니요",
-			                reverseButtons: true
-			            }).then((result) => {
-			                if (result.isConfirmed) {
-			                    fetch('/customer/payment/cancel', {
-			                        method: 'POST',
-			                        headers: {
-			                            'Content-Type': 'application/x-www-form-urlencoded'
-			                        },
-			                        body: new URLSearchParams({ orderId: orderId,
-			                        	 						paymentCompletedNo: paymentCompletedNo
-			                        	 					  })
-			                    })
-			                    .then(async res => {
-								    const text = await res.text();
+						const orderId = $(this).attr('data-order-id');
+						const paymentKey = $(this).attr('data-payment-key');
+						const paymentCompletedNo = $(this).attr('data-payment-completed-no');
+						const entCeoNo = $(this).attr('data-ent-ceo-no');
+						const entEmpId = $(this).attr('data-ent-emp-id');
+
+						Swal.fire({
+							title: "환불 요청",
+							input: "text",
+							inputLabel: "환불 사유를 입력해주세요.",
+							inputPlaceholder: "예: 단순변심, 상품 불량 등",
+							showCancelButton: true,
+							confirmButtonText: "환불 요청",
+							cancelButtonText: "취소",
+							inputValidator: (value) => {
+								if (!value) {
+									return "환불 사유는 필수입니다.";
+								}
+							}
+						}).then((result) => {
+							if (result.isConfirmed) {
+								const refundReason = result.value;
 								
-								    if (res.ok) {
-								        swalWithBootstrapButtons.fire({
-								            title: "처리 완료",
-								            text: text,
-								            icon: "success"
-								        }).then(() => {
-								            location.reload();
-								        });
-								    } else {
-								        swalWithBootstrapButtons.fire({
-								            title: "처리 실패",
-								            text: text,
-								            icon: "error"
-								        });
-								    }
+								fetch('/customer/payment/refund', {
+									method: 'POST',
+									headers: {
+										'Content-Type': 'application/x-www-form-urlencoded'
+									},
+									body: new URLSearchParams({
+										orderId: orderId,
+										paymentKey: paymentKey,
+										paymentCompletedNo: paymentCompletedNo,
+										refundReason: refundReason,
+										entCeoNo: entCeoNo,
+										entEmpId: entEmpId
+									})
 								})
-			                    .catch(err => {
-			                        console.error("에러:", err);
-			                        Swal.fire("오류", "주문취소 중 오류가 발생했습니다.", "error");
-			                    });
-			                } else if (result.dismiss === Swal.DismissReason.cancel) {
-			                    swalWithBootstrapButtons.fire({
-			                        title: "중단됨",
-			                        text: "주문 취소가 중단되었습니다.",
-			                        icon: "info"
-			                    });
-			                }
-			            });
-			        });
-			    });
+								.then(async res => {
+									const text = await res.text();
+									if (res.ok) {
+										Swal.fire("완료", text, "success").then(() => location.reload());
+									} else {
+										Swal.fire("실패", text, "error");
+									}
+								})
+								.catch(err => {
+									console.error("에러:", err);
+									Swal.fire("오류", "환불 처리 중 문제가 발생했습니다.", "error");
+								});
+							}
+						});
+					
+					} else {			        		
+						Swal.fire("환불 불가", "배송완료가 아닌 상품은 환불할 수 없습니다.", "info");
+						return;
+					}
+				});
+				
 			});
+			
+				
+				
+
+				
+				
 
 
 		</script>
@@ -130,7 +213,7 @@
 				<th:block th:if="${!#lists.isEmpty(PaymentList)}" th:each="l : ${PaymentList}">
 					<!-- 상품1 -->
 					<div class="product-cart-wrap border col-12" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
-						<div class="product-content-wrap mt-50 mb-30 col-8">
+						<div class="product-content-wrap mt-50 mb-30 col-7">
 							<span th:text="${l.paymentStatus}">상태</span>
 							<h4><a href="#" th:text="${l.prodNm}">상품명</a></h4>
 							<div>
@@ -140,15 +223,21 @@
 								<span th:text="${#strings.contains(l.rentalContractNo, 'rental') ? '렌탈' : (l.rentalContractNo == '일시불판매' ? '일반판매' : l.rentalContractNo)}" style="color: black;">계약정보</span>
 								<input type="hidden" class="contractType" th:value="${l.rentalContractNo}">
 								<span style="color: black;">|</span>
-								<span th:text="${l.paymentCompletedDate}" style="color: black;">계약정보</span>
+								<span th:text="${l.paymentCompletedDate}" style="color: black;">계약날짜</span>
+							</div>
+							<div>
+								<span class="delProgress" th:text="${l.delProgress}">배송상태</span>
 							</div>
 							
 						</div>
-						<div class="product-price d-flex col-4">
+						<div class="product-price d-flex col-5">
 							<div class="ml-100 text-center">
-								<p style="font-weight:bold; color: black;font-size: 25px; padding-right: 10px;">주문취소/카드변경</p>
-								<button type="button" class="btn btn-xl cancelBtn" th:data-order-id="${l.orderId}" th:data-payment-completed-no="${l.paymentCompletedNo}">취소</button>
-								<button type="button" class="btn btn-xl modifyCardBtn">변경</button>
+								<p style="font-weight:bold; color: black;font-size: 25px; padding-right: 10px;"></p>
+								<button type="button" class="btn cancelBtn" th:data-order-id="${l.orderId}" th:data-payment-completed-no="${l.paymentCompletedNo}">주문 취소</button>
+								<button type="button" class="btn modifyCardBtn" th:if="${l.rentalContractNo != '일시불판매'}">카드 변경</button>
+								<button type="button" class="btn refundBtn" th:if="${l.rentalContractNo == '일시불판매'}" th:data-payment-key="${l.paymentKey}"
+										th:data-order-id="${l.orderId}" th:data-payment-completed-no="${l.paymentCompletedNo}" 
+										th:data-ent-ceo-no="${l.entCeoNo}" th:data-ent-emp-id="${l.entEmpId}">환불</button>
 							</div>
 						</div>
 					</div>
