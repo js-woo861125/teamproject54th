@@ -32,6 +32,9 @@
 			<result column="delivery_request" 		property="delRequest" />
 			<result column="register_date" 			property="regDate" />
 			<result column="revision_date" 			property="revDate" />
+			    <result column="product_name" property="productName"/>
+    <result column="product_image" property="productImage"/>
+    <result column="model_name" property="modelName"/>
 		</association>
 		
 	</resultMap>
