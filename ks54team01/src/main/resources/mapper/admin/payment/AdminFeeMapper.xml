@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.admin.payment.mapper.AdminFeeMapper">
+
+	<resultMap id="settlementConfirmRequestMap" 	type="SettlementConfirmRequest">
+	
+        <id property="monthlyFeeNo" 				column="monthly_fee_no"/>
+        <result property="searchValue" 				column="ent_ceo_no"/>
+        <result property="entEmpId" 				column="manager_id"/>
+        <result property="paymentDetails" 			column="payment_details"/>
+        <result property="totalEntFeeRental" 		column="platform_fee"/>
+        <result property="totalPlatFormFeeRental" 	column="ent_fee"/> 
+        <result property="payStatus" 				column="pay_status"/> 
+        <result property="provisionDate" 		column="provision_date"/>
+        <result property="settlementMonth" 			column="settlement_month"/>
+
+        </resultMap>
+	
+	
+	<select id="getMaxMonthlyFeeNumber" resultType="java.lang.Integer">
+        SELECT
+            COALESCE(MAX(CAST(SUBSTRING_INDEX(monthly_fee_no, '_', -1) AS UNSIGNED)), 0)
+        FROM
+            monthly_fee
+        WHERE
+            monthly_fee_no LIKE 'monthly_fee_%';
+    </select>
+
+    <insert id="insertMonthlyFeeDetail" parameterType="ks54team01.admin.payment.domain.AdminMonthlyFee">
+        INSERT INTO monthly_fee (
+            monthly_fee_no,
+            ent_ceo_no,
+            ent_emp_id,
+            manager_id,
+            payment_details,
+            platform_fee,
+            ent_fee,
+            pay_status,
+            provision_date,
+            settlement_month
+        ) VALUES (
+            #{monthlyFeeNo},
+            #{entCeoNo},
+            #{entEmpId},
+            #{managerId},
+            #{paymentDetails},
+            #{platformFee},
+            #{entFee},
+            #{payStatus},
+            #{provisionDate},
+            #{settlementMonth}
+        )
+    </insert>
+    
+    
+    <update id="updateFeeClosingSettlementStatus">
+           UPDATE fee
+        SET
+            closing_settlement = #{status}
+        WHERE
+            settlement_month = #{settlementMonth}
+            AND ent_ceo_no = #{entCeoNo}  
+            AND closing_settlement = '1.마감(정산)전';
+            
+     </update>
+	
+	
+
+
+</mapper>
+
+
