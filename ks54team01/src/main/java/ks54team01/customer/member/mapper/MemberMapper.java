@@ -39,9 +39,6 @@ public interface MemberMapper {
 	// 공통정보 수정
 	int modifyCommonInfo(Map<String, Object> commonInfoMap);
 	
-	// 비밀번호 일치여부 체크
-	public boolean isPwCheck(Map<String, Object> params);
-	
 	// 기업고객 정보 조회
 	CustomerMember getCorpInfoById(String memberId);
 	

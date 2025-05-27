@@ -44,17 +44,16 @@ public class MemberController {
 		
 		String tempPw = emailService.generateTempPassword(); 
 		
-	    try {
-	        emailService.sendPwEmail(memberEmail, memberId, tempPw);
-	        log.info("이메일 발송 성공");
-	        model.addAttribute("message", "임시비밀번호를 입력하신 이메일로 발송했습니다.");
-	        memberService.updateRandomPw(memberId, tempPw);
-	        log.info("임시비밀번호 업데이트 성공: {}", tempPw);
-	    } catch (Exception e) {
-	        model.addAttribute("error", "임시비밀번호 이메일 발송에 실패했습니다. 관리자에게 문의하세요.");
-	    }
-
-	    return "customer/member/forgotPwView";
+		 try {
+			 	emailService.sendPwEmail(memberEmail, memberId, tempPw);
+		        log.info("이메일 발송 성공");
+		        memberService.updateRandomPw(memberId, tempPw);
+		        log.info("임시비밀번호 업데이트 성공: {}", tempPw);
+		        return "redirect:/customer/login/memberLogin?message=tempPwSent";
+		    } catch (Exception e) {
+		        log.error("이메일 발송 실패", e);
+		        return "redirect:/customer/member/forgotPw?error=emailFailed";
+		    }
 	}
 
 	
@@ -81,14 +80,13 @@ public class MemberController {
 	    }
 
 	    try {
-	        emailService.sendIdEmail(memberEmail, findMemberId.getMemberId());
+	    	emailService.sendIdEmail(memberEmail, findMemberId.getMemberId());
 	        log.info("이메일 발송 성공");
-	        model.addAttribute("message", "아이디를 입력하신 이메일로 발송했습니다.");
+	        return "redirect:/customer/login/memberLogin?message=emailSuccess";
 	    } catch (Exception e) {
-	        model.addAttribute("error", "아이디 이메일 발송에 실패했습니다. 관리자에게 문의하세요.");
+	    	log.info("이메일 발송 실패", e);
+	    	return "redirect:/customer/member/forgotId?error=true";
 	    }
-
-	    return "customer/member/forgotIdView";
 	}
 
 	
