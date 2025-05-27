@@ -1,6 +1,7 @@
 package ks54team01.enterprise.product.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,4 +42,19 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 		
 		return adminProductMapper.getProductList();
 	};
+	
+	/*
+	 * 입점업체 상품 등록
+	 */
+	@Override
+	public void addSellProduct(EnterpriseProduct enterpriseProduct) {
+		
+		// Pk 랜덤 생성
+		String sellProductNo = UUID.randomUUID().toString().replace("-", "");
+		enterpriseProduct.setUseStatus("활성화");
+		
+		enterpriseProduct.setSellProductsNo(sellProductNo);
+		enterpriseProductMapper.addEnterpriseProduct(enterpriseProduct);
+		
+	}
 }
