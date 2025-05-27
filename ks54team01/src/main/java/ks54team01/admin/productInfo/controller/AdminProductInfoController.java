@@ -24,6 +24,8 @@ import ks54team01.admin.productInfo.domain.ProductInfoItem;
 import ks54team01.admin.productInfo.domain.ProductInfoModel;
 import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
 import ks54team01.admin.productInfo.service.AdminProductInfoService;
+import ks54team01.system.util.PageInfo;
+import ks54team01.system.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -131,11 +133,13 @@ public class AdminProductInfoController {
 
 		List<ProductInfoModelSpec> modelSpecList = adminProductInfoService.getSearchModelSpec(searchKey, searchValue, useStatus);
 		
-		model.addAttribute("title", "모델별/상세스펙 검색결과");
+		model.addAttribute("title", "모델별/상세스펙 목록");
 		model.addAttribute("modelSpecList", modelSpecList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
 		model.addAttribute("useStatus", useStatus);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "productInfoList");
 		
 		return "admin/productInfo/modelSpecListView";
 		}
@@ -145,12 +149,16 @@ public class AdminProductInfoController {
 	public String getSearchCategorySpec(String searchKey, String searchValue, String useStatus, Model model) {
 
 		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoService.getSearchCategorySpec(searchKey, searchValue, useStatus);
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
 		
-		model.addAttribute("title", "카테고리별/상세스펙 검색결과");
+		model.addAttribute("title", "카테고리별/상세스펙 목록");
 		model.addAttribute("categorySpecList", categorySpecList);
+		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
 		model.addAttribute("useStatus", useStatus);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "productInfoList");
 		
 		return "admin/productInfo/categorySpecListView";
 		}
@@ -160,11 +168,13 @@ public class AdminProductInfoController {
 
 		List<ProductInfoBenefit> benefitList = adminProductInfoService.getSearchBenefit(searchKey, searchValue, useStatus);
 		
-		model.addAttribute("title", "혜택 검색결과");
+		model.addAttribute("title", "혜택 목록");
 		model.addAttribute("benefitList", benefitList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
 		model.addAttribute("useStatus", useStatus);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "productInfoList");
 		
 		return "admin/productInfo/benefitListView";
 		}
@@ -174,11 +184,13 @@ public class AdminProductInfoController {
 
 		List<ProductInfoModel> modelList = adminProductInfoService.getSearchModel(searchKey, searchValue, useStatus);
 		
-		model.addAttribute("title", "모델 검색결과");
+		model.addAttribute("title", "모델 목록");
 		model.addAttribute("modelList", modelList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
 		model.addAttribute("useStatus", useStatus);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "productInfoList");
 		
 		return "admin/productInfo/modelListView";
 		}
@@ -188,11 +200,13 @@ public class AdminProductInfoController {
 
 		List<ProductInfoItem> itemList = adminProductInfoService.getSearchItem(searchKey, searchValue, useStatus);
 		
-		model.addAttribute("title", "품목 검색결과");
+		model.addAttribute("title", "품목 목록");
 		model.addAttribute("itemList", itemList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
 		model.addAttribute("useStatus", useStatus);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "productInfoList");
 		
 		return "admin/productInfo/itemListView";
 		}
@@ -202,11 +216,13 @@ public class AdminProductInfoController {
 
 		List<ProductInfoBrand> brandList = adminProductInfoService.getSearchBrand(searchKey, searchValue, useStatus);
 		
-		model.addAttribute("title", "브랜드 검색결과");
+		model.addAttribute("title", "브랜드 목록");
 		model.addAttribute("brandList", brandList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
 		model.addAttribute("useStatus", useStatus);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "productInfoList");
 		
 		return "admin/productInfo/brandListView";
 		}
@@ -216,11 +232,13 @@ public class AdminProductInfoController {
 
 		List<ProductInfoCategory> categoryList = adminProductInfoService.getSearchCategory(searchKey, searchValue, useStatus);
 		
-		model.addAttribute("title", "카테고리 검색결과");
+		model.addAttribute("title", "카테고리 목록");
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
 		model.addAttribute("useStatus", useStatus);
+		model.addAttribute("activeMenu", "productInfo");
+		model.addAttribute("activeSubMenu", "productInfoList");
 		
 		return "admin/productInfo/categoryListView";
 		}
@@ -646,6 +664,7 @@ public class AdminProductInfoController {
 		model.addAttribute("brandList", brandList);
 		model.addAttribute("activeMenu", "productInfo");
 		model.addAttribute("activeSubMenu", "productInfoList");
+		
 		
 		return "admin/productInfo/brandListView";
 	}	
