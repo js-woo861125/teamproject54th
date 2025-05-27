@@ -15,7 +15,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 import ks54team01.customer.member.domain.CustomerMember;
+import ks54team01.customer.member.domain.FindMember;
 import ks54team01.customer.member.service.MemberService;
+import ks54team01.customer.register.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +28,70 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 	
 	private final MemberService memberService;
+	private final EmailService emailService;
+	
+	
+	@PostMapping("/forgotPw")
+	public String forgotPwSubmit(@RequestParam String memberId, @RequestParam String memberEmail, @RequestParam String memberType, Model model) {
+
+		FindMember findMemberPw = memberService.findMemberPwByInfo(memberId, memberEmail, memberType);
+		log.info("비밀번호찾기 요청: {}",findMemberPw);
+		
+		if (findMemberPw == null) {
+	        model.addAttribute("error", "입력하신 정보와 일치하는 아이디가 없습니다.");
+	        return "customer/member/forgotPwView";
+	    }
+		
+		String tempPw = emailService.generateTempPassword(); 
+		
+	    try {
+	        emailService.sendPwEmail(memberEmail, memberId, tempPw);
+	        log.info("이메일 발송 성공");
+	        model.addAttribute("message", "임시비밀번호를 입력하신 이메일로 발송했습니다.");
+	        memberService.updateRandomPw(memberId, tempPw);
+	        log.info("임시비밀번호 업데이트 성공: {}", tempPw);
+	    } catch (Exception e) {
+	        model.addAttribute("error", "임시비밀번호 이메일 발송에 실패했습니다. 관리자에게 문의하세요.");
+	    }
+
+	    return "customer/member/forgotPwView";
+	}
+
+	
+	@GetMapping("/forgotPw")
+	public String getforgotPw(Model model) {
+		
+		model.addAttribute("title", "비밀번호찾기");
+		
+		return "customer/member/forgotPwView";
+		
+	}
+	
+	
+	@PostMapping("/forgotId")
+	public String forgotIdSubmit(@RequestParam String memberName, @RequestParam String memberPhone,
+							     @RequestParam String memberEmail, @RequestParam String memberType, Model model) {
+
+		FindMember findMemberId = memberService.findMemberIdByInfo(memberName, memberPhone, memberEmail, memberType);
+		log.info("아이디찾기 요청: {}",findMemberId);
+		
+		if (findMemberId == null) {
+	        model.addAttribute("error", "입력하신 정보와 일치하는 아이디가 없습니다.");
+	        return "customer/member/forgotIdView";
+	    }
+
+	    try {
+	        emailService.sendIdEmail(memberEmail, findMemberId.getMemberId());
+	        log.info("이메일 발송 성공");
+	        model.addAttribute("message", "아이디를 입력하신 이메일로 발송했습니다.");
+	    } catch (Exception e) {
+	        model.addAttribute("error", "아이디 이메일 발송에 실패했습니다. 관리자에게 문의하세요.");
+	    }
+
+	    return "customer/member/forgotIdView";
+	}
+
+	
 	
 	@GetMapping("/forgotId")
 	public String getforgotId(Model model) {
@@ -37,14 +103,6 @@ public class MemberController {
 	}
 	
 	
-	@GetMapping("/forgotPw")
-	public String getforgotPw(Model model) {
-		
-		model.addAttribute("title", "비밀번호찾기");
-		
-		return "customer/member/forgotPwView";
-		
-	}
 	
 	@PostMapping("/customerLeave")
 	@ResponseBody
@@ -75,13 +133,16 @@ public class MemberController {
 	    }
 	    
 	    // 세션에서 정보 꺼내오기
-	    String loginMember = (String) session.getAttribute("loginMember");
-	    String memberType = (String) session.getAttribute("memberType");
+	    String loginId = (String) session.getAttribute("loginId");
+	    String loginMemberType = (String) session.getAttribute("loginMemberType");
 	    
 	    
-	    boolean customerLeave = memberService.customerLeave(memberType, memberId);
+	    boolean customerLeave = memberService.customerLeave(loginMemberType, memberId);
+	    if (customerLeave) {
+	        session.invalidate();
+	    }
 		resultMap.put("status", customerLeave ? "success" : "fail");
-		log.info("탈퇴 성공: {}", loginMember);
+		log.info("탈퇴 성공: {}", loginId);
 
 	    return resultMap;
 	}
@@ -148,9 +209,9 @@ public class MemberController {
 		model.addAttribute("title", "내 프로필");
 		
 		String loginId = (String) session.getAttribute("loginId");
-	    String loginType = (String) session.getAttribute("loginMemberType");
+	    String loginMemberType = (String) session.getAttribute("loginMemberType");
 		
-	    if (loginId == null || loginType == null) {
+	    if (loginId == null || loginMemberType == null) {
 	        return "redirect:/customer/login/memberLogin"; 
 	    }
 	    

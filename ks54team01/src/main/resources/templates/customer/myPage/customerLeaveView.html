@@ -57,7 +57,7 @@
 							</div>
 							<div class="btn_box mb-20 d-flex justify-content-center gap-3">
 							  <button class="leave_cancel_btn btn radius" id="leave_cancel_btn">탈퇴취소</button>
-							  <button class="leave_btn btn radius black" id="leave_btn" th:data-member-id="${memberId}">탈퇴완료</button>
+							  <button class="leave_btn btn radius black" id="leave_btn" th:data-member-id="${loginId}">탈퇴완료</button>
 							</div>			
               			</div>
             		</div>
@@ -69,7 +69,7 @@
 		<script>
 			$('.leave_btn').click(e => {
 				e.preventDefault();
-				const memberId = $(e.target).data('memberId');
+				const memberId = $(e.currentTarget).data('memberId');
 				
 				const isChecked = $('#leaveFg').is(':checked');
 			    if (!isChecked) {
@@ -126,6 +126,7 @@
 							method: 'post',
 							data: { 'memberId': memberId, 'memberPw': password },
 							dataType: 'json',
+							contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
 							success: (res) => {
 								if (res.status === 'success') {
 									Swal.fire({
