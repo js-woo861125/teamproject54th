@@ -16,6 +16,16 @@ public class CustomerWishListServiceImpl implements CustomerWishListService{
 	private final CustomerWishListMapper customerWishListMapper;
 	
 	@Override
+	public boolean addMyWishList(String productsNum) {
+		
+		int added = customerWishListMapper.addMyWishList(productsNum);
+		
+		boolean isAdd = added > 0 ? true : false;
+		
+		return isAdd;
+	}
+	
+	@Override
 	public boolean removeMyWishLists(List<String> wishListNum) {
 		
 		int deleted = customerWishListMapper.removeMyWishLists(wishListNum);

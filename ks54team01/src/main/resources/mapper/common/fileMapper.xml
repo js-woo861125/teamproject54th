@@ -5,6 +5,15 @@
 <mapper namespace="ks54team01.common.file.mapper.FileMapper">
 		
 		
+		<select id="getFileIdx" parameterType="string">
+			SELECT 
+				file_idx
+			FROM 
+				files
+			WHERE 
+				ref_id = #{transferBoard};
+		</select>
+		
 		<select id="getFileListByRefId" resultType="FileMetaData">
 		    SELECT
 		     *
