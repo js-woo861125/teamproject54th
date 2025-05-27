@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.enterprise.refund.mapper.EnterpriseRefundMapper">
+	
+	<resultMap type="EnterpriseRefund" id="refundResultMap">
+		<id 	column="refund_request_no" 			property="refundRequestNo" />
+		<result column="cust_id"					property="custId" />
+		<result column="ent_ceo_no"					property="entCeoNo" />
+		<result column="ent_emp_id"					property="entEmpId" />
+		<result column="payment_completed_no"		property="paymentCompletedNo" />
+		<result column="refund_reason"				property="refundReason" />
+		<result column="refund_date"				property="refundDate" />
+		<result column="request_status"				property="requestStatus" />
+		<result column="review_content"				property="reviewContent" />
+		<result column="review_notification_date"	property="reviewNotificationDate" />
+		<result column="payment_key"				property="paymentKey" />
+		<result column="order_id"					property="orderId" />
+		<result column="products_nm"				property="prodNm" />
+	</resultMap>
+	
+	
+	<update id="modifyRefundApproved" parameterType="EnterpriseRefund">
+		update rental_refund_request
+		<set>
+			request_status = '환불승인',
+			review_notification_date = NOW()
+		</set>
+		where
+			order_id = #{orderId}
+	</update>
+	
+	
+	<select id="getRefundList" resultMap="refundResultMap">
+		select
+			rrr.cust_id,
+			pd.products_nm,
+			rrr.refund_reason,
+			rrr.refund_date,
+			rrr.request_status,
+			rrr.review_notification_date,
+			rrr.payment_key,
+			rrr.order_id
+		from
+			rental_refund_request rrr inner join payment p
+			on rrr.payment_completed_no = p.payment_completed_no
+			inner join sell_products sp
+			on p.sell_products_no = sp.sell_products_no
+			inner join products pd
+			on sp.products_no = pd.products_no
+		where
+			rrr.ent_ceo_no = #{entCeoNo}
+	</select>
+	    
+</mapper>
+
+
+
+
+
+
+
