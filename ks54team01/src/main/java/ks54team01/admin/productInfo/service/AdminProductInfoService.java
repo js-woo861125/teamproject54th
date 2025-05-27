@@ -10,6 +10,8 @@ import ks54team01.admin.productInfo.domain.ProductInfoCategorySpec;
 import ks54team01.admin.productInfo.domain.ProductInfoItem;
 import ks54team01.admin.productInfo.domain.ProductInfoModel;
 import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
+import ks54team01.system.util.PageInfo;
+import ks54team01.system.util.Pageable;
 
 public interface AdminProductInfoService {
 	

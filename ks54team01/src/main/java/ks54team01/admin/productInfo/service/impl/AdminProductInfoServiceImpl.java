@@ -16,6 +16,8 @@ import ks54team01.admin.productInfo.domain.ProductInfoModel;
 import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
 import ks54team01.admin.productInfo.mapper.AdminProductInfoMapper;
 import ks54team01.admin.productInfo.service.AdminProductInfoService;
+import ks54team01.system.util.PageInfo;
+import ks54team01.system.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -93,7 +95,6 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		switch (searchKey) {
 		case "specName" -> searchKey = "spec_nm";
-		case "categoryInfo.smCategory" -> searchKey = "pc.small_category";
 		}
 		
 		if (useStatus.isBlank()) {
@@ -125,7 +126,6 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		case "modelName" -> searchKey = "model_nm";
 		case "brandInfo.brandName" -> searchKey ="b.brand_nm";
 		case "itemInfo.itemName" -> searchKey ="i.item_nm";
-		case "categoryInfo.smCategory" -> searchKey = "pc.small_category";
 		}
 		
 		if (useStatus.isBlank()) {
@@ -141,7 +141,6 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		switch (searchKey) {
 		case "itemName" -> searchKey = "item_nm";
-		case "categoryInfo.smCategory" -> searchKey = "pc.small_category";
 		}
 		
 		if (useStatus.isBlank()) {
