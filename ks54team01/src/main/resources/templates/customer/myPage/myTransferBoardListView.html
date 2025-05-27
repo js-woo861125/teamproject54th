@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{customer/layout/myPageDefault}">
+
+
+	<!-- head 삽입공간 -->
+	
+	<head>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</th:block>
+	
+	
+	<th:block layout:fragment="jsScript">
+		<script th:inline="javascript">
+			$('.deleteBtn').click(e => {
+				e.preventDefault();
+				const transferBoardNum = $(e.currentTarget).data('transferBoardNum');
+				Swal.fire({
+				  	text: "선택하신 양도 게시글을 삭제하시겠습니까?",
+				  	icon: "warning",
+				  	showCancelButton: true,
+				  	confirmButtonColor: "#3085d6",
+				  	cancelButtonColor: "#d33",
+				  	confirmButtonText: "삭제",
+				  	cancelButtonText: "취소"
+				}).then(async (result) => {
+						console.log(result);
+						
+						if (result.isDismissed) return ;
+						
+						const optionObj = {
+								title: '',
+								text: '',
+								icon: ''
+							};
+						
+						if (result.isConfirmed) {
+					    	const request = $.ajax({
+								url : '/customer/transferBoard/removeMyTransferBoard',
+								method : 'post',
+								data : { 'transferBoardNum' : transferBoardNum},
+								dataType : 'json',
+								async : false
+					    	});
+					    	request.done(isDelete => {
+								if(isDelete) {
+								  	optionObj.title = '';
+									optionObj.text = '선택하신 양도 게시글이 삭제되었습니다.';
+								  	optionObj.icon = 'success';
+								}
+					    	});
+					    	request.fail((jqXHR, textStatus, error) => {
+								console.log(jqXHR, textStatus, error);
+					    	});
+						}
+						Swal.fire(optionObj).then(result => location.reload());
+					});
+				});
+		</script>
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+		<div class="container mb-30">
+			<div class="row">
+				<div class="col-12">
+					<div class="section-title">
+						<h3 class="mb-0" >내 양도 게시글</h3>
+					</div>
+					<div class="shop-product-fillter">
+						<div class="totall-product">
+							<h5 class="text-body">
+								내가 쓴 글
+								<span class="text-brand">&emsp;
+									<span th:text="${myTransferBoardList.size()}">5</span>
+								</span>
+								<span>개</span>
+							</h5>
+						</div>
+					</div>
+					<div class="overflow-auto" style="height: 800px;">
+						<div class="row product-grid">
+							<th:block th:if="${!#lists.isEmpty(myTransferBoardList)}"
+									  th:each="l : ${myTransferBoardList}">
+								<div class="col-lg-4 col-md-4 col-12 col-sm-6">
+									<div class="product-cart-wrap mb-30">
+										<div class="product-img-action-wrap">
+											<div class="product-img product-img-zoom">
+												<a th:href="@{/customer/transferBoard/modifyTransferBoard(transferBoardNum=${l.transferBoardNum})}">
+													<img class="default-img"
+													th:src="@{'/user/assets/imgs/shop/' + ${l.productInfo.productsImage}}"
+													alt="" />
+												</a>
+											</div>
+										</div>
+										<div class="product-content-wrap">
+											<div class="product-category d-flex justify-content-between">
+												<a th:text="${l.productInfoCategory.smCategory}" href="shop-grid-right.html">TV</a>
+											<div class="dropdown">
+	                                        	<a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> 
+	                                        		<i class="bi bi-three-dots-vertical text-muted" style="font-size: 0.65rem;"></i> 
+	                                        	</a>
+	                                        	<div class="dropdown-menu">
+	                                            	<a th:data-transfer-board-num="${l.transferBoardNum}" 
+	                                            	   class="deleteBtn dropdown-item" href="#">
+                                               			게시글 삭제
+	                                        		</a>
+	                                        	</div>
+                                    		</div>
+											</div>
+											<h2 th:text="${l.transferTitle}">
+												<a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a>
+											</h2>
+											<div class="product-card-bottom">
+												<div class="product-price">
+													<span>💸월렌탈료</span> 
+													<span th:text="|₩${#numbers.formatInteger(l.rentalFee, 3, 'COMMA')}">85,000원</span>
+												</div>
+											</div>
+											<div class="product-card-bottom">
+												<div class="product-price">
+													<span>💰지원금</span> 
+													<span th:text="|₩${l.individualGrants >= 1000 ? #numbers.formatInteger(l.individualGrants, 3, 'COMMA') : l.individualGrants}">1,000원</span>
+												</div>
+											</div>
+											<div class="product-card-bottom">
+												<p>등록일</p>
+												<p th:text="${l.registerDate}">2025-04-09</p>
+												<div></div>
+												<th:block th:switch="${l.transferRentalProcsssingStatus}">
+													<span th:case="${'2.양도계약진행'}" class="stock-status in-stock">
+														진행중 </span>
+													<span th:case="${'3.양도계약완료'}" class="stock-status out-stock">
+														마감 </span>
+												</th:block>
+											</div>
+										</div>
+									</div>
+								</div>
+							</th:block>
+						</div>
+						<!-- <div th:if="${contentRowCount < 1}"
+							 class="mt-100" style="text-align: center;">
+							<p>게시글이 없습니다.</p>	
+						</div> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</th:block> 
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script>
+			/**
+			* 카테고리 + 브랜드 + 품목 + 모델명 중복체크
+			*/
+			$('#modifyModelBtn').click(function(){
+				const modelName = $('#modelName').val();
+				const categoryNo = $('#categoryNo').val();
+				const brandNo = $('#brandNo').val();
+				const itemNo = $('#itemNo').val();
+				
+				if (!categoryNo) {
+					alert('카테고리를 선택해주세요');
+					$('#categoryNo').focus();
+					return;
+				}
+				
+				if (!itemNo) {
+					alert('품목을 선택해주세요');
+					$('#itemNo').focus();
+					return;
+				}
+				
+				if (!brandNo) {
+					alert('브랜드를 선택해주세요');
+					$('#brandNo').focus();
+					return;
+				}
+				
+				if(!modelName){
+					alert('모델명을 입력해주세요');
+					$('#modelName').focus();
+					return ;
+				}
+				
+				$.ajax({
+					url : '/admin/productInfo/modelNameCheck',
+					method : 'post',
+					data : {
+						'modelName': modelName,
+						'categoryNo' : categoryNo,
+						'brandNo' : brandNo,
+						'itemNo' : itemNo
+					},
+					dataType : 'json'
+				}).done(function(isDuplicate) {
+					if(isDuplicate){
+						alert('이미 등록된 모델명 입니다.');
+						$('#modelName').focus();
+						return ;
+					}
+
+					$('#modifyProductInfoForm').submit();
+			    }).fail(function(jqXHR, textStatus, error) {
+			        console.log("에러 발생:", textStatus, error);
+			        alert('모델명 확인 중 오류가 발생했습니다.');
+			    });
+			});
+			
+			/**
+			* 카테고리 선택 시 해당 품목 조회
+			*/
+			$('#categoryNo').change(function() {
+			    const categoryNo = $(this).val();
+			    const itemNo = $(this).val();
+			    $('#itemNo').empty().append('<option value="">품목을 선택해주세요</option>');
+			    
+			    if (categoryNo) {
+			        $.ajax({
+			            url: '/admin/productInfo/itemListByCategory',
+			            type: 'GET',
+			            data: { categoryNo: categoryNo },
+			            success: function(itemList) {
+			                if (itemList && itemList.length > 0) {
+			                	$.each(itemList, function(idx, item) {
+			                	    $('#itemNo').append('<option value="' + item.itemNo + '">' + item.itemName + '</option>');
+			                	});
+			                } else {
+			                    $('#itemNo').append('<option value="">품목이 없습니다</option>');
+			                }
+			            },
+			            error: function() {
+			                alert('품목 목록을 불러오는 중 오류가 발생했습니다.');
+			            }
+			        });
+			    }
+			});
+		</script>		
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="content">
+		<div class="content-header">
+			<div>
+				<h2 class="content-title card-title" th:text="${title}"></h2>
+			</div>
+		</div>
+		<div class="card mb-4 col-8">
+			<div class="card-body">
+				<div class="row gx-4">
+					<!-- 사이드 메뉴 -->
+					<aside class="col-lg-3 border-end">
+						<nav class="nav nav-pills flex-column mb-4">
+							<a class="nav-link" th:href="@{/admin/productInfo/addCategory}">카테고리</a>
+							<a class="nav-link" th:href="@{/admin/productInfo/addBrand}">브랜드</a>
+							<a class="nav-link" th:href="@{/admin/productInfo/addItem}">품목</a>
+							<a class="nav-link active" aria-current="page" th:href="@{/admin/productInfo/addModel}">모델</a> 
+							<a class="nav-link" th:href="@{/admin/productInfo/addBenefit}">전체혜택</a>
+							<a class="nav-link" th:href="@{/admin/productInfo/addCategorySpec}">카테고리별/상세스펙</a> 
+							<a class="nav-link" th:href="@{/admin/productInfo/addModelSpec}">모델별/상세스펙</a>
+						</nav>
+					</aside>
+					
+					 <!-- 본문 영역 -->
+					<div class="col-lg-9">
+						<form id="modifyProductInfoForm" th:action="@{/admin/productInfo/modifyModel}" method="post" th:object="${modelInfo}">
+							<section class="content-body p-xl-4">
+							
+								<div class="col-12">
+									<!-- Hidden -->
+									<input type="hidden" th:field="*{modelNo}" />
+	                            	<input type="hidden" th:field="*{managerId}" />
+
+									<!-- 수정 영역 -->
+									<div class="mb-4">
+										<label class="form-label fs-6" for="categoryNo">카테고리</label> 
+										<select th:field="*{categoryNo}" class="form-select text-center fs-7" id="categoryNo" name="categoryNo">
+											<option value="">카테고리를 선택해주세요</option>
+											<th:block th:if="${not #lists.isEmpty(categoryList)}" th:each="l : ${categoryList}">
+												<option th:value="${l.categoryNo}" th:text="${l.lgCategory + ' > ' + l.mdCategory + ' > ' + l.smCategory}"></option>
+											</th:block>
+										</select>
+									</div>
+									<div class="mb-4">
+										<label class="form-label fs-6" for="itemNo">품목</label> 
+										<select th:field="*{itemNo}" class="form-select text-center fs-7" id="itemNo" name="itemNo">
+											<option value="">품목을 선택해주세요</option>
+											<th:block th:if="${not #lists.isEmpty(categoryList)}" th:each="l : ${itemList}">
+												<option th:value="${l.itemNo}" th:text="${l.itemName}"></option>
+											</th:block>
+										</select>
+									</div>
+									<div class="mb-4">
+										<label class="form-label fs-6" for="brandNo">브랜드</label> 
+										<select th:field="*{brandNo}" class="form-select text-center fs-7" id="brandNo" name="brandNo">
+											<option value="">브랜드를 선택해주세요</option>
+											<th:block th:if="${not #lists.isEmpty(brandList)}" th:each="l : ${brandList}">
+												<option th:value="${l.brandNo}" th:text="${l.brandName}"></option>
+											</th:block>
+										</select>
+									</div>
+									<div class="mb-4">
+										<label class="form-label fs-6" for="modelName">모델명</label>
+										<input type="text" th:field="*{modelName}" id="modelName" name="modelName" class="form-control" placeholder="모델명을 입력해주세요" />
+									</div>
+								</div>
+								<br />
+								<!-- 버튼 -->
+								<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+									<div class="col-md-2 col-2 ms-auto">
+										<button type="button" id="modifyModelBtn" 
+												class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6">수정</button>
+									</div>
+									<div class="col-md-2 col-2">
+										<button type="reset" onclick="location.href='/admin/productInfo/modelList'" 
+												class="btn btn-warning w-100 rounded font-lg hover-up text-white justify-content-center fs-6">수정취소</button>
+									</div>
+								</div>
+							</section>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</th:block>
+
+</html>

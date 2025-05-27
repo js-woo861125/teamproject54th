@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.common.file.mapper.FileMapper">
+		
+		
+		<select id="getFileListByRefId" resultType="FileMetaData">
+		    SELECT
+		     *
+		    FROM files
+		    WHERE 
+		    	ref_id = #{refId}
+		    AND 
+		      	file_type = #{fileType}
+		    AND 
+		      	file_status = '사용중'
+		</select>
+		
+	 <insert id="addFile" parameterType="FileMetaData">
+        /* 단인 파일 INSERT */
+        INSERT INTO 
+        files (
+            file_idx,
+            ref_id,
+            file_original_name,
+            file_new_name,
+            file_path,
+            file_ext,
+            file_size,
+            file_type,
+            file_status,
+            register_date,
+            revision_date
+			)
+         VALUES (
+            #{fileIdx},
+            #{refId},
+            #{fileOriginalName},
+            #{fileNewName},
+            #{filePath},
+            #{fileExt},
+            #{fileSize},
+            #{fileType},
+            #{fileStatus},
+            #{registerDate},
+            #{revisionDate}
+       		)
+    </insert>
+    
+
+    <insert id="addFiles" parameterType="java.util.List">
+     /* 다중파일 INSERT */
+        INSERT INTO files (
+            file_idx,
+            ref_id,
+            file_original_name,
+            file_new_name,
+            file_path,
+            file_ext, 
+            file_size,
+            file_type,
+            file_status,
+            register_date,
+            revision_date
+        )
+        VALUES
+       		 <foreach collection="list" item="l" separator=",">
+            (
+                #{l.fileIdx},
+                #{l.refId},
+                #{l.fileOriginalName},
+                #{l.fileNewName},
+                #{l.filePath},
+                #{l.fileExt},
+                #{l.fileSize},
+                #{l.fileType},
+                #{l.fileStatus},
+                #{l.registerDate},
+                #{l.revisionDate}
+            )
+        	</foreach>
+   	</insert>
+   	
+   	<delete id="deleteFiles" parameterType="string">
+    DELETE 
+    FROM 
+    	files 
+    WHERE 
+    	file_idx = #{fileIdx}
+	</delete>
+ 
+</mapper>

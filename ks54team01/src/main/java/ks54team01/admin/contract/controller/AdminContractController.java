@@ -18,8 +18,6 @@ public class AdminContractController {
 
 	private final AdminContractService adminContractService;
 	
-	
-	
 	@GetMapping("/searchContractList")
 	public String getSearchContractList(String searchKey, String searchValue, Model model) {
 		
@@ -30,7 +28,7 @@ public class AdminContractController {
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
 		
-		return "admin/contract/ContractListView";
+		return "admin/contract/contractListView";
 	}
 	
 	
@@ -42,7 +40,7 @@ public class AdminContractController {
 		model.addAttribute("title", "입점업체&고객 계약목록");
 		model.addAttribute("ContractList", ContractList);
 		
-		return "admin/contract/ContractListView";
+		return "admin/contract/contractListView";
 	}
 	
 	

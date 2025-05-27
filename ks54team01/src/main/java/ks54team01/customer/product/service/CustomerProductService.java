@@ -10,11 +10,13 @@ import ks54team01.customer.product.domain.CustomerProduct;
 
 @Service
 public interface CustomerProductService {
-
+	
+	List<CustomerProduct> getProductDetailByProd(String productsNum);
+	
+	
 
 	List<CustomerProduct> getCustomerProductList(String smallCategory);
 	
-
 	
 	
 }

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{enterprise/layout/default}">
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	</th:block>
+
+    <th:block layout:fragment="content">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title" th:text="@{#}"></h2>
+            </div>
+            <div>
+                <a th:href="@{/enterprise/product/addProduct}" class="btn btn-primary btn-sm rounded">등록하기</a>
+            </div>
+         </div>
+         <div class="card mb-4">
+            <header class="card-header">
+                <div class="row align-items-center">
+					   <div class="col-lg-1 col-md-3 col-12">
+	                       <select class="form-select" name="searchKey">
+	                           <option>상품명</option>
+	                       </select>
+	                   </div>
+	                   <div class="col-lg-3 col-md-5">
+	                       <input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
+	                   </div>
+	                   <div class="col-lg-1 col-md-1 me-auto">
+						   <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
+	                   </div>
+                    <div class="col-lg-2">
+                        <select class="form-select">
+                            <option>모든 카테고리</option>
+                            <option>TV</option>
+                            <option>노트북</option>
+                            <option>전기레인지</option>
+                            <option>냉장고</option>
+                            <option>식탁</option>
+                            <option>소파</option>
+                            <option>침대</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2">
+                        <select class="form-select">
+                            <option>판매상태</option>
+                            <option>활성화</option>
+                            <option>비활성화</option>
+                            <option>판매중단</option>
+                        </select>
+                    </div>
+                </div>
+            </header>
+            <!-- card-header end// -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class=text-center>
+                                <th>상품명</th>
+                                <th>상품이미지</th>                            
+                                <th>모델명</th>
+                                <th>등록일자</th>
+                                <th>수정일자</th>
+                                <th>상품등록</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                        <th:block th:if="${!#lists.isEmpty(getProductList)}" th:each="l : ${getProductList}">
+                            <tr>
+                                <td><a class="fw-bold" th:text="${l.productName}"></a></td>
+                               <td>
+								    <a class="item" href="#">
+								        <div class="img">
+								            <img th:if="${l.productImage != null}" 
+								                 th:src="${l.productImage}" 
+								                 class="img-sm img-main" 
+								                 alt="상품이미지" />
+								               
+								            <div th:if="${l.productImage == null}" 
+								                 class="img-sm img-main bg-light d-inline-block" 
+								                 style="width: 100px; height: 100px;"></div>
+								        </div>							       
+								    </a>
+								</td>
+                                <td th:text="${l.modelName}">모델명</td>                               
+                                <td th:text="${l.registerDate}">2023-01-01 13:00:00</td>
+                                <td th:text="${l.revisionDate}">2023-01-01 13:00:00</td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-action">
+                                    <a th:href="@{/enterprise/product/addProduct(productNo=${l.productNo})}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 등록 </a>
+                                </td>
+                            </tr>
+                          </th:block>
+                          	 <tr th:unless="${!#lists.isEmpty(entList)}">
+							 	<td colspan="11">등록없음</td>
+							 </tr>  
+                        </tbody>
+                    </table>
+                </div>
+                <!-- table-responsive //end -->
+            </div>
+            <!-- card-body end// -->
+        </div>
+   </th:block> 
+        <!-- card end// -->
+        
+ 
+    <!-- content-main end// -->
+
+        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/vendors/select2.min.js"></script>
+        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+    </body>
+</html>

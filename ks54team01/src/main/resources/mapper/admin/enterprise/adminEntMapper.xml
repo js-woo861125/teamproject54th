@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="ks54team01.admin.enterprise.mapper.AdminEntMapper">
+	
+	<resultMap type="AdminEntAddContract" id="contractResultMap">
+		<id 	column="ent_contract_no" 	  property="entContractNo"/>
+		<result column="ent_ceo_no" 		  property="entCeoNo"/>
+		<result column="ent_emp_id" 		  property="entEmpId"/>
+		<result column="manager_id" 		  property="managerId"/>
+		<result column="fee_rate_sales" 	  property="feeRateSales"/>
+		<result column="fee_rate_rental" 	  property="feeRateRental"/>
+		<result column="fee_rate_penalty" 	  property="feeRatePenalty"/>
+		<result column="entry_fee" 			  property="entryFee"/>
+		<result column="contract_date" 		  property="contractDate"/>
+		<result column="contract_expiry_date" property="contractEndDate"/>
+		<result column="ent_cal_date" 		  property="entCalDate"/>
+		<result column="contract_status" 	  property="contractStatus"/>
+	</resultMap>
+
+	<insert id="addContract" parameterType="AdminEntAddContract">
+		<selectKey keyProperty="entContractNo" resultType="string" order="BEFORE">
+		/* 계약코드 자동증가 */
+		SELECT 
+			case
+			when count(*) = 0 then 'ent_contract_1'
+			else
+				CONCAT('ent_contract_',max(cast(SUBSTRING_INDEX(ent_contract_no, '_', -1) as unsigned))+1)
+			end as entContractNo	
+		FROM
+			ent_contract;
+		</selectKey>
+		/* 플랫폼 입점업체 계약 등록 */
+		INSERT INTO ent_contract
+		(ent_contract_no, ent_ceo_no, ent_emp_id, manager_id, fee_rate_sales, fee_rate_rental, 
+		fee_rate_penalty, entry_fee, contract_date, contract_expiry_date, ent_cal_date, contract_status)
+		VALUES
+		(#{entContractNo}, #{entCeoNo}, #{entEmpId}, #{managerId}, 0.1, 0.05, 0.05, 3000000, #{contractDate}, #{contractEndDate}, 20, '계약중');
+	</insert>	
+
+	 <select id="getEntList" parameterType="string">
+		/* 입점업체 목록 조회 */
+		 SELECT 
+			ec.ent_ceo_no as ceoCode,
+			ec.ent_nm as entName, 
+			ec.ent_ceo_id as entEmpId, 
+			ec.ent_ceo_nm as entCeoName, 
+			ec.ent_ceo_phone as ceoTelNo,
+			ec.ent_brno as entBrNo,
+			ct.contract_status as entContractStatus,
+			ct.contract_expiry_date as contractEndDate
+		FROM 
+			ent_ceo ec LEFT JOIN ent_contract ct
+			ON ec.ent_ceo_no = ct.ent_ceo_no; 
+	 </select>
+	 
+	 
+	 <select id="getEntDetail" parameterType="string">
+		 /* 입점업체 상세조회 */ 
+		  SELECT 
+		    ct.ent_contract_no as entContractNo,
+		    ec.ent_ceo_no as CeoNo,
+		    ec.ent_ceo_id as CeoId,
+		    ec.ent_ceo_email as CeoEmail,
+		    ec.ent_ceo_addr as entAddr,
+		    ec.ent_ceo_daddr as entDaddr,
+		    ct.fee_rate_sales as feeRateSales,
+		    ct.fee_rate_rental as feeRateRental,
+		    ct.fee_rate_penalty as feeRetePenalty,
+		    ct.entry_fee as entryFee,
+		    ct.contract_date as contractDate,
+		    ct.contract_expiry_date as contractEndDate,
+		    ct.ent_cal_date as entCalDate,
+		    ct.contract_status as contractStatus
+		  FROM 
+		    ent_ceo ec 
+		    LEFT JOIN ent_contract ct ON ec.ent_ceo_no = ct.ent_ceo_no
+		  WHERE ec.ent_ceo_no = #{ceoCode}
+	</select>
+ 	 
+ 	<select id="getSearchEnt" parameterType="string" resultType="AdminEntList">
+		/* 입점업체 검색 조회 */
+		SELECT 
+			ec.ent_ceo_no AS ceoCode,
+			ec.ent_nm AS entName,
+			ec.ent_ceo_phone AS ceoTelNo,
+			ec.ent_ceo_id AS entId,
+			ec.ent_brno AS entBrNo,
+			ec.ent_ceo_nm AS entCeoName,
+			ec.register_date AS regDate,
+			ct.contract_status AS entContractStatus,
+			ct.contract_expiry_date AS contractEndDate
+		FROM 
+			ent_ceo ec 
+			LEFT JOIN ent_contract ct ON ec.ent_ceo_no = ct.ent_ceo_no
+		<where>
+	        <if test="searchValue != null and searchValue != ''">
+	            <choose>
+	                <when test="searchKey == 'entBrNo'">
+	                    ec.ent_brno = #{searchValue}
+	                </when>
+	                <otherwise>
+	                    ${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+	                </otherwise>
+	            </choose>
+	        </if>
+    	</where>
+		ORDER BY CAST(SUBSTRING_INDEX(ec.ent_ceo_no, 'ent', -1) AS UNSIGNED) ASC;
+	</select>
+		 	
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ </mapper>

@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/layout/default}">
+<!-- head 삽입공간 -->
+<head>
+<style type="text/css">
+.ck-editor__editable[role="textbox"] {
+	min-height: 300px;
+}
+
+.ck-content .image {
+	max-width: 80%;
+	margin: 20px auto;
+}
+</style>
+
+</head>
+
+
+<th:block layout:fragment="jsFile">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script
+		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<script
+		src="https://cdn.ckeditor.com/ckeditor5/34.2.0/super-build/ckeditor.js"></script>
+</th:block>
+
+<th:block layout:fragment="jsScript">
+	<script>
+	let previousImageSrcs = [];
+	
+	CKEDITOR.ClassicEditor.create(document.getElementById("editor"), {
+	    toolbar: {
+	      items: [
+	        //'exportPDF', 'exportWord', '|',
+	        'findAndReplace', 'selectAll', '|',
+	        'heading', '|',
+	        'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
+	        'bulletedList', 'numberedList', 'todoList', '|',
+	        'outdent', 'indent', '|',
+	        'undo', 'redo', '|',
+	        'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
+	        'alignment', '|',
+	        'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
+	        'specialCharacters', 'horizontalLine', 'pageBreak', '|',
+	        'textPartLanguage', '|',
+	        'sourceEditing'
+	      ],
+	      shouldNotGroupWhenFull: true
+	    },
+	    list: {
+	      properties: {
+	        styles: true,
+	        startIndex: true,
+	        reversed: true
+	      }
+	    },
+	    heading: {
+	      options: [
+	        { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+	        { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+	        { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+	        { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+	        { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' },
+	        { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
+	        { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
+	      ]
+	    },
+	    placeholder: 'Welcome to CKEditor 5!',
+	    fontFamily: {
+	      options: [
+	        'default',
+	        'Arial, Helvetica, sans-serif',
+	        'Courier New, Courier, monospace',
+	        'Georgia, serif',
+	        'Lucida Sans Unicode, Lucida Grande, sans-serif',
+	        'Tahoma, Geneva, sans-serif',
+	        'Times New Roman, Times, serif',
+	        'Trebuchet MS, Helvetica, sans-serif',
+	        'Verdana, Geneva, sans-serif'
+	      ],
+	      supportAllValues: true
+	    },
+	    fontSize: {
+	      options: [10, 12, 14, 'default', 18, 20, 22],
+	      supportAllValues: true
+	    },
+	    htmlSupport: {
+	      allow: [
+	        {
+	          name: /.*/,
+	          attributes: true,
+	          classes: true,
+	          styles: true
+	        }
+	      ]
+	    },
+	    htmlEmbed: {
+	      showPreviews: true
+	    },
+	    link: {
+	      decorators: {
+	        addTargetToExternalLinks: true,
+	        defaultProtocol: 'https://',
+	        toggleDownloadable: {
+	          mode: 'manual',
+	          label: 'Downloadable',
+	          attributes: {
+	            download: 'file'
+	          }
+	        }
+	      }
+	    },
+	    mention: {
+	      feeds: [
+	        {
+	          marker: '@',
+	          feed: [
+	            '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
+	            '@cupcake', '@danish', '@donut', '@dragée', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
+	            '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@soufflé',
+	            '@sugar', '@sweet', '@topping', '@wafer'
+	          ],
+	          minimumCharacters: 1
+	        }
+	      ]
+	    },
+	    removePlugins: [
+	      'ExportPdf',
+	      'ExportWord',
+	      'CKBox',
+	      'CKFinder',
+	      'EasyImage',
+	      'RealTimeCollaborativeComments',
+	      'RealTimeCollaborativeTrackChanges',
+	      'RealTimeCollaborativeRevisionHistory',
+	      'PresenceList',
+	      'Comments',
+	      'TrackChanges',
+	      'TrackChangesData',
+	      'RevisionHistory',
+	      'Pagination',
+	      'WProofreader',
+	      'MathType'
+	    ],
+	    ckfinder : {
+			uploadUrl: '/admin/product/uploadImage'
+	    }
+	  })
+	  .then(editor => {
+		  const editorElement = editor.ui.view.editable.element;
+		  
+		  const extractImagSrcs = html => {
+		  		const parser = new DOMParser();
+		  		const doc = parser.parseFromString(html, 'text/html');
+		  		return Array.from(doc.querySelectorAll('img'))
+		  				    .map(img => $(img).attr('src'))
+		  				    .filter(src => Boolean(src));
+		  }
+		  
+		  // 초기 이미지 저장
+		  previousImageSrcs = extractImagSrcs(editor.getData());
+		  
+		  // observer 생성
+		  const observer = new MutationObserver(()=>{
+				const currentImageSrcs = extractImagSrcs(editor.getData());
+				
+				
+				// 삭제 이미지 탐지
+				const deletedImages = previousImageSrcs.filter(src => !currentImageSrcs.includes(src));
+				
+				deletedImages.forEach( src => {
+					console.log(src , '<-- 삭제 이미지');
+					if(src){
+						const request = $.ajax({
+							method : 'POST',
+							url : '/admin/product/deleteImage',
+							data : { 'imageUrl' : src }
+						});
+						request.done( res => {
+							console.log(`이미지 삭제 : ${res}`);
+						});
+						request.fail( (jqXHR, textStatus, error) => {
+							console.log(jqXHR, textStatus, error)
+						});
+					}
+					
+				});
+				
+				previousImageSrcs = currentImageSrcs;
+		  });
+		  
+		  observer.observe(editorElement, {
+				childList : true,
+				subtree : true,
+				characterData : true
+		  });
+
+	  });
+	let deleteFileIdxArr = []; // 삭제할 fileIdx 모음
+
+	// 대표 이미지 X
+	$(document).on('click', '.delete-db-img1', function(){
+	    const fileIdx = $(this).data('file-idx');
+	    deleteFileIdxArr.push(fileIdx);
+	    $('#deleteFileIdxs').val(deleteFileIdxArr.join(','));
+	    $(this).closest('.img-box1').remove();
+	});
+
+	// 썸네일 X
+	$(document).on('click', '.delete-db-img2', function(){
+	    const fileIdx = $(this).data('file-idx');
+	    deleteFileIdxArr.push(fileIdx);
+	    $('#deleteFileIdxs').val(deleteFileIdxArr.join(','));
+	    $(this).closest('.img-box2').remove();
+	});
+	
+	// 대표사진 미리보기
+	$('#mainImage').change(function(){
+    $('#mainImagePreview').empty();
+    const files = this.files;
+    if (files.length > 0) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            // img-box1으로 감싸줌
+            const div = $('<div class="img-box1"></div>');
+            const img = $('<img />', {src: e.target.result, alt: '대표사진'});
+            // 대표사진은 한 장만이므로 lastModified 속성을 data-remove-key로 사용
+            const span = $('<span class="delete-img1" data-remove-key="' + files[0].lastModified + '">X</span>');
+            div.append(img).append(span);
+            $('#mainImagePreview').append(div);
+        }
+        reader.readAsDataURL(files[0]);
+    }
+	});
+ // 썸네일 미리보기 & 삭제
+   	$('#thumbnails').change(function(){
+   	    $('#previewThumnail').empty();
+   	    const files = this.files;
+   	    const fileList = [...files];
+   	    fileList.forEach(function(file, idx){
+   	        const imgDiv = $('<div class="col-md-3 img-box1" style="position:relative"></div>');
+   	        const lastModified = files[idx].lastModified;
+   	        const fileFullName = files[idx].name;
+   	        const dotIdx = fileFullName.lastIndexOf('.');
+   	        const fileName = (dotIdx != -1 &&  dotIdx < fileFullName.length - 1) 
+   	                            ? fileFullName.substring(0, dotIdx) 
+   	                            : fileFullName;
+   	        if(file.type.match('image.*')){
+   	            const reader = new FileReader(); 
+   	            reader.onload = function (e) { 
+   	                const img = $('<img />', {src: e.target.result, id : lastModified, alt: fileName });
+   	                const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
+   	                imgDiv.append(img,span);
+   	                imgDiv.appendTo('#previewThumnail');
+   	            } 
+   	            reader.readAsDataURL(file);
+   	        }else{
+   	            const noImage = $('<img />', { src : '/manage/assets/imgs/theme/upload.svg', id : lastModified, alt : fileName});
+   	            const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
+   	            imgDiv.append(noImage, span);
+   	            imgDiv.appendTo('#previewThumnail');
+   	        }
+   	    });
+   	});
+
+   	// X버튼 클릭 시 메인 파일 삭제
+	 $(document).on('click', '.delete-img1', function(){
+	    const input = document.getElementById('mainImage');
+	    input.value = ""; // 파일 선택창 비움
+	    $(this).closest('.img-box1').remove(); // 미리보기 영역 삭제
+	});
+
+   	// X버튼 클릭 시 썸네일 파일 삭제
+   	$(document).on('click', '.delete-img2', function(){
+   	    const input = document.getElementById('thumbnails');
+   	    const files = input.files;
+   	    const dataTransfer = new DataTransfer();
+   	    const removeTargetId = $(this).attr('data-remove-key');
+   	    Array.from(files)
+   	        .filter(file => file.lastModified != removeTargetId)
+   	        .forEach(file => dataTransfer.items.add(file));
+   	    input.files = dataTransfer.files;
+   	    $(this).closest('.img-box2').remove();
+   	});
+   		
+
+
+   	    // ========== [1] 카테고리 셀렉트 옵션이 없으면 최초 AJAX로 채움 ==========
+   	 $(document).ready(function(){
+	
+	    if ($('#categorySelect option').length <= 1) {
+	        $.ajax({
+	            url: '/admin/product/categoryList',
+	            method: 'GET',
+	            success: function(data){
+	                $('#categorySelect').empty().append('<option value="">카테고리 선택</option>');
+	                $.each(data, function(i, v){
+	                    $('#categorySelect').append(
+	                        '<option value="' + v.categoryNo + '">' +
+	                        v.lgCategory + ' > ' + v.mdCategory + ' > ' + v.smCategory +
+	                        '</option>'
+	                    );
+	                });
+	            }
+	        });
+	    }
+   	 });
+
+   	    // ========== [2] 카테고리 변경 시 품목 초기화 및 AJAX ==========
+   	    $('#categorySelect').change(function(){
+   	        var categoryNo = $(this).val();
+   	        $('#itemSelect').empty().append('<option value="">품목 선택</option>');
+   	        $('#brandSelect').empty().append('<option value="">브랜드 선택</option>');
+   	        $('#modelSelect').empty().append('<option value="">모델 선택</option>');
+
+   	        if(categoryNo){
+   	            $.ajax({
+   	                url: '/admin/product/itemList',
+   	                data: { categoryNo: categoryNo },
+   	                method: 'GET',
+   	                success: function(list){
+   	                    $.each(list, function(idx, item){
+   	                        $('#itemSelect').append(
+   	                            '<option value="'+item.itemNo+'">'+item.itemName+'</option>'
+   	                        );
+   	                    });
+   	                }
+   	            });
+   	        }
+   	    });
+
+   	    // ========== [3] 품목 변경 시 브랜드 초기화 및 AJAX ==========
+   	    $('#itemSelect').change(function(){
+   	        var categoryNo = $('#categorySelect').val();
+   	        var itemNo = $(this).val();
+
+   	        $('#brandSelect').empty().append('<option value="">브랜드 선택</option>');
+   	        $('#modelSelect').empty().append('<option value="">모델 선택</option>');
+
+   	        if(categoryNo && itemNo){
+   	            $.ajax({
+   	                url: '/admin/product/brandList',
+   	                method: 'GET',
+   	                data: {
+   	                    categoryNo: categoryNo,
+   	                    itemNo: itemNo
+   	                },
+   	                success: function(brandList){
+   	                 console.log("브랜드 리스트:", brandList);
+   	                    $.each(brandList, function(i, brand){
+   	                        $('#brandSelect').append(
+   	                            '<option value="' + brand.brandNo + '">' + brand.brandName + '</option>'
+   	                        );
+   	                    });
+   	                }
+   	            });
+   	        }
+   	    });
+
+   	    // ========== [4] 브랜드 변경 시 모델 초기화 및 AJAX ==========
+   	    $('#brandSelect').change(function(){
+   	        var categoryNo = $('#categorySelect').val();
+   	        var itemNo = $('#itemSelect').val();
+   	        var brandNo = $(this).val();
+
+   	        $('#modelSelect').empty().append('<option value="">모델 선택</option>');
+
+   	        if(categoryNo && itemNo && brandNo){
+   	            $.ajax({
+   	                url: '/admin/product/modelList',
+   	                method: 'GET',
+   	                data: {
+   	                    categoryNo: categoryNo,
+   	                    itemNo: itemNo,
+   	                    brandNo: brandNo
+   	                },
+   	                success: function(modelList){
+   	                    $.each(modelList, function(i, model){
+   	                        $('#modelSelect').append(
+   	                            '<option value="' + model.modelNo + '">' + model.modelNm + '</option>'
+   	                        );
+   	                    });
+   	                }
+   	            });
+   	        }
+   	    });
+
+   	    // ========== [5] 모델 변경 시 상세옵션(스펙) 표시 ==========
+   	    $('#modelSelect').change(function() {
+   	        var modelNo = $(this).val();
+   	        $('#specArea').empty();
+
+   	        if(modelNo){
+   	            $.ajax({
+   	                url: '/admin/product/specContent',
+   	                data: { modelNo: modelNo },
+   	                success: function(specList) {
+   	                    if(specList.length === 0){
+   	                        $('#specArea').html('<span>등록된 상세옵션이 없습니다.</span>');
+   	                    } else {
+   	                        $.each(specList, function(i, spec){
+   	                            var html = '<div class="mb-2">';
+   	                            html += '<label>' + spec.specNm + '</label>: ';
+   	                            html += '<span>' + (spec.specContent ? spec.specContent : '-') + '</span>';
+   	                            html += '</div>';
+   	                            $('#specArea').append(html);
+   	                        });
+   	                    }
+   	                }
+   	            });
+   	        }
+   	    }); 
+
+
+		
+   	</script>
+</th:block>
+<th:block layout:fragment="content">
+	<form class="user" th:action="@{/admin/product/modifyProduct}"
+		method="post" enctype="multipart/form-data">
+		<input type="hidden" name="productNo" th:value="${product.productNo}" />
+		<input type="hidden" name="deleteFileIdxs" id="deleteFileIdxs" value="" />
+		<div class="row">
+			<div class="col-9">
+				<div class="content-header">
+					<h2 class="content-title">제품 수정</h2>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="card mb-4">
+					<div class="card-header">
+						<h4>제품정보</h4>
+					</div>
+					<div class="card-body">
+						<div class="mb-4">
+							<label for="product_name" class="form-label">제품 이름</label> <input
+								type="text" name="productName" placeholder="제품을 입력해주세요"
+								class="form-control" id="product_name" required
+								th:value="${product.productName}" />
+						</div>
+						<div class="row">
+							<div class="col-lg-10">
+								<div class="mb-4">
+									<label class="form-label">카테고리</label> <select
+										name="categoryNo" class="form-select" id="categorySelect">
+										<option value="">카테고리 선택</option>
+										<option th:each="category : ${categoryList}"
+											th:value="${category.categoryNo}"
+											th:text="${category.lgCategory + ' > ' + category.mdCategory + ' > ' + category.smCategory}"
+											th:selected="${product.categoryNo} == ${category.categoryNo}"></option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-4">
+								<div class="mb-4">
+									<label class="form-label">품목</label> <select name="itemNo"
+										class="form-select" id="itemSelect">
+										<option value="">품목 선택</option>
+										<option th:each="item : ${itemList}" th:value="${item.itemNo}"
+											th:text="${item.itemName}"
+											th:selected="${product.itemNo} == ${item.itemNo}"></option>
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="mb-4">
+									<label class="form-label">브랜드</label> <select name="brandNo"
+										class="form-select" id="brandSelect">
+										<option value="">브랜드 선택</option>
+										<option th:each="brand : ${brandList}"
+											th:value="${brand.brandNo}" th:text="${brand.brandName}"
+											th:selected="${product.brandNo} == ${brand.brandNo}"></option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-10">
+							<label class="form-label">모델</label> <select name="modelNo"
+								class="form-select" id="modelSelect">
+								<option value="">모델 선택</option>
+								<option th:each="model : ${modelList}"
+									th:value="${model.modelNo}" th:text="${model.modelNm}"
+									th:selected="${product.modelNo} == ${model.modelNo}"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<!-- card end// -->
+				<div class="card mb-4">
+					<div class="card-header">
+						<h4>제품 상세옵션</h4>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<div id="specArea" class="mb-3">
+								<div th:if="${#lists.isEmpty(specContentList)}">등록된 상세옵션이
+									없습니다.</div>
+								<div th:each="spec : ${specContentList}">
+									<span th:text="${spec.specNm}"></span>: <span
+										th:text="${spec.specContent != null ? spec.specContent : '-'}"></span>
+								</div>
+							</div>
+						</div>
+						<!-- card end// -->
+						<!-- card end// -->
+					</div>
+					<div class="card-header">
+						<h4>2. 상세페이지 작성</h4>
+						<div class="card-body">
+							<div class="row">
+								<div class="col-12">
+									<textarea id="editor" name="productDetail"
+										th:utext="${product.productDetail != null ? product.productDetail : ''}"></textarea>
+
+								</div>
+							</div>
+						</div>
+						<!-- row.// -->
+
+					</div>
+				</div>
+			</div>
+			<div class="row col-lg-3">
+				<div class="card">
+					<div class="card-header">
+						<h4>대표 사진 미리보기</h4>
+					</div>
+					<div class="card-body">
+						<div class="mb-3" id="mainImagePreview"></div>
+						<th:block th:each="img : ${mainImageList}">
+							<div class="img-box1">
+								<img th:src="@{${img.filePath}}" alt="대표이미지">
+								<button type="button" class="delete-db-img1"
+									th:attr="data-file-idx=${img.fileIdx}">X</button>
+							</div>
+						</th:block>
+						<div>
+							<input type="file" id="mainImage" name="mainImage"
+								class="form-control">
+						</div>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-header">
+						<h4>상품 썸네일 미리보기</h4>
+					</div>
+					<div class="card-body">
+						<div id="previewThumnail" class="mb-2"></div>
+						<th:block th:each="img : ${thumbnailList}">
+							<div class="img-box2">
+								<img th:src="@{${img.filePath}}" alt="썸네일">
+								<button type="button" class="delete-db-img2"
+									th:attr="data-file-idx=${img.fileIdx}">X</button>
+							</div>
+						</th:block>
+					</div>
+					<input type="file" id="thumbnails" name="thumbnails"
+						class="form-control" multiple>
+				</div>		
+			</div>
+		</div>
+		<button class="btn btn-primary" type="submit">상품등록</button>
+	</form>
+</th:block>
+<!-- card end// -->
+<div class="pagination-area mt-15 mb-50">
+	<nav aria-label="Page navigation example">
+		<ul class="pagination justify-content-start">
+			<li class="page-item active"><a class="page-link" href="#">01</a></li>
+			<li class="page-item"><a class="page-link" href="#">02</a></li>
+			<li class="page-item"><a class="page-link" href="#">03</a></li>
+			<li class="page-item"><a class="page-link dot" href="#">...</a></li>
+			<li class="page-item"><a class="page-link" href="#">16</a></li>
+			<li class="page-item"><a class="page-link" href="#"><i
+					class="material-icons md-chevron_right"></i></a></li>
+		</ul>
+	</nav>
+</div>
+<!-- content-main end// -->
+
+
+<script src="manage/assets/js/vendors/bootstrap.bundle.min.js"></script>
+<script src="manage/assets/js/vendors/select2.min.js"></script>
+<script src="manage/assets/js/vendors/perfect-scrollbar.js"></script>
+<script src="manage/assets/js/vendors/jquery.fullscreen.min.js"></script>
+<!-- Main Script -->
+<script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+
+</body>
+</html>

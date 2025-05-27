@@ -13,7 +13,6 @@
 			<result column="sell_products_no"		property="sellProdNo"/>
 			<result column="recipient_nm"			property="recipientNm"/>
 			<result column="delivery_company"		property="delCompany"/>
-			<result column="billing_number"			property="billNo"/>
 			<result column="delivery_request"		property="delRequest"/>
 			<result column="delivery_progress"		property="delProgress"/>
 			<result column="register_date"			property="regDate"/>
@@ -41,15 +40,13 @@
 	<update id="modifyDelivery" parameterType="EnterpriseDelivery">
 		UPDATE delivery_information
 		<trim prefix="SET" suffixOverrides=",">
-			<if test="delInfoNo != null and vendCode != ''">
-				del_info_no= #{delInfoNo},
-			</if>
-			<if test="sellProdNo != null and prodName != ''">
-				sell_products_no= #{sellProdNo}, 
-			</if>
+			delivery_company= #{adminDeliveryInfo.delCompany},
+			depart_date= #{adminDeliveryInfo.departDate},
+			arrive_date= #{adminDeliveryInfo.arriveDate},
+			delivery_progress= #{adminDeliveryInfo.delProgress}
 		</trim>
 		WHERE
-			del_info_no= #{delInfoNo};
+			del_info_no= #{adminDeliveryInfo.delInfoNo};
 	</update>
 	
 	
@@ -63,7 +60,6 @@
 			dl.delivery_addr,
 			dl.delivery_daddr,
 			di.delivery_company,
-			di.billing_number,
 			di.delivery_request,
 			di.delivery_progress,
 			di.register_date,
@@ -86,7 +82,6 @@
 			dl.delivery_addr,
 			dl.delivery_daddr,
 			di.delivery_company,
-			di.billing_number,
 			di.delivery_request,
 			di.delivery_progress,
 			di.register_date,
@@ -112,7 +107,6 @@
 			dl.delivery_addr,
 			dl.delivery_daddr,
 			di.delivery_company,
-			di.billing_number,
 			di.delivery_request,
 			di.delivery_progress,
 			di.register_date,

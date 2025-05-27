@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/default}">
+<head>
+</head>
+<body>
+<th:block layout:fragment="content">
+
+<style>
+  /* 특정 행의 하단에 선을 추가하여 밑줄처럼 보이게 합니다. */
+  .bottom-border-row td {
+    border-bottom: 1px solid #333; /* 2px 두께의 진한 회색 선 */
+    padding-bottom: 5px; /* 선 아래에 여백을 주어 텍스트와 분리 */
+  }
+ 
+</style>
+
+        <div class="card">
+         <header class="card-header">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
+                    <span> <i class="material-icons md-calendar_today"></i> <b id="current-time"></b> </span> <br />
+                    <small class="text-muted">플랫폼직원 <span>ID: 3453012</span> </small>
+                </div>
+                <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+                    <!-- <select class="form-select d-inline-block mb-lg-0 mr-5 mw-200">
+                        <option>Change status</option>
+                        <option>Awaiting payment</option>
+                        <option>Confirmed</option>
+                        <option>Shipped</option>
+                        <option>Delivered</option>
+                    </select> -->
+                    <form th:action="@{/admin/payment/confirmSettlement}" method="POST" id="settlementForm">
+                        <input type="hidden" name="settlementMonth" th:value="${settlementMonth}" />
+                        <input type="hidden" name="searchValue" th:value="${searchValue}" />
+                        <input type="hidden" name="entEmpId" th:value="${entEmpId}" />
+                        <input type="hidden" name="platformEmpId" value="3453012" /> <input type="hidden" name="totalApprovedAmount" th:value="${totalApprovedAmount}" />
+                        <input type="hidden" name="totalCancelledAmount" th:value="${totalCancelledAmount}" />
+                        <input type="hidden" name="totalNetPlatformFee" th:value="${totalNetPlatformFee}" />
+                        <input type="hidden" name="finalSettlementAmount" th:value="${totalApprovedAmount-(totalCancelledAmount +totalNetPlatformFee )}" />
+
+                        <th:block th:if="${!#lists.isEmpty(adminMonthlyFeeList)}" th:each="fee, i : ${adminMonthlyFeeList}">
+                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].monthlyFeeNo" th:value="${fee.monthlyFeeNo}" />
+                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].entCeoNo" th:value="${fee.entCeoNo}" />
+                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].entEmpId" th:value="${fee.entEmpId}" />
+                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].managerId" th:value="${fee.managerId}" />
+                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].paymentDetails" th:value="${fee.paymentDetails}" />
+                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].platformFee" th:value="${fee.platformFee}" />
+                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].entFee" th:value="${fee.entFee}" />
+                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].payStatus" th:value="${fee.payStatus}" />
+                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].provisionDate" th:value="${fee.provisionDate}" />
+                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].settlementMonth" th:value="${fee.settlementMonth}" />
+                        </th:block>
+    
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </header>
+        <div class="card-body">
+
+         
+            <p><strong>정산 연월:</strong> <span th:text="${settlementMonth}"></span></p>
+           
+
+            <p><strong>검색 업체코드:</strong><span th:text="${searchValue}"> </span>, ID:<span th:text="${entEmpId}"></span></p>
+            
+          
+            <div class="row mt-20">
+                <div class="col-lg-12 justify-content-center">
+                    <div class="table-responsive">
+                        <table class="table" style="table-layout: fixed; width: 100%;">
+                            <thead>
+                                <tr class="text-center font-xl">
+                                    <th width="12%">매출구분</th>
+                                    <th width="7%">건수</th>
+                                    <th width="12%">항목별 합계</th>
+                                    <th width="8%">취소/환불</th>
+                                    <th width="12%">취소금액</th>
+                                    <th width="8%">정상결제</th>
+                                    <th width="13%">정상결제금액</th>
+                                    <th width="14%">수수료</th>  
+                                    <th width="14%">수수료 차감</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- 렌탈요금 -->
+                                <tr class="text-center">
+                                    <td class="font-lg fw-bold">
+                                        <div>월렌탈요금</div>
+                                    </td>
+                                    <!-- 월렌탈요금 전체 결제건수  -->
+                                    <td th:with="data=${paymentSummaryList.?[paymentDetails == '1.월렌탈요금']}" 
+                                        th:text="${#lists.isEmpty(data) ? 0 : data[0].count}">
+                                    </td>
+                                    <!-- 월렌탈요금 전체 금액  -->
+                                    <td th:with="data=${paymentSummaryList.?[paymentDetails == '1.월렌탈요금']}" 
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].totalEntSales + data[0].totalPlatformFee), 0, 'COMMA', 0, 'POINT')}|">
+                                    </td>
+                                    <!-- 월렌탈요금 취소건수  -->
+                                     <td th:with="data=${paymentSummaryList.?[paymentDetails == '1.월렌탈요금']}" 
+                                        th:text="${#lists.isEmpty(data) ? 0 : data[0].cancellationCount}">
+                                    </td>
+                                    <!-- 월렌탈요금 취소금액  -->
+                                    <td th:with="data=${paymentSummaryList.?[paymentDetails == '1.월렌탈요금']}" 
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : data[0].cancelledAmount, 0, 'COMMA', 0, 'POINT')}|">
+                                    </td>
+                                    <!-- 정상결제건수   -->
+                                    <td class="font-lg text-success"
+                                        th:with="data=${paymentSummaryList.?[paymentDetails == '1.월렌탈요금']}" 
+                                        th:text="${#lists.isEmpty(data) ? 0 : data[0].normalCount}">
+                                    </td>
+                                    <!-- 정상결제 금액   -->
+                                    <td class="font-lg text-success"
+                                        th:with="data=${paymentSummaryList.?[paymentDetails == '1.월렌탈요금']}" 
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].normalEntSales + data[0].totalPlatformFee), 0, 'COMMA', 0, 'POINT')}|">
+                                    </td>
+                                    <!-- 플렛폼 수수료 -->        
+                                    <td class="font-lg text-info"
+                                        th:with="data=${paymentSummaryList.?[paymentDetails == '1.월렌탈요금']}" 
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].totalPlatformFee), 0, 'COMMA', 0, 'POINT')}|">
+                                    </td>
+                                      <!-- 플렛폼 수수료 차감 -->
+                                    <td class="font-lg text-warning" 
+                                        th:with="data=${paymentSummaryList.?[paymentDetails == '1.월렌탈요금']}" 
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].normalEntSales), 0, 'COMMA', 0, 'POINT')}|">
+                                    </td>
+                                </tr>
+
+                                <!-- 일시불판매 -->
+                                <tr class="text-center">
+                                    <td class="font-lg fw-bold">
+                                        <div>일시불판매</div>
+                                    </td>
+                                    <!-- 일시불판매 전체 결제건수  -->
+                                    <td th:with="data=${paymentSummaryList.?[paymentDetails == '2.일시불판매']}" 
+                                        th:text="${#lists.isEmpty(data) ? 0 : data[0].count}">
+                                    </td>
+                                    <!-- 일시불판매 전체 금액  -->
+                                    <td th:with="data=${paymentSummaryList.?[paymentDetails == '2.일시불판매']}" 
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].totalEntSales + data[0].totalPlatformFee), 0, 'COMMA', 0, 'POINT')}|">
+                                    </td>
+                                    <!-- 일시불판매 취소건수  -->
+                                     <td th:with="data=${paymentSummaryList.?[paymentDetails == '2.일시불판매']}" 
+                                        th:text="${#lists.isEmpty(data) ? 0 : data[0].cancellationCount}">
+                                    </td>
+                                    <!-- 일시불판매 취소금액  -->
+                                    <td th:with="data=${paymentSummaryList.?[paymentDetails == '2.일시불판매']}" 
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : data[0].cancelledAmount, 0, 'COMMA', 0, 'POINT')}|">
+                                    </td>
+                                    <!-- 정상결제건수   -->
+                                    <td class="font-lg text-success" 
+                                        th:with="data=${paymentSummaryList.?[paymentDetails == '2.일시불판매']}" 
+                                        th:text="${#lists.isEmpty(data) ? 0 : data[0].normalCount}">
+                                    </td>
+                                    <!-- 정상결제 금액   -->
+                                    <td class="font-lg text-success" 
+                                        th:with="data=${paymentSummaryList.?[paymentDetails == '2.일시불판매']}" 
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].normalEntSales + data[0].totalPlatformFee), 0, 'COMMA', 0, 'POINT')}|">
+                                    </td>
+                                    <!-- 플렛폼 수수료 -->        
+                                    <td class="font-lg text-info" 
+                                        th:with="data=${paymentSummaryList.?[paymentDetails == '2.일시불판매']}" 
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].totalPlatformFee), 0, 'COMMA', 0, 'POINT')}|">
+                                    </td>
+                                      <!-- 플렛폼 수수료 차감 -->
+                                    <td class="font-lg text-warning" 
+                                        th:with="data=${paymentSummaryList.?[paymentDetails == '2.일시불판매']}" 
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].normalEntSales), 0, 'COMMA', 0, 'POINT')}|">
+                                    </td>
+                                </tr>
+
+                                <!-- 위약금 -->
+                                <tr class="text-center bottom-border-row">
+                                    <td class="font-lg fw-bold">
+                                        <div>위약금</div>
+                                    </td>
+                                    <!-- 위약금 전체 결제건수  -->
+                                    <td th:with="data=${paymentSummaryList.?[paymentDetails == '3.위약금']}" 
+                                        th:text="${#lists.isEmpty(data) ? 0 : data[0].count}">
+                                    </td>
+                                    <!-- 위약금 전체 금액  -->
+                                    <td th:with="data=${paymentSummaryList.?[paymentDetails == '3.위약금']}" 
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].totalEntSales + data[0].totalPlatformFee), 0, 'COMMA', 0, 'POINT')}|">
+                                    </td>
+                                    <!-- 위약금 취소건수  -->
+                                     <td th:with="data=${paymentSummaryList.?[paymentDetails == '3.위약금']}" 
+                                        th:text="${#lists.isEmpty(data) ? 0 : data[0].cancellationCount}">
+                                    </td>
+                                    <!-- 위약금 취소금액  -->
+                                    <td th:with="data=${paymentSummaryList.?[paymentDetails == '3.위약금']}" 
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : data[0].cancelledAmount, 0, 'COMMA', 0, 'POINT')}|">
+                                    </td>
+                                    <!-- 정상결제건수   -->
+                                    <td class="font-lg text-success" 
+                                        th:with="data=${paymentSummaryList.?[paymentDetails == '3.위약금']}" 
+                                        th:text="${#lists.isEmpty(data) ? 0 : data[0].normalCount}">
+                                    </td>
+                                    <!-- 정상결제 금액   -->
+                                    <td class="font-lg text-success" 
+                                        th:with="data=${paymentSummaryList.?[paymentDetails == '3.위약금']}" 
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].normalEntSales + data[0].totalPlatformFee), 0, 'COMMA', 0, 'POINT')}|">
+                                    </td>
+                                    <!-- 플렛폼 수수료 -->        
+                                    <td class="font-lg text-info" 
+                                        th:with="data=${paymentSummaryList.?[paymentDetails == '3.위약금']}" 
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].totalPlatformFee), 0, 'COMMA', 0, 'POINT')}|">
+                                    </td>
+                                      <!-- 플렛폼 수수료 차감 -->
+                                    <td class="font-lg text-warning" 
+                                        th:with="data=${paymentSummaryList.?[paymentDetails == '3.위약금']}" 
+                                        th:text="|₩ ${#numbers.formatDecimal(#lists.isEmpty(data) ? 0 : (data[0].normalEntSales), 0, 'COMMA', 0, 'POINT')}|">
+                                    </td>
+                                </tr>
+                                
+                                <!-- 여백 -->
+                                <tr>
+                                    <td></td>
+                                </tr>
+                               
+                                <tr>
+                                    <td colspan="7"> 
+                                    
+                                    </td>
+                                    <td colspan="2">
+                                        <article class="float-ent">
+                                            <dl class="dlist">
+                                                <dt class="h6"> 매출총합 :</dt>
+                                                <dd class="h6" th:text="|₩ ${#numbers.formatDecimal(totalApprovedAmount, 0, 'COMMA', 0, 'POINT')}|"></dd>
+                                            </dl>
+                                            <dl class="dlist">
+                                                <dt class="h6">취소(환불):</dt>
+                                                <dd class="h6" th:text="|- ₩ ${#numbers.formatDecimal(totalCancelledAmount, 0, 'COMMA', 0, 'POINT')}|"></dd>
+                                            </dl>
+                                            <dl class="dlist bottom-border-row2">
+                                                <dt class="h6 ">플랫폼수수료:</dt>
+                                                <dd class="h6" th:text="|- ₩ ${#numbers.formatDecimal(totalNetPlatformFee, 0, 'COMMA', 0, 'POINT')}|"></dd>
+                                            </dl>
+                                            <dl class="dlist">
+                                                <dt class="h5">총 계:</dt>
+                                                <dd><b class="h5" th:text="|₩ ${#numbers.formatDecimal(totalApprovedAmount-(totalCancelledAmount +totalNetPlatformFee ), 0, 'COMMA', 0, 'POINT')}|"></b></dd>
+                                            </dl>
+                                        </article>
+                                    </td> 
+                                </tr>
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <div class="col-lg-1"></div>
+            </div>
+     </div>
+    </div>
+            
+    <th:block layout:fragment="jsScript">
+        <script>
+        // 1. 날짜 포맷팅 함수 정의
+        function formatDate(date) {
+            const days = ['일', '월', '화', '수', '목', '금', '토'];
+            const months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+
+            const dayOfWeek = days[date.getDay()];
+            const month = months[date.getMonth()];
+            const dayOfMonth = date.getDate();
+            const year = date.getFullYear();
+
+            let hours = date.getHours();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+
+            let minutes = date.getMinutes();
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+
+        return `${year}년 ${month}월 ${dayOfMonth}일 ${dayOfWeek}요일`;
+        }
+
+        // 2. DOMContentLoaded 이벤트 리스너: HTML 문서가 완전히 로드된 후 스크립트 실행
+        document.addEventListener('DOMContentLoaded', () => {
+        // 3. 시간을 표시할 HTML 요소 가져오기
+        const timeDisplayElement = document.getElementById('current-time');
+
+        // 4. 요소가 존재하는지 확인 후 시간 업데이트
+        if (timeDisplayElement) {
+            // 초기 시간 설정
+            const now = new Date();
+            timeDisplayElement.textContent = formatDate(now);
+        }
+    });
+
+        </script>
+    </th:block>
+    
+        
+</th:block>
+
+</body>
+</html>

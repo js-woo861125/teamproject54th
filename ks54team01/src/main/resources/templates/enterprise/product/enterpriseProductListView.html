@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{enterprise/layout/default}">
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	</th:block>
+
+    <th:block layout:fragment="content">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title" th:text="${title}"></h2>
+            </div>
+            <div>
+                <a th:href="@{/enterprise/product/productList}" class="btn btn-primary btn-sm rounded">등록하기</a>
+            </div>
+         </div>
+        <div class="card mb-4">
+            <header class="card-header">
+                <div class="row align-items-center">
+					   <div class="col-lg-1 col-md-3 col-12">
+	                       <select class="form-select" name="searchKey">
+	                           <option>브랜드</option>
+	                           <option>상품</option>
+	                       </select>
+	                   </div>
+	                   <div class="col-lg-3 col-md-5">
+	                       <input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
+	                   </div>
+	                   <div class="col-lg-1 col-md-1 me-auto">
+						   <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
+	                   </div>
+                    <div class="col-lg-2">
+                        <select class="form-select">
+                            <option>모든 카테고리</option>
+                            <option>TV</option>
+                            <option>노트북</option>
+                            <option>전기레인지</option>
+                            <option>냉장고</option>
+                            <option>식탁</option>
+                            <option>소파</option>
+                            <option>침대</option>
+                        </select>
+                    </div>
+                </div>
+            </header>
+            <!-- card-header end// -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class=text-center>
+                                <th>상품명</th>
+                                <th>이미지</th>
+                                <th>모델명</th>
+                                <th>판매상태</th>                            
+                                <th>기간(개월)</th>
+                                <th>판매금액</th>
+                                <th>수정/삭제</th>
+                            </tr>
+                        </thead>
+                             <tbody class="text-center">
+                        <th:block th:if="${!#lists.isEmpty(sellProductList)}" th:each="sl : ${sellProductList}">
+                             <tr>	 
+                             	<td><a class="fw-bold" th:text="${sl.productName}"></a></td>
+                                <td>
+                                	 <a class="item" href="#">
+								        <div class="img">
+								            <img th:if="${sl.productImage != null}" 
+								                 th:src="${sl.productImage}" 
+								                 class="img-sm img-main" 
+								                 alt="상품이미지" />
+								                 
+								            <div th:if="${sl.productImage == null}" 
+								                 class="img-sm img-main bg-light d-inline-block" 
+								                 style="width: 100px; height: 100px;"></div>
+								        </div>							       
+								    </a>
+                                </td>
+                                <td th:text="${sl.modelName}">모델명</td>
+                                 <td class="col-lg-2 col-sm-2 col-4 col-status">
+                                    <span class="badge rounded-pill alert-success">사용중</span>
+                                    <div class="dropdown">
+                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">사용중</a>
+                                            <a class="dropdown-item text-danger" href="#">사용불가</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td th:text="${sl.period}">12개월</td>
+                                <td th:text="${sl.finalPrice}">60,000</td> 
+                                <td class="col-lg-2 col-sm-2 col-4 col-action">
+                                    <a href="#" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
+                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
+                                </td>
+                           </tr>
+                          </th:block>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- table-responsive //end -->
+            </div>
+            <!-- card-body end// -->
+        </div>
+   </th:block>    
+        <!-- card end// -->
+        <div class="pagination-area mt-15 mb-50">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-start">
+                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                    <li class="page-item"><a class="page-link" href="#">02</a></li>
+                    <li class="page-item"><a class="page-link" href="#">03</a></li>
+                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#">16</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    <!-- content-main end// -->
+
+        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/vendors/select2.min.js"></script>
+        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+    </body>
+</html>

@@ -18,20 +18,131 @@
 	<!-- 페이지 삽입공간 -->
 	<th:block layout:fragment="content">
 		<div class="content-header">
-            <div>
-                <h2 class="content-title card-title">Dashboard</h2>
-                <p>Whole data about your business here</p>
+			<div>
+			    <h2 class="content-title card-title">대시보드</h2>    
+			</div>     
+		</div>
+		
+		<div class="row d-flex justify-content-center">
+			<div class="col-lg-3">
+        		<div class="card card-body mb-4">
+           			<a th:href="@{/admin/member/memberList}">
+           			   <article class="icontext">
+                		<span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons">✔️</i></span>
+                			<div class="text ">
+                    			<h4 class="mb-1 card-title">회원관리</h4>
+				                    <span class="fs-6 text-body"> • 총 회원 : 2000</span>
+				                    <span class="fs-6 text-body"> • 신규가입 : 150</span>
+				                    <span class="fs-6 text-danger"> • 탈퇴 : 2  </span>
+                			</div>
+            			</article>
+            		</a>
+        		</div>
+    		</div>
+    		<div class="col-lg-3">
+        		<div class="card card-body mb-4">
+           			<a th:href="@{/admin/delivery/deliveryInfoList}">
+           			   <article class="icontext">
+                		<span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons">🚚</i></span>
+                			<div class="text ">
+                    			<h4 class="mb-1 card-title">배송</h4>
+				                    <span class="fs-6 text-body"> • 상품준비중 : 1</span>
+				                    <span class="fs-6 text-body"> • 배송중 : 0</span>
+				                    <span class="fs-6 text-danger"> • 배송완료 : 8</span>
+                			</div>
+            			</article>
+            		</a>
+        		</div>
+    		</div>
+    		<div class="col-lg-3">
+        		<div class="card card-body mb-4">
+           			<a th:href="@{/admin/product/productList}">
+           			   <article class="icontext">
+                		<span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons">🎁</i></span>
+                			<div class="text ">
+                    			<h4 class="mb-1 card-title">상품</h4>
+				                    <span class="fs-6 text-body"> • 총등록상품 : 2000</span>
+				                    <span class="fs-6 text-body"> • 신규상품 : 150</span>
+				                    <span class="fs-6 text-danger"> • 판매불가 상품 : 20 </span>
+                			</div>
+            			</article>
+            		</a>
+        		</div>
+    		</div>
+    		<div class="col-lg-3">
+        		<div class="card card-body mb-4">
+           			<a th:href="@{/admin/payment/calculate}">
+           			   <article class="icontext">
+                		<span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons">💲</i></span>
+                			<div class="text ">
+                    			<h4 class="mb-1 card-title">정산관리</h4>
+				                    <span class="fs-6 text-body"> • 정산금액 : ₩2000</span>
+				                    <span class="fs-6 text-body"> • 정산건수 : ₩1500</span>
+				                    <span class="fs-6 text-danger"> • 환불금액 : ₩100 </span>
+                			</div>
+            			</article>
+            		</a>
+        		</div>
+    		</div>
+		</div>
+		<div class="row">
+			<div class="col-xl-8 col-lg-12">
+				<div class="card mb-4">
+					<article class="card-body">
+	                    <h5 class="card-title">월별 판매 현황</h5>
+	                    <canvas id="myChart" height="150px"></canvas>
+                    </article>
+                 </div>
+            </div> 
+			<div class="col-xl-4 col-lg-12">
+				<div class="card mb-4">
+                      <article class="card-body">
+                          <h5 class="card-title">카테고리별 판매현황(중분류)</h5>
+                          <span class="text-muted font-xs">TV/디지털</span>
+                    <div class="progress mb-3">
+                    	<div class="progress-bar" role="progressbar" style="width: 15%">15%</div>
+                    </div>
+                    <span class="text-muted font-xs">세탁가전</span>
+                    <div class="progress mb-3">
+                        <div class="progress-bar" role="progressbar" style="width: 65%">65%</div>
+                    </div>
+                    <span class="text-muted font-xs">냉장가전</span>
+                    <div class="progress mb-3">
+                        <div class="progress-bar" role="progressbar" style="width: 51%">51%</div>
+                    </div>
+                    <span class="text-muted font-xs">주방가전</span>
+                    <div class="progress mb-3">
+                        <div class="progress-bar" role="progressbar" style="width: 22%">22%</div>
+                    </div>
+                    <span class="text-muted font-xs">생활가전</span>
+                    <div class="progress mb-3">
+                        <div class="progress-bar" role="progressbar" style="width: 11%">11%</div>
+                    </div>
+                    <span class="text-muted font-xs">냉난방기</span>
+                    <div class="progress mb-3">
+                        <div class="progress-bar" role="progressbar" style="width: 5%">5%</div>
+                    </div>
+                    <span class="text-muted font-xs">계절/환경</span>
+                    <div class="progress mb-3">
+                        <div class="progress-bar" role="progressbar" style="width: 12%">12%</div>
+                    </div>
+                    <span class="text-muted font-xs">건강뷰티</span>
+                    <div class="progress mb-3">
+                        <div class="progress-bar" role="progressbar" style="width: 30%">30%</div>
+                    </div>
+                    <span class="text-muted font-xs">가구/침대</span>
+                    <div class="progress mb-3">
+                        <div class="progress-bar" role="progressbar" style="width: 25%">25%</div>
+                    </div>
+                </article>
             </div>
         </div>
-        <div class="card mb-4">
-            <header class="card-header">
-                <h4 class="card-title">콘텐츠 타이틀</h4>
-            </header>
-            <div class="card-body">
-                
-            </div>
-        </div>
+    </div>
         
+	</th:block>
+	<th:block layout:fragment="jsFile">
+		<script src="/manage/assets/js/vendors/chart.js"></script>
+		<script src="/manage/assets/js/custom-chart.js" type="text/javascript"></script>
 	</th:block>
 	
 </html>

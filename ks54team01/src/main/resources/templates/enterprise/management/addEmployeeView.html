@@ -11,28 +11,185 @@
 	</th:block>
 
 	<th:block layout:fragment="content">
+		<div class="content-header">
+	            <div>
+	                <h2 class="content-title card-title" th:text="${title}"></h2>
+	            </div>
+	    </div>
 		<div class="card mx-auto card-login">
 			<div class="card-body">
 				<h4 class="card-title mb-4">직원계정 생성</h4>
-				<form>
-					<div class="mb-3">
-						<input class="form-control" placeholder="아이디(6-12자 이내, 영문/숫자 사용 가능)" type="text" />
-						<button class="authentication check-button">중복확인</button>
+				<form id="addEmployeeForm" th:action="@{/enterprise/management/addEmployee}" method="post">
+					<div class="mb-3 row">
+						<label class="form-label fs-6" for="memberId" >아이디</label>
+						<div class="col-6">
+							<input id="memberId" name="memberId" class="form-control" placeholder="아이디(6-12자 이내, 영문/숫자 사용 가능)" type="text" value="entempid3"/>						
+						</div>
+						<div class="col-6">
+							<button type="button" id="idCheckBtn" class="btn btn-primary justify-content-center">중복확인</button>						
+						</div>
 					</div>
 					<!-- form-group// -->
 					<div class="mb-3">
-					    <input class="form-control" placeholder="비밀번호(8자 이상, 문자/특수문자/숫자 사용 가능)" type="password" />
+						<label class="form-label fs-6" for="memberPw">비밀번호</label>
+					    <input id="memberPw" name="memberPw" class="form-control" placeholder="비밀번호(8자 이상, 특수문자 포함)" type="password" value="111111!!" readonly />
 					</div>
 					<div class="mb-3">
-					    <input class="form-control" placeholder="비밀번호 확인" type="password" />
+						<label class="form-label fs-6" for="memberPwConfirm">비밀번호 확인</label>
+					    <input id="memberPwConfirm" name="memberPwConfirm" class="form-control" placeholder="비밀번호 확인" type="password" value="111111!!" readonly />
+					</div>
+					<div class="mb-3">
+						<label class="form-label fs-6" for="entPosition">직급</label>
+					    <input id="entPosition" name="entPosition" class="form-control" placeholder="직급을 입력해주세요." value="대리" type="text" />
 					</div>
 					<!-- form-group// -->
 					<div class="mb-4">
-					    <button type="submit" class="btn btn-primary w-100">직원등록</button>
+					    <button type="submit" id="addEmployeeBtn" class="btn btn-primary w-100 justify-content-center">직원등록</button>
 					</div>
 					<!-- form-group// -->
 				</form>
 			</div>
 		</div>
+	</th:block>
+	<th:block layout:fragment="jsScript">
+		<script>
+			/**
+			 * 아이디 중복체크
+			 */
+			$('#idCheckBtn').click(function() {
+			    let memberId = $('#memberId').val().trim();
+			
+				if(!memberId){
+					alert('아이디를 입력해주세요');
+					$('#memberId').focus();
+					return;
+				}
+				
+				// 공백 포함된 아이디
+			    if (memberId.includes(' ')) {
+			        alert('아이디에는 공백을 사용할 수 없습니다.');
+			        $('#memberId').focus();
+			        return;
+			    }
+			    
+				
+				const request = $.ajax({
+					url : '/customer/register/idCheck',
+					method : 'post',
+					data : {'memberId' : memberId},
+					dataType : 'json'
+				});
+				
+				request.done(isDuplicate => {
+					
+					if(isDuplicate){
+						alert('사용할 수 없는 아이디입니다. 다른 아이디를 입력해주세요');
+						$('#memberId').focus();
+						return;
+					}
+					
+					alert('사용가능한 아이디 입니다.');
+					$('#isIdChecked').val('true');
+					// 중복되지 않은 경우 비밀번호 필드 활성화
+					$('#memberPw, #memberPwConfirm').prop('readonly', false);
+					$('#memberPw').focus();
+				});
+				
+				request.fail((jqXHR, textStatus, error)=>{
+					console.log(jqXHR, textStatus, error);
+				});
+				
+			});
+			
+			/**
+			* 비밀번호 유효성 검증
+			*/
+			$(function () {
+			    const $pw = $('#memberPw'), $cf = $('#memberPwConfirm'), $msg = $('#passwordMatchMessage');
+			    
+			    function checkPasswordValid() {
+			        const pw = $pw.val();
+			        const valid = /^(?=.*[!@#$%^&*()_+~`{}\[\]:;"'<>,.?\/\\|\-]).{8,}$/;
+
+			        if (!valid.test(pw)) {
+			            $msg.text('8자 이상, 특수문자 포함 필수').css('color', 'red');
+			            $pw.css('border-color', 'red');
+			            return false;
+			        } else {
+			            $msg.text('').css('color', 'green');
+			            $pw.css('border-color', 'green');
+			            return true;
+			        }
+			    }
+			
+			    
+			    /**
+				* 비밀번호 일치 여부
+				*/
+			    function checkPasswordMatch() {
+			        const pw = $pw.val();
+			        const cf = $cf.val();
+			        
+			        if (cf && pw !== cf) {
+			            $msg.text('비밀번호가 일치하지 않습니다.').css('color', 'red');
+			            $cf.css('border-color', 'red');
+			            $cf.focus();
+			        } else if (cf && pw === cf) {
+			            $msg.text('비밀번호가 유효하며 일치합니다.').css('color', 'green');
+			            $cf.css('border-color', 'green');
+			        } else {
+			            $msg.text('');
+			            $cf.css('border-color', '');
+			        }
+			    }
+			    
+			 	// 비밀번호 입력 시 유효성 검사
+			    $pw.on('input', function() {
+			        checkPasswordValid();
+			    });
+
+			    // 비밀번호 확인 입력 시 일치 여부 체크
+			    $cf.on('input', function() {
+			        checkPasswordMatch();
+			    });
+
+			});
+
+			
+			/**
+			* 회원등록 폼 유효성 검증 및 페이지 이동
+			*/
+			$('#addEmployeeBtn').click((e) => {
+			    e.preventDefault();
+			    
+			 	// 아이디 중복확인
+			    if ($('#isIdChecked').val() !== 'true') {
+			        alert('아이디 중복확인을 해주세요.');
+			        $('#memberId').focus();
+			        return;
+			    }
+			 
+			    const $formTag = $('#addEmployeeForm').find('input');
+			    
+			    let isSubmit = true;
+			    
+			    $formTag.each((idx, element) => {
+			        const value = $(element).val();
+			       
+			        // 일반 input 필드
+			        if (!value.trim()) {
+			        	const cate = $(`label[for="${id}"]`).text();
+			            alert(`${placeholder} 필수 입력항목입니다.`);
+			            $(element).focus();
+			            isSubmit = false;
+			            return false;
+			        }
+			    });
+						   
+			    if (isSubmit) {
+			        $('#addEmployeeForm').submit();
+			    }
+			});
+		</script>
 	</th:block>
 </html>

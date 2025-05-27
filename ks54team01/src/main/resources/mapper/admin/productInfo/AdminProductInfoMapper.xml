@@ -9,24 +9,34 @@
 		<!-- id : 테이블 pk 컬럼 -->
 		<id 	column="product_category_no" property="categoryNo"/>
 		<!-- result : 테이블 일반 컬럼 -->
-		<result column="large_category_no" 	 property="lgCategoryNo"/>	
-		<result column="large_category" 	 property="lgCategory"/>	
-		<result column="middle_category_no"  property="mdCategoryNo"/>	
-		<result column="middle_category" 	 property="mdCategory"/>	
-		<result column="small_category" 	 property="smCategory"/>	
-		<result column="use_status" 		 property="useStatus"/>	
+		<result column="manager_id"  		property="managerId"/>
+		<result column="large_category_no" 	property="lgCategoryNo"/>	
+		<result column="large_category" 	property="lgCategory"/>	
+		<result column="middle_category_no" property="mdCategoryNo"/>	
+		<result column="middle_category" 	property="mdCategory"/>	
+		<result column="small_category" 	property="smCategory"/>
+		<result column="register_date"  	property="categoryRegDate"/>
+		<result column="revision_date"  	property="categoryRevDate"/>	
+		<result column="use_status" 		property="useStatus"/>	
 	</resultMap>
 	
 	<resultMap type="ProductInfoBrand" id="brandResultMap">
-		<id 	column="brand_no" 	 property="brandNo"/>
-		<result column="brand_nm" 	 property="brandName"/>	
-		<result column="use_status"  property="useStatus"/>	
+		<id 	column="brand_no" 	 	property="brandNo"/>
+		<result column="manager_id"  	property="managerId"/>
+		<result column="brand_nm" 	 	property="brandName"/>	
+		<result column="register_date"  property="brandRegDate"/>
+		<result column="revision_date"  property="brandRevDate"/>			
+		<result column="use_status"  	property="useStatus"/>
 	</resultMap>
 	
 	<resultMap type="ProductInfoItem" id="itemResultMap">
-		<id 	column="item_no" 	 property="itemNo"/>
-		<result column="item_nm" 	 property="itemName"/>	
-		<result column="use_status"  property="useStatus"/>	
+		<id 	column="item_no" 	 		 property="itemNo"/>
+		<result column="manager_id"  		 property="managerId"/>
+		<result column="product_category_no" property="categoryNo"/>
+		<result column="item_nm" 	 		 property="itemName"/>	
+		<result column="register_date"  	 property="itemRegDate"/>
+		<result column="revision_date"  	 property="itemRevDate"/>	
+		<result column="use_status"  		 property="useStatus"/>	
 		
 		<association property="categoryInfo" javaType="ProductInfoCategory">
 			<id 	column="product_category_no"	property="categoryNo"/>
@@ -35,9 +45,15 @@
 	</resultMap>
 	
 	<resultMap type="ProductInfoModel" id="modelResultMap">
-		<id 	column="model_no" 	 property="modelNo"/>
-		<result column="model_nm" 	 property="modelName"/>	
-		<result column="use_status"  property="useStatus"/>	
+		<id 	column="model_no" 	 		 property="modelNo"/>
+		<result column="manager_id"  		 property="managerId"/>
+		<result column="brand_no" 	 		 property="brandNo"/>
+		<result column="item_no" 	 		 property="itemNo"/>
+		<result column="product_category_no" property="categoryNo"/>		
+		<result column="model_nm" 	 		 property="modelName"/>	
+		<result column="register_date"  	 property="modelRegDate"/>
+		<result column="revision_date"  	 property="modelRevDate"/>	
+		<result column="use_status"  		 property="useStatus"/>	
 		
 		<association property="categoryInfo" javaType="ProductInfoCategory">
 			<id 	column="product_category_no"	property="categoryNo"/>
@@ -54,15 +70,22 @@
 	</resultMap>
 	
 	<resultMap type="ProductInfoBenefit" id="benefitResultMap">
-		<id 	column="benefit_no" 	 property="benefitNo"/>
-		<result column="benefit_nm" 	 property="benefitName"/>	
-		<result column="use_status"  property="useStatus"/>	
+		<id 	column="benefit_no" 	property="benefitNo"/>
+		<result column="manager_id"  	property="managerId"/>
+		<result column="benefit_nm" 	property="benefitName"/>	
+		<result column="register_date"  property="benefitRegDate"/>
+		<result column="revision_date"  property="benefitRevDate"/>	
+		<result column="use_status"  	property="useStatus"/>	
 	</resultMap>
 	
 	<resultMap type="ProductInfoCategorySpec" id="categorySpecResultMap">
-		<id 	column="spec_no" 	 property="specNo"/>
-		<result column="spec_nm" 	 property="specName"/>	
-		<result column="use_status"  property="useStatus"/>	
+		<id 	column="spec_no" 	 		 property="specNo"/>
+		<result column="manager_id"  		 property="managerId"/>
+		<result column="product_category_no" property="categoryNo"/>
+		<result column="spec_nm" 	 		 property="specName"/>	
+		<result column="register_date"  	 property="specRegDate"/>
+		<result column="revision_date"  	 property="specRevDate"/>	
+		<result column="use_status"  		 property="useStatus"/>		
 		
 		<association property="categoryInfo" javaType="ProductInfoCategory">
 			<id 	column="product_category_no"	property="categoryNo"/>
@@ -70,36 +93,187 @@
 		</association>
 	</resultMap>
 	
-	<select id="getCategorySpecList" resultMap="categorySpecResultMap">
-		/* 상품정보 카테고리별/상세스펙 목록 조회 */
-		SELECT
-			psc.spec_no,
-			pc.small_category,
-			psc.SPEC_NM,
-			psc.use_status
-		FROM
-			products_spec psc inner join products_category pc 
-			using(product_category_no);
-	</select>
+	<resultMap type="ProductInfoModelSpec" id="modelSpecResultMap">
+		<id 	column="spec_content_no" property="modelSpecNo"/>
+		<result column="manager_id" 	 property="managerId"/>
+		<result column="model_no" 		 property="modelNo"/>
+		<result column="spec_no" 		 property="specNo"/>
+		<result column="spec_content" 	 property="modelSpecName"/>
+		<result column="register_date" 	 property="modelSpecRegDate"/>
+		<result column="revision_date" 	 property="modelSpecRevDate"/>
+		<result column="use_status" 	 property="useStatus"/>
+
+		<association property="modelInfo" javaType="ProductInfoModel">
+			<id 	column="model_no"	property="modelNo"/>
+			<result column="model_nm"	property="modelName"/>
+		</association>
+		<association property="specInfo" javaType="ProductInfoCategorySpec">
+			<id 	column="spec_no"	property="specNo"/>
+			<result column="spec_nm"	property="specName"/>
+		</association>			
+	</resultMap>
+
+	<update id="updateModelSpecUseStatus">
+		/* 모델별/상세스펙 상태 변경 */
+		UPDATE
+			model_spec_content
+		SET
+			use_status = #{useStatus},
+			revision_date = NOW()
+		WHERE
+			spec_content_no = #{modelSpecNo}
+	</update>
+
+	<update id="updateCategorySpecUseStatus">
+		/* 카테고리별/상세스펙 상태 변경 */
+		UPDATE
+			products_spec
+		SET
+			use_status = #{useStatus},
+			revision_date = NOW()
+		WHERE
+			spec_no = #{specNo}
+	</update>	
+
+	<update id="updateBenefitUseStatus">
+		/* 전체혜택 상태 변경 */
+		UPDATE
+			benefit
+		SET
+			use_status = #{useStatus},
+			revision_date = NOW()
+		WHERE
+			benefit_no = #{benefitNo}
+	</update>
+
+	<update id="updateModelUseStatus">
+		/* 모델 상태 변경 */
+		UPDATE
+			model
+		SET
+			use_status = #{useStatus},
+			revision_date = NOW()
+		WHERE
+			model_no = #{modelNo}
+	</update>
 	
-	<select id="getBenefitList" resultMap="benefitResultMap">
-		/* 상품정보 전체혜택 목록 조회 */
+	<update id="updateItemUseStatus">
+		/* 품목 상태 변경 */
+		UPDATE
+			item
+		SET
+			use_status = #{useStatus},
+			revision_date = NOW()
+		WHERE
+			item_no = #{itemNo}
+	</update>	
+	
+	<update id="updateBrandUseStatus">
+		/* 브랜드 상태 변경 */
+		UPDATE
+			brand
+		SET
+			use_status = #{useStatus},
+			revision_date = NOW()
+		WHERE
+			brand_no = #{brandNo}
+	</update>	
+	
+	<update id="updateCategoryUseStatus">
+		/* 카테고리 상태 변경 */
+		UPDATE
+			products_category
+		SET
+			use_status = #{useStatus},
+			revision_date = NOW()
+		WHERE
+			product_category_no = #{categoryNo}	
+	</update>
+
+	<select id="getSearchModelSpec" parameterType="String" resultMap="modelSpecResultMap">
+		/* 모델별/상세스펙 검색 */
+		SELECT
+			msc.spec_content_no,
+			msc.manager_id,
+			m.model_nm,
+			ps.spec_nm,
+			msc.spec_content,
+			msc.register_date,
+			msc.revision_date,
+			msc.use_status
+		FROM
+			model_spec_content msc inner join model m
+			on msc.MODEL_NO = m.MODEL_NO
+			inner join products_spec ps
+			using(spec_no)
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+			<if test="useStatus != null and useStatus != ''">
+				AND msc.use_status = #{useStatus}
+			</if>
+		</where>			
+		ORDER BY CAST(SUBSTRING_INDEX(spec_content_no, '_', -1) AS UNSIGNED);		
+	</select>
+
+	<select id="getSearchCategorySpec" parameterType="String" resultMap="categorySpecResultMap">
+		/* 카테고리별/상세스펙 검색 */
+		SELECT
+			ps.spec_no,
+			ps.manager_id,
+			pc.small_category,
+			ps.spec_nm,
+			ps.register_date,
+			ps.revision_date,
+			ps.use_status
+		FROM
+			products_spec ps inner join products_category pc 
+			using(product_category_no)
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+			<if test="useStatus != null and useStatus != ''">
+				AND ps.use_status = #{useStatus}
+			</if>			
+		</where>	
+		ORDER BY CAST(SUBSTRING_INDEX(spec_no, '_', -1) AS UNSIGNED);	
+	</select>
+		
+	<select id="getSearchBenefit" parameterType="String" resultMap="benefitResultMap">
+		/* 전체혜택 검색 */
 		SELECT 
 			benefit_no,
+			manager_id,
 			benefit_nm,
+			register_date,
+			revision_date,
 			use_status
 		FROM 
-			benefit;	
+			benefit
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+			<if test="useStatus != null and useStatus != ''">
+				AND use_status = #{useStatus}
+			</if>			
+		</where>
+		ORDER BY CAST(SUBSTRING_INDEX(benefit_no, '_', -1) AS UNSIGNED);	
 	</select>
-	
-	<select id="getModelList" resultMap="modelResultMap">
-		/* 상품정보 모델 목록 조회 */
+
+	<select id="getSearchModel" parameterType="String" resultMap="modelResultMap">
+		/* 모델 검색 */
 		SELECT 
 			m.model_no,
+			m.manager_id,
 			b.brand_nm,
 			i.item_nm,
 			pc.small_category,
 			m.model_nm,
+			m.register_date,
+			m.revision_date,
 			m.use_status
 		FROM 
 			model m inner join products_category pc
@@ -107,43 +281,737 @@
 			inner join item i
 			using(item_no)
 			left join brand b
-			using(brand_no);
+			using(brand_no)
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+			<if test="useStatus != null and useStatus != ''">
+				AND m.use_status = #{useStatus}
+			</if>			
+		</where>
+		ORDER BY CAST(SUBSTRING_INDEX(model_no, '_', -1) AS UNSIGNED);	
 	</select>
-	
-	<select id="getItemList" resultMap="itemResultMap">
-		/* 상품정보 품목 목록 조회 */
+
+	<select id="getSearchItem" parameterType="String" resultMap="itemResultMap">
+		/* 품목 검색 */
 		SELECT 
 			i.item_no,
+			i.manager_id,
 			pc.small_category,
 			i.item_nm,
+			i.register_date,
+			i.revision_date,
 			i.use_status
 		FROM 
 			item i inner join products_category pc
-			using(product_category_no);
+			using(product_category_no)
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+			<if test="useStatus != null and useStatus != ''">
+				AND i.use_status = #{useStatus}
+			</if>			
+		</where>
+		ORDER BY CAST(SUBSTRING_INDEX(item_no, '_', -1) AS UNSIGNED);	
 	</select>
-	
-	<select id="getBrandList" resultMap="brandResultMap">
-		/* 상품정보 브랜드 목록 조회 */
+
+	<select id="getSearchBrand" parameterType="String" resultMap="brandResultMap">
+		/* 브랜드 검색 */
 		SELECT 
-			brand_no, 
+			brand_no,
+			manager_id,
 			brand_nm, 
+			register_date,
+			revision_date,
 			use_status
 		FROM 
-			brand;
+			brand
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+			<if test="useStatus != null and useStatus != ''">
+				AND use_status = #{useStatus}
+			</if>			
+		</where>
+		ORDER BY CAST(SUBSTRING_INDEX(brand_no, '_', -1) AS UNSIGNED);
 	</select>
-	
-	<select id="getCategoryList" resultMap="categoryResultMap">
-		/* 상품정보 카테고리 목록 조회 */
+	<select id="getSearchCategory" parameterType="String" resultMap="categoryResultMap">
+		/* 카테고리 검색 */
 		SELECT 
 			product_category_no,
+			manager_id,
+			large_category_no, 
+			large_category, 
+			middle_category_no, 
+			middle_category, 
+			small_category,			
+			register_date,
+			revision_date,
+			use_status
+		FROM 
+			products_category
+		<where>
+			<if test="searchValue != null and searchValue !=''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%');
+			</if>
+			<if test="useStatus != null and useStatus != ''">
+				AND use_status = #{useStatus}
+			</if>			
+		</where>				
+	</select>
+	
+	<delete id="removeModelSpecSpecInfoByNo" parameterType="String">
+		/* 모델별/상세스펙 삭제 */
+		DELETE
+		FROM
+			model_spec_content
+		WHERE
+			spec_content_no = #{modelSpecNo};
+	</delete>
+	
+	<delete id="removeCategorySpecInfoByNo" parameterType="String">
+		/* 카테고리별/상세스펙 삭제 */
+		DELETE
+		FROM
+			products_spec
+		WHERE
+			spec_no = #{specNo};
+	</delete>
+
+	<delete id="removeBenefitInfoByNo" parameterType="String">
+		/* 전체혜택 삭제 */
+		DELETE
+		FROM
+			benefit
+		WHERE
+			benefit_no = #{benefitNo};
+	</delete>
+
+	<delete id="removeModelInfoByNo"  parameterType="String">
+		/* 모델 삭제 */
+		DELETE
+		FROM
+			model
+		WHERE
+			model_no = #{modelNo};
+	</delete>
+
+	<delete id="removeItemInfoByNo" parameterType="String">
+		/* 품목 삭제 */
+		DELETE
+		FROM
+			item
+		WHERE
+			item_no = #{itemNo};	
+	</delete>
+
+	<delete id="removeBrandInfoByNo" parameterType="String">
+		/* 브랜드 삭제 */
+		DELETE 
+		FROM 
+			brand
+		WHERE 
+			brand_no = #{brandNo};
+	</delete>
+	
+	<delete id="removeCategoryInfoByNo" parameterType="String">
+		/* 카테고리 삭제 */
+		DELETE
+		FROM
+			products_category
+		WHERE
+			product_category_no = #{categoryNo};
+	</delete>
+	
+	<select id="isSpecContentCheck" parameterType="String" resultType="boolean">
+	 /* 모델별/상세스펙(모델 + 스펙 + 상세스펙내용) 중복체크 */
+		SELECT
+			CASE WHEN COUNT(*) > 0 THEN true ELSE false END
+		FROM
+			model_spec_content
+		WHERE
+			spec_content = #{modelSpecName}
+			AND model_no = #{modelNo}
+			AND spec_no = #{specNo};	 	
+	</select>
+	
+	<select id="isSpecNameCheck" parameterType="String" resultType="boolean">
+		/* 카테고리별/상세스펙(카테고리 + 스펙명) 중복체크 */
+		SELECT
+			CASE WHEN COUNT(*) > 0 THEN true ELSE false END
+		FROM
+			products_spec
+		WHERE
+			spec_nm = #{specName}
+			AND product_category_no = #{categoryNo};
+	</select>
+
+	<select id="isBenefitNameCheck" parameterType="String" resultType="boolean">
+		/* 전체혜택(혜택명) 중복체크 */
+		SELECT
+			count(*)
+		FROM
+			benefit
+		WHERE
+			benefit_nm = #{benefitName};
+	</select>
+
+	<select id="isModelNameCheck" parameterType="String" resultType="boolean">
+		/* 모델(카테고리 + 브랜드 + 품목 + 모델명) 중복체크 */
+		SELECT
+			CASE WHEN COUNT(*) > 0 THEN true ELSE false END
+		FROM
+			model
+		WHERE
+			model_nm = #{modelName}
+			AND product_category_no = #{categoryNo}
+			AND brand_no = #{brandNo}	
+			AND item_no = #{itemNo};	
+	</select>
+
+	<select id="isItemNameCheck" parameterType="String" resultType="boolean">
+		/* 품목(카테고리 + 품목명) 중복체크 */
+		SELECT
+			CASE WHEN COUNT(*) > 0 THEN true ELSE false END
+		FROM
+			item
+		WHERE
+			item_nm = #{itemName}
+			AND product_category_no = #{categoryNo};
+	</select>
+
+	<select id="isBrandNameCheck" parameterType="String" resultType="boolean">
+		/* 브랜드(브랜드명) 중복체크 */
+		SELECT
+			count(*)
+		FROM
+			brand
+		WHERE
+			brand_nm = #{brandName};
+	</select>
+
+	<select id="isCategoryCheck" parameterType="String" resultType="boolean">
+		/* 카테고리(대분류 + 중분류 + 소분류) 중복체크 */
+		SELECT
+			CASE WHEN COUNT(*) > 0 THEN true ELSE false END
+		FROM
+			products_category
+		WHERE
+			large_category = #{lgCategory}
+			AND middle_category = #{mdCategory}
+			AND small_category = #{smCategory};		
+	</select>
+
+	<update id="modifyModelSpec" parameterType="ProductInfoModelSpec">
+		/* 모델별/상세스펙 수정 */
+		UPDATE model_spec_content
+		SET
+			model_no = #{modelNo},
+			spec_no = #{specNo},
+			spec_content = #{modelSpecName},
+			revision_date = NOW()
+		WHERE
+			spec_content_no = #{modelSpecNo};
+	</update>
+
+	<update id="modifyCategorySpec" parameterType="ProductInfoCategorySpec">
+		/* 카테고리별/상세스펙 수정 */
+		UPDATE products_spec
+		SET
+			product_category_no = #{categoryNo},
+		    spec_nm = #{specName},
+			revision_date = NOW()
+		WHERE
+			spec_no = #{specNo};
+	</update>	
+		
+	<update id="modifyBenefit" parameterType="ProductInfoBenefit">
+		/* 전체혜택 수정 */
+		UPDATE benefit
+		SET
+		    benefit_nm = #{benefitName},
+			revision_date = NOW()
+		WHERE
+			benefit_no = #{benefitNo};
+	</update>
+	
+	<update id="modifyModel" parameterType="ProductInfoModel">
+		/* 모델 수정 */
+		UPDATE model
+		SET
+			product_category_no = #{categoryNo},
+			brand_no = #{brandNo},
+			item_no = #{itemNo},
+		    model_nm = #{modelName},
+		    revision_date = NOW()
+		WHERE
+			model_no = #{modelNo};
+	</update>
+	
+	<update id="modifyItem" parameterType="ProductInfoItem">
+		/* 품목 수정 */
+		UPDATE item
+		SET
+		   product_category_no = #{categoryNo},
+		   item_nm = #{itemName},
+		   revision_date = NOW()
+		WHERE
+			item_no = #{itemNo};
+	</update>
+	
+	<update id="modifyBrand" parameterType="ProductInfoBrand">
+		/* 브랜드 수정 */
+		UPDATE brand
+		SET
+			brand_nm = #{brandName},
+			revision_date = NOW(),
+			use_status = #{useStatus}
+		WHERE
+			brand_no = #{brandNo};
+	</update>
+	
+	<update id="modifyCategory" parameterType="ProductInfoCategory">
+		/* 카테고리 수정 */
+		UPDATE products_category 
+		SET 
+			large_category_no = #{lgCategoryNo},
+			large_category = #{lgCategory},	
+			middle_category_no = #{mdCategoryNo},
+			middle_category = #{mdCategory},
+			small_category = #{smCategory},
+			revision_date = NOW(),
+			use_status = #{useStatus}
+		WHERE 
+		  product_category_no = #{categoryNo};
+	</update>
+	
+	<select id="getLgCategory" resultType="ProductInfoCategory">
+		/* 등록되어있는 카테고리 대분류 목록 조회 */
+		SELECT DISTINCT
+			large_category AS lgCategory,
+			large_category_no AS lgCategoryNo
+		FROM
+			products_category
+		WHERE
+			large_category IS NOT NULL
+	</select>
+	
+	<select id="getMdCategory" resultType="ProductInfoCategory">
+		/* 등록되어있는 카테고리 중분류 목록 조회 */
+		SELECT DISTINCT
+			middle_category AS mdCategory,
+			middle_category_no AS mdCategoryNo
+		FROM
+			products_category
+		WHERE
+			middle_category IS NOT NULL
+	</select>
+		
+	<select id="getCategoryNoByModelNo" resultType="String">
+		/* 모델코드로 카테고리코드 조회 */
+		SELECT
+			product_category_no
+		FROM
+			model
+		WHERE
+			model_no = #{modelNo}
+	</select>
+	
+	<select id="getSpecListByCategoryNo" resultType="ProductInfoCategorySpec">
+		/* 카테고리코드로 스펙 목록 조회 */
+		SELECT
+			spec_no AS specNo,
+			spec_nm AS specName,
+			product_category_no
+		FROM
+			products_spec
+		WHERE
+			product_category_no = #{categoryNo}
+	</select>
+	
+	<select id="getItemListByCategoryNo" resultType="ProductInfoItem">
+		/* 카테고리코드로 품목 목록 조회 */
+		SELECT
+			item_no AS itemNo,
+			item_nm AS itemName,
+			product_category_no
+		FROM
+			item	
+		WHERE
+			product_category_no = #{categoryNo}	
+	</select>
+	
+	<select id="getModelSpecInfoByNo" parameterType="String" resultMap="modelSpecResultMap"> 
+		/* 모델별/상세스펙 조회 */
+		SELECT 
+			spec_content_no,
+			manager_id, 
+			model_no, 
+			spec_no, 
+			spec_content, 
+			register_date, 
+			revision_date, 
+			use_status
+		FROM 
+			model_spec_content
+		WHERE
+			spec_content_no = #{modelSpecNo};
+	</select>
+	
+	<select id="getCategorySpecInfoByNo" parameterType="String" resultMap="categorySpecResultMap">
+		/* 카테고리별/상세스펙 조회 */
+		SELECT 
+			spec_no, 
+			manager_id, 
+			product_category_no, 
+			spec_nm, 
+			register_date, 
+			revision_date, 
+			use_status
+		FROM 
+			products_spec
+		WHERE
+			spec_no = #{specNo};
+	</select>
+	
+	<select id="getBenefitInfoByNo" parameterType="String" resultMap="benefitResultMap">
+		/* 전체혜택 조회 */
+		SELECT 
+			benefit_no, 
+			manager_id, 
+			benefit_nm, 
+			register_date, 
+			revision_date, 
+			use_status
+		FROM 
+			benefit
+		WHERE
+			benefit_no = #{benefitNo};	
+	</select>
+	
+	<select id="getModelInfoByNo" parameterType="String" resultMap="modelResultMap"> 
+		/* 모델 조회 */
+		SELECT 
+			model_no, 
+			manager_id, 
+			brand_no, 
+			item_no, 
+			product_category_no, 
+			model_nm, 
+			register_date, 
+			revision_date, 
+			use_status
+		FROM 
+			model
+		WHERE
+			model_no = #{modelNo};	
+	</select>
+	
+	<select id="getItemInfoByNo" parameterType="String" resultMap="itemResultMap"> 
+		/* 품목 조회 */
+		SELECT 
+			item_no, 
+			manager_id, 
+			product_category_no, 
+			item_nm, 
+			register_date, 
+			revision_date, 
+			use_status
+		FROM 
+			item
+		WHERE
+			item_no = #{itemNo};	
+	</select>
+	
+	<select id="getBrandInfoByNo" parameterType="String" resultMap="brandResultMap"> 
+		/* 브랜드 조회 */
+		SELECT 
+			brand_no, 
+			manager_id, 
+			brand_nm, 
+			register_date, 
+			revision_date, 
+			use_status
+		FROM 
+			brand
+		WHERE
+			brand_no = #{brandNo};
+	</select>
+	
+	<select id="getCategoryInfoByNo" parameterType="String" resultMap="categoryResultMap">
+		/* 카테고리 조회 */
+		SELECT 
+			product_category_no, 
+			manager_id, 
 			large_category_no, 
 			large_category, 
 			middle_category_no, 
 			middle_category, 
 			small_category, 
+			register_date, 
+			revision_date, 
 			use_status
 		FROM 
-			products_category;	 
+			products_category
+		WHERE
+			product_category_no = #{categoryNo};
 	</select>
 	
+	<insert id="addModelSpec" parameterType="ProductInfoModelSpec">
+		<selectKey keyProperty="modelSpecNo" resultType="string" order="BEFORE">	
+		/* 스펙내용코드 자동증가 */
+		SELECT 
+			case
+			when count(*) = 0 then 'spec_content_1'
+			else
+				CONCAT('spec_content_',max(cast(SUBSTRING_INDEX(spec_content_no, '_', -1) as unsigned))+1)
+			end as modelSpecNo	
+		FROM
+			model_spec_content;
+		</selectKey>		
+		/* 모델별/상세스펙 등록 */
+		INSERT INTO model_spec_content
+		(spec_content_no, manager_id, model_no, spec_no, spec_content, register_date, revision_date, use_status)
+		VALUES
+		(#{modelSpecNo}, #{managerId}, #{modelNo}, #{specNo}, #{modelSpecName}, NOW(), NOW(), '사용중');
+	</insert>
+	
+	<insert id="addCategorySpec" parameterType="ProductInfoCategorySpec">
+		<selectKey keyProperty="specNo" resultType="string" order="BEFORE">
+		/* 스펙코드 자동증가 */
+		SELECT 
+			case
+			when count(*) = 0 then 'spec_1'
+			else
+				CONCAT('spec_',max(cast(SUBSTRING_INDEX(spec_no, '_', -1) as unsigned))+1)
+			end as specNo	
+		FROM
+			products_spec;
+		</selectKey>
+		/* 카테고리별/상세스펙 등록 */
+		INSERT INTO products_spec
+		(spec_no, manager_id, product_category_no, spec_nm, register_date, revision_date, use_status)
+		VALUES
+		(#{specNo}, #{managerId}, #{categoryNo}, #{specName}, NOW(), NOW(), '사용중');
+	</insert>
+	
+	<insert id="addBenefit" parameterType="ProductInfoBenefit">
+		<selectKey keyProperty="benefitNo" resultType="string" order="BEFORE">
+		/* 혜택코드 자동증가 */
+		SELECT 
+			case
+			when count(*) = 0 then 'benefit_1'
+			else
+				CONCAT('benefit_',max(cast(SUBSTRING_INDEX(benefit_no, '_', -1) as unsigned))+1)
+			end as benefitNo	
+		FROM
+			benefit;
+		</selectKey>
+		/* 전체혜택 등록 */
+		INSERT INTO benefit
+		(benefit_no, manager_id, benefit_nm, register_date, revision_date, use_status)
+		VALUES
+		(#{benefitNo}, #{managerId}, #{benefitName}, NOW(), NOW(), '사용중');
+	</insert>
+	
+	<insert id="addModel" parameterType="ProductInfoModel">
+		<selectKey keyProperty="modelNo" resultType="string" order="BEFORE">
+		/* 모델코드 자동증가 */
+		SELECT 
+			case
+			when count(*) = 0 then 'model_1'
+			else
+				CONCAT('model_',max(cast(SUBSTRING_INDEX(model_no, '_', -1) as unsigned))+1)
+			end as modelNo	
+		FROM
+			model;
+		</selectKey>
+		/* 모델 등록 */
+		INSERT INTO model
+		(model_no, manager_id, brand_no, item_no, product_category_no, model_nm, register_date, revision_date, use_status)
+		VALUES
+		(#{modelNo}, #{managerId}, #{brandNo}, #{itemNo}, #{categoryNo}, #{modelName}, NOW(), NOW(), '사용중');
+	</insert>
+	
+	<insert id="addItem" parameterType="ProductInfoItem">
+		<selectKey keyProperty="itemNo" resultType="string" order="BEFORE">
+		/* 품목코드 자동증가 */
+		SELECT 
+			case
+			when count(*) = 0 then 'item_1'
+			else
+				CONCAT('item_',max(cast(SUBSTRING_INDEX(item_no, '_', -1) as unsigned))+1)
+			end as itemNo	
+		FROM
+			item;
+		</selectKey>
+		/* 품목 등록 */
+		INSERT INTO item
+		(item_no, manager_id, product_category_no, item_nm, register_date, revision_date, use_status)
+		VALUES
+		(#{itemNo}, #{managerId}, #{categoryNo}, #{itemName}, NOW(), NOW(), '사용중');
+	</insert>
+	
+	<insert id="addBrand" parameterType="ProductInfoBrand">
+		<selectKey keyProperty="brandNo" resultType="string" order="BEFORE">
+		/* 브랜드코드 자동증가 */
+		SELECT 
+			case
+			when count(*) = 0 then 'brand_1'
+			else
+				CONCAT('brand_',max(cast(SUBSTRING_INDEX(brand_no, '_', -1) as unsigned))+1)
+			end as brandNo	
+		FROM
+			brand;
+		</selectKey>
+		/* 브랜드 등록 */
+		INSERT INTO brand
+		(brand_no, manager_id, brand_nm, register_date, revision_date, use_status)
+		VALUES
+		(#{brandNo}, #{managerId}, #{brandName}, NOW(), NOW(), '사용중');
+	</insert>
+	
+	<insert id="addCategory" parameterType="ProductInfoCategory">
+	    <selectKey keyProperty="categoryNo" resultType="string" order="BEFORE">
+	    /* 카테고리코드 자동증가 */
+        SELECT
+            CASE
+                WHEN COUNT(*) = 0 THEN CONCAT(#{lgCategoryNo}, '_', #{mdCategoryNo}, '_1') -- 최초에는 1번
+                ELSE CONCAT(#{lgCategoryNo}, '_', #{mdCategoryNo}, '_', 
+                            MAX(CAST(SUBSTRING_INDEX(product_category_no, '_', -1) AS UNSIGNED)) + 1) -- 기존 값들 중에서 최대값 + 1
+            END AS product_category_no
+        FROM
+            products_category
+        WHERE
+            large_category_no = #{lgCategoryNo} 
+            AND middle_category_no = #{mdCategoryNo} 
+	    </selectKey>
+	
+	    /* 카테고리 등록 */
+	    INSERT INTO products_category
+		(product_category_no, manager_id, large_category_no, large_category, middle_category_no, middle_category, small_category, register_date, revision_date, use_status)
+		VALUES
+		(#{categoryNo}, #{managerId}, #{lgCategoryNo}, #{lgCategory}, #{mdCategoryNo}, #{mdCategory}, #{smCategory}, NOW(), NOW(), '사용중');
+	</insert>
+	
+	<select id="getModelSpecList" resultMap="modelSpecResultMap">
+		/* 모델별/상세스펙 목록 조회*/
+		SELECT
+			msc.spec_content_no,
+			msc.manager_id,
+			m.model_nm,
+			ps.spec_nm,
+			msc.spec_content,
+			msc.register_date,
+			msc.revision_date,
+			msc.use_status
+		FROM
+			model_spec_content msc inner join model m
+			on msc.MODEL_NO = m.MODEL_NO
+			inner join products_spec ps
+			using(spec_no)
+		ORDER BY CAST(SUBSTRING_INDEX(spec_content_no, '_', -1) AS UNSIGNED);	
+	</select>
+	
+	<select id="getCategorySpecList" resultMap="categorySpecResultMap">
+		/* 카테고리별/상세스펙 목록 조회 */
+		SELECT
+			ps.spec_no,
+			ps.manager_id,
+			pc.small_category,
+			ps.spec_nm,
+			ps.register_date,
+			ps.revision_date,
+			ps.use_status
+		FROM
+			products_spec ps inner join products_category pc 
+			using(product_category_no)
+		ORDER BY CAST(SUBSTRING_INDEX(spec_no, '_', -1) AS UNSIGNED);	
+	</select>
+	
+	<select id="getBenefitList" resultMap="benefitResultMap">
+		/* 전체혜택 목록 조회 */
+		SELECT 
+			benefit_no,
+			manager_id,
+			benefit_nm,
+			register_date,
+			revision_date,
+			use_status
+		FROM 
+			benefit
+		ORDER BY CAST(SUBSTRING_INDEX(benefit_no, '_', -1) AS UNSIGNED);		
+	</select>
+	
+	<select id="getModelList" resultMap="modelResultMap">
+		/* 모델 목록 조회 */
+		SELECT 
+			m.model_no,
+			m.manager_id,
+			b.brand_nm,
+			i.item_nm,
+			pc.small_category,
+			m.model_nm,
+			m.register_date,
+			m.revision_date,
+			m.use_status
+		FROM 
+			model m inner join products_category pc
+			using(product_category_no)
+			inner join item i
+			using(item_no)
+			left join brand b
+			using(brand_no)
+		ORDER BY CAST(SUBSTRING_INDEX(model_no, '_', -1) AS UNSIGNED);	
+	</select>
+	
+	<select id="getItemList" resultMap="itemResultMap">
+		/* 품목 목록 조회 */
+		SELECT 
+			i.item_no,
+			i.manager_id,
+			pc.small_category,
+			i.item_nm,
+			i.register_date,
+			i.revision_date,
+			i.use_status
+		FROM 
+			item i inner join products_category pc
+			using(product_category_no)
+		ORDER BY CAST(SUBSTRING_INDEX(item_no, '_', -1) AS UNSIGNED);	
+	</select>
+	
+	<select id="getBrandList" resultMap="brandResultMap">
+		/* 브랜드 목록 조회 */
+		SELECT 
+			brand_no,
+			manager_id,
+			brand_nm, 
+			register_date,
+			revision_date,
+			use_status
+		FROM 
+			brand
+		ORDER BY CAST(SUBSTRING_INDEX(brand_no, '_', -1) AS UNSIGNED);
+	</select>
+	
+	<select id="getCategoryList" resultMap="categoryResultMap">
+		/* 카테고리 목록 조회 */
+		SELECT 
+			product_category_no,
+			manager_id,
+			large_category_no, 
+			large_category, 
+			middle_category_no, 
+			middle_category, 
+			small_category,			
+			register_date,
+			revision_date,
+			use_status
+		FROM 
+			products_category;
+	</select>
 </mapper>

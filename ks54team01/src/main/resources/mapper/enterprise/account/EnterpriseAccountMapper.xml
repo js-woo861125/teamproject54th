@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="ks54team01.enterprise.account.mapper.EnterpriseAccountMapper">
+  
+  <update id="modifyEntCeo" parameterType="EntMember">
+	  /* 입점업체대표정보 수정 */
+	  UPDATE ent_ceo
+	  <set>
+	    <if test="entCeoName != null and entCeoName != ''">
+	      ent_ceo_nm = #{entCeoName},
+	    </if>
+	    <if test="entCeoPhone != null and entCeoPhone != ''">
+	      ent_ceo_phone = #{entEmpPhone},
+	    </if>
+	    <if test="entCeoEmail != null and entCeoEmail != ''">
+	      ent_ceo_email = #{entCeoEmail},
+	    </if>
+	    <if test="entBank != null and entBank != ''">
+	      ent_bank = #{entBank},
+	    </if>
+	    <if test="entBankNum != null and entBankNum != ''">
+	      ent_bank_num = #{entBankNum},
+	    </if>
+	    revision_date = CURDATE()
+	  </set>
+	  WHERE 
+	  	ent_ceo_id = #{memberId}
+	</update>
+  
+
+  	<update id="modifyEntEmp" parameterType="EntMember">
+	  /* 입점업체직원정보 수정 */
+	  UPDATE ent_emp
+	  <set>
+	    <if test="entEmpName != null and entEmpName != ''">
+	      ent_emp_nm = #{entEmpName},
+	    </if>
+	    <if test="entEmpPhone != null and entEmpPhone != ''">
+	      ent_emp_phone = #{entEmpPhone},
+	    </if>
+	    <if test="entEmpEmail != null and entEmpEmail != ''">
+	      ent_emp_email = #{entEmpEmail},
+	    </if>
+	    <if test="entPosition != null and entPosition != ''">
+	      ent_position = #{entPosition},
+	    </if>
+	    revision_date = CURDATE()
+	  </set>
+	  WHERE 
+	  	ent_emp_id = #{memberId};
+	</update>
+
+  	
+  	<update id="modifyCommonInfo" parameterType="EntMember">
+  		/* 공통정보 수정 */
+		UPDATE members
+		<set>
+			<if test="memberPw != null and memberPw != ''">
+				members_pw = #{memberPw},
+			</if>
+				state_transition_date = CURDATE()	
+		</set>		 
+		WHERE 
+			members_id = #{memberId};
+  	</update>
+  
+	
+  </mapper>

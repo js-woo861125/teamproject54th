@@ -9,7 +9,6 @@ public class AdminDeliveryInfo {
 	private String sellProdNo;
 	private String recipientNm;
 	private String delCompany;
-	private String billNo;
 	private String delRequest;
 	private String delProgress;
 	private String regDate;

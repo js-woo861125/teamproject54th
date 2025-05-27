@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{enterprise/layout/default}">
+<!-- head 삽입공간 -->
+<head>
+</head>
+
+<th:block layout:fragment="jsFile">
+	<script
+		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</th:block>
+
+<th:block layout:fragment="content">
+	<form class="user" th:action="@{/enterprise/product/addProduct}"
+		method="post" enctype="multipart/form-data">
+		<div class="row">
+			<div class="col-9">
+				<div class="content-header">
+					<h2 class="content-title">제품 등록</h2>
+				</div>
+				<button class="btn btn-primary" type="submit">상품등록</button>
+			</div>
+			<div class="col-lg-6">
+				<div class="card mb-4">
+					<div class="card-header">
+						<h4>제품정보</h4>
+					</div>
+					<div class="card-body">
+						<div class="mb-4">
+							<label for="product_name" class="form-label">제품 이름</label> <input
+								type="text" name="productName" placeholder="제품을 입력해주세요"
+								class="form-control" id="product_name" required />
+						</div>
+
+						<div class="row">
+							<div class="col-lg-4">
+								<div class="mb-4">
+									<label class="form-label">개월수</label> <select id="itemSelect"
+										name="itemNo" class="form-select">
+										<option value="">개월 수 를 선택해 주세요</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="mb-4">
+									<label for="product_name" class="form-label">일시불판매가</label> <input
+										type="text" name="" placeholder="가격을 입력해주세요"
+										class="form-control" id="" />
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<button type="button" class="btn btn-md rounded font-sm hover-up"
+								id="addProductBtn">상품추가</button>
+						</div>
+					</div>
+				</div>
+				<!-- card end// -->
+				<div class="card mb-4">
+					<div class="card-header">
+						<h4>제품 상세옵션</h4>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<div class="col-lg-4">
+								<div class="mb-4">
+									<label class="form-label">플랫폼판매가</label> <select id="" name=""
+										class="form-select">
+										<option value="">개월 수 를 선택해 주세요</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="mb-4">
+									<label for="" class="form-label">일시불판매가</label> <input
+										type="text" name="" placeholder="가격을 입력해주세요"
+										class="form-control" id="" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-body">
+					<div class="row">
+						<div class="col-lg-4">
+							<div class="mb-4">
+								<label class="form-label">위약금등록</label> <select
+									class="form-select">
+									<option value=""></option>
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="mb-4">
+								<label class="form-label">위약금률</label> <input type="text"
+									name="" placeholder="가격을 입력해주세요" class="form-control" />
+							</div>
+						</div>
+					</div>
+					</div>
+					<!-- 혜택 입력란 한 줄로 -->
+					<div class="card-body">
+					<div class="row">
+						<div class="col-lg-4">
+							<div class="mb-4">
+								<label class="form-label">전체혜택</label> <select
+									class="form-select">
+									<option value="">전체혜택</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="mb-4">
+								<label class="form-label">혜택상세</label> <input type="text"
+									name="" placeholder="혜택상세" class="form-control" />
+							</div>
+						</div>
+					</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-4">
+			<div class="card-header">
+				<h4>최종 등록리스트</h4>
+			</div>
+			<div class="card-body">
+				<p>12개월5만원방문설치사은품</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-4">
+				<input type="text" placeholder="등록 수량" class="form-select">
+			</div>
+			<div class="col-lg-4">
+				<button class="btn btn-md rounded font-sm hover-up">상품 등록</button>
+			</div>
+		</div>
+	</form>
+
+
+</th:block>
+<!-- card end// -->
+<div class="pagination-area mt-15 mb-50">
+	<nav aria-label="Page navigation example">
+		<ul class="pagination justify-content-start">
+			<li class="page-item active"><a class="page-link" href="#">01</a></li>
+			<li class="page-item"><a class="page-link" href="#">02</a></li>
+			<li class="page-item"><a class="page-link" href="#">03</a></li>
+			<li class="page-item"><a class="page-link dot" href="#">...</a></li>
+			<li class="page-item"><a class="page-link" href="#">16</a></li>
+			<li class="page-item"><a class="page-link" href="#"><i
+					class="material-icons md-chevron_right"></i></a></li>
+		</ul>
+	</nav>
+</div>
+<!-- content-main end// -->
+
+<script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+<script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+<script src="assets/js/vendors/select2.min.js"></script>
+<script src="assets/js/vendors/perfect-scrollbar.js"></script>
+<script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+<!-- Main Script -->
+<script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+</body>
+</html>

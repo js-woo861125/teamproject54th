@@ -13,21 +13,14 @@
 	<th:block layout:fragment="content">
 		<div class="content-header">
             <div>
-                <h2 class="content-title card-title" th:text="@{#}"></h2>
+                <h2 class="content-title card-title" th:text="${title}"></h2>
             </div>
         </div>
         <div class="card mb-4">
             <header class="card-header">
-                <div class="row gx-3">
-                    <div class="col-lg-2 col-md-3 col-6">
-                        <select class="form-select">
-                            <option>재직상태</option>
-                            <option>재직자</option>
-                            <option>퇴직자</option>
-                        </select>
-                    </div>
-		            <div class="col-lg-2">
-		                <a th:href="@{#}" class="btn btn-primary"><i class="material-icons md-plus"></i>직원 등록</a>
+                <div class="row">
+		            <div class="col text-end">
+		                <a th:href="@{/enterprise/management/addEmployee}" class="btn btn-primary p-15"><i class="material-icons md-plus"></i>직원 등록</a>
 		            </div>
                 </div>
             </header>
@@ -36,36 +29,37 @@
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
-                            <tr>
-                                <th>No.</th>
+                            <tr class=text-center>
                                 <th>직원아이디</th>
                                 <th>직원직책</th>
                                 <th>직원이름</th>
                                 <th>직원이메일</th>
                                 <th>직원연락처</th>
                                 <th>재직상태</th>
-                                <th>등록일자</th>
+                                <th>등록일시</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>entempid1</td>
-                                <td>부장</td>
-                                <td>곽철용</td> 
-                                <td>emp1@naver.com</td>
-                                <td>010-0013-0013</td>
-                                <td class="col-lg-2 col-sm-2 col-4 col-status">
-                                    <span class="badge rounded-pill alert-success">재직자</span>
+                        <tbody class="text-center">
+                            <tr th:if="${!#lists.isEmpty(employeeList)}"
+                            	th:each="l : ${employeeList}">
+                                <td th:text="${l.memberId}">entempid1</td>
+                                <td th:text="${l.entPosition}">부장</td>
+                                <td th:text="${l.entEmpName}">곽철용</td> 
+                                <td th:text="${l.entEmpEmail}">emp1@naver.com</td>
+                                <td th:text="${l.entEmpPhone}">010-0013-0013</td>
+                                <td class="col-lg-2 col-sm-2 col-4 col-status" >
+                                    <span class="badge rounded-pill alert-success" 
+                                    	  th:classappend="${l.entPosition} == '퇴사' ? 'alert-danger' : 'alert-success'"
+          								  th:text="${l.entPosition} == '퇴사' ? '퇴직자' : '재직자'">재직상태</span>
                                     <div class="dropdown">
-                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i></a>
                                         <div class="dropdown-menu">
                                             <a class="dropdown-item" href="#">재직자</a>
-                                            <a class="dropdown-item text-danger" href="#">퇴직자</a>
+                                            <a class="dropdown-item text-danger" th:if="${l.entPosition} == '퇴사'" href="#">퇴직자</a>
                                         </div>
                                     </div>
                                 </td>
-                                <td>2023-03-01</td>
+                                <td th:text="${l.memberRegDate}">2023-03-01 16:00:00</td>
                             </tr>
                         </tbody>
                     </table>

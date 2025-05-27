@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{customer/layout/default}">
+
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+		<script th:inline="javascript">
+			/* 내가 담은 관심상품 목록 중 선택한 카테고리에 맞게 조회 */
+			const viewValue = /*[[${viewValue}]]*/'';
+			$('#viewValue').change(function() {
+				const href = location.href; // 현재 url 가져온다.
+				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
+				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
+				const currentPage = urlParams.get('viewValue'); 
+				if(currentPage) urlParams.set('viewValue', viewValue);
+				urlParams.set('viewValue', $(this).val());
+				location.href = `${url.pathname}?${urlParams.toString()}`;
+			});
+			
+			
+			// 전체 체크
+			$('input.allCheck').on('change', function () {
+			    const isChecked = $(this).prop('checked');
+			    $('input.wCheck').prop('checked', isChecked);
+			    $('input.allCheck').prop('checked', isChecked);
+			});
+
+			// 개별 체크 이벤트
+			$('input.wCheck').on('change', function () {
+			    const totalCnt = $('input.wCheck').length;
+			    const checkedCnt = $('input.wCheck:checked').length;
+			    const allChecked = totalCnt === checkedCnt;
+
+			    $('input.allCheck').prop('checked', allChecked);
+			});
+			
+			/* 체크박스 체크 시 선택삭제 버튼 노출 */
+			$('input[type="checkbox"]').on('change', function() {
+		        const isAnyChecked = $('input[type="checkbox"]:checked').length > 0;
+		        $('button.removeBtn').toggle(isAnyChecked);
+    		});
+			
+			
+			/* 관심상품 목록 삭제 전 alert */
+			/* 다중삭제(체크박스)  */
+			$('button.removeBtn').click(e => {
+				e.preventDefault();
+				const checkedList = $('.wCheck:checked').map(function () {
+			    	return $(this).val();
+			    }).get(); // 배열로 변환
+				console.log(checkedList);
+				Swal.fire({
+				  	text: `선택하신 ${checkedList.length}개의 관심상품을 삭제하시겠습니까?`,
+				  	icon: "warning",
+				  	showCancelButton: true,
+				  	confirmButtonColor: "#3085d6",
+				  	cancelButtonColor: "#d33",
+				  	confirmButtonText: "확인",
+				  	cancelButtonText: "취소"
+				}).then(async (result) => {
+						console.log(result);
+						
+						if (result.isDismissed) return ;
+						
+						const optionObj = {
+								title: '',
+								text: '',
+								icon: ''
+							};
+						
+						if (result.isConfirmed) {
+					    	const request = $.ajax({
+								url : '/customer/wishList/removeMyWishLists',
+								method : 'post',
+								traditional: true,
+								data : { 'wishListNum' : checkedList},
+								dataType : 'json',
+								async : false
+					    	});
+					    	request.done(isDelete => {
+								if(isDelete) {
+								  	optionObj.title = '';
+									optionObj.text = '선택하신 관심상품이 삭제되었습니다.';
+								  	optionObj.icon = 'success';
+								}
+					    	});
+					    	request.fail((jqXHR, textStatus, error) => {
+								console.log(jqXHR, textStatus, error);
+					    	});
+						}
+						Swal.fire(optionObj).then(result => location.reload());
+					});
+				});
+			
+				/* 단일삭제(휴지통 아이콘) */
+				$('.wasteBasket').click(e => {
+					e.preventDefault();
+					const wishListNum = $(e.currentTarget).data('wishListNum');
+					console.log(wishListNum);
+					Swal.fire({
+				  		/* title: "회원탈퇴", */
+					  	text: "선택하신 관심상품을 삭제하시겠습니까?",
+					  	icon: "warning",
+					  	showCancelButton: true,
+					  	confirmButtonColor: "#3085d6",
+					  	cancelButtonColor: "#d33",
+					  	confirmButtonText: "확인",
+					  	cancelButtonText: "취소"
+					}).then(async (result) => {
+							console.log(result);
+							
+							if (result.isDismissed) return ;
+							
+							const optionObj = {
+									title: '',
+									text: '',
+									icon: ''
+								};
+							
+							if (result.isConfirmed) {
+						    	const request = $.ajax({
+									url : '/customer/wishList/removeMyWishList',
+									method : 'post',
+									data : { 'wishListNum' : wishListNum},
+									dataType : 'json',
+									async : false
+						    	});
+						    	request.done(isDelete => {
+									if(isDelete) {
+									  	optionObj.title = '';
+										optionObj.text = '선택하신 관심상품이 삭제되었습니다.';
+									  	optionObj.icon = 'success';
+									}
+						    	});
+						    	request.fail((jqXHR, textStatus, error) => {
+									console.log(jqXHR, textStatus, error);
+						    	});
+							}
+							Swal.fire(optionObj).then(result => location.reload());
+						});
+					});
+		</script>
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+        <div class="container mb-30 mt-50">
+            <div class="row">
+                <div class="col-xl-10 col-lg-12 m-auto">
+                    <div class="mb-50">
+                        <h1 class="heading-2 mb-10">내 관심 상품</h1>
+                    </div>
+                    <div class="d-flex justify-content-between">
+	                    <div class="d-flex mb-20">
+	                        <div>
+		                        <h5 th:text="${viewValue}" class="text-body">전체</h5>
+	                        </div>
+	                        <div>
+		                        <h5 class="text-body">
+									<span th:text="${'&emsp;' + myWishList.size()}"
+										  class="text-brand">5
+									</span> 
+									<span>개</span>
+								</h5>
+	                        </div>
+	                    </div>
+	                    <div class ="mb-20">
+	                        <div class = "KeepProductAutoCategory_list_category__2WYqD">
+	                            <div class = "flicking-viewport" style = "user-select: none; -webkit-user-drag: none; touch-action: pan-y;">
+	                                <div class="col-lg-12 col-md-12 col-12">
+	                                    <select class="form-select" name="viewValue" id="viewValue">
+										    <option value="전체" 
+										    		th:selected="${viewValue == null or viewValue == '전체'}">전체</option>
+										    <option th:each="c : ${wishListCategory}"
+										            th:value="${c.productInfoCategory.mdCategory}"
+										            th:text="${c.productInfoCategory.mdCategory}"
+										            th:selected="${c.productInfoCategory.mdCategory == viewValue}">카테고리</option>
+										</select>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+                    </div>
+
+                    <div class="table-responsive shopping-summery">
+                        <form action=""> 
+	                        <table class="table table-wishlist">
+	                            <thead>
+	                                <tr class="main-heading">
+	                                    <th class="custome-checkbox start" colspan = "5">
+	                                        <div class="d-flex align-items-center gap-2">
+								            	<div class="form-check mb-0">
+								                	<input class="allCheck form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox0" />
+								                	<label class="allCheck form-check-label ms-2" for="exampleCheckbox0">전체 선택</label>
+								            	</div>
+								         	    <button type="button" class="removeBtn btn btn-xs btn-outline-danger ms-3" style="display: none;">
+								                	선택삭제
+								            	</button>
+								        	</div>
+	                                    </th>
+	                                </tr>
+	                            </thead>
+	                            <tbody>
+	                               <tr th:if="${!#lists.isEmpty(myWishList)}"
+			                           th:each="l, stat : ${myWishList}" class="pt-30">
+	                                    <td class="custome-checkbox pl-30">
+	                                        <input class="wCheck form-check-input" type="checkbox" name="checkbox"  th:id="'exampleCheckbox' + ${stat.count}" th:value="${l.wishListNum}" />
+	                                        <label class="wCheck form-check-label" th:for="'exampleCheckbox' + ${stat.count}"></label>
+	                                    </td>
+	                                    <td class="image product-thumbnail pt-40">
+	                                    	<img th:src="@{'/user/assets/imgs/shop/' + ${l.productInfo.productsImage}}" alt="#"/>
+	                                    </td>
+	                                    <td class="product-des product-name">
+	                                        <h4>
+	                                        	<a th:text="${l.productInfo.productsName}" class="product-name" href="shop-product-right.html">삼성크리스탈 UHDTV 85인치</a>
+	                                        </h4>
+	                                        <span th:text="${l.productInfoCategory.mdCategory}" class="font-small ml-5 text-muted">TV / 디지털</span>
+	                                        <div class="text-brand price fs-6 mt-10 mb-10" data-title="Price">
+	                                        	<span>렌탈최저가: </span>
+	                                        	<span th:text="|₩${l.minimumRentalFee >= 1000 ? #numbers.formatInteger(l.minimumRentalFee, 3, 'COMMA') : l.minimumRentalFee}|">₩ 56,000 </span>
+	                                        </div>
+	                                        <div class="text-brand price fs-6 mt-10 mb-10">
+	                                        	<span>판매최저가: </span>
+	                                        	<span th:text="|₩${l.minimumPrice >= 1000 ? #numbers.formatInteger(l.minimumPrice, 3, 'COMMA') : l.minimumPrice}|">₩ 56,000 </span>
+	                                        </div>
+	                                    </td>
+	                                    <td class="action text-center" data-title="Remove">
+	                                    	<a th:data-wish-list-num="${l.wishListNum}" href="#" class="wasteBasket text-body"><i class="fi-rs-trash"></i></a>
+	                                	</td>
+	                            	</tr>
+	                            </tbody>
+	                        </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</th:block>
+</html>

@@ -6,6 +6,9 @@ import lombok.Data;
 public class ProductInfoBenefit {
 
 	private String benefitNo;
+	private String managerId;
 	private String benefitName;
+	private String benefitRegDate;
+	private String benefitRevDate;
 	private String useStatus;
 }

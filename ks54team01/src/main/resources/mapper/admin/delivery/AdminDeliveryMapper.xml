@@ -33,7 +33,6 @@
 		<result column="sell_products_no"		property="sellProdNo"/>
 		<result column="recipient_nm"		property="recipientNm"/>
 		<result column="delivery_company"		property="delCompany"/>
-		<result column="billing_number"			property="billNo"/>
 		<result column="delivery_request"		property="delRequest"/>
 		<result column="delivery_progress"		property="delProgress"/>
 		<result column="register_date"			property="regDate"/>
@@ -50,7 +49,6 @@
 			sell_products_no,
 			recipient_nm,
 			delivery_company,
-			billing_number,
 			delivery_request,
 			delivery_progress,
 			register_date,
@@ -74,7 +72,6 @@
 			di.sell_products_no,
 			di.recipient_nm,
 			di.delivery_company,
-			di.billing_number,
 			di.delivery_request,
 			di.delivery_progress,
 			di.register_date,

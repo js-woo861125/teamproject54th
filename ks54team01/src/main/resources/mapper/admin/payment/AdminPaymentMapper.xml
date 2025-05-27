@@ -12,7 +12,6 @@
 		<result column="cust_id" 					property="custId" />
 		<result column="sell_products_no" 			property="sellProdNo" />
 		<result column="rental_contract_no" 		property="rentalContractNo" />
-		<result column="pay_info_no" 				property="payInfoNo" />
 		<result column="ent_ceo_no" 				property="entCeoNo" />
 		<result column="ent_emp_id" 				property="entEmpId" />
 		<result column="manager_id" 				property="managerId" />
@@ -38,6 +37,81 @@
 		
 	</resultMap>
 	
+	
+	
+	
+	<resultMap type="AdminFee" id="paymentFeeResultMap">
+	<id 	column="fee_no" 					property="feeNo" />
+	<result column="payment_completed_no"		property="paymentCompletedNo" />
+	<result column="ent_ceo_no"					property="entCeoNo" />
+	<result column="ent_emp_id"					property="entEmpId" />
+	<result column="manager_id"					property="managerId" />
+	<result column="payment_details"			property="paymentDetils" />
+	<result column="platform_fee"				property="platFormFee" />
+	<result column="ent_sales"					property="entSales" />
+	<result column="provision_schedule_date"	property="provisionScheduleDate" />
+	<result column="provision_date"				property="provisionDate" />
+	<result column="settlement_month"			property="settlementMonth" />
+	<result column="closing_settlement"			property="closingSttelement" />
+	<result column="payment_status"				property="paymentStatus" />
+	<result column="revision_date"				property="revisionDate" />
+	</resultMap>
+	
+	
+	<select id="getSearchEnt" parameterType="string" resultType="AdminEntList">
+		/* 입점업체 검색 조회 */
+		SELECT 
+			ec.ent_ceo_no AS ceoCode,
+			ec.ent_nm AS entName,
+			ec.ent_ceo_nm AS entCeoName,
+			ec.ent_ceo_phone AS ceoTelNo,
+			ec.ent_brno AS entBrNo,
+			ct.ent_emp_id AS entEmpId,
+			ct.contract_status AS entContractStatus,
+			ct.contract_expiry_date AS contractEndDate
+		FROM 
+			ent_ceo ec 
+			LEFT JOIN ent_contract ct ON ec.ent_ceo_no = ct.ent_ceo_no
+		<where>
+			<if test="searchValue != null and searchValue != ''">
+				${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			</if>
+		</where>
+
+	</select>
+	
+	<select id="getSearchEntFee" parameterType="string" resultType="AdminFee">
+	/*수수료조회*/
+		SELECT 
+			f.fee_no AS feeNo, 
+			f.payment_completed_no AS paymentCompletedNo, 
+			f.ent_ceo_no AS entCeoNo, 
+			f.ent_emp_id AS entEmpId,
+			f.manager_id AS managerId, 
+			f.payment_details AS paymentDetils, 
+			f.platform_fee AS platFormFee,
+			f.ent_sales AS entSales,
+			f.provision_schedule_date AS provisionScheduleDate,
+			f.provision_date AS provisionDate, 
+			f.settlement_month AS settlementMonth,
+			f.closing_settlement AS closingSttelement,
+			f.payment_status AS paymentStatus,
+			f.revision_date AS revisionDate
+		FROM 
+			fee f INNER JOIN ent_ceo ec 
+			ON f.ent_ceo_no = ec.ent_ceo_no
+		WHERE 
+			f.ent_ceo_no = #{entCeoNo}        
+			<if test="settlementMonth != null and settlementMonth != ''">
+       	 		AND f.settlement_month = #{settlementMonth}
+    		</if>
+			
+			
+		ORDER BY 
+			CAST(substring(f.fee_no,5)AS UNSIGNED);
+			
+			
+	</select>
 	
 	
 	<select id="getSearchPaymentList" parameterType="string" resultMap="paymentResultMap">

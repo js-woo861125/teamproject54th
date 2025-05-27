@@ -19,12 +19,27 @@ public class CustomerProductServiceImpl implements CustomerProductService {
 
 	private final ProductMapper productMapper;
 	
+	
+	// 상품 상세 화면
 	@Override
-	public List<CustomerProduct> getCustomerProductList(String smallCategory) {
+	public List<CustomerProduct> getProductDetailByProd(String productsNum) {
+		
+		List<CustomerProduct> productDetailByProd = productMapper.getProductDetailByProd(productsNum);
+		
+		return productDetailByProd;
+	}
+	
+	
+
+	
+	//	상품 목록조회
+		@Override
+		public List<CustomerProduct> getCustomerProductList(String smallCategory) {
 		
 		List<CustomerProduct> customerProductList = productMapper.getCustomerProductList(smallCategory);
 		
 		return customerProductList;
 	}
 	
+
 }

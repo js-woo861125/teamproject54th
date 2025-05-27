@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="ks54team01.customer.member.mapper.MemberMapper">
+  
+	
+	<update id="deactivateCommonMember" parameterType="CommonMember">
+  		/* 공통정보 테이블 탈퇴처리 */
+		UPDATE members
+		<set>
+			revision_date = CURDATE(),
+			state_transition_date = CURDATE(),
+			withdraw_status = 'Y'
+		</set>		 
+		WHERE 
+			members_id = #{memberId};
+  	</update>
+  	
+	<update id="deactivateCorpMember" parameterType="CustomerMember">
+  		/* 기업고객(추가정보테이블) 탈퇴 */
+		UPDATE corp_customer
+		<set>
+			revision_date = CURDATE()	
+		</set>		 
+		WHERE 
+			cust_id = #{memberId};
+  	</update>
+	
+	<update id="deactivateCustomerMember" parameterType="CustomerMember">
+  		/* 회원 탈퇴 */
+		UPDATE customer
+		<set>
+			revision_date = CURDATE()	
+		</set>		 
+		WHERE 
+			cust_id = #{memberId};
+  	</update>
+	
+	
+	<select id="resultCountById" parameterType="string" resultType="int">
+		/* 처리 진행중인 상태 여부 조회(탈퇴) */
+		SELECT
+		   COUNT(*) 
+		FROM
+		   (
+		      SELECT cust_id FROM delivery_information
+		      WHERE delivery_progress IN ('1.상품준비중', '2.배송중')
+		      UNION
+		      SELECT cust_id FROM payment_cancel
+		      WHERE cancel_status = '처리중'
+		      UNION
+		      SELECT cust_id FROM rental_cancel_request
+		      WHERE request_processing_status = '검토중'
+		      UNION
+		      SELECT cust_id FROM rental_refund_request
+		      WHERE request_status = '입점업체검토중'
+		   ) a
+		WHERE
+		   a.cust_id = #{memberId};
+	</select>
+	
+	
+  	<update id="modifyCorpInfo" parameterType="CustomerMember">
+  		/* 기업회원 추가정보 수정 */
+		UPDATE corp_customer
+		<set>
+			<if test="corpBrno != null and corpBrno != ''">
+				corp_brno = #{corpBrno}, 			
+			</if>
+			<if test="corpName != null and corpName != ''">
+				corp_nm = #{corpName}, 			
+			</if>
+				revision_date = CURDATE()
+		</set>		 
+		WHERE 
+			cust_id = #{memberId};
+  	</update>
+  	
+  	<update id="modifyCustomerInfo" parameterType="CustomerMember">
+  		/* 회원정보 수정 */
+		UPDATE customer
+		<set>
+			<if test="custName != null and custName != ''">
+				cust_nm = #{custName}, 			
+			</if>
+			<if test="custBrdt != null and custBrdt != ''">
+				cust_brdt = #{custBrdt}, 			
+			</if>
+			<if test="custAddr != null and custAddr != ''">
+				cust_addr = #{custAddr}, 			
+			</if>
+			<if test="custDaddr != null and custDaddr != ''">
+				cust_daddr = #{custDaddr}, 			
+			</if>
+			<if test="custEmail != null and custEmail != ''">
+				cust_email = #{custEmail}, 			
+			</if>
+			<if test="custPhone != null and custPhone != ''">
+				cust_phone = #{custPhone}, 			
+			</if>
+				revision_date = CURDATE()	
+		</set>		 
+		WHERE 
+			cust_id = #{memberId};
+  	</update>
+  	
+  	<update id="modifyCommonInfo" parameterType="map">
+  		/* 회원 공통정보 수정 */
+		UPDATE members
+		<set>
+			<if test="newPw != null and newPw != ''">
+				members_pw = #{newPw},
+			</if>
+				state_transition_date = CURDATE()	
+		</set>		 
+		WHERE 
+			members_id = #{memberId};
+  	</update>
+  
+	<select id="isPwCheck" parameterType="map" resultType="boolean">
+		/* 비밀번호 일치여부 체크 */
+		SELECT 
+			COUNT(*)
+    	FROM 
+    		members
+    	WHERE 
+    		members_id = #{memberId} 
+    		AND members_pw = #{memberPw};
+	</select>
+  
+	<select id="getCorpInfoById" resultType="ks54team01.customer.member.domain.CustomerMember">
+		/* 기업고객 정보 조회 */
+	    SELECT 
+	        memberId,
+	        memberPw,
+	        memberType,
+	        corpName,
+	        corpBrno,
+	        custName,
+	        custPhone,
+	        custBrdt,
+	        custAddr,
+	        custDaddr,
+	        custEmail
+	    FROM 
+	    	corp_customer_info_view
+	    WHERE 
+	    	memberId = #{memberId}
+	</select>
+	
+	<select id="getCustomerInfoById" resultType="ks54team01.customer.member.domain.CustomerMember">
+		/* 개인 및 기업고객 정보 조회 */
+	    SELECT 
+	        memberId,
+	        memberPw,
+	        memberType,
+	        custName,
+	        custPhone,
+	        custBrdt,
+	        custAddr,
+	        custDaddr,
+	        custEmail
+	    FROM 
+	    	customer_info_view
+	    WHERE 
+	    	memberId = #{memberId}
+	</select>
+  </mapper>

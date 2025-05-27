@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="ks54team01.customer.payment.mapper.CustomerPaymentMapper">
+  
+  	<resultMap type="CustomerPayment" id="paymentResultMap">
+  		<id 	column="payment_completed_no" 	property="paymentCompletedNo" />
+  		<result column="cust_id"				property="custId" />
+  		<result column="sell_products_no"		property="sellProdNo" />
+  		<result column="rental_contract_no"		property="rentalContractNo" />
+  		<result column="ent_ceo_no"				property="entCeoNo" />
+  		<result column="ent_emp_id"				property="entEmpId" />
+  		<result column="manager_id"				property="managerId" />
+  		<result column="payment_type"			property="paymentType" />
+  		<result column="contract_details"		property="contractDetail" />
+  		<result column="payment_details"		property="paymentDetail" />
+  		<result column="payment_count"			property="paymentCount" />
+  		<result column="product_unit_price"		property="prodUnitPrice" />
+  		<result column="total_price"			property="totalPrice" />
+  		<result column="payment_completed_date"	property="paymentCompletedDate" />
+  		<result column="payment_status"			property="paymentStatus" />
+  		<result column="revision_date"			property="revDate" />
+  		<result column="products_nm"			property="prodNm" />
+  		<result column="payment_key"			property="paymentKey" />
+  		<result column="order_id"				property="orderId" />
+  		<result column="customer_key"			property="customerKey" />
+  		<result column="billing_key"			property="billingKey" />
+  		<result column="payment_count_period"	property="paymentCountPeriod" />
+  		<result column="contract_period"		property="contractPeriod" />
+  		<result column="next_payment_date"		property="nextPaymentDate" />
+  	</resultMap>
+  	
+  	
+  	<resultMap type="CustomerDelivery" id="deliveryResultMap">
+		
+		<id 	column="delivery_location_no" 	property="delNo" />
+		<result column="cust_id" 				property="custId" />
+		<result column="delivery_nm" 			property="delNm" />
+		<result column="primary_location" 		property="primaryLocation" />
+		<result column="delivery_addr" 			property="delAddr" />
+		<result column="delivery_daddr" 		property="delDaddr" />
+		<result column="delivery_zip_no" 		property="delZipNo" />
+		<result column="recipient_phone" 		property="recipientPhone" />		
+		<result column="delivery_request" 		property="delRequest" />
+		<result column="register_date" 			property="regDate" />
+		<result column="revision_date" 			property="revDate" />
+			
+	</resultMap>
+	
+	
+	<resultMap type="CustomerQuantity" id="quantityResultMap">
+	
+		<id 	column="quantity_no" 		property="quantityNo" />
+		<result column="products_no" 		property="prodNo" />
+		<result column="ent_ceo_no" 		property="entCeoNo" />
+		<result column="ent_emp_id" 		property="entEmpId" />
+		<result column="quantity" 			property="quantity" />
+		<result column="register_date" 		property="regDate" />
+		<result column="revision_date" 		property="revDate" />
+			
+	</resultMap>
+	
+	<resultMap type="CustomerDeliveryInfo" id="deliveryInfoResultMap">
+	
+		<id 	column="del_info_no" 			property="delInfoNo" />
+		<result column="cust_id" 				property="custId" />
+		<result column="ent_ceo_no" 			property="entCeoNo" />
+		<result column="ent_emp_id" 			property="entEmpId" />
+		<result column="payment_completed_no" 	property="paymentCompletedNo" />
+		<result column="sell_products_no" 		property="sellProdNo" />
+		<result column="delivery_location_no" 	property="delNo" />
+		<result column="recipient_nm" 			property="recipientNm" />
+		<result column="recipient_phone" 		property="recipientPhone" />
+		<result column="delivery_company" 		property="delCompany" />
+		<result column="delivery_request" 		property="delRequest" />
+		<result column="delivery_progress" 		property="delProgress" />
+		<result column="depart_date" 			property="departDate" />
+		<result column="arrive_date" 			property="arriveDate" />
+		<result column="register_date" 			property="regDate" />
+			
+	</resultMap>
+	
+	
+	<select id="getLastBillingPayment" resultMap="paymentResultMap">
+		SELECT 
+			payment_completed_no, 
+			cust_id, 
+			sell_products_no, 
+			rental_contract_no, 
+			ent_ceo_no, 
+			ent_emp_id, 
+			manager_id, 
+			payment_type, 
+			contract_details, 
+			payment_details, 
+			payment_count, 
+			product_unit_price, 
+			total_price, 
+			payment_completed_date, 
+			payment_status, 
+			revision_date, 
+			payment_key, 
+			customer_key, 
+			order_id, 
+			billing_key, 
+			payment_count_period, 
+			contract_period, 
+			next_payment_date
+		FROM 
+			payment
+		WHERE 
+			cust_id = #{custId} 
+			AND rental_contract_no = #{rentalContractNo}
+			AND payment_type = '정기결제'
+			AND payment_status = '정상결제상태'
+			ORDER BY 
+				next_payment_date DESC
+			LIMIT 1
+	</select>
+	
+	
+	<update id="modifyBillingKey" parameterType="CustomerPayment">
+		update payment
+		<set>
+			billing_key = #{billingKey},
+			revision_date = NOW()
+		</set>
+		where
+			rental_contract_no = #{rentalContractNo}
+			
+	</update>
+	
+	
+	
+	<insert id="addNextScheduledPayment" parameterType="CustomerPayment">
+		/* 달마다 결제시 payment 테이블에 값 등록 */
+		insert into payment
+			(payment_completed_no, cust_id, sell_products_no, rental_contract_no, ent_ceo_no, ent_emp_id, manager_id, payment_type, contract_details, 
+			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, customer_key, order_id, billing_key, payment_count_period, contract_period, next_payment_date)
+		VALUES
+			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, #{rentalContractNo}, #{entCeoNo}, #{entEmpId}, #{managerId}, '정기결제', '렌탈계약상세',
+			 '월렌탈요금', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), #{paymentStatus}, NOW(), #{paymentKey}, #{customerKey}, #{orderId}, #{billingKey}, #{paymentCountPeriod}, #{contractPeriod}, #{nextPaymentDate});
+	</insert>
+	
+	
+	
+	
+	
+	<select id="getPaymentTargets" resultMap="paymentResultMap">
+		/* 정기결제 대상자 조회 */
+		select
+			payment_completed_no, 
+			cust_id, 
+			sell_products_no, 
+			rental_contract_no, 
+			ent_ceo_no, 
+			ent_emp_id, 
+			manager_id, 
+			payment_type, 
+			contract_details, 
+			payment_details, 
+			payment_count,
+			product_unit_price, 
+			total_price, 
+			payment_status, 
+			revision_date,
+			customer_key, 
+			billing_key, 
+			MAX(payment_count_period) AS payment_count_period,
+			contract_period,
+			MAX(next_payment_date) AS next_payment_date
+		from
+			payment
+		WHERE 
+			payment_type = '정기결제' 
+			AND payment_status = '정상결제상태' 
+			AND billing_key IS NOT NULL 
+			AND customer_key IS NOT NULL 
+			AND payment_count_period IS NOT NULL 
+			AND contract_period IS NOT NULL
+		GROUP BY billing_key
+		HAVING MAX(next_payment_date) = CURDATE() AND MAX(payment_count_period) <![CDATA[ < ]]> contract_period;
+	</select>
+	
+	
+	
+	
+	<delete id="removeDeliveryInfo" parameterType="CustomerDeliveryInfo">
+		delete from delivery_information
+		where payment_completed_no = #{paymentCompletedNo}
+	</delete>
+	
+	
+	<insert id="addDeliveryInfo" parameterType="CustomerDeliveryInfo">
+		INSERT INTO delivery_information
+		(del_info_no, cust_id, ent_ceo_no, ent_emp_id, payment_completed_no, sell_products_no, delivery_location_no, recipient_nm, 
+		 recipient_phone, delivery_company, delivery_request, delivery_progress, depart_date, arrive_date, register_date)
+		VALUES
+			(#{delInfoNo}, #{custId}, #{entCeoNo}, #{entEmpId}, #{paymentCompletedNo}, #{sellProdNo}, #{delNo}, #{recipientNm},
+			 #{recipientPhone}, NULL, #{delRequest}, '상품준비중', NULL, NULL, NOW())
+	</insert>
+	
+	<update id="modifyPaymentStatus" parameterType="CustomerPayment">
+		update payment p
+		<set>
+			p.payment_status = #{paymentStatus},
+			p.revision_date = NOW()
+		</set>
+		where
+			p.order_id = #{orderId};
+	</update>
+	
+
+	<select id="getPaymentKeyByOrderId" resultType="String">
+		
+		select
+			p.payment_key
+		from
+			payment p
+		where
+			p.order_id = #{orderId};
+	</select>
+
+	
+	<update id="modifyQuantity" parameterType="CustomerQuantity">
+		UPDATE quantity q
+		<set>
+				q.quantity = q.quantity - #{orderQuantity},	
+				q.revision_date = NOW()
+		</set>		 
+		WHERE 
+			q.products_no = #{prodNo} and q.ent_ceo_no = #{entCeoNo};
+	</update>
+
+
+
+	<select id="getQuantity" resultType="int">
+		select
+			q.quantity as quantity
+		from
+			quantity q
+		where
+			q.products_no = #{prodNo} and q.ent_ceo_no = #{entCeoNo};
+	</select>
+
+	
+	
+	<select id="getDeliveryListById" resultMap="deliveryResultMap">
+		select
+			dl.delivery_location_no,
+			dl.delivery_nm,
+			dl.primary_location,
+			dl.delivery_addr,
+			dl.delivery_daddr,
+			dl.recipient_phone,
+			dl.delivery_request
+		from
+			delivery_list dl
+		where
+			dl.cust_id = #{custId}
+		order by
+			dl.primary_location
+	</select>
+	
+	
+	<insert id="addPayment" parameterType="CustomerPayment">
+		/* 일반결제시 payment테이블에 값 등록 */
+		insert into payment
+			(payment_completed_no, cust_id, sell_products_no, rental_contract_no, ent_ceo_no, ent_emp_id, manager_id, payment_type, contract_details, 
+			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, customer_key, order_id, billing_key, payment_count_period, contract_period, next_payment_date)
+		values
+			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, '일시불판매', #{entCeoNo}, #{entEmpId}, #{managerId}, #{paymentType}, '일시불판매',
+			 '일시불판매', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), '정상결제상태', NOW(), #{paymentKey}, #{customerKey}, #{orderId}, #{billingKey}, NULL, NULL, NULL)
+	</insert>
+	
+	
+	<insert id="addBlillingPayment" parameterType="CustomerPayment">
+		/* 첫 정기결제시 payment테이블에 값 등록 */
+		insert into payment
+			(payment_completed_no, cust_id, sell_products_no, rental_contract_no, ent_ceo_no, ent_emp_id, manager_id, payment_type, contract_details, 
+			 payment_details, payment_count, product_unit_price, total_price, payment_completed_date, payment_status, revision_date, payment_key, customer_key, order_id, billing_key, payment_count_period, contract_period, next_payment_date)
+		VALUES
+			(#{paymentCompletedNo}, #{custId}, #{sellProdNo}, #{rentalContractNo}, #{entCeoNo}, #{entEmpId}, #{managerId}, '정기결제', '렌탈계약상세',
+			 '월렌탈요금', #{paymentCount}, #{prodUnitPrice}, #{totalPrice}, CURDATE(), #{paymentStatus}, NOW(), #{paymentKey}, #{customerKey}, #{orderId}, #{billingKey}, 1, #{contractPeriod}, #{nextPaymentDate});
+	</insert>
+	
+	
+	<select id="getPaymentList" resultMap="paymentResultMap">
+		select
+			pd.products_nm,
+			p.total_price,
+			p.rental_contract_no,
+			p.payment_completed_date,
+			p.payment_status,
+			p.order_id,
+			p.payment_completed_no,
+			p.customer_key,
+			p.cust_id
+		from
+			payment p inner join sell_products sp 
+			on p.sell_products_no = sp.sell_products_no
+			inner join products pd
+			on sp.products_no = pd.products_no
+		where
+			p.cust_id = #{custId}
+		group by
+			CASE
+				WHEN p.rental_contract_no = '일시불판매' THEN CONCAT(p.rental_contract_no, '_', p.payment_completed_no)
+				ELSE p.rental_contract_no
+			END
+		order by
+			p.payment_completed_date desc
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+  </mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.enterprise.product.mapper.EnterpriseMarginRatioMapper">
+
+	<select id="existMarginRatioByPeriod" parameterType="int">
+		/* 마진율 등록 전 이미 등록되어있는 기간 등록 시 실행, 미등록 시 실행하지 않음*/
+		SELECT
+			COUNT(margin_ratio_no)
+		FROM
+			margin_ratio
+		WHERE
+			ent_ceo_no = 'ent_ceo_1'
+			AND period = #{period};
+	</select>
+
+	<insert id="addEnterpriseMarginRatio" parameterType="ks54team01.enterprise.product.domain.EnterpriseMarginRatio">
+		/* 업체별 마진율 최초 등록 (랜덤코드) */
+		INSERT INTO margin_ratio
+		(margin_ratio_no, ent_ceo_no, ent_emp_id, period, margin_ratio, register_date, revision_date, use_status)
+		VALUES(#{marginRatioNum}, 'ent_ceo_1', 'entempid1', #{period}, #{marginRatio}, NOW(), NOW(), '사용중');
+	</insert>
+	
+	<update id="modifyMarginRatioUseStatus" parameterType="ks54team01.enterprise.product.domain.EnterpriseMarginRatio">
+		/* 업체별 마진율 사용유무 설정 (사실상 삭제 기능도 포함) */
+		UPDATE margin_ratio
+		SET
+			<if test="useStatus == '사용중'">
+			    use_status = '사용불가',
+			</if>
+			<if test="useStatus == '사용불가'">
+			    use_status = '사용중',
+			</if>
+		    revision_date = NOW()
+		WHERE
+		    margin_ratio_no = #{marginRatioNum};
+	</update>
+	
+	<update id="modifyEnterpriseMarginRatio" parameterType="ks54team01.enterprise.product.domain.EnterpriseMarginRatio">
+		/* 업체별 설정한 마진율 변경 */
+		UPDATE margin_ratio
+		SET
+		    margin_ratio = #{marginRatio},
+		    revision_date = NOW()
+		WHERE
+		    ent_ceo_no = #{enterpriseCeoNum}
+		    AND period = #{period};
+	</update>
+	
+	<select id="getEnterpriseMarginRatio" parameterType="string">
+		/* 업체별 마진율 조회 */
+		SELECT
+			margin_ratio_no AS marginRatioNum ,
+			ent_ceo_no AS EnterpriseCeoNum ,
+			ent_emp_id AS EnterpriseEmployeeId ,
+			period AS period ,
+			margin_ratio AS marginRatio ,
+			register_date AS registerDate ,
+			revision_date AS revisionDate,
+			use_status AS useStatus
+		FROM
+			margin_ratio
+		WHERE
+			ent_ceo_no = 'ent_ceo_1'
+		ORDER BY period DESC;
+	</select>
+</mapper>
+
+
+
+
+
+
+

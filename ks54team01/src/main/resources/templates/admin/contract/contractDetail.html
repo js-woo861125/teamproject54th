@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/layout/defaultPopUp}">
+	
+	<!-- head 삽입공간 -->
+	<head>
+	
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+	
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+	
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="content">
+		<div class="content-header">
+			<div>
+				<h2 class="content-title card-title" th:text="${title}">타이틀</h2>
+			</div>
+	
+		</div>
+		<div class="card mb-4">
+			
+			<div class="card-body">
+				<div class="table-responsive">
+					<div class="table-responsive">
+						<table class="table align-middle table-nowrap mb-0">
+							<thead class="table-light text-center">
+								<tr>						
+									<th class="align-middle" scope="col">납입회차</th>
+									<th class="align-middle" scope="col">월납입금액</th>
+									<th class="align-middle" scope="col">위약금</th>
+									<th class="align-middle" scope="col">월별납입</th>
+									<th class="align-middle" scope="col">납입예정일</th>	
+									<th class="align-middle" scope="col">납입여부</th>
+									<th class="align-middle" scope="col">계약유형</th>
+								</tr>
+							</thead>
+							<tbody class="text-center">
+								<tr th:if="${!#lists.isEmpty(ContractDetailList)}" th:each="l : ${ContractDetailList}">
+									<td th:text="${l.paidInRound}+'회차'">회차</td>
+									<td th:text="|₩ ${#numbers.formatInteger(l.paymentAmount,3,'COMMA')}|"></td>			
+									<td th:text="|₩ ${#numbers.formatInteger(l.penaltyFee,3,'COMMA')}|">위약금</td>
+									<td th:text="${l.monthlyDate}">월별납입</td>				
+									<td th:text="${l.monthlyPaymentDate}">납입예정일</td>
+									<td th:text="${l.unpaidStatus}">납입여부</td>
+									<td th:text="${l.rentalContType}">계약유형</td>
+								</tr>
+								<tr th:unless="${!#lists.isEmpty(ContractDetailList)}">
+                                	<td colspan="12">등록없음</td>
+                                </tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pagination-area mt-15 mb-50">
+			<nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-start">
+					<li class="page-item active"><a class="page-link" href="#">01</a></li>
+					<li class="page-item"><a class="page-link" href="#">02</a></li>
+					<li class="page-item"><a class="page-link" href="#">03</a></li>
+					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
+					<li class="page-item"><a class="page-link" href="#">16</a></li>
+					<li class="page-item"><a class="page-link" href="#"><i
+							class="material-icons md-chevron_right"></i></a></li>
+				</ul>
+			</nav>
+		</div>
+	</th:block>
+
+</html>

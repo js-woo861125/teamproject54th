@@ -2,8 +2,57 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="ks54team01.enterprise.product.mapper.EnterPriseProductMapper">
+<mapper namespace="ks54team01.enterprise.product.mapper.EnterpriseProductMapper">
 	
+	<select id="getQuantityList" resultType="EnterpriseProductQuantity">
+	    SELECT
+	        sp.ent_ceo_no AS entCeoNo,
+	        p.products_nm AS productName,
+	        pc.small_category AS cateName,
+	        p.products_status AS productStatus,
+	        q.quantity AS quantity
+	    FROM 
+	    	sell_products sp
+	    JOIN 
+	    	products p ON sp.products_no = p.products_no
+	    JOIN 
+	    	products_category pc ON p.product_category_no = pc.product_category_no
+	    JOIN 
+	    	quantity q ON sp.products_no = q.products_no AND sp.ent_ceo_no = q.ent_ceo_no
+	    GROUP BY 
+	    	sp.ent_ceo_no, p.products_no;
+	</select>
+	
+	<select id="getSellProductList" resultType="ks54team01.enterprise.product.domain.EnterpriseProduct">
+		SELECT
+			s.sell_products_no AS sellProductsNo, 
+			p.products_nm AS productName,
+			s.margin_ratio_no AS marginRatioNo, 
+			m.model_nm AS modelName,
+			s.ent_ceo_no AS entCeoNo, 
+			s.ent_emp_id AS entEmpId, 
+			s.products_no AS productsNo, 
+			s.lump_sum_pay_price AS lumpSumPayPrice, 
+			s.period AS period, 
+			s.calculate_price AS calculatePrice, 
+			s.final_price AS finalPrice, 
+			DATE_FORMAT(s.register_date, '%Y-%m-%d %H:%i:%s') AS registerDate, 
+			DATE_FORMAT(s.revision_date, '%Y-%m-%d %H:%i:%s') AS revisionDate, 
+			s.use_status AS useStatus,
+			IFNULL(f.file_path, '/manage/assets/imgs/theme/upload.svg') AS productImage
+		FROM
+		   sell_products s LEFT JOIN products p
+ 		   ON 
+ 		   		s.products_no = p.products_no
+  		LEFT JOIN files f
+ 		   ON 
+ 		   		f.ref_id = p.model_no AND f.file_type = 'mainImage'
+		JOIN model m
+		ON p.model_no = m.model_no	
+  		   
+	</select>
+
+	    
 </mapper>
 
 

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{customer/layout/default}">
+
+
+	<!-- head 삽입공간 -->
+	
+	<head>
+		
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="https://js.tosspayments.com/v2/standard"></script>
+	</th:block>
+	
+	
+	<th:block layout:fragment="jsScript">
+		<script type="text/javascript">
+			const clientKey = "test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq";
+	     	const customerKey = "17HILJmHcBSCiQ2iCWk2C";
+			const tossPayments = TossPayments(clientKey);
+			
+			const payment = tossPayments.payment({ customerKey });
+			
+			
+			 async function requestBillingAuth() {
+		        await payment.requestBillingAuth({
+		          method: "CARD", // 자동결제(빌링)는 카드만 지원합니다
+		          successUrl: window.location.origin + "/success", // 요청이 성공하면 리다이렉트되는 URL
+		          failUrl: window.location.origin + "/fail", // 요청이 실패하면 리다이렉트되는 URL
+		          customerEmail: "customer123@gmail.com",
+		          customerName: "김토스",
+				});
+			}
+		</script>
+	
+	</th:block>
+	
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+		<div class="container mb-80 mt-50">
+            <div class="row">
+                <div class="col-lg-8 mb-40">
+                    <h1 class="heading-2 mb-10">주문/결제</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="table-responsive shopping-summery">
+                        <table class="table table-wishlist">
+                            <thead>
+                                <tr class="main-heading">
+                                    
+                                    <th scope="col" colspan="2" class="text-center">상품명</th>
+                                    <th scope="col" class="text-center">금액</th>
+                                    <th scope="col" class="text-center">수량</th>
+                                    <th scope="col" class="text-center">합계</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="pt-30">
+                                    
+                                    <td class="image product-thumbnail pt-40"><img src="assets/imgs/shop/product-1-1.jpg" alt="#" class="ml-20"></td>
+                                    <td class="product-des product-name">
+                                        <h6 class="mb-5"><a class="product-name mb-10 text-heading" href="shop-product-right.html">Field Roast Chao Cheese Creamy Original</a></h6>
+                                    </td>
+                                    <td class="price" data-title="Price">
+                                        <h4 class="text-body text-center">$2.51 </h4>
+                                    </td>
+                                    <td class="text-center detail-info justify-content-center" data-title="Stock">
+                                        <div class="detail-extralink">
+                                            <div class="detail-qty border radius">
+                                                <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+                                                <input type="text" name="quantity" class="qty-val" value="1" min="1">
+                                                <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="price" data-title="Price">
+                                        <h4 class="text-brand text-center">$2.51 </h4>
+                                    </td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="border p-md-4 cart-totals ml-30 mb-30">
+                        <div class="row mt-10">
+                            <div class="col-lg-12">
+                                <h4 class="mb-10">배송지 목록</h4>
+                                <form class="field_form shipping_calculator">
+                                    <div class="form-row">
+                                        <div class="form-group col-lg-12">
+                                            <div class="custom_select">
+                                                <select class="form-control w-100">
+                                                    
+                                                    <option value="">내 배송지명</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border p-md-4 cart-totals ml-30">
+                        <div class="table-responsive">
+                            <table class="no-border">
+                                <tbody>
+                                    
+                                    <tr>
+                                        <td class="cart_total_label">
+                                            <h6 class="text-muted">총 결제금액</h6>
+                                        </td>
+                                        <td class="cart_total_amount">
+                                            <h4 class="text-brand text-end">$12.31</h4>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button class="button" style="margin-top: 30px" onclick="requestBillingAuth()">카드 등록하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</th:block> 
+</html>

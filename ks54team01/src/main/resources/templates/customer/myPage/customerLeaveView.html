@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{customer/layout/default}">
+
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</th:block>
+	
+	
+	 <!-- 페이지 삽입 공간 -->
+	<th:block layout:fragment="customContents">
+		<div class="container">
+	   		<div class="row justify-content-center">
+		        <div class="col-xl-9 col-lg-9 col-md-9">
+                    <div class="d-flex justify-content-center ">
+						<div class="section_wrap mt-30">
+							<div class="top_area mb-30">
+								<h3 style="font-size: 25px;" th:text="${title}"></h3>
+							</div>
+							<div class="leave_info bg-light p-4" style="font-size: 17px; font-weight: 600" >
+	                        	<div class="inner_content">
+									<h3 class="txt1 text-center mt-10 mb-10">탈퇴 시 1년간 재가입이 되지 않습니다.<br>재가입은 탈퇴일로부터 1년이 지난 후 가입이 가능합니다.<br>정말로 탈퇴 하시겠습니까?</h3>
+									<h3 class="txt2 text-center " style="font-size: 20px;">회원탈퇴 시 잔여 포인트와 쿠폰은 소멸됩니다.</h3>
+								</div>
+								<hr />
+								<div class="inner_content">
+									<div class="row justify-content-center">
+        								<div class="bg-light col-xl-9 col-lg-9 col-md-9">
+											<div class="bottom_area ml-140 my-4">
+												<ul class="bul_list lh-lg">
+													<li>∙ 배송/반품/교환 등 진행중인 주문 건이 있을 경우에는 탈퇴가 되지 않습니다.</li>
+													<li>∙ 모든 쿠폰, 포인트 및 개인정보가 삭제됩니다. (재가입시에 환불되지 않습니다.) </li>
+													<li>∙ 소비자보호에 관한 법률 및 동법 시행령에 의거 아래의 기간동안 보유됩니다. <br>(개인정보는 법률에 의한 경우를 제외 보유되어지는 이외의 다른 목적으로 이용되지 않습니다.)
+														<ul class="dash_list my-2">
+															<li class="ml-20" style="font-size: 14px">- 계약 또는 청약철회 등의 관한 기록은 5년</li>
+															<li class="ml-20" style="font-size: 14px">- 대금결제 및 재화 등의 공급에 관한 기록은 5년</li>
+															<li class="ml-20" style="font-size: 14px">- 소비자의 불만 또는 분쟁처리에 관한 기록은 3년</li>
+														</ul>
+													</li>
+													<li class="mb-10">∙ 회원 탈퇴 후 동일 아이디로는 재가입이 불가합니다.</li>
+													<li class="mb-10">∙ 당사 사이트에 입력하신 게시물 및 댓글은 삭제되지 않으며, 회원정보 삭제로 인해 작성자 본인을 확인할 수 없으므로 게시물 편집 및 삭제 처리가 불가능합니다. 게시물 삭제를 원하시는 경우 게시물을 삭제하신 후 탈퇴 신청 바랍니다.</li>												
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+                  			</div>
+							<div class="form-check text-center my-2">
+								<label class="form-check-label" for="leaveFg">
+								    <input class="form-check-input me-2" type="checkbox" id="leaveFg">탈퇴에 대한 내용을 모두 확인하였습니다.
+								</label>
+							</div>
+							<div class="btn_box mb-20 d-flex justify-content-center gap-3">
+							  <button class="leave_cancel_btn btn radius" id="leave_cancel_btn">탈퇴취소</button>
+							  <button class="leave_btn btn radius black" id="leave_btn" th:data-member-id="${memberId}">탈퇴완료</button>
+							</div>			
+              			</div>
+            		</div>
+            	</div>		
+        	</div>
+    	</div>
+	</th:block>
+	<th:block layout:fragment="jsScript">
+		<script>
+			$('.leave_btn').click(e => {
+				e.preventDefault();
+				const memberId = $(e.target).data('memberId');
+				
+				const isChecked = $('#leaveFg').is(':checked');
+			    if (!isChecked) {
+			        Swal.fire('체크박스를 확인해 주세요.', '', 'warning');
+			        return;
+			    }
+			    
+				Swal.fire({
+					  title: '회원탈퇴',
+					  text: '정말로 회원탈퇴 하시겠습니까?',
+					  icon: "warning",
+					  showCancelButton: true,
+					  confirmButtonColor: "#3085d6",
+					  cancelButtonColor: "#d33",
+					  confirmButtonText: "회원탈퇴",
+					  cancelButtonText: "탈퇴취소"
+				}).then(async (result) => {
+					console.log(result);
+					
+				  	if (result.isDismissed) {
+				    	Swal.fire({
+				      		title: "탈퇴취소",
+				      		icon: "error"
+				    	}).then(() => location.reload());
+				    	return ;
+				 	 }
+				  	
+				  	const { value: password } = await Swal.fire({
+				  	  title: "회원탈퇴",
+				  	  input: "password",				  	  
+				  	  inputPlaceholder: "비밀번호를 입력해주세요",
+				  	  inputAttributes: {
+				  	    autocapitalize: "off",
+				  	    autocorrect: "off"
+				  	  },
+				  	  showCancelButton: true,
+					  confirmButtonText: "회원탈퇴",
+					  cancelButtonText: "취소"
+				  	});
+				  	
+				  	const optionObj = {
+			  			title: '탈퇴취소',
+			      		icon: 'error'
+					}
+				  	
+				  	if (!password) {
+				        Swal.fire("비밀번호를 입력해주세요.", "", "warning");
+				        return;
+				    }
+				  	
+				  	if (password) {
+						$.ajax({
+							url: '/customer/member/customerLeave',
+							method: 'post',
+							data: { 'memberId': memberId, 'memberPw': password },
+							dataType: 'json',
+							success: (res) => {
+								if (res.status === 'success') {
+									Swal.fire({
+										title: '회원탈퇴가 정상적으로 처리되었습니다.',
+										icon: 'success'
+									}).then(() => location.href = '/');
+								} else if (res.status === 'in_progress_order') {
+									Swal.fire({
+										title: '현재 진행중인 주문건이 있어 회원탈퇴가 불가능합니다.',
+										icon: 'error'
+									}).then(() => location.href = '/customer/member/myAccount');
+								} else if (res.status === 'invalid_password') {
+									Swal.fire({
+										title: '비밀번호가 일치하지 않습니다.',
+										icon: 'error'
+									});
+								} else {
+									Swal.fire({
+										title: '회원탈퇴 처리 중 오류가 발생했습니다.',
+										icon: 'error'
+									});
+								}
+							},
+							error: (jqXHR, textStatus, error) => {
+								console.error(jqXHR, textStatus, error);
+								Swal.fire({
+									title: '서버 오류가 발생했습니다.',
+									icon: 'error'
+								}).then(() => location.reload());
+							}
+						});
+					};
+				});
+			});
+			
+		/**
+		 * 탈퇴취소
+		 */	
+		 $('#leave_cancel_btn').on('click', function(e) {
+		      location.href = "/customer/member/myAccount";
+		  });
+		
+		</script>
+	</th:block>
+
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{enterprise/layout/default}">
+
+	<!-- head 삽입공간 -->
+	<head>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+		<script>
+			/**
+			 * 전화번호 조합
+			 */
+			function setPhoneValue() {
+			    const phone = `${$('#entEmpPhone1').val()}-${$('#entEmpPhone2').val()}-${$('#entEmpPhone3').val()}`;
+			    $('#entEmpPhone').val(phone);
+			}
+			
+			
+			$('#modifyMemberBtn').click(function(e) {
+		        e.preventDefault();
+		        
+		        setPhoneValue();
+	                  $('#modifyMemberForm').submit();
+		    });
+			
+		</script>
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="content">
+		<div class="content-header">
+	        <div>
+	            <h2 class="content-title card-title" th:text="${title}"></h2>
+	        </div>
+	    </div>
+	     <div class="card mb-4 col-10">
+        	<form id="modifyMemberForm" th:action="@{/enterprise/myAccount}" method="post">
+	            <header class="card-header">
+	                <div class="row align-items-end">
+	                    <div class="col-md-2 col-2 ms-auto">
+	                        <button type="submit" id="modifyMemberBtn"
+	                        		class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6">수정완료</button>
+	                    </div>
+	                    <div class="col-md-2 col-2">
+	                        <button type="button" onclick="location.href='/admin/member/memberList';" 
+	                        		class="btn btn-warning w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >수정취소</button>
+	                    </div>
+	                </div>
+	            </header>
+	            <div class="card-body">
+	                <div class="card-body">
+	                    <div class="row">
+	                        <div class="col-md-2">
+	                            <h4>1. 수정 항목</h4>
+	                        </div>
+	                        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+							<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+	                        <div class="col-md-10" th:object="${entInfo}">
+	                        	<div class="row align-items-end ">
+	                        		<div class="col-6">
+			                            <div class="mb-4">
+			                                <label class="form-label fs-6" for="memberId">아이디</label>
+			                                <input type="text" id="memberId" name="memberId" th:value="*{memberId}" 
+			                                	   placeholder="회원의 아이디를 입력해주세요" class="form-control col-8 fs-6" readonly />
+			                            </div>                        		
+	                        		</div>                        		
+	                        		<div class="col-6">	                        		
+			                            <div class="mb-4">
+			                                <label class="form-label fs-6" for="memberPw">비밀번호</label>
+			                                <input type="text" id="memberPw" name="memberPw" th:value="*{memberPw}"
+			                                	   placeholder="회원의 비밀번호를 입력해주세요" class="form-control fs-6" />
+			                            </div>
+	                        		</div>
+	                        	</div>                     		
+	          					<div class="row">
+	                            	<div class="col-6">
+	                            		<div class="row align-items-end">
+	                            			<input type="hidden" id="entEmpPhone" name="entEmpPhone" class="form-control " />
+	                            			<div class="col-4">
+					                            <div class="mb-4">
+					                                <label class="form-label fs-6" for="entEmpPhone">연락처</label>
+					                            	<input type="text" class="form-control" id ="entEmpPhone1" name="entEmpPhone1" th:value="${entEmpPhone1}" readonly />
+					                            </div>
+	                            			</div>
+	                            			<div class="col-4">
+	                            				<div class="mb-4">
+					                                <input type="text" id="entEmpPhone2" name="entEmpPhone2" th:value="${entEmpPhone2}"
+					                                	   placeholder="중간 연락처" class="form-control fs-6" />
+	                            				</div>
+	                            			</div>
+	                            			<div class="col-4">
+	                            				<div class="mb-4">
+					                                <input type="text" id="entEmpPhone3" name="entEmpPhone3" th:value="${entEmpPhone3}"
+					                                	   placeholder="마지막 연락처" class="form-control fs-6" />
+	                            				</div>
+	                            			</div>
+	                            		</div>
+	                            	</div>
+	                            </div>
+							    <!-- 대표 -->
+							    <div class="row" th:if="${memberType == '입점업체 대표'}">
+							    	<div class="row">
+						           		<div class="col-6">
+							                <div class="mb-4">
+							                     <label class="form-label fs-6" for="entEmpName">대표 이름</label>
+							                     <input type="text" id="entEmpName" name="entCeoName" th:value="*{entEmpName}"
+							                     	   placeholder="이름을 입력해주세요" class="form-control fs-6" />
+							                </div>
+						           		</div>
+						           		<div class="col-6">
+							                <div class="mb-4">
+							                     <label class="form-label fs-6" for="entEmpEmail">대표 이메일</label>
+							                     <input type="text" id="entEmpEmail" name="entEmpEmail" th:value="*{entEmpEmail}"
+							                     	   placeholder="이메일을 입력해주세요" class="form-control fs-6" />
+							                </div>
+						           		</div>
+					           		</div>
+							    	<div class="row">
+						           		<div class="col-6">
+							                <div class="mb-4">
+							                     <label class="form-label fs-6" for="entCeoAddr">대표 주소</label>
+							                     <input type="text" id="entCeoAddr" name="entCeoAddr" th:value="*{entCeoAddr}"
+							                     	   placeholder="주소를 입력해주세요" class="form-control fs-6" />
+							                </div>
+						           		</div>
+						           		<div class="col-6">
+							                <div class="mb-4">
+							                     <label class="form-label fs-6" for="entCeoDaddr">대표 상세주소</label>
+							                     <input type="text" id="entCeoDaddr" name="entCeoDaddr" th:value="*{entCeoDaddr}"
+							                     	   placeholder="상세주소를 입력해주세요" class="form-control fs-6" />
+							                </div>
+						           		</div>
+					           		</div>
+							    	<div class="row">
+						           		<div class="col-6">
+							                <div class="mb-4">
+							                     <label class="form-label fs-6" for="entBank">대표 은행명</label>
+							                     <input type="text" id="entBank" name="entBank" th:value="*{entBank}"
+							                     	   placeholder="은행명을 입력해주세요" class="form-control fs-6" />
+							                </div>
+						           		</div>
+						           		<div class="col-6">
+							                <div class="mb-4">
+							                     <label class="form-label fs-6" for="entBank">대표 계좌번호</label>
+							                     <input type="text" id="entBankNum" name="entBankNum" th:value="*{entBankNum}"
+							                     	   placeholder="계좌번호를 입력해주세요" class="form-control fs-6" />
+							                </div>
+						           		</div>
+					           		</div>
+					           	</div>
+							    <!-- 직원 -->
+							    <div th:if="${memberType == '입점업체 직원'}">
+							    	<div class="row">
+						           		<div class="col-6">
+							                <div class="mb-4">
+							                     <label class="form-label fs-6" for="entEmpName">직원 이름</label>
+							                     <input type="text" id="entEmpName" name="entEmpName" th:value="*{entEmpName}"
+							                     	   placeholder="이름을 입력해주세요" class="form-control fs-6" />
+							                </div>
+						           		</div>
+						           		<div class="col-6">
+							                <div class="mb-4">
+							                     <label class="form-label fs-6" for="entEmpEmail">직원 이메일</label>
+							                     <input type="text" id="entEmpEmail" name="entEmpEmail" th:value="*{entEmpEmail}"
+							                     	   placeholder="이메일을 입력해주세요" class="form-control fs-6" />
+							                </div>
+						           		</div>
+					           		</div>
+							    	<div class="row">
+						           		<div class="col-6">
+							                <div class="mb-4">
+							                     <label class="form-label fs-6" for="entPosition">직원 직책</label>
+							                     <input type="text" id="entPosition" name="entPosition" th:value="*{entPosition}"
+							                     	   placeholder="직책을 입력해주세요" class="form-control fs-6" readonly />
+							                </div>
+						           		</div>
+					           		</div>
+						    	</div>
+						    </div>
+						</div>
+					</div>
+			    </div>
+			</form>
+		</div>
+	</th:block>
+</html>

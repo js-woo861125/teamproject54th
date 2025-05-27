@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="ks54team01.customer.register.mapper.RegisterMapper">
+  
+	<insert id="addEntEmpMember" parameterType="EntMember">
+		/* 입점업체직원정보 등록 */
+		INSERT INTO ent_emp
+		(ent_emp_id, ent_ceo_no, ent_brno, ent_nm, ent_position, ent_emp_nm, ent_emp_email, ent_emp_phone, register_date, revision_date)
+		VALUES
+		(#{memberId}, #{entCeoNo}, #{entBrno}, #{entName}, #{entPosition}, #{entEmpName}, #{entEmpEmail}, #{entEmpPhone}, CURDATE(), CURDATE());
+	</insert>
+	
+	<insert id="addEntMember" parameterType="EntMember">
+		/* 입점업체대표 직원테이블에 등록 */
+		INSERT INTO ent_emp
+		(ent_emp_id, ent_ceo_no, ent_brno, ent_nm, ent_position, ent_emp_nm, ent_emp_email, ent_emp_phone, register_date, revision_date)
+		VALUES
+		(#{memberId}, #{entCeoNo}, #{entBrno}, #{entName}, '대표', #{entCeoName}, #{entCeoEmail}, #{entCeoPhone}, CURDATE(), CURDATE());
+	</insert>
+	
+	<insert id="addEntCeoMember" parameterType="EntMember">
+		/* 입점업체대표정보 등록 */
+	    INSERT INTO ent_ceo 
+	    	(ent_ceo_no, ent_ceo_id, ent_ceo_nm, ent_brno, ent_nm, ent_ceo_addr, ent_ceo_daddr, ent_ceo_email,
+	         ent_bank, ent_bank_num, ent_ceo_phone, register_date, revision_date) 
+	    VALUES 
+	    	(#{entCeoNo}, #{memberId}, #{entCeoName}, #{entBrno}, #{entName}, #{entCeoAddr}, #{entCeoDaddr}, #{entCeoEmail},
+	         #{entBank}, #{entBankNum}, #{entCeoPhone}, CURDATE(), CURDATE())
+	</insert>
+	
+	<insert id="addCorpMember" parameterType="CustomerMember">
+		/* 기업고객 추가정보 등록 */
+		INSERT INTO corp_customer
+		(cust_id, corp_brno, corp_nm, register_date, revision_date)
+		VALUES
+		(#{memberId}, #{corpBrno}, #{corpName}, CURDATE(), CURDATE());
+	</insert>
+	
+	<insert id="addCustomerMember" parameterType="CustomerMember">
+		/* 일반고객정보 등록 */
+		INSERT INTO customer
+		(cust_id, cust_nm, cust_brdt, cust_addr, cust_daddr, cust_email, cust_phone, register_date, revision_date)
+		VALUES
+		(#{memberId}, #{custName}, #{custBrdt}, #{custAddr}, #{custDaddr}, #{custEmail}, #{custPhone}, CURDATE(), CURDATE());
+	</insert>
+	
+	<insert id="addCommonMember" parameterType="CommonMember">
+		/* 고객공통정보 등록 */
+		INSERT INTO members
+		(members_id, members_pw, members_type, register_date, revision_date, state_transition_date)
+		VALUES
+		(#{memberId}, #{memberPw}, #{memberType}, CURDATE(), CURDATE(), #{memberStateTransitionDate});
+	</insert>
+	
+  	<select id="isIdCheck" parameterType="string" resultType="boolean">
+		/* 아이디 중복 체크 */
+		select 
+			count(*)
+		from 
+			members m
+		where 
+			m.members_id = #{memberId};
+	</select>
+  </mapper>
