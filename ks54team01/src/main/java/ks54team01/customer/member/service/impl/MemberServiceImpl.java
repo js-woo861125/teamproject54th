@@ -3,9 +3,11 @@ package ks54team01.customer.member.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import ks54team01.customer.member.domain.CustomerMember;
+import ks54team01.customer.member.domain.FindMember;
 import ks54team01.customer.member.mapper.MemberMapper;
 import ks54team01.customer.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -17,15 +19,43 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberServiceImpl implements MemberService{
 
 	private final MemberMapper memberMapper;
+	private final PasswordEncoder passwordEncoder;
 	
-
+	/**
+	 * 임시비밀번호 업데이트
+	 */
+	@Override
+	public void updateRandomPw(String memberId, String tempPw) {
+		String encodedPw = passwordEncoder.encode(tempPw);
+	   
+	    memberMapper.updatePassword(memberId, encodedPw);
+		
+	}
+	
+	/**
+	 * 비밀번호 찾기
+	 */
+	@Override
+	public FindMember findMemberPwByInfo(String memberId, String memberEmail, String memberType) {
+		return memberMapper.findMemberPwByInfo(memberId, memberEmail, memberType);
+	}
+	
+	/**
+	 * 아이디 찾기
+	 */
+	@Override
+	public FindMember findMemberIdByInfo(String memberName, String memberPhone, String memberEmail, String memberType) {
+		return memberMapper.findMemberIdByInfo(memberName, memberPhone, memberType, memberType);
+	}
+	
+	
 	/**
 	 * 회원탈퇴
 	 */
 	@Override
 	public boolean customerLeave(String memberType, String memberId) {
 		 int result = 0;
-		 log.info("탈퇴시작: {}",memberId);
+		 log.info("탈퇴시작: {}", memberId);
 
 		    switch (memberType) {
 		        case "개인고객":
