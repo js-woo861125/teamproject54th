@@ -31,7 +31,7 @@
                                     <div class="padding_eight_all bg-white">
                                         <div class="heading_s1">
                                             <h1 class="mb-5" th:text="${title}"></h1>
-                                            <p class="mb-30">이미 회원이신가요? <a href="page-login.html">로그인</a></p>
+                                            <p class="mb-30">이미 회원이신가요? <a th:href="@{/customer/login/memberLogin}">로그인</a></p>
                                         </div>
                                         <form id="memberRegisterForm" th:action="@{/customer/register/memberRegister}" method="post"> 
                                         	 <!-- 아이디 입력 및 중복 확인 -->                                        

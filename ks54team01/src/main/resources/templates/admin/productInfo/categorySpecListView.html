@@ -119,8 +119,7 @@
 					<div class="row gx-3">
 	                   <div class="col-lg-2 col-md-3 col-12">
 	                       <select class="form-select" name="searchKey">
-	                           <option value="specName" th:selected="${searchKey == 'specName'}">스펙명</option>
-	                           <option value="categoryInfo.smCategory" th:selected="${searchKey == 'categoryInfo.smCategory'}">카테고리</option>	                           
+	                           <option value="specName" th:selected="${searchKey == 'specName'}">스펙명</option>                        
 	                       </select>
 	                   </div>
 	                   <div class="col-lg-4 col-md-5">
@@ -128,7 +127,7 @@
 	                   </div>
 	                   <div class="col-lg-1 col-md-1 me-auto">
 						   <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
-	                   </div>
+	                   </div>	
 	                   <div class="col-lg-2 col-md-3 col-12">
 	                       <select class="form-select" name="useStatus" id="useStatus">
 	                           <option value="">사용유무</option>
@@ -149,7 +148,7 @@
 							<a class="nav-link" th:href="@{/admin/productInfo/itemList}">품목</a>
 							<a class="nav-link" th:href="@{/admin/productInfo/modelList}">모델</a>
 							<a class="nav-link" th:href="@{/admin/productInfo/benefitList}">전체혜택</a>
-							<a class="nav-link active" aria-current="page" th:href="@{/admin/productInfo/categorySpecList}">카테고리달/상세스펙</a>
+							<a class="nav-link active" aria-current="page" th:href="@{/admin/productInfo/categorySpecList}">카테고리별/상세스펙</a>
 							<a class="nav-link" th:href="@{/admin/productInfo/modelSpecList}">모델별/상세스펙</a>
 						</nav>
 					</aside>
