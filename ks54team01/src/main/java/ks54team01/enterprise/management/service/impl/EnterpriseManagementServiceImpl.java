@@ -26,7 +26,7 @@ public class EnterpriseManagementServiceImpl implements EnterpriseManagementServ
 	@Override
 	public void addEntEmpMember(EntMember entMember) {
 		
-		if (entMember.getEntEmpName() == null) entMember.setEntEmpName("");
+		if (entMember.getEntEmpName() == null) entMember.setEntEmpName("010");
 	    if (entMember.getEntEmpEmail() == null) entMember.setEntEmpEmail("");
 	    if (entMember.getEntEmpPhone() == null) entMember.setEntEmpPhone("");
 	    if (entMember.getMemberType() == null) entMember.setMemberType("입점업체 직원");

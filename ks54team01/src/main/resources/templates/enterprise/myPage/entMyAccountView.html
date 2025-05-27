@@ -61,7 +61,7 @@
 	                        </div>
 	                        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
 							<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-	                        <div class="col-md-10" th:object="${entInfo}">
+	                        <div class="col-md-10" th:object="${entMemberInfo}">
 	                        	<div class="row align-items-end ">
 	                        		<div class="col-6">
 			                            <div class="mb-4">
@@ -160,14 +160,14 @@
 						           		<div class="col-6">
 							                <div class="mb-4">
 							                     <label class="form-label fs-6" for="entEmpName">직원 이름</label>
-							                     <input type="text" id="entEmpName" name="entEmpName" th:value="*{entEmpName}"
+							                     <input type="text" id="entEmpName" name="entEmpName" th:value="${entInfo != null and entInfo.entEmpName != null ? entInfo.entEmpName : ''}"
 							                     	   placeholder="이름을 입력해주세요" class="form-control fs-6" />
 							                </div>
 						           		</div>
 						           		<div class="col-6">
 							                <div class="mb-4">
 							                     <label class="form-label fs-6" for="entEmpEmail">직원 이메일</label>
-							                     <input type="text" id="entEmpEmail" name="entEmpEmail" th:value="*{entEmpEmail}"
+							                     <input type="text" id="entEmpEmail" name="entEmpEmail" th:value="${entInfo != null and entInfo.entEmpEmail != null ? entInfo.entEmpEmail : ''}"
 							                     	   placeholder="이메일을 입력해주세요" class="form-control fs-6" />
 							                </div>
 						           		</div>

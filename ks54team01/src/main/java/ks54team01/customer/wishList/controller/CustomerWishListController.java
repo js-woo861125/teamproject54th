@@ -42,6 +42,13 @@ public class CustomerWishListController {
 		return isRemove;
 	}
 	
+	@PostMapping("addMyWishList")
+	public boolean addMyWishList(@RequestParam(name="productsNum") String productsNum) {
+		
+		boolean isAdd = customerWishListService.addMyWishList(productsNum);
+		
+		return isAdd;
+	}
 	
 	@GetMapping("/myWishList")
 	public String getMyWishList(@RequestParam(name="viewValue", required = false, defaultValue = "전체") String viewValue

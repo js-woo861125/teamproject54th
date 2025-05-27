@@ -4,6 +4,7 @@ package ks54team01.customer.register.service.impl;
 
 import java.util.UUID;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class RegisterServiceImpl implements RegisterService{
 	
 	private final RegisterMapper registerMapper;
+	private final PasswordEncoder passwordEncoder;
 	
 	/**
 	 * 입점업체직원정보 등록
@@ -38,10 +40,11 @@ public class RegisterServiceImpl implements RegisterService{
 	 */
 	@Override
 	public int addEntCeoMember(EntMember member) {
+		String encodedPw = passwordEncoder.encode(member.getMemberPw());
 		
 		CommonMember common = new CommonMember();
 	    common.setMemberId(member.getMemberId());
-	    common.setMemberPw(member.getMemberPw());
+	    common.setMemberPw(encodedPw);
 	    common.setMemberType(member.getMemberType());
 
 	    // 공통 정보 등록
@@ -67,10 +70,11 @@ public class RegisterServiceImpl implements RegisterService{
 	 */
 	@Override
 	public int addCustomerMember(CustomerMember member) {
+		String encodedPw = passwordEncoder.encode(member.getMemberPw());
 		
 		CommonMember commonMember = new CommonMember();
         commonMember.setMemberId(member.getMemberId());
-        commonMember.setMemberPw(member.getMemberPw());
+        commonMember.setMemberPw(encodedPw);
         commonMember.setMemberType(member.getMemberType());
 		
 	    log.info("개인/기업 회원등록 시작");

@@ -34,6 +34,8 @@ public class CustomerTransferBoard {
 	private String registerDate;
 	private String revisionDate;
 	private String uploadImage;
+	
+	private String transferRentalContractNum;
 
 	private CustomerMember customerMember;
 	

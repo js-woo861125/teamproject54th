@@ -41,6 +41,17 @@ public class CustomerTransferBoardController {
 	
 	private final CustomerTransferBoardService customerTransferBoardService;
 
+	@PostMapping("/applyTransfer")
+	public String applyTransfer(CustomerTransferBoard customerTransferBoard) {
+		
+		log.info("customerTransferBoard : {}", customerTransferBoard);
+		
+		customerTransferBoardService.applyTranfer(customerTransferBoard);
+		
+		
+		return "redirect:/customer/transferBoard/transferBoardList";
+	}
+	
 	@PostMapping("/removeMyTransferBoard")
 	@ResponseBody
 	public boolean removeMyTransferBoard(@RequestParam(name="transferBoardNum") String transferBoard) {
@@ -55,7 +66,7 @@ public class CustomerTransferBoardController {
 									, @RequestParam("mainImage") MultipartFile[] mainImage
 									, @RequestParam("extraImage") MultipartFile[] extraImage) {
 		
-		customerTransferBoardService.modifyTransferBoard(customerTrnasferBoard);
+		customerTransferBoardService.modifyTransferBoard(customerTrnasferBoard, mainImage, extraImage);
 		
 		return "redirect:/customer/transferBoard/myTransferBoardList";
 	}
@@ -153,11 +164,12 @@ public class CustomerTransferBoardController {
 	public String getTransferBoardDetail(
 			@RequestParam(name = "transferBoardNum", required = false) String transferBoardNum, Model model) {
 
-		CustomerTransferBoard transferBoardInfo = customerTransferBoardService
-				.getTransferBoardInfoByCode(transferBoardNum);
+		CustomerTransferBoard transferBoardInfo = customerTransferBoardService.getTransferBoardInfoByCode(transferBoardNum);
 
 		model.addAttribute("title", "양도 게시글 상세 조회");
 		model.addAttribute("transferBoardInfo", transferBoardInfo);
+		
+		log.info("transferBoardInfo:{}", transferBoardInfo);
 
 		return "customer/transferBoard/transferBoardDetailView";
 	}

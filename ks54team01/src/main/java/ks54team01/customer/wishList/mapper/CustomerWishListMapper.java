@@ -9,6 +9,9 @@ import ks54team01.customer.wishList.domain.CustomerWishList;
 @Mapper
 public interface CustomerWishListMapper {
 
+	//관심상품 추가
+	int addMyWishList(String productsNum);
+	
 	// 관심상품 다중 삭제(체크박스)
 	int removeMyWishLists(List<String> orderNumList);
 	

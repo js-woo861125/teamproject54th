@@ -73,14 +73,20 @@ public class EnterpriseAccountController {
 	    }
 
 	    EntMember entMemberInfo = enterpriseAccountService.getEntInfoById(loginId);
-	    String[] phoneArray = entMemberInfo.getEntEmpPhone().split("-");
-	    
-	    model.addAttribute("title", "내 프로필");
-	    model.addAttribute("entInfo", entMemberInfo);
+	    String phone = entMemberInfo.getEntEmpPhone();
+	    model.addAttribute("entMemberInfo", entMemberInfo);
 	    model.addAttribute("memberType", loginMemberType);
-        model.addAttribute("entEmpPhone1", phoneArray[0]);
-        model.addAttribute("entEmpPhone2", phoneArray[1]);
-        model.addAttribute("entEmpPhone3", phoneArray[2]);
+	    
+	    if (phone != null && phone.matches("\\d{2,4}-\\d{3,4}-\\d{4}")) {
+	        String[] phoneArray = phone.split("-");
+	        model.addAttribute("entEmpPhone1", phoneArray[0]);
+	        model.addAttribute("entEmpPhone2", phoneArray[1]);
+	        model.addAttribute("entEmpPhone3", phoneArray[2]);
+	    } else {
+	        model.addAttribute("entEmpPhone1", "");
+	        model.addAttribute("entEmpPhone2", "");
+	        model.addAttribute("entEmpPhone3", "");
+	    }
 
 	    return "enterprise/myPage/entMyAccountView";
 	}
