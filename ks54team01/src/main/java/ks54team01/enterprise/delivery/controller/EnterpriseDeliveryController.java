@@ -33,7 +33,7 @@ public class EnterpriseDeliveryController {
 		
 		delivery.getAdminDeliveryInfo().setDelCompany("직접배송");
 		
-		delivery.getAdminDeliveryInfo().setDelProgress("2.배송중");
+		delivery.getAdminDeliveryInfo().setDelProgress("배송중");
 		
 		String currentDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		
@@ -56,7 +56,7 @@ public class EnterpriseDeliveryController {
 		
 		EnterpriseDelivery delivery = enterpriseDeliveryService.getDeliveryInfoByCode(deliveryNo);
 		
-		delivery.getAdminDeliveryInfo().setDelProgress("3.배송완료(설치완료)");
+		delivery.getAdminDeliveryInfo().setDelProgress("배송완료");
 		
 		String currentDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		

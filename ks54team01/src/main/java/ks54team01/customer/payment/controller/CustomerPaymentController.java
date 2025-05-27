@@ -33,6 +33,23 @@ public class CustomerPaymentController {
 	private final CustomerPaymentService customerPaymentService;
 	
 	
+	@PostMapping("/refund")
+	public ResponseEntity<String> addRefund(@RequestParam("orderId") String orderId, @RequestParam("paymentCompletedNo") String paymentCompletedNo
+										  , @RequestParam("paymentKey") String paymentKey, @RequestParam String refundReason
+										  , @RequestParam("entCeoNo") String entCeoNo, @RequestParam("entEmpId") String entEmpId, HttpSession session) {
+			
+		String custId = (String) session.getAttribute("loginId");
+		
+		
+		
+		customerPaymentService.addRefund(orderId, paymentCompletedNo, paymentKey, refundReason, custId, entCeoNo, entEmpId);
+		
+		return ResponseEntity.ok("환불 요청이 접수되었습니다.");
+	}
+	
+	
+	
+	
 	@GetMapping("/modifyBilling/success")
 	public String modifyBillingPayment(@RequestParam("authKey") String authKey
 									 , @RequestParam("customerKey") String customerKey, @RequestParam("rentalContractNo") String rentalContractNo, HttpSession session) {
@@ -105,9 +122,16 @@ public class CustomerPaymentController {
 				return ResponseEntity.badRequest().body("결제 정보가 존재하지 않습니다.");
 			}
 			
+			
 			customerPaymentService.cancelPayment(paymentKey, "고객 요청 취소");
 			
 			customerPaymentService.modifyPaymentStatus(orderId, "주문취소");
+			
+			int cancelQuantity = customerPaymentService.getQuantityByOrderId(orderId);
+			
+			CustomerPayment cancelProduct = customerPaymentService.getProductByOrderId(orderId);
+			
+			customerPaymentService.modifyCancelQuantity(cancelProduct, cancelQuantity);
 			
 			customerPaymentService.removeDeliveryInfo(paymentCompletedNo);
 			
@@ -166,7 +190,7 @@ public class CustomerPaymentController {
 		
 		CustomerDeliveryInfo customerDeliveryInfo = new CustomerDeliveryInfo();
 		
-		String delInfoNo = "del_info_" + UUID.randomUUID().toString().replace("-", "").substring(0, 10);
+		String delInfoNo = "del_info_" + UUID.randomUUID().toString().replace("-", "");
 		customerDeliveryInfo.setDelInfoNo(delInfoNo);
 		
 		customerDeliveryInfo.setDelNo(delNo);
@@ -208,7 +232,7 @@ public class CustomerPaymentController {
 		
 		CustomerDeliveryInfo customerDeliveryInfo = new CustomerDeliveryInfo();
 		
-		String delInfoNo = "del_info_" + UUID.randomUUID().toString().replace("-", "").substring(0, 10);
+		String delInfoNo = "del_info_" + UUID.randomUUID().toString().replace("-", "");
 		customerDeliveryInfo.setDelInfoNo(delInfoNo);
 		
 		customerDeliveryInfo.setDelNo(delNo);

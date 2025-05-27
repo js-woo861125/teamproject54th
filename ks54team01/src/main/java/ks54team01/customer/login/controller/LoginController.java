@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
-import ks54team01.admin.manage.domain.Admin;
 import ks54team01.customer.login.service.LoginService;
-import ks54team01.customer.member.domain.CommonMember;
 import ks54team01.customer.member.domain.EntMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,15 +41,16 @@ public class LoginController {
 
 	     Map<String, Object> loginResult = loginService.matchMember(memberId, memberPw);
 
+	     if ("Y".equals(loginResult.get("memberWithdrawStatus"))) {
+	    	 log.warn("탈퇴 회원 로그인 시도: {}", memberId);
+	    	 return "redirect:/customer/login/memberLogin?withdrawn=true";
+	     }
+	     
 	     if (loginResult == null || loginResult.get("memberInfo") == null) {
 	         log.warn("로그인 실패: 존재하지 않거나 비밀번호 불일치: {}", memberId);
 	         return "redirect:/customer/login/memberLogin?error=true";
 	     }
 
-	     if ("Y".equals(loginResult.get("memberWithdrawStatus"))) {
-	         log.warn("탈퇴 회원 로그인 시도: {}", memberId);
-	         return "redirect:/customer/login/memberLogin?withdrawn=true";
-	     }
 
 	     // 세션 저장
 	     String loginMemberType = (String) loginResult.get("memberType");

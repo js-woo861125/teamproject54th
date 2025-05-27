@@ -3,6 +3,7 @@ package ks54team01.customer.login.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginServiceImpl implements LoginService {
 
     private final LoginMapper loginMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Map<String, Object> matchMember(String memberId, String memberPw) {
