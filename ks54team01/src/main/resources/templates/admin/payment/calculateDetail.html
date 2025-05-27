@@ -21,7 +21,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
                     <span> <i class="material-icons md-calendar_today"></i> <b id="current-time"></b> </span> <br />
-                    <small class="text-muted">플랫폼직원 <span>ID: 3453012</span> </small>
+                    <small class="text-muted">플랫폼직원 <span>ID:managerid1</span> </small>
                 </div>
                 <div class="col-lg-6 col-md-6 ms-auto text-md-end">
                     <!-- <select class="form-select d-inline-block mb-lg-0 mr-5 mw-200">
@@ -31,30 +31,70 @@
                         <option>Shipped</option>
                         <option>Delivered</option>
                     </select> -->
-                    <form th:action="@{/admin/payment/confirmSettlement}" method="POST" id="settlementForm">
+                   
+                      <form th:action="@{/admin/payment/confirmSettlement}" method="post">
                         <input type="hidden" name="settlementMonth" th:value="${settlementMonth}" />
                         <input type="hidden" name="searchValue" th:value="${searchValue}" />
                         <input type="hidden" name="entEmpId" th:value="${entEmpId}" />
-                        <input type="hidden" name="platformEmpId" value="3453012" /> <input type="hidden" name="totalApprovedAmount" th:value="${totalApprovedAmount}" />
-                        <input type="hidden" name="totalCancelledAmount" th:value="${totalCancelledAmount}" />
-                        <input type="hidden" name="totalNetPlatformFee" th:value="${totalNetPlatformFee}" />
-                        <input type="hidden" name="finalSettlementAmount" th:value="${totalApprovedAmount-(totalCancelledAmount +totalNetPlatformFee )}" />
+                        <input type="hidden" name="platformEmpId" value="managerid1" />
 
-                        <th:block th:if="${!#lists.isEmpty(adminMonthlyFeeList)}" th:each="fee, i : ${adminMonthlyFeeList}">
-                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].monthlyFeeNo" th:value="${fee.monthlyFeeNo}" />
-                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].entCeoNo" th:value="${fee.entCeoNo}" />
-                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].entEmpId" th:value="${fee.entEmpId}" />
-                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].managerId" th:value="${fee.managerId}" />
-                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].paymentDetails" th:value="${fee.paymentDetails}" />
-                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].platformFee" th:value="${fee.platformFee}" />
-                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].entFee" th:value="${fee.entFee}" />
-                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].payStatus" th:value="${fee.payStatus}" />
-                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].provisionDate" th:value="${fee.provisionDate}" />
-                            <input type="hidden" th:name="adminMonthlyFeeList[__${i.index}__].settlementMonth" th:value="${fee.settlementMonth}" />
-                        </th:block>
-    
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <!-- 
+                            totalPlatFormFeeRental; //플렛폼 수수료 렌탈요금합   1.월렌탈요금의 수수료 
+                            totalEntFeeRental;	//입점업체 수수료 렌탈요금합      1.월렌탈요금의 수수료차감  
+                                            
+                            totalPlatFormFee; //일반판매 플렛폼수수료합     2.일시불판매의 수수료      
+                            totalEntFee; //일반판매 입점업체 수수료합       2.일시불팬매의 수수료차감       
+                                                                        
+                            totalPlatFormPenalty; //위약금 플렛폼 합          
+                            totalEntPenalty; // 위약금 입점업체 합             
+                                                                        
+                            totalNetPlatformFee; // 플렛폼수수료 총합          
+                            totalApprovedAmount; // 입점업체 매출합           
+                      
+                        -->
+        
+
+                        <div th:with="rentalFeeData=${paymentSummaryList.?[paymentDetails == '1.월렌탈요금']}">
+                            <input type="hidden" name="totalPlatFormFeeRental"
+                                th:value="${#lists.isEmpty(rentalFeeData) ? 0 : rentalFeeData[0].totalPlatformFee}" />
+                        </div>
+
+                        <div th:with="rentalFeeData=${paymentSummaryList.?[paymentDetails == '1.월렌탈요금']}">
+                            <input type="hidden" name="totalEntFeeRental"
+                                th:value="${#lists.isEmpty(rentalFeeData) ? 0 : rentalFeeData[0].normalEntSales}" />
+                        </div>
+
+                        <div th:with="rentalFeeData=${paymentSummaryList.?[paymentDetails == '2.일시불판매']}">
+                            <input type="hidden" name="totalPlatFormFee"
+                                th:value="${#lists.isEmpty(rentalFeeData) ? 0 : rentalFeeData[0].totalPlatformFee}" />
+                        </div>
+
+
+                        <div th:with="rentalFeeData=${paymentSummaryList.?[paymentDetails == '2.일시불판매']}">
+                            <input type="hidden" name="totalEntFee"
+                                th:value="${#lists.isEmpty(rentalFeeData) ? 0 : rentalFeeData[0].normalEntSales}" />
+                        </div>
+
+
+                        <div th:with="rentalFeeData=${paymentSummaryList.?[paymentDetails == '3.위약금']}">
+                            <input type="hidden" name="totalPlatFormPenalty"
+                                th:value="${#lists.isEmpty(rentalFeeData) ? 0 : rentalFeeData[0].totalPlatformFee}" />
+                        </div>
+
+
+                        <div th:with="rentalFeeData=${paymentSummaryList.?[paymentDetails == '3.위약금']}">
+                            <input type="hidden" name="totalEntPenalty"
+                                th:value="${#lists.isEmpty(rentalFeeData) ? 0 : rentalFeeData[0].normalEntSales}" />
+                        </div>
+                
+
+                        <input type="hidden" name="totalNetPlatformFee" th:value="${totalNetPlatformFee}" />
+                        <input type="hidden" name="totalApprovedAmount" th:value="${totalApprovedAmount}" />
+                        
+
+                        <button type="submit" class="btn btn-primary">저장</button>
                     </form>
+
                 </div>
             </div>
         </header>
@@ -88,7 +128,7 @@
                                 <!-- 렌탈요금 -->
                                 <tr class="text-center">
                                     <td class="font-lg fw-bold">
-                                        <div>월렌탈요금</div>
+                                        <div>1.월렌탈요금</div>
                                     </td>
                                     <!-- 월렌탈요금 전체 결제건수  -->
                                     <td th:with="data=${paymentSummaryList.?[paymentDetails == '1.월렌탈요금']}" 
@@ -131,7 +171,7 @@
                                 <!-- 일시불판매 -->
                                 <tr class="text-center">
                                     <td class="font-lg fw-bold">
-                                        <div>일시불판매</div>
+                                        <div>2.일시불판매</div>
                                     </td>
                                     <!-- 일시불판매 전체 결제건수  -->
                                     <td th:with="data=${paymentSummaryList.?[paymentDetails == '2.일시불판매']}" 
@@ -174,7 +214,7 @@
                                 <!-- 위약금 -->
                                 <tr class="text-center bottom-border-row">
                                     <td class="font-lg fw-bold">
-                                        <div>위약금</div>
+                                        <div>3.위약금</div>
                                     </td>
                                     <!-- 위약금 전체 결제건수  -->
                                     <td th:with="data=${paymentSummaryList.?[paymentDetails == '3.위약금']}" 
@@ -255,39 +295,42 @@
             
     <th:block layout:fragment="jsScript">
         <script>
-        // 1. 날짜 포맷팅 함수 정의
-        function formatDate(date) {
-            const days = ['일', '월', '화', '수', '목', '금', '토'];
-            const months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+            // 1. 날짜 포맷팅 함수 정의
+                function formatDate(date) {
+                    const days = ['일', '월', '화', '수', '목', '금', '토'];
+                    const months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
 
-            const dayOfWeek = days[date.getDay()];
-            const month = months[date.getMonth()];
-            const dayOfMonth = date.getDate();
-            const year = date.getFullYear();
+                    const dayOfWeek = days[date.getDay()];
+                    const month = months[date.getMonth()];
+                    const dayOfMonth = date.getDate();
+                    const year = date.getFullYear();
 
-            let hours = date.getHours();
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-                hours = hours % 12;
-                hours = hours ? hours : 12; // the hour '0' should be '12'
+                    let hours = date.getHours();
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                        hours = hours % 12;
+                        hours = hours ? hours : 12; // the hour '0' should be '12'
 
-            let minutes = date.getMinutes();
-                minutes = minutes < 10 ? '0' + minutes : minutes;
+                    let minutes = date.getMinutes();
+                        minutes = minutes < 10 ? '0' + minutes : minutes;
 
-        return `${year}년 ${month}월 ${dayOfMonth}일 ${dayOfWeek}요일`;
-        }
+                    return `${year}년 ${month}월 ${dayOfMonth}일 ${dayOfWeek}요일`;
+                }
 
-        // 2. DOMContentLoaded 이벤트 리스너: HTML 문서가 완전히 로드된 후 스크립트 실행
-        document.addEventListener('DOMContentLoaded', () => {
-        // 3. 시간을 표시할 HTML 요소 가져오기
-        const timeDisplayElement = document.getElementById('current-time');
+            // 2. DOMContentLoaded 이벤트 리스너: HTML 문서가 완전히 로드된 후 스크립트 실행
+            document.addEventListener('DOMContentLoaded', () => {
+            // 3. 시간을 표시할 HTML 요소 가져오기
+            const timeDisplayElement = document.getElementById('current-time');
 
-        // 4. 요소가 존재하는지 확인 후 시간 업데이트
-        if (timeDisplayElement) {
-            // 초기 시간 설정
-            const now = new Date();
-            timeDisplayElement.textContent = formatDate(now);
-        }
-    });
+            // 4. 요소가 존재하는지 확인 후 시간 업데이트
+                if (timeDisplayElement) {
+                    // 초기 시간 설정
+                    const now = new Date();
+                    timeDisplayElement.textContent = formatDate(now);
+                }
+            });
+
+
+
 
         </script>
     </th:block>
