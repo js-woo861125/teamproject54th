@@ -50,6 +50,12 @@
 		</association>
   	</resultMap>	
 
+	<insert id="addMyWishList" parameterType="string">
+		INSERT INTO wishlist
+		(wishlist_no, cust_id, ent_ceo_no, ent_emp_id, products_no, register_date)
+		VALUES(#{wishListNum}, 'personalcustid2', '', '', #{productsNum}, NOW());
+	</insert>
+
 	<delete id="removeMyWishLists" parameterType="List">
 		/* 관심상품 다중 삭제하기 */	
 		DELETE

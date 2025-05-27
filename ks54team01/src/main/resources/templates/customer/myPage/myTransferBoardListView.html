@@ -92,9 +92,9 @@
 										<div class="product-img-action-wrap">
 											<div class="product-img product-img-zoom">
 												<a th:href="@{/customer/transferBoard/modifyTransferBoard(transferBoardNum=${l.transferBoardNum})}">
-													<img class="default-img"
-													th:src="@{'/user/assets/imgs/shop/' + ${l.productInfo.productsImage}}"
-													alt="" />
+													<img class="img-main"
+													 th:src="@{${l.uploadImage}}"
+													 alt="이미지" />
 												</a>
 											</div>
 										</div>

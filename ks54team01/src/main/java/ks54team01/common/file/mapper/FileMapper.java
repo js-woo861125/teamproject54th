@@ -9,6 +9,9 @@ import ks54team01.common.file.domain.FileMetaData;
 
 @Mapper
 public interface FileMapper {
+	
+		String getFileIdx(String transferBoardNum);
+	
 		// 단일 파일 메타데이터 테이블 저장
 		int addFile(FileMetaData fileMetaData);
 		
