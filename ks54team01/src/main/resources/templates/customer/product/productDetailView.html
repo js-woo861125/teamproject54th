@@ -8,6 +8,7 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</th:block>
 	
 	
@@ -206,10 +207,14 @@
 								<div class="detail-info pr-30 pl-30 d-flex mb-30">
 	
 									<h2 class="title-detail" th:text="${productDetailByProd[0].productsName}">LG 그램 Pro</h2>
-								
-	
-	
-	
+									<div class="product-extra-link2">
+										<form th:action="@{/customer/wishList/addMyWishList}" method="post" style="display:inline; background-color: black;">
+									        <input type="hidden" name="productsNum" th:value="${productDetailByProd[0].productsNum}" />
+									    	<button type="submit" class="action-btn" aria-label="Add To Wishlist" style="background-color: black;">
+									        	<i class="fi-rs-heart"></i>
+									    	</button>
+										</form>
+                                   	</div>
 								</div>
 								<!-- Detail Info -->
 	

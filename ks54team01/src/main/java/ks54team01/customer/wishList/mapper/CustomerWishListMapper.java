@@ -10,7 +10,10 @@ import ks54team01.customer.wishList.domain.CustomerWishList;
 public interface CustomerWishListMapper {
 
 	//관심상품 추가
-	int addMyWishList(String productsNum);
+	int addMyWishList(CustomerWishList customerWishList);
+	
+	// 담은 상품 중복체크
+	int isDuplicateProductCheck(String productsNum, String custId);
 	
 	// 관심상품 다중 삭제(체크박스)
 	int removeMyWishLists(List<String> orderNumList);
@@ -22,5 +25,5 @@ public interface CustomerWishListMapper {
 	List<CustomerWishList> getWishListCategory(String custId);
 	
 	// 내 관심상품 목록 조회
-	List<CustomerWishList> getMyWishList(String viewValue);
+	List<CustomerWishList> getMyWishList(String custId, String viewValue);
 }

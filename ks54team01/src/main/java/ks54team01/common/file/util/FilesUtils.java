@@ -16,10 +16,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import ks54team01.common.file.domain.FileMetaData;
+import lombok.extern.slf4j.Slf4j;
 
 
 
 @Component
+@Slf4j
 public class FilesUtils {
 	
 	@Value("${file.path}")
@@ -28,6 +30,28 @@ public class FilesUtils {
 	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
 	// 파일 인덱스 이름 포맷 설정
 	private static final DateTimeFormatter FILEIDX_FORMATTER = DateTimeFormatter.ofPattern("yyMMdd");
+	
+	/**
+	 * 경로 받아 실제 이미지 삭제
+	 */
+	public boolean deleteFileByPath(String path) {
+		// os별 루트 설정
+		String osName = System.getProperty("os.name").toLowerCase();
+		String osRoot = osName.contains("win") ? "c:": "";
+		String rootFilePath = osRoot + fileRealPath;
+		
+		Path deletePath = Paths.get(rootFilePath, path);
+		
+		try {
+			log.info("파일 삭제 경로: {}", deletePath);
+			return Files.deleteIfExists(deletePath);
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		
+	}
 	
 	/**
 	 * 경로를 입력받아서 서버에 디렉토리 생성

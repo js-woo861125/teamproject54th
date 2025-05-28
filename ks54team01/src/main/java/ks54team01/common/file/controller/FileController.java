@@ -6,6 +6,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -44,6 +45,21 @@ public class FileController {
 	
 	private final FileMapper fileMapper;
 	private final FileService fileService;
+	
+	/*
+	 * @GetMapping("/deleteFiles") public String
+	 * deleteFiles(@RequestParam(name="filesIdx") List<String> filesIdx) {
+	 * 
+	 * log.info("filesIdx: {}", filesIdx);
+	 * 
+	 * return "redirect:/admin/file/fileDownload"; }
+	 * 
+	 * @GetMapping("/deleteFile") public String deleteFile(String fileIdx) {
+	 * 
+	 * fileService.deleteFileByIdx(fileIdx);
+	 * 
+	 * return "redirect:/admin/file/fileDownload"; }
+	 */
 	
 	@GetMapping("/download")
 	@ResponseBody

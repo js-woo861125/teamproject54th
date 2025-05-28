@@ -1,6 +1,7 @@
 package ks54team01.customer.wishList.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -16,13 +17,12 @@ public class CustomerWishListServiceImpl implements CustomerWishListService{
 	private final CustomerWishListMapper customerWishListMapper;
 	
 	@Override
-	public boolean addMyWishList(String productsNum) {
+	public void addMyWishList(CustomerWishList customerWishList) {
 		
-		int added = customerWishListMapper.addMyWishList(productsNum);
+		String wishListNum =  "wishlist_" + UUID.randomUUID().toString().replace("-", "");
+		customerWishList.setWishListNum(wishListNum);
 		
-		boolean isAdd = added > 0 ? true : false;
-		
-		return isAdd;
+		customerWishListMapper.addMyWishList(customerWishList);
 	}
 	
 	@Override
@@ -52,9 +52,9 @@ public class CustomerWishListServiceImpl implements CustomerWishListService{
 	}
 	
 	@Override
-	public List<CustomerWishList> getMyWishList(String viewValue) {
+	public List<CustomerWishList> getMyWishList(String custId, String viewValue) {
 		
-		List<CustomerWishList> myWishList = customerWishListMapper.getMyWishList(viewValue);
+		List<CustomerWishList> myWishList = customerWishListMapper.getMyWishList(custId, viewValue);
 		return myWishList;
 	}
 }

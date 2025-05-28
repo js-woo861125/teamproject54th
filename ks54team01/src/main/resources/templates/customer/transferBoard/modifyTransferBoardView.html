@@ -27,9 +27,11 @@
 			    }
 			});
 			
+			
+			
 		 	// 추가 이미지 미리보기 & 삭제
 		   	$('#extraImage').change(function(){
-		   	    $('#extraImagePreview').empty();
+		   	    $('#extraModifyImagePreview').empty();
 		   	    const files = this.files;
 		   	    const fileList = [...files];
 		   	    fileList.forEach(function(file, idx){
@@ -43,25 +45,25 @@
 		   	        if(file.type.match('image.*')){
 		   	            const reader = new FileReader(); 
 		   	            reader.onload = function (e) { 
-		   	                const img = $('<img />', {src: e.target.result, id : lastModified, alt: fileName });
 		   	                const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
-		   	                imgDiv.append(img,span);
-		   	                imgDiv.appendTo('#extraImagePreview');
+		   	                const img = $('<img />', {src: e.target.result, id : lastModified, alt: fileName });
+		   	                imgDiv.append(span, img);
+		   	                imgDiv.appendTo('#extraModifyImagePreview');
 		   	            } 
 		   	            reader.readAsDataURL(file);
 		   	        }else{
-		   	            const noImage = $('<img />', { src : '/manage/assets/imgs/theme/upload.svg', id : lastModified, alt : fileName});
 		   	            const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
-		   	            imgDiv.append(noImage, span);
-		   	            imgDiv.appendTo('#extraImagePreview');
+		   	            const noImage = $('<img />', { src : '/manage/assets/imgs/theme/upload.svg', id : lastModified, alt : fileName});
+		   	            imgDiv.append(span, noImage);
+		   	            imgDiv.appendTo('#extraModifyImagePreview');
 		   	        }
 		   	    });
 		   	});
 	
 	
 		   	// X버튼 클릭 시 상세 이미지 파일 삭제
-		   	$(document).on('click', '.delete-img2', function(){
-		   	    const input = document.getElementById('thumbnails');
+		   	$(document).on('click', '.delete-img1', function(){
+		   	    const input = document.getElementById('extraImage');
 		   	    const files = input.files;
 		   	    const dataTransfer = new DataTransfer();
 		   	    const removeTargetId = $(this).attr('data-remove-key');
@@ -69,9 +71,40 @@
 		   	        .filter(file => file.lastModified != removeTargetId)
 		   	        .forEach(file => dataTransfer.items.add(file));
 		   	    input.files = dataTransfer.files;
-		   	    $(this).closest('.img-box2').remove();
+		   	    const deleteInput = $('<input />', {'type' : 'hidden', 'name' : 'deleteFile', 'value' : removeTargetId});
+		   	 	$(this).closest('#extraImagePreview').append(deleteInput);
+		   	    $(this).closest('.img-box1').remove();
+		   	    
 		   	});
 		   	
+		   	
+		   	
+		   	/*
+		   	
+		   	$(document).on('click', '.delete-img1', function(){
+		   	    const fileIdx = $(this).data('remove-key');
+		   	    const deleteInput = $('#deleteImageIds');
+		   	    const currentVal = deleteInput.val();
+		   	    let newVal = currentVal ? currentVal + ',' + fileIdx : fileIdx;
+		   	    deleteInput.val(newVal);
+
+		   	    // 미리보기에서 이미지 제거
+		   	    $(this).closest('.img-box1').remove();
+		   	});
+		   	*/
+		   	
+		  /*  	document.querySelectorAll('.delete-img1').forEach(span => {
+		   	    span.addEventListener('click', function() {
+		   	        const fileIdx = this.getAttribute('data-file-idx');
+		   	        fetch('/customer/transferBoard/deleteFile?fileIdx=' + fileIdx)
+		   	            .then(response => {
+		   	                if (response.redirected) {
+		   	                    // 서버가 redirect하는 경우에도 JS 처리
+		   	                    location.reload(); 
+		   	                }
+		   	            });
+		   	    });
+		   	}); */
 		</script>
 	</th:block>
 	
@@ -115,9 +148,20 @@
 	                            <div class="card-body">
 									<div class="input-group">
 										<input type="file" id="extraImage" name="extraImage"
-											   class="form-control" multiple>
+											   class="form-control form-control-sm" multiple>
 									</div>
-									<div id="extraImagePreview" class="row mt-3 mb-2"></div>
+									<div id="extraModifyImagePreview" class="row mt-3 mb-2">
+										
+									</div>
+									<hr>
+									<div id="extraImagePreview" class="row mt-3 mb-2"
+										 th:if="${!#lists.isEmpty(fileList)}">
+										<div th:each="fl : ${fileList}" class="col-md-6 img-box1" style="position:relative" >
+											<span class="delete-img1" th:attr="data-remove-key=${fl.fileIdx}">X</span>												
+											<img th:src="@{${fl.filePath}}" alt="이미지">
+											<!-- <input type="hidden" name="deleteFile" th:value="${fl.fileIdx}"> -->
+										</div>
+									</div>
 								</div>
 	                        </div>
                   		</div>

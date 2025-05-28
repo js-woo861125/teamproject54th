@@ -64,13 +64,10 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 		customerTransferBoardMapper.modifyTransferBoard(customerTransferBoard);
 		
 		// 기존 이미지 delete -> 새 이미지 insert
-		
-
+	
 	    //기존 이미지 delete
 	    
-	    String idx = fileMapper.getFileIdx(customerTransferBoard.getTransferBoardNum());
-	    
-	    fileService.deleteFiles(idx);
+	    fileService.deleteFileByIdx(null);
 	    // 새 이미지 업로드 (mainImage)
 	    if (mainImage != null) {
 	        for (MultipartFile file : mainImage) {
@@ -80,7 +77,7 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	        }
 	    }
 
-	    // 🔸 새 이미지 업로드 (extraImage)
+	    // 새 이미지 업로드 (extraImage)
 	    if (extraImage != null) {
 	        for (MultipartFile file : extraImage) {
 	            if (!file.isEmpty()) {
