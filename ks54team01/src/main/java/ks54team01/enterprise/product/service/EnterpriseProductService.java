@@ -19,4 +19,6 @@ public interface EnterpriseProductService {
 	List<AdminProduct> getProductList();
 	
 	void addSellProduct(EnterpriseProduct enterpriseProduct);
+	
+	
 }
