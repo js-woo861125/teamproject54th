@@ -7,6 +7,7 @@ import ks54team01.enterprise.product.domain.EnterpriseProduct;
 import ks54team01.enterprise.product.domain.EnterpriseProductQuantity;
 
 public interface EnterpriseProductService {
+	 
 
 	// 재고 조회
 	List<EnterpriseProductQuantity> getQuantityList();
