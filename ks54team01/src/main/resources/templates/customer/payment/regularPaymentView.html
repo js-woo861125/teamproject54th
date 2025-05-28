@@ -67,26 +67,49 @@
 			});
 
 		
-			
-			// 배송지 선택 버튼 클릭 시
-		    document.querySelectorAll(".product-cart-wrap .btn").forEach(function (btn) {
-		        btn.addEventListener("click", function (e) {
-		            e.preventDefault();
+			document.addEventListener("DOMContentLoaded", function () {
+				
+			    const deliveryCards = document.querySelectorAll(".product-cart-wrap");
 	
-		            const card = btn.closest(".product-cart-wrap");
-		            const delNo = card.getAttribute("data-del-no");
-		            const delNm = card.getAttribute("data-del-nm");
-		            const delRecipientPhone = card.getAttribute("data-recipient-phone");
-		            const delRequest = card.getAttribute("data-del-request");
+			    deliveryCards.forEach(function (card) {
+			        const isDefault = card.querySelector("span").textContent.trim();
 	
-		            // 선택한 값 input에 채우기
-		            document.getElementById("delSelected").value = delNo;
-		            document.getElementById("delName").value = delNm;
-		            document.getElementById("delRecipientPhone").value = delRecipientPhone;
-		            document.getElementById("delRequest").value = delRequest;
-		        });
-		    });
-			
+			        if (isDefault === "기본배송지") {
+			            const delNo = card.getAttribute("data-del-no");
+			            const delNm = card.getAttribute("data-del-nm");
+			            const delRecipientPhone = card.getAttribute("data-recipient-phone");
+			            const delRequest = card.getAttribute("data-del-request");
+	
+			            // input에 자동 채우기
+			            document.getElementById("delSelected").value = delNo;
+			            document.getElementById("delName").value = delNm;
+			            document.getElementById("delRecipientPhone").value = delRecipientPhone;
+			            document.getElementById("delRequest").value = delRequest;
+			        }
+			    });
+			    
+			    
+			    document.querySelectorAll(".product-cart-wrap .btn").forEach(function (btn) {
+			        btn.addEventListener("click", function (e) {
+			            e.preventDefault();
+	
+			            const card = btn.closest(".product-cart-wrap");
+			            const delNo = card.getAttribute("data-del-no");
+			            const delNm = card.getAttribute("data-del-nm");
+			            const delRecipientPhone = card.getAttribute("data-recipient-phone");
+			            const delRequest = card.getAttribute("data-del-request");
+	
+			            // 선택한 값 input에 채우기
+			            document.getElementById("delSelected").value = delNo;
+			            document.getElementById("delName").value = delNm;
+			            document.getElementById("delRecipientPhone").value = delRecipientPhone;
+			            document.getElementById("delRequest").value = delRequest;
+			        });
+			    });
+			    
+			    
+			    
+			});
 			
 		    document.getElementById("paymentBtn").addEventListener("click", function (e) {
 		    	
