@@ -46,6 +46,15 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 	
 	
 	@Override
+	public String getRentalContractNo(String paymentCompletedNo) {
+
+		String contractNo = customerPaymentMapper.getRentalContractNo(paymentCompletedNo);
+		
+		return contractNo;
+	}
+	
+	
+	@Override
 	public void modifyCancelQuantity(CustomerPayment cancelProduct, Integer cancelQuantity) {
 
 		String ProdNo = cancelProduct.getProdNo();

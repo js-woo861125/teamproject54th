@@ -9,6 +9,8 @@ import ks54team01.customer.payment.domain.CustomerPayment;
 
 public interface CustomerPaymentService {
 	
+	String getRentalContractNo(String paymentCompletedNo);
+	
 	void modifyCancelQuantity(CustomerPayment cancelProduct, Integer cancelQuantity);
 	
 	CustomerPayment getProductByOrderId(String orderId);

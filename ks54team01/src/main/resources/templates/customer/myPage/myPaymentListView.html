@@ -22,8 +22,8 @@
 				    const customerKey = document.getElementById("custId").value;
 	
 				    const card = $(this).closest(".product-cart-wrap");
-				    const contractInput = card.find(".contractType");
-				    const rentalContractNo = contractInput ? contractInput.value : "";
+				    const contractInput = card.find(".contractNo");
+				    const rentalContractNo = contractInput ? contractInput.val() : "";
 
 				    
 				    const tossPayments = TossPayments("test_ck_GePWvyJnrKvyQXaXB74bVgLzN97E");
@@ -31,7 +31,7 @@
 	
 				    payment.requestBillingAuth({
 		     			method: "CARD",
-			     		successUrl: window.location.origin + "/customer/payment/modifyBilling/success?rentalContractNo=" + encodeURIComponent(rentalContractNo),
+			     		successUrl: window.location.origin + "/customer/payment/modifyBilling/success?rentalContractNo=" + rentalContractNo,
 				     	failUrl: window.location.origin + "/customer/payment/modifyBilling/fail"
 				    }).catch(function (error) {
 			    		if (error.code === "USER_CANCEL") {
@@ -49,9 +49,12 @@
 		             const delProgress = card.find(".delProgress");
 		             const delStatus = delProgress ? delProgress.text().trim() : "";
 		        	
-		        	if(delStatus !== "상품준비중") {
+		        	if(delStatus === "배송중" || delStatus === "배송완료") {
 		        		Swal.fire("취소 불가", "배송이 이미 시작된 상품은 주문을 취소할 수 없습니다.", "info");
 		        		return;
+		        	} else if(delStatus === "주문취소") {
+		        		Swal.fire("취소 불가", "주문이 취소된 상품입니다.", "info");
+		        		return
 		        	}
 		        	
 		            const orderId = this.getAttribute('data-order-id');
@@ -131,6 +134,8 @@
 					const delStatus = delProgress ? delProgress.text().trim() : "";
 
 					if(delStatus === "배송완료") {
+						
+						const refundBtn = $(this);
 	
 						const orderId = $(this).attr('data-order-id');
 						const paymentKey = $(this).attr('data-payment-key');
@@ -172,7 +177,9 @@
 								.then(async res => {
 									const text = await res.text();
 									if (res.ok) {
-										Swal.fire("완료", text, "success").then(() => location.reload());
+										Swal.fire("완료", text, "success").then(() => {
+											location.reload();
+										});
 									} else {
 										Swal.fire("실패", text, "error");
 									}
@@ -214,32 +221,38 @@
 					<!-- 상품1 -->
 					<div class="product-cart-wrap border col-12" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
 						<div class="product-content-wrap mt-50 mb-30 col-7">
-							<span th:text="${l.paymentStatus}">상태</span>
+							<span th:text="${l.requestStatus == '환불거부' ? '환불거부' : l.paymentStatus}">상태</span>
 							<h4><a href="#" th:text="${l.prodNm}">상품명</a></h4>
 							<div>
 								<span th:text="|₩${#numbers.formatInteger(l.totalPrice, 3, 'COMMA')}|" style="color: black; font-size: 20px;">금액</span>
 							</div>
 							<div>
 								<span th:text="${#strings.contains(l.rentalContractNo, 'rental') ? '렌탈' : (l.rentalContractNo == '일시불판매' ? '일반판매' : l.rentalContractNo)}" style="color: black;">계약정보</span>
-								<input type="hidden" class="contractType" th:value="${l.rentalContractNo}">
+								<input type="hidden" class="contractNo" th:value="${l.rentalContractNo}">
 								<span style="color: black;">|</span>
 								<span th:text="${l.paymentCompletedDate}" style="color: black;">계약날짜</span>
 							</div>
 							<div>
-								<span class="delProgress" th:text="${l.delProgress}">배송상태</span>
+								<span class="delProgress" th:text="${#strings.isEmpty(l.delProgress) ? '주문취소' : l.delProgress}">배송상태</span>
 							</div>
 							
 						</div>
 						<div class="product-price d-flex col-5">
 							<div class="ml-100 text-center">
 								<p style="font-weight:bold; color: black;font-size: 25px; padding-right: 10px;"></p>
-								<button type="button" class="btn cancelBtn" th:data-order-id="${l.orderId}" th:data-payment-completed-no="${l.paymentCompletedNo}">주문 취소</button>
-								<button type="button" class="btn modifyCardBtn" th:if="${l.rentalContractNo != '일시불판매'}">카드 변경</button>
-								<button type="button" class="btn refundBtn" th:if="${l.rentalContractNo == '일시불판매'}" th:data-payment-key="${l.paymentKey}"
+								<button type="button" class="btn cancelBtn" th:data-order-id="${l.orderId}" th:disabled="${l.paymentStatus == '주문취소'}" th:data-payment-completed-no="${l.paymentCompletedNo}">주문 취소</button>
+								<button type="button" class="btn modifyCardBtn" th:if="${l.rentalContractNo != '일시불판매'}" th:disabled="${l.paymentStatus == '주문취소'}">카드 변경</button>
+								<button type="button" class="btn refundBtn" th:if="${l.rentalContractNo == '일시불판매'}" 
+										th:disabled="${l.requestStatus == '입점업체검토중' or l.requestStatus == '환불승인' or l.requestStatus == '환불거부'}" th:data-payment-key="${l.paymentKey}"
 										th:data-order-id="${l.orderId}" th:data-payment-completed-no="${l.paymentCompletedNo}" 
-										th:data-ent-ceo-no="${l.entCeoNo}" th:data-ent-emp-id="${l.entEmpId}">환불</button>
+										th:data-ent-ceo-no="${l.entCeoNo}" th:data-ent-emp-id="${l.entEmpId}">상품 환불</button>
 							</div>
 						</div>
+					</div>
+				</th:block>
+				<th:block th:unless="${!#lists.isEmpty(PaymentList)}">
+					<div class="product-cart-wrap border col-12 justify-content-center" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
+						<span class="mt-100 mb-100" style="color: black; font-size: 26px;">주문 내역이 없습니다.</span>
 					</div>
 				</th:block>
 			</div>

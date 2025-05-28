@@ -9,7 +9,7 @@ import ks54team01.enterprise.refund.domain.EnterpriseRefund;
 @Mapper
 public interface EnterpriseRefundMapper {
 
-	void modifyRefundApproved(String orderId);
+	void modifyRefundApproved(String orderId, String requestStatus);
 	
 	List<EnterpriseRefund> getRefundList(String entCeoNo);
 	

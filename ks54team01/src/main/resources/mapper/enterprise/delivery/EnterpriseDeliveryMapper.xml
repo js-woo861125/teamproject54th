@@ -117,7 +117,11 @@
 			di.arrive_date
 		from
 			delivery_information di inner join delivery_list dl
-			using(delivery_location_no);
+			using(delivery_location_no)
+		where
+			di.ent_ceo_no = #{entCeoNo}
+		order by
+			di.register_date DESC
 	</select>
 
 	

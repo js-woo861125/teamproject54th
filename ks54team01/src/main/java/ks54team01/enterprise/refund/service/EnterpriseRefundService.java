@@ -7,6 +7,9 @@ import ks54team01.enterprise.refund.domain.EnterpriseRefund;
 
 public interface EnterpriseRefundService {
 
+	
+	void rejectRefund(String orderId, String paymentKey);
+	
 	void processRefund(String orderId, String paymentKey) throws IOException, InterruptedException;
 	
 	List<EnterpriseRefund> getRefundList(String entCeoNo);

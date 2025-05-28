@@ -47,9 +47,9 @@ public class EnterpriseDeliveryServiceImpl implements EnterpriseDeliveryService{
 	
 	
 	@Override
-	public List<EnterpriseDelivery> getDeliveryList() {
+	public List<EnterpriseDelivery> getDeliveryList(String entCeoNo) {
 
-		List<EnterpriseDelivery> enterpriseDeliveryList = enterpriseDeliveryMapper.getDeliveryList();
+		List<EnterpriseDelivery> enterpriseDeliveryList = enterpriseDeliveryMapper.getDeliveryList(entCeoNo);
 		
 		return enterpriseDeliveryList;
 		

@@ -12,6 +12,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ks54team01.customer.payment.service.CustomerPaymentService;
 import ks54team01.enterprise.refund.domain.EnterpriseRefund;
 import ks54team01.enterprise.refund.mapper.EnterpriseRefundMapper;
 import ks54team01.enterprise.refund.service.EnterpriseRefundService;
@@ -26,6 +27,7 @@ public class EnterpriseRefundServiceImpl implements EnterpriseRefundService{
 
 	private final EnterpriseRefundMapper enterpriseRefundMapper;
 	
+	private final CustomerPaymentService customerPaymentService;
 	
 	private void cancelPayment(String paymentKey, String reason) throws IOException, InterruptedException {
 		String secretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
@@ -51,6 +53,15 @@ public class EnterpriseRefundServiceImpl implements EnterpriseRefundService{
 	
 	
 	
+	@Override
+	public void rejectRefund(String orderId, String paymentKey) {
+
+		enterpriseRefundMapper.modifyRefundApproved(orderId, "환불거부");
+		
+		customerPaymentService.modifyPaymentStatus(orderId, "정상결제상태");
+	}
+	
+	
 	
 	
 	@Override
@@ -59,7 +70,9 @@ public class EnterpriseRefundServiceImpl implements EnterpriseRefundService{
 		cancelPayment(paymentKey, "입점업체 환불 승인");
 		
 		
-		enterpriseRefundMapper.modifyRefundApproved(orderId);
+		enterpriseRefundMapper.modifyRefundApproved(orderId, "환불승인");
+		
+		customerPaymentService.modifyPaymentStatus(orderId, "환불");
 		
 	}
 	

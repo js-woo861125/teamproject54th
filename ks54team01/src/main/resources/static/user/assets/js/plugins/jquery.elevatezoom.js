@@ -302,7 +302,7 @@ if ( typeof Object.create !== 'function' ) {
 
 
 
-				//create zoom window 
+				/*//create zoom window 
 				if(isNaN(self.options.zoomWindowPosition)){
 					self.zoomWindow = $("<div style='z-index:999;left:"+(self.windowOffsetLeft)+"px;top:"+(self.windowOffsetTop)+"px;" + self.zoomWindowStyle + "' class='zoomWindow'>&nbsp;</div>")
 					.appendTo('body')
@@ -317,7 +317,7 @@ if ( typeof Object.create !== 'function' ) {
 					});
 				}              
 				self.zoomWindowContainer = $('<div/>').addClass('zoomWindowContainer').css("width",self.options.zoomWindowWidth);
-				self.zoomWindow.wrap(self.zoomWindowContainer);
+				self.zoomWindow.wrap(self.zoomWindowContainer);*/
 
 
 				//  self.captionStyle = "text-align: left;background-color: black;color: white;font-weight: bold;padding: 10px;font-family: sans-serif;font-size: 11px";                                                                                                                                                                                                                                          
