@@ -212,9 +212,9 @@ public class AdminProductInfoController {
 		}
 	
 	@GetMapping("/searchBrand")
-	public String getSearchBrand(String searchKey, String searchValue, String useStatus, Model model) {
+	public String getSearchBrand(String searchKey, String searchValue, String useStatus, Model model, @RequestParam(defaultValue = "1") int currentPage, @RequestParam(defaultValue = "10") int rowPerPage) {
 
-		List<ProductInfoBrand> brandList = adminProductInfoService.getSearchBrand(searchKey, searchValue, useStatus);
+		List<ProductInfoBrand> brandList = adminProductInfoService.getSearchBrand(searchKey, searchValue, useStatus, currentPage, rowPerPage);
 		
 		model.addAttribute("title", "브랜드 목록");
 		model.addAttribute("brandList", brandList);
@@ -223,6 +223,8 @@ public class AdminProductInfoController {
 		model.addAttribute("useStatus", useStatus);
 		model.addAttribute("activeMenu", "productInfo");
 		model.addAttribute("activeSubMenu", "productInfoList");
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("rowPerPage", rowPerPage);
 		
 		return "admin/productInfo/brandListView";
 		}
@@ -504,13 +506,13 @@ public class AdminProductInfoController {
 		
 		ProductInfoModel modelInfo = adminProductInfoService.getModelInfoByNo(modelNo);
 		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
-		List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
+	//	List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
 		List<ProductInfoItem> itemList = adminProductInfoService.getItemList();
 		
 		model.addAttribute("title", "모델 수정");
 		model.addAttribute("modelInfo", modelInfo);
 		model.addAttribute("categoryList", categoryList);
-		model.addAttribute("brandList", brandList);
+	//	model.addAttribute("brandList", brandList);
 		model.addAttribute("itemList", itemList);
 		model.addAttribute("activeMenu", "productInfo");
 		
@@ -656,14 +658,30 @@ public class AdminProductInfoController {
 	}
 	
 	@GetMapping("/brandList")
-	public String getBrandList(Model model) {
+	public String getBrandList(Pageable pageable, Model model) {
 		
-		List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
+		pageable.setRowPerPage(5);			
+		
+		pageable.setOffset();
+		
+		PageInfo<ProductInfoBrand> brand = adminProductInfoService.getBrandList(pageable);
+		
+		var brandList = brand.getContents();
+		int currentPage = brand.getCurrentPage();
+		int lastPage = brand.getLastPage();
+		int startPageNum = brand.getStartPageNum();
+		int endPageNum = brand.getEndPageNum();
+		int rowPerPage = pageable.getRowPerPage();
 		
 		model.addAttribute("title", "브랜드 목록");
 		model.addAttribute("brandList", brandList);
 		model.addAttribute("activeMenu", "productInfo");
 		model.addAttribute("activeSubMenu", "productInfoList");
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("lastPage", lastPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("rowPerPage", rowPerPage);
 		
 		
 		return "admin/productInfo/brandListView";
@@ -779,12 +797,12 @@ public class AdminProductInfoController {
 	@GetMapping("/addModel")
 	public String addModel(Model model) {
 		
-		List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
+	//	List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
 		List<ProductInfoItem> itemList = adminProductInfoService.getItemList();
 		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
 		
 		model.addAttribute("title", "모델 등록");
-		model.addAttribute("brandList", brandList);
+	//	model.addAttribute("brandList", brandList);
 		model.addAttribute("itemList", itemList);
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("activeMenu", "productInfo");

@@ -29,6 +29,7 @@ public class CustomerPayment {
 	private Integer contractPeriod;
 	private String nextPaymentDate;
 	private String delProgress;
+	private String requestStatus;
 		
 	private String prodNm;
 	private String prodNo;

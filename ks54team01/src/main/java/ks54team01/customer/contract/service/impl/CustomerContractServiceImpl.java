@@ -17,6 +17,13 @@ public class CustomerContractServiceImpl implements CustomerContractService {
 
 	private final CustomerContractMapper customerContractMapper;
 	
+	
+	@Override
+	public void modifyRentalContractStatus(String rentalContractNo) {
+
+		customerContractMapper.modifyRentalContractStatus(rentalContractNo);
+	}
+	
 	@Override
 	public void addCustomerContract(CustomerContract customerContract) {
 		

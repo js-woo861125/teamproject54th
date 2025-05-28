@@ -10,79 +10,159 @@
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	</th:block>
 	
+	<th:block layout:fragment="jsScript">
+		<script th:inline="javascript">
+			const rowPerPage = /*[[${rowPerPage}]]*/'';
+			if(rowPerPage) {
+				$('.page-link').each((idx, item)=>{
+					let href = $(item).attr('href');
+					let separator = '?';
+					if(href.includes('?')) separator = '&';
+					href += `${separator}rowPerPage=${rowPerPage}`;
+					$(item).attr('href', href);
+				});
+			}
+			$('#rowPerPage').change(function(){
+				const href = location.href;
+				const url = new URL(href);
+				const urlParams = url.searchParams;
+				const currentPage = urlParams.get('currentPage');
+				if(currentPage) urlParams.set('currentPage', currentPage);
+				urlParams.set('rowPerPage', $(this).val());
+				location.href = `${url.pathname}?${urlParams.toString()}`;
+			});
+		</script>
+	</th:block>
+	
 	<th:block layout:fragment="content">
-        <div class="content-header">
-            <h2 class="content-title" th:text="${title}"></h2>
-        </div>
-        <div class="card mb-4">
-            <header class="card-header">
-                <div class="row gx-3">
-                    <div class="col-lg-4 col-md-6 me-auto">
-                        <input type="text" placeholder="검색어를 입력해주세요" class="form-control" />
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-6">
-                        <select class="form-select">
-                            <option>회원유형</option>
-                            <option>플랫폼직원</option>
-                            <option>개인고객</option>
-                            <option>기업고객</option>
-                            <option>입점업체 대표</option>
-                            <option>입점업체 직원</option>
-                        </select>
-                    </div>
-                </div>
-            </header>
-            <!-- card-header end// -->
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr class=text-center>
-                                <th>로그인코드</th>
-                                <th>회원아이디</th>
-                                <th>로그인시간</th>
-                                <th>로그아웃시간</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class=text-center
-                            	th:if="${!#lists.isEmpty(loginHistoryList)}"
-                                th:each="l : ${loginHistoryList}">
-                                <td th:text="${l.loginNo}">login_1</td>
-                                <td th:text="${l.memberId}">ent_ceo_1</td>
-                                <td th:text="${l.loginDate}">2023-03-01 00:00:00</td>
-                                <td th:text="${l.logoutDate}">2023-03-01 00:00:00</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- table-responsive.// -->
-                </div>
-            </div>
-            <!-- card-body end// -->
-        </div>
-     </th:block>          
-                <!-- card end// -->
-                <div class="pagination-area mt-15 mb-50">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                            <li class="page-item"><a class="page-link" href="#">02</a></li>
-                            <li class="page-item"><a class="page-link" href="#">03</a></li>
-                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">16</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            <!-- content-main end// -->
-        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-        <script src="assets/js/vendors/select2.min.js"></script>
-        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
-        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-        <!-- Main Script -->
-        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-    </body>
+	    <div class="content-header">
+	        <h2 class="content-title" th:text="${title}"></h2>
+	    </div>
+	        <div class="card mb-4">
+	            <header class="card-header">
+	                <form th:action="@{/admin/member/searchLoginHistory}" method="get">
+	            		<div class="row gx-3">
+		                   	<!-- 검색 기준 -->
+						    <div class="col-lg-2 col-md-3 col-6">
+						    	<select class="form-select" name="searchKey">
+						        	<option value="memberId" th:selected="${searchKey == 'memberId'}">회원아이디</option>
+						    	</select>
+						    </div>
+		                    <!-- 키워드 입력 -->
+						    <div class="col-lg-2 col-md-3 col-6">
+						      <input type="text" name="searchValue" th:value ="${searchValue}" placeholder="검색어 입력" class="form-control" />
+						    </div>
+						    <!-- 회원 유형 -->
+						    <div class="col-lg-2 col-md-3 col-6">
+						    	<select class="form-select" name="memberType">
+							    	<option value="" th:selected="${memberType == null or memberType == ''}">전체유형</option>
+									<option value="개인고객" th:selected="${memberType == '개인고객'}">개인고객</option>
+									<option value="기업고객" th:selected="${memberType == '기업고객'}">기업고객</option>
+									<option value="입점업체 대표" th:selected="${memberType == '입점업체 대표'}">입점업체 대표</option>
+									<option value="입점업체 직원" th:selected="${memberType == '입점업체 직원'}">입점업체 직원</option>
+							    	<option value="플랫폼직원" th:selected="${memberType == '플랫폼직원'}">플랫폼직원</option>
+						    	</select>
+						    </div>
+						    <!-- 회원 상태 -->
+						    <div class="col-lg-2 col-md-3 col-6">
+					    		<select class="form-select" name="status">
+									 <option value="" th:selected="${status == null or status == ''}">전체상태</option>
+									 <option value="ACTIVE" th:selected="${status == 'ACTIVE'}">정상회원</option>
+									 <option value="DORMANT" th:selected="${status == 'DORMANT'}">휴면회원</option>
+									 <option value="WITHDRAWN" th:selected="${status == 'WITHDRAWN'}">탈퇴회원</option>
+								</select>
+						    </div>
+						    <div class="col-lg-2 col-md-3 col-6">
+						      <button type="submit" class="btn btn-primary">검색</button>
+						    </div>
+		                   	<div class="col-lg-2 col-md-3 col-12">
+		                       <select class="form-select" name="rowPerPage" id="rowPerPage">
+		                           <option value="10" th:selected="${rowPerPage eq 10}">Show 10</option>
+		                           <option value="20" th:selected="${rowPerPage eq 20}">Show 20</option>
+		                           <option value="30" th:selected="${rowPerPage eq 30}">Show 30</option>
+		                       </select>
+	                   		</div>
+		               </div>          	
+	            	</form>
+	            </header>
+	            <!-- card-header end// -->
+	            <div class="card-body">
+	                <div class="table-responsive">
+	                    <table class="table align-middle table-hover">
+	                        <thead class="table-light text-center">
+	                            <tr>
+	                                <th class="align-middle" scope="col">로그인코드</th>
+	                                <th class="align-middle" scope="col">로그인아이디</th>
+	                                <th class="align-middle" scope="col">회원유형</th>
+	                                <th class="align-middle" scope="col">로그인시간</th>
+	                                <th class="align-middle" scope="col">로그아웃시간</th>
+	                            </tr>
+	                        </thead>
+	                        <tbody class="text-center">
+	                            <tr th:if="${!#lists.isEmpty(loginHistoryList)}"
+	                                th:each="l : ${loginHistoryList}">
+	                                <th:block th:if="${l.loginNo ne null}">
+		                                <td th:text="${l.loginNo}">login_1</td>
+		                                <td th:text="${l.memberId}">ent_ceo_1</td>
+		                                <td th:text="${l.memberType}">ent_ceo_1</td>
+		                                <td th:text="${l.loginDate}">2023-03-01 00:00:00</td>
+		                                <td th:text="${l.logoutDate}">2023-03-01 00:00:00</td>
+		                            </th:block>
+		                            <th:block th:unless="${l.loginNo ne null}">
+		                            	<td th:text="${l.loginNo}">login_1</td>
+		                                <td th:text="${l.memberId}">ent_ceo_1</td>
+		                                <td th:text="${l.memberType}">ent_ceo_1</td>
+	                                    	<td colspan="1">로그인 이력 없음</td>
+	                                </th:block>
+	                            </tr>
+	                            <tr th:unless="${!#lists.isEmpty(loginHistoryList)}">
+	                                	<td colspan="7">등록없음</td>
+	                            </tr>
+	                        </tbody>
+	                    </table>
+	                    <!-- table-responsive.// -->
+	                </div>
+	            </div>
+	            <!-- card-body end// -->
+	        </div>
+	        <div class="pagination-area mt-30 mb-50">
+	            <nav aria-label="Page navigation example">
+	                <ul class="pagination justify-content-center">
+	                	 <li class="page-item text-center">
+	                        <a class="page-link" th:href="@{/admin/member/loginHistoryList}"><i class="material-icons md-first_page"></i></a>
+	                     </li>
+	                     <li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
+	                        <a class="page-link" th:href="@{/admin/member/loginHistoryList(currentPage=${currentPage - 1})}">
+	                        	<i class="material-icons md-chevron_left"></i>
+	                        </a>
+	                     </li>
+	                     <th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
+		                    <li class="page-item" th:classappend="${num eq currentPage} ? 'active disabled'">
+		                    	<a class="page-link" th:href="@{/admin/member/loginHistoryList(currentPage=${num})}"
+		                    		th:text="${num < 10 ? '0' + num : num}">01</a>
+		                   	</li>                    
+	                     </th:block>                 
+	                     <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
+	                        <a class="page-link" th:href="@{/admin/member/loginHistoryList(currentPage=${currentPage + 1})}">
+	                        	<i class="material-icons md-chevron_right"></i>
+	                        </a>
+	                     </li>
+	                     <li class="page-item">
+	                        <a class="page-link" th:href="@{/admin/member/loginHistoryList(currentPage=${lastPage})}">
+	                        	<i class="material-icons md-last_page"></i>
+	                        </a>
+	                    </li>
+	                </ul>
+	            </nav>
+	        </div>
+     	</th:block>          
+    	<!-- card end// -->
+	     <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+	     <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+	     <script src="assets/js/vendors/select2.min.js"></script>
+	     <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+	     <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+	     <!-- Main Script -->
+	     <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+	</body>
 </html>

@@ -13,7 +13,7 @@
 	<th:block layout:fragment="jsScript">
 		<script type="text/javascript">
 			$(function() {
-				$('.approveBtn').click(function(){
+				$('.confirmBtn').click(function(){
 					const orderId = $(this).attr('data-order-id');
 					const paymentKey = $(this).attr('data-payment-key');
 					
@@ -28,7 +28,7 @@
 						if(result.isConfirmed) {
 							$.ajax({
 								type: 'POST',
-								url: '/enterprise/refund/approve',
+								url: '/enterprise/refund/confirm',
 								data: {
 									orderId: orderId,
 									paymentKey: paymentKey
@@ -45,6 +45,50 @@
 						}
 					});
 				});
+				
+				
+				
+				
+				
+				$('.rejectBtn').click(function(){
+					const orderId = $(this).attr('data-order-id');
+					const paymentKey = $(this).attr('data-payment-key');
+					
+					
+					Swal.fire({
+						title: '환불 거부',
+						text: '정말로 이 요청을 거부하시겠습니까?',
+						icon: 'warning',
+						showCancelButton: true,
+						confirmButtonText: '예',
+						cancelButtonText: '아니오'
+					}).then((result) => {
+						if(result.isConfirmed) {
+							$.ajax({
+								type: 'POST',
+								url: '/enterprise/refund/reject',
+								data: {
+									orderId: orderId,
+									paymentKey: paymentKey
+								},
+								success: function(res) {
+									Swal.fire('완료', res.message, 'success').then(() => {
+										location.reload();
+									});
+								},
+								error: function() {
+									Swal.fire('오류', '환불 처리 중 문제가 발생했습니다.', 'error');
+								}
+							});
+						}
+					});
+				});
+				
+				
+				
+				
+				
+				
 			});
 		
 		
@@ -85,22 +129,25 @@
 								<th class="align-middle" scope="col">상품명</th>
 								<th class="align-middle" scope="col">환불사유</th>
 								<th class="align-middle" scope="col">환불신청날짜</th>
-								<th class="align-middle" scope="col">요청상태</th>
+								<th class="align-middle" scope="col">상태</th>
 								<th class="align-middle" scope="col">결과통보일</th>
 								<th class="align-middle" scope="col">설정</th>								
 							</tr>
 						</thead>
 						<tbody class="text-center">
 							<tr th:if="${!#lists.isEmpty(refundList)}" th:each="l : ${refundList}">
-								<td><p th:text="${l.custId}"></p></td>
-								<td><p th:text="${l.prodNm}"></p></td>
-								<td><p th:text="${l.refundReason}"></p></td>
-								<td><p th:text="${l.refundDate}"></p></td>
-								<td><p th:text="${l.requestStatus}"></p></td>
-								<td><p th:text="${l.reviewNotificationDate}"></p></td>
+								<td><p th:text="${l.custId}"></td>
+								<td><p th:text="${l.prodNm}"></td>
+								<td><p th:text="${l.refundReason}"></td>
+								<td><p th:text="${l.refundDate}"></td>
+								<td><p th:text="${l.requestStatus}"></td>
+								<td><p th:text="${l.reviewNotificationDate}"></td>
 								<td>
-									<button type="button" class="btn btn-xs approveBtn" th:data-order-id="${l.orderId}" th:data-payment-key="${l.paymentKey}">승인</button>
-									<button type="button" class="btn btn-xs">거부</button>
+									<button type="button" class="btn btn-xs confirmBtn" th:if="${l.requestStatus == '입점업체검토중'}" th:data-order-id="${l.orderId}" th:data-payment-key="${l.paymentKey}">승인</button>
+									<button type="button" class="btn btn-xs rejectBtn" th:if="${l.requestStatus == '입점업체검토중'}" th:data-order-id="${l.orderId}" th:data-payment-key="${l.paymentKey}" >거부</button>
+									 <p th:if="${l.requestStatus == '환불승인'}">승인 완료
+									 <p th:if="${l.requestStatus == '환불거부'}">신청 거부
+									 
 								</td>
 							</tr>
 							<tr th:unless="${!#lists.isEmpty(refundList)}">

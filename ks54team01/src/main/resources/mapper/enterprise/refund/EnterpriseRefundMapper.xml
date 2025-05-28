@@ -24,7 +24,7 @@
 	<update id="modifyRefundApproved" parameterType="EnterpriseRefund">
 		update rental_refund_request
 		<set>
-			request_status = '환불승인',
+			request_status = #{requestStatus},
 			review_notification_date = NOW()
 		</set>
 		where
@@ -51,6 +51,8 @@
 			on sp.products_no = pd.products_no
 		where
 			rrr.ent_ceo_no = #{entCeoNo}
+		order by
+			rrr.refund_date DESC
 	</select>
 	    
 </mapper>

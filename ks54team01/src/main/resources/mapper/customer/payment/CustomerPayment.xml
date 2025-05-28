@@ -32,6 +32,7 @@
   		<result column="next_payment_date"		property="nextPaymentDate" />
   		<result column="delivery_progress"		property="delProgress" />
   		<result column="products_no"			property="prodNo" />
+		<result column="request_status"			property="requestStatus" />
   	</resultMap>
   	
   	
@@ -103,6 +104,15 @@
 	</resultMap>
 	
 	
+	
+	<select id="getRentalContractNo" resultType="String">
+		select
+			rental_contract_no
+		from
+			payment
+		where
+			payment_completed_no = #{paymentCompletedNo}
+	</select>
 	
 	
 	
@@ -363,13 +373,16 @@
 			di.delivery_progress,
 			p.payment_key,
 			p.ent_ceo_no,
-			p.ent_emp_id
+			p.ent_emp_id,
+			rrr.request_status
 		from
 			payment p inner join sell_products sp 
 			on p.sell_products_no = sp.sell_products_no
 			inner join products pd
 			on sp.products_no = pd.products_no
-			inner join delivery_information di
+			left join rental_refund_request rrr
+			on rrr.payment_completed_no = p.payment_completed_no
+			left join delivery_information di
 			on p.payment_completed_no = di.payment_completed_no
 		where
 			p.cust_id = #{custId}
@@ -379,7 +392,7 @@
 				ELSE p.rental_contract_no
 			END
 		order by
-			p.payment_completed_date DESC;
+			p.payment_completed_date DESC, p.revision_date DESC;
 	</select>
 	
 	

@@ -54,7 +54,7 @@ public interface AdminProductInfoMapper {
 	// 품목 검색
 	List<ProductInfoItem> getSearchItem(String searchKey, String searchValue, String useStatus);
 	// 브랜드 검색
-	List<ProductInfoBrand> getSearchBrand(String searchKey, String searchValue, String useStatus);
+	List<ProductInfoBrand> getSearchBrand(String searchKey, String searchValue, String useStatus, int currentPage ,int rowPerPage);
 	// 카테고리 검색
 	List<ProductInfoCategory> getSearchCategory(String searchKey, String searchValue, String useStatus);
 	
@@ -120,7 +120,7 @@ public interface AdminProductInfoMapper {
 	// 모델별/상세스펙 조회
 	ProductInfoModelSpec getModelSpecInfoByNo(String modelSpecNo);
 	// 카테고리별/상세스펙 조회
-	ProductInfoCategorySpec getCategorySpecInfoByNo(String categorySpecyNo);
+	ProductInfoCategorySpec getCategorySpecInfoByNo(String categorySpecNo);
 	// 전체혜택 조회
 	ProductInfoBenefit getBenefitInfoByNo(String benefitNo);
 	// 모델 조회
@@ -172,7 +172,7 @@ public interface AdminProductInfoMapper {
 	// 품목 목록 조회
 	List<ProductInfoItem> getItemList();
 	// 브랜드 목록 조회
-	List<ProductInfoBrand> getBrandList();
+	List<ProductInfoBrand> getBrandList(Pageable pageable);
 	// 카테고리 목록 조회
 	List<ProductInfoCategory> getCategoryList();
 }

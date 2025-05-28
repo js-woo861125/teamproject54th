@@ -89,9 +89,11 @@ public class EnterpriseDeliveryController {
 	
 	
 	@GetMapping("/deliveryList")
-	public String getDeliveryList(Model model) {
+	public String getDeliveryList(HttpSession session, Model model) {
 		
-		List <EnterpriseDelivery> DeliveryList = enterpriseDeliveryService.getDeliveryList();
+		String entCeoNo = (String) session.getAttribute("entCeoNo");
+		
+		List <EnterpriseDelivery> DeliveryList = enterpriseDeliveryService.getDeliveryList(entCeoNo);
 		
 		model.addAttribute("title", "배송정보 목록");
 		model.addAttribute("DeliveryList", DeliveryList);

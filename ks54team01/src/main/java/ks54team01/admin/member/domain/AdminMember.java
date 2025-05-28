@@ -13,5 +13,5 @@ public class AdminMember {
 	private String withdrawStatus;
 	private String memberRegDate;
 	private String memberRevDate;
-	private String stateTransDate;
+	private String stateTransitionDate;
 }

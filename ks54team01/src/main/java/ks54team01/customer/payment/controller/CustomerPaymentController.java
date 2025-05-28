@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
-import ks54team01.customer.member.domain.CustomerMember;
+import ks54team01.customer.contract.service.CustomerContractService;
 import ks54team01.customer.payment.domain.CustomerDelivery;
 import ks54team01.customer.payment.domain.CustomerDeliveryInfo;
 import ks54team01.customer.payment.domain.CustomerPayment;
@@ -32,6 +32,8 @@ public class CustomerPaymentController {
 	
 	private final CustomerPaymentService customerPaymentService;
 	
+	private final CustomerContractService customerContractService;
+	
 	
 	@PostMapping("/refund")
 	public ResponseEntity<String> addRefund(@RequestParam("orderId") String orderId, @RequestParam("paymentCompletedNo") String paymentCompletedNo
@@ -43,6 +45,8 @@ public class CustomerPaymentController {
 		
 		
 		customerPaymentService.addRefund(orderId, paymentCompletedNo, paymentKey, refundReason, custId, entCeoNo, entEmpId);
+		
+		customerPaymentService.modifyPaymentStatus(orderId, "환불요청");
 		
 		return ResponseEntity.ok("환불 요청이 접수되었습니다.");
 	}
@@ -135,6 +139,9 @@ public class CustomerPaymentController {
 			
 			customerPaymentService.removeDeliveryInfo(paymentCompletedNo);
 			
+			String rentalContractNo = customerPaymentService.getRentalContractNo(paymentCompletedNo);
+			
+			customerContractService.modifyRentalContractStatus(rentalContractNo);
 			
 			return ResponseEntity.ok("주문이 취소되었습니다.");
 			
