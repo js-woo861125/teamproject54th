@@ -92,7 +92,7 @@
                         <input type="hidden" name="totalApprovedAmount" th:value="${totalApprovedAmount}" />
                         
 
-                        <button type="submit" class="btn btn-primary">저장</button>
+                        <button type="submit" class="btn btn-primary" id="saveBtn">저장</button>
                     </form>
 
                 </div>
@@ -293,10 +293,14 @@
      </div>
     </div>
             
+    <th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</th:block>
+
     <th:block layout:fragment="jsScript">
-        <script>
+       <script type="text/javascript">
             // 1. 날짜 포맷팅 함수 정의
-                function formatDate(date) {
+            function formatDate(date) {
                     const days = ['일', '월', '화', '수', '목', '금', '토'];
                     const months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
 
@@ -316,23 +320,70 @@
                     return `${year}년 ${month}월 ${dayOfMonth}일 ${dayOfWeek}요일`;
                 }
 
-            // 2. DOMContentLoaded 이벤트 리스너: HTML 문서가 완전히 로드된 후 스크립트 실행
-            document.addEventListener('DOMContentLoaded', () => {
-            // 3. 시간을 표시할 HTML 요소 가져오기
-            const timeDisplayElement = document.getElementById('current-time');
+                // 2. DOMContentLoaded 이벤트 리스너: HTML 문서가 완전히 로드된 후 스크립트 실행
+                document.addEventListener('DOMContentLoaded', () => {
+                // 3. 시간을 표시할 HTML 요소 가져오기
+                const timeDisplayElement = document.getElementById('current-time');
 
-            // 4. 요소가 존재하는지 확인 후 시간 업데이트
-                if (timeDisplayElement) {
-                    // 초기 시간 설정
-                    const now = new Date();
-                    timeDisplayElement.textContent = formatDate(now);
+                // 4. 요소가 존재하는지 확인 후 시간 업데이트
+                    if (timeDisplayElement) {
+                        // 초기 시간 설정
+                        const now = new Date();
+                        timeDisplayElement.textContent = formatDate(now);
+                    }
+
+
+
+
+
+
+                const saveButton = document.getElementById('saveBtn'); 
+
+                if (saveButton) {
+                    saveButton.addEventListener('click', function(event) {
+                        // 기본 폼 제출 동작을 잠시 막습니다.
+                        // 사용자가 '확인'을 눌렀을 때만 폼을 제출하도록 하기 위함
+                        event.preventDefault(); 
+                        
+                        Swal.fire({
+                            title: '정산 확인',
+                            text: '현재 정산 내역을 저장하시겠습니까?',
+                            icon: 'question', // 'success', 'error', 'warning', 'info', 'question' 중 선택
+                            showCancelButton: true, // '취소' 버튼 표시
+                            confirmButtonColor: '#3085d6', // '확인' 버튼 색상
+                            cancelButtonColor: '#d33', // '취소' 버튼 색상
+                            confirmButtonText: '저장', // '확인' 버튼 텍스트
+                            cancelButtonText: '아니요' // '취소' 버튼 텍스트
+                        }).then((result) => {
+                            // 사용자가 '확인' 버튼을 눌렀을 경우
+                            if (result.isConfirmed) {
+                                // 폼 제출
+                                this.closest('form').submit();
+                                
+                            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                                // 사용자가 '취소' 버튼을 눌렀을 경우
+                                Swal.fire(
+                                    '취소됨',
+                                    '정산 저장이 취소되었습니다.',
+                                    'error'
+                                );
+                            }
+                        });
+                    });
                 }
+                
+
+
+
+
+
+
+
+
             });
-
-
-
-
         </script>
+        
+
     </th:block>
     
         
