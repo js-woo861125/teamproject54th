@@ -74,66 +74,49 @@
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
-	<!-- 모트스트랩 start -->
 	<th:block layout:fragment="customContents">
-		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content">
-					<form id="addDeliveryForm" th:action="@{/customer/delivery/addDeliveryList}" method="post">
-						<div class="modal-header">
-							<h5 class="modal-title" id="staticBackdropLabel">양도 받기 신청서 작성!</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<div class="row">
-								<div class="form-group col-md-6">
-									<input placeholder="배송지명" class="form-control" id="delNm" name="delNm" type="text">
-								</div>
-								<div class="form-group col-md-6 mt-10">
-						        	<button type="button" id="daumPostBtn" class="btn col-12">주소찾기</button>
-						    	</div>
-								<div class="form-group col-md-12 d-flex">
-									<div class="col-sm-8">
-										<input placeholder="주소" class="form-control" id="delAddr" name="delAddr" type="text" readonly>
-									</div>
-									<div class="col-sm-4 pl-10">
-										<input placeholder="우편번호" class="form-control" id="delZipNo" name="delZipNo" type="text" readonly>
-									</div>
-								</div>
-								<div class="form-group col-md-12">
-									<input placeholder="상세주소" class="form-control" id="delDaddr" name="delDaddr" type="text">
-								</div>
-								<div class="form-group col-md-12">
-					       			<input placeholder="연락처" class="form-control" id="recipientPhone" name="recipientPhone" type="text" maxlength="13">
-					   				</div>
-					   			<div class="form-group col-md-12">
-					      			<input placeholder="요청사항" class="form-control" id="delRequest" name="delRequest" type="text">
-					  			</div>
-					   			<div class="form-group col-md-12">
-									<div class="custome-checkbox">
-	                  					<input class="form-check-input" type="checkbox" id="agreeCheckbox" name="agreeCheckbox">
-	                   					<label class="form-check-label mr-10" for="agreeCheckbox"><span>기본배송지로 설정</span></label>
-										<input type="hidden" name="primaryLocation" id="primaryLocationChk">
-									</div>
-									<input type="hidden" name="custId" id="custId" value="personalcustid2">
-									<input type="hidden" name="delNo" id="delNo">
-					  			</div>
-							</div>
-						</div>
-		 				<div class="modal-footer">
-			     			<button id="addDeliveryBtn" type="submit" class="btn btn-primary">등록</button>
-			   			</div>
-					</form>
-		  		</div>
-			</div>
-		</div>
-		<!-- 모트스트랩 end -->
+		
         <div class="container mb-30">
             <div class="row">
                 <div class="col-xl-11 col-lg-12 m-auto">
                     <div class="row">
                         <div class="col-xl-9 product-info mt-30">
                             <div class="product-detail accordion-detail" th:object="${transferBoardInfo}">
+                                <!-- 모트스트랩 start -->
+								<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<form id="applyTransferForm" th:action="@{/customer/transferBoard/applyTransfer}" method="post">
+												<div class="modal-header">
+													<h5 class="modal-title" id="staticBackdropLabel">양도 받기 신청서 작성</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<div class="modal-body">
+													<div class="row">
+														<div class="form-group col-md-6">
+															<select>
+																<option></option>
+															</select>
+														</div>
+														<div class="form-group col-md-6">
+															<input type="hidden" name="customerSellProduct.entCeoNo" th:value="*{customerSellProduct.entCeoNo}" id="entCeoNoInput" class="form-control">
+															<input type="hidden" name="customerSellProduct.entEmpId" th:value="*{customerSellProduct.entEmpId}" id="entEmpIdInput" class="form-control">
+															<input type="hidden" name="sellProductsNum" th:value="*{sellProductsNum}" id="sellProductsNumInput" class="form-control">
+															<input type="hidden" name="rentalContractNum" th:value="*{rentalContractNum}" id="rentalContractNumInput" class="form-control">
+															<input type="hidden" name="customerContract.rentalEndDate" th:value="*{customerContract.rentalEndDate}" id="rentalContractNumInput" class="form-control">
+															<input type="hidden" name="transferBoardNum" th:value="*{transferBoardNum}" id="transferBoardNumInput" class="form-control">
+															<input placeholder="배송지명" class="form-control" id="delNm" name="delNm" type="text">
+														</div>
+													</div>
+												</div>
+								 				<div class="modal-footer">
+									     			<button id="applyTransferBtn" type="submit" class="btn btn-primary">신청</button>
+									   			</div>
+											</form>
+								  		</div>
+									</div>
+								</div>
+								<!-- 모트스트랩 end -->
                                 <div class="row mb-50 mt-30">
                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                         <div class="detail-info pr-30 pl-30 product-info">
@@ -189,6 +172,10 @@
                                                 <div style="width: 100%; height: 1px; min-height: 1px; margin: 24px 0px; background-color: rgba(112, 115, 124, 0.16);"></div>
                                                 <h4>기타 전달사항</h4>
                                                 <p th:text="*{transferContent}">매월 첫째주에 방문케어 해주십니다!</p>
+                                            	<img th:if="${!#lists.isEmpty(fileList)}"
+													 th:each="l : ${fileList}" class="img-main"
+													 th:src="@{${l.filePath}}"
+													 alt="이미지" />
                                             </div>
                                         </div>
                                     </div>

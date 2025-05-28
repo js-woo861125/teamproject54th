@@ -23,6 +23,14 @@ public class FileServiceImpl implements FileService {
 	
 
 	@Override
+	public String getFileIdx(String transferBoardNum) {
+		
+		String fileIdx = fileMapper.getFileIdx(transferBoardNum);
+		
+		return fileIdx;
+	}
+	
+	@Override
 	public void deleteFiles(String fileIdx) {
 		fileMapper.deleteFiles(fileIdx);
 		

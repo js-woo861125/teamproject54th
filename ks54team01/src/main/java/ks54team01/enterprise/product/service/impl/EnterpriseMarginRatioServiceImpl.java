@@ -27,7 +27,7 @@ public class EnterpriseMarginRatioServiceImpl implements EnterpriseMarginRatioSe
 		int isAdd = enterpriseMarginRatioMapper.existMarginRatioByPeriod(enterpriseMarginRatio);
 		
 		if(isAdd != 1) {
-			String marginRatioNum =  "margin_ratio_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+			String marginRatioNum =  "margin_ratio_" + UUID.randomUUID().toString().replace("-", "");
 			enterpriseMarginRatio.setMarginRatioNum(marginRatioNum);		
 			enterpriseMarginRatioMapper.addEnterpriseMarginRatio(enterpriseMarginRatio);
 		}

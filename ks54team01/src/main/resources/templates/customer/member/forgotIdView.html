@@ -34,9 +34,11 @@
                                         <div class="heading_s1 mb-20">
                                             <h1 class="mb-5" th:text="${title}"></h1>                                         
                                         </div>
+                                        <div th:if="${message}" class="alert alert-danger"><p th:text="${message}"></p></div>
+                                        <div th:if="${error}" class="alert alert-danger"><p th:text="${error}"></p></div>
                                         <form id="forgotIdForm" th:action="@{/customer/member/forgotId}" method="post">
                                             <div class="form-group">
-                                                <input type="text" id="memberName" name="memberName" placeholder="이름" required />
+                                                <input type="text" id="memberName" name="memberName" placeholder="이름" value="홍01" required />
                                             </div>
                                             <div class="form-group">
 												<input type="hidden" id="memberPhone" name="memberPhone"/>
@@ -67,15 +69,15 @@
 											<!-- 회원 유형 선택 -->
                                             <div class="custome-radio type-radio d-flex justify-content-evenly mb-30">
                                                 <div class="custome-radio">
-												    <input class="form-check-input" type="radio" id="memberTypeCustomer" name="memberType" value="CUSTOMER" checked="checked" required />
+												    <input class="form-check-input" type="radio" id="memberTypeCustomer" name="memberType" value="개인고객" checked="checked" required />
 												    <label class="form-check-label" for="memberTypeCustomer">일반회원</label>
 												</div>
                                                 <div class="custome-radio">
-												    <input class="form-check-input" type="radio" id="memberTypeCorp" name="memberType" value="CORP" checked="checked" required />
+												    <input class="form-check-input" type="radio" id="memberTypeCorp" name="memberType" value="기업고객" required />
 												    <label class="form-check-label" for="memberTypeCorp">기업회원</label>
 												</div>
 												<div class="custome-radio">
-												    <input class="form-check-input" type="radio" id="memberTypeEnt" name="memberType" value="ENT" required />
+												    <input class="form-check-input" type="radio" id="memberTypeEnt" name="memberType" value="입점업체" required />
 												    <label class="form-check-label" for="memberTypeEnt">입점업체</label>
 												</div>
                                             </div>
@@ -119,16 +121,16 @@
 		     * email 유효성검증 및 인증코드 전송
 		     */
 		    function sendVerificationCode() {
-		    	const custEmail  = getFullEmail();
+		    	const memberEmail  = getFullEmail();
 
-		        if (!custEmail) {
+		        if (!memberEmail) {
 		            alert("이메일을 정확히 입력해주세요.");
 		            return;
 		        }
 		        
 		        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		        
-		        if (!regex.test(custEmail )) {
+		        if (!regex.test(memberEmail)) {
 		            alert("이메일 형식이 올바르지 않습니다.");
 		            return;
 		        }
@@ -164,7 +166,7 @@
 		   	let isEmailVerified = false;
 		   	
 		   	function verifyCodeSubmit() {
-		        const custEmail = getFullEmail();		       
+		        const memberEmail = getFullEmail();		       
 		        const code = $('#verifyCode').val();
 		        
 		        if (!code) {
@@ -176,7 +178,7 @@
 		            url: '/customer/register/verifyCode',
 		            method: 'POST',
 		            data: {
-		                email: custEmail,
+		                email: memberEmail,
 		                code: code
 		            },
 		            success: function(response) {
@@ -207,19 +209,33 @@
 		        return true;
 		    }
 		    
+		    
 		    /**
-		     *  폼 유효성 검증
+			* input 유효성검증
+			*/
+			function validateRequiredFields() {
+			    const requiredFields = ['memberName','phone1', 'phone2', 'emailFirst', 'emailLast'];
+			    for (let field of requiredFields) {
+			        const input = document.getElementById(field);
+			        if (!input.value.trim()) {
+			            alert(`${input.placeholder} 필수 입력항목입니다.`);
+			            input.focus();
+			            return false;
+			        }
+			    }
+			    return true;
+			}
+		    
+		    /**
+		     *  검증유형별 함수 실행
 		     */
 		    function validateForm() {
-		        const memberName = $('#memberName').val().trim();
-		        const phone1 = $('#phone1').val().trim();
-		        const phone2 = $('#phone2').val().trim();
-		        const memberEmail = getFullEmail();
-
-		        if (!memberName || !phone1 || !phone2 || !memberEmail) {
-		            alert("모든 항목을 입력해주세요.");
-		            return false;
-		        }
+		    	if (!validateRequiredFields()) return false;
+		        if (!validateEmailVerification()) return false;
+		        
+		        setPhoneValue();
+		        
+		        return true;
 		    }
 		        
 		    /**
@@ -227,12 +243,24 @@
 		     */
 		    $('#forgotIdBtn').click(function(e) {
 		        e.preventDefault();
-
+		        
 		        if (validateForm()) {
-		            alert("임시 비밀번호가 이메일로 발송되었습니다.");
 		            $('#forgotIdForm').submit();
 		        }
 		    });
+		    
+
+			/**
+		 	 * 아이디찾기 이메일발송 실패
+		 	 */	
+		 	const params = new URLSearchParams(window.location.search);
+		 	
+		 	if (params.get('error') === 'true') {
+			 	  alert('일치하는 아이디가 없습니다. 아이디를 다시한번 확인 해 주세요.');
+			 	}
+		 	
+
+		 	
 		</script>
 	</th:block>
 	

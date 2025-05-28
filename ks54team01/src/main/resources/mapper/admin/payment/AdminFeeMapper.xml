@@ -53,10 +53,9 @@
             #{settlementMonth}
         )
     </insert>
-    
-    
+ 
     <update id="updateFeeClosingSettlementStatus">
-           UPDATE fee
+        UPDATE fee
         SET
             closing_settlement = #{status}
         WHERE
@@ -65,9 +64,61 @@
             AND closing_settlement = '1.마감(정산)전';
             
      </update>
-	
-	
+     
+     
+     <insert id="insertSettlement" parameterType="ks54team01.admin.payment.domain.SettlementConfirmRequest">
+        INSERT INTO settlement (
+            settlement_month,
+            ent_ceo_no,
+            ent_emp_id,
+            platform_emp_id,
+            total_ent_fee_rental,
+            total_platform_fee_rental,
+            total_ent_fee,
+            total_platform_fee,
+            total_ent_penalty,
+            total_platform_penalty,
+            total_approved_amount,
+            total_net_platform_fee,
+            settlement_date,
+            settlement_status
+        ) VALUES (
+            #{settlementMonth},
+            #{entCeoNo},
+            #{entEmpId},
+            #{platformEmpId},
+            #{totalEntFeeRental},
+            #{totalPlatFormFeeRental},
+            #{totalEntFee},
+            #{totalPlatFormFee},
+            #{totalEntPenalty},
+            #{totalPlatFormPenalty},
+            #{totalApprovedAmount},
+            #{totalNetPlatformFee},
+            NOW(), '정산완료' )
+    </insert>
 
+    <update id="updateIndividualFeePaymentStatus">
+        UPDATE fee
+        SET
+            provision_date = #{currentDate},
+            closing_settlement = '2.마감(정산)완료' WHERE
+            fee_no IN
+            <foreach item="feeNo" collection="feeNoList" open="(" separator="," close=")">
+                #{feeNo}
+            </foreach>
+            AND closing_settlement = '2.마감(정산)완료'; </update>
+
+    <update id="updateMonthlyFeePaymentStatus">
+        UPDATE monthly_fee
+        SET
+            pay_status = '지급'
+        WHERE
+            settlement_month = #{settlementMonth}
+            AND ent_ceo_no = #{entCeoNo}
+            AND (pay_status IS NULL OR pay_status != '지급');
+    </update>
+     
 
 </mapper>
 

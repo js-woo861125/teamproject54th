@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ks54team01.admin.product.domain.AdminProduct;
+import ks54team01.admin.product.service.AdminProductService;
+import ks54team01.admin.productInfo.domain.ProductInfoBenefit;
+import ks54team01.admin.productInfo.service.AdminProductInfoService;
 import ks54team01.enterprise.product.domain.EnterpriseMarginRatio;
 import ks54team01.enterprise.product.domain.EnterpriseProduct;
 import ks54team01.enterprise.product.domain.EnterpriseProductQuantity;
@@ -34,7 +37,8 @@ public class EnterpriseProductController {
 	private final EnterpriseProductService enterpriseProductService;
 	private final EnterpriseMarginRatioService enterpriseMarginRatioService;
 	private final EnterpriseMarginRatioMapper enterpriseMarginRatioMapper;
-	
+	private final AdminProductService adminProductService;
+	private final AdminProductInfoService adminProductInfoService;
 	
 	
 	
@@ -124,7 +128,9 @@ public class EnterpriseProductController {
 		
 		return "enterprise/product/enterpriseMarginRatioView";
 	}
-	
+	/*
+	 * 입점업체 재고 조회
+	 */
 	@GetMapping("/product/quantityList")
 	public String quantityList(Model model) {
 		
@@ -135,21 +141,31 @@ public class EnterpriseProductController {
 		
 		return "enterprise/product/enterpriseQuantityView";
 	}
-	
+	/*
+	 * 
+	 * 입점업체 상품등록
+	 */
 	@GetMapping("/product/addProduct")
-	public String enterpriseAddProduct(Model model) {
+	public String enterpriseAddProduct(@RequestParam("productNo") String productNo, Model model) {
+		
+		AdminProduct product = adminProductService.getProduct(productNo);
+	
+		List<EnterpriseMarginRatio> marginList = enterpriseMarginRatioService.getEnterpriseMarginRatio();
+		List<ProductInfoBenefit> benefitList = adminProductInfoService.getBenefitList();
+		
+		model.addAttribute("product", product);
+		model.addAttribute("marginList", marginList);
+		model.addAttribute("benefitList", benefitList);
 		
 		return "enterprise/product/addSellProductView";
 	}
 	
 	@PostMapping("/product/addproduct")
-	public String enterpriseAddProduct() {
+	public String enterpriseAddProduct(EnterpriseProduct enterpriseProduct) {
 		
+		enterpriseProductService.addSellProduct(enterpriseProduct);
 		
-		
-		
-		
-		return "ridirect:/enterprise/product/productList";
+		return "redirect:/enterprise/product/productList";
 	}
 	
 }

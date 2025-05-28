@@ -13,80 +13,64 @@
 	
 	<th:block layout:fragment="jsScript">
 		<script th:inline="javascript">
-		let existingMainImage = /*[[${mainImagePath}]]*/'';
-		let existingExtraImages = /*[[${extraImagePaths}]]*/'';
+			// 메인 이미지 미리보기
+			$('#mainImage').change(function(){
+			    $('#mainImagePreview').empty();
+			    const files = this.files;
+			    if (files.length > 0) {
+			        const reader = new FileReader();
+			        reader.onload = function (e) {
+			            const img = $('<img />', {src: e.target.result, alt: '대표사진'});
+			            $('#mainImagePreview').append(img);
+			        }
+			        reader.readAsDataURL(files[0]);
+			    }
+			});
+			
+		 	// 추가 이미지 미리보기 & 삭제
+		   	$('#extraImage').change(function(){
+		   	    $('#extraImagePreview').empty();
+		   	    const files = this.files;
+		   	    const fileList = [...files];
+		   	    fileList.forEach(function(file, idx){
+		   	        const imgDiv = $('<div class="col-md-6 img-box1" style="position:relative"></div>');
+		   	        const lastModified = files[idx].lastModified;
+		   	        const fileFullName = files[idx].name;
+		   	        const dotIdx = fileFullName.lastIndexOf('.');
+		   	        const fileName = (dotIdx != -1 &&  dotIdx < fileFullName.length - 1) 
+		   	                            ? fileFullName.substring(0, dotIdx) 
+		   	                            : fileFullName;
+		   	        if(file.type.match('image.*')){
+		   	            const reader = new FileReader(); 
+		   	            reader.onload = function (e) { 
+		   	                const img = $('<img />', {src: e.target.result, id : lastModified, alt: fileName });
+		   	                const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
+		   	                imgDiv.append(img,span);
+		   	                imgDiv.appendTo('#extraImagePreview');
+		   	            } 
+		   	            reader.readAsDataURL(file);
+		   	        }else{
+		   	            const noImage = $('<img />', { src : '/manage/assets/imgs/theme/upload.svg', id : lastModified, alt : fileName});
+		   	            const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
+		   	            imgDiv.append(noImage, span);
+		   	            imgDiv.appendTo('#extraImagePreview');
+		   	        }
+		   	    });
+		   	});
 	
 	
-		$(document).ready(function () {
-
-			// ✅ 수정 페이지 진입 시 기존 메인 이미지 보여주기
-			if (existingMainImage) {
-				const img = $('<img />', {src: existingMainImage, alt: '기존 대표사진'});
-				$('#mainImagePreview').append(img);
-			}
-
-			// ✅ 수정 페이지 진입 시 기존 추가 이미지 보여주기
-			if (existingExtraImages && existingExtraImages.length > 0) {
-				existingExtraImages.forEach(function (imgPath) {
-					const imgDiv = $('<div class="col-md-6 img-box1" style="position:relative"></div>');
-					const img = $('<img />', {src: imgPath, alt: '기존 추가 이미지'});
-					const span = $('<span />', {'class': 'delete-img1', 'data-remove-key': imgPath}).text('X');
-					imgDiv.append(img, span);
-					$('#extraImagePreview').append(imgDiv);
-				});
-			}
-
-			// ✅ 새 메인 이미지 업로드 시 미리보기
-			$('#mainImage').change(function () {
-				$('#mainImagePreview').empty();
-				const files = this.files;
-				if (files.length > 0) {
-					const reader = new FileReader();
-					reader.onload = function (e) {
-						const img = $('<img />', {src: e.target.result, alt: '대표사진'});
-						$('#mainImagePreview').append(img);
-					}
-					reader.readAsDataURL(files[0]);
-				}
-			});
-
-			// ✅ 새 추가 이미지 업로드 시 미리보기 + 삭제버튼
-			$('#extraImage').change(function () {
-				$('#extraImagePreview').empty();
-				const files = this.files;
-				const fileList = [...files];
-				fileList.forEach(function (file, idx) {
-					const imgDiv = $('<div class="col-md-6 img-box1" style="position:relative"></div>');
-					const lastModified = file.lastModified;
-					const fileFullName = file.name;
-					const dotIdx = fileFullName.lastIndexOf('.');
-					const fileName = (dotIdx != -1 && dotIdx < fileFullName.length - 1)
-						? fileFullName.substring(0, dotIdx)
-						: fileFullName;
-					if (file.type.match('image.*')) {
-						const reader = new FileReader();
-						reader.onload = function (e) {
-							const img = $('<img />', {src: e.target.result, id: lastModified, alt: fileName});
-							const span = $('<span />', {'class': 'delete-img1', 'data-remove-key': lastModified}).text('X');
-							imgDiv.append(img, span);
-							imgDiv.appendTo('#extraImagePreview');
-						}
-						reader.readAsDataURL(file);
-					} else {
-						const noImage = $('<img />', {
-							src: '/manage/assets/imgs/theme/upload.svg',
-							id: lastModified,
-							alt: fileName
-						});
-						const span = $('<span />', {'class': 'delete-img1', 'data-remove-key': lastModified}).text('X');
-						imgDiv.append(noImage, span);
-						imgDiv.appendTo('#extraImagePreview');
-					}
-				});
-			});
-
-		});
-		
+		   	// X버튼 클릭 시 상세 이미지 파일 삭제
+		   	$(document).on('click', '.delete-img2', function(){
+		   	    const input = document.getElementById('thumbnails');
+		   	    const files = input.files;
+		   	    const dataTransfer = new DataTransfer();
+		   	    const removeTargetId = $(this).attr('data-remove-key');
+		   	    Array.from(files)
+		   	        .filter(file => file.lastModified != removeTargetId)
+		   	        .forEach(file => dataTransfer.items.add(file));
+		   	    input.files = dataTransfer.files;
+		   	    $(this).closest('.img-box2').remove();
+		   	});
 		   	
 		</script>
 	</th:block>
@@ -115,7 +99,9 @@
 										<input type="file" id="mainImage" name="mainImage"
 											   class="form-control">
 									</div>
-									<div class="mt-3" id="mainImagePreview"></div>
+									<div class="mt-3" id="mainImagePreview">
+										<img th:src="*{uploadImage}">
+									</div>
 								</div>
                         	</div>
                     	</div>
@@ -152,6 +138,9 @@
                                     <input id="productNameInput" th:value="*{productInfo.productsName}" type="text" name="productsName" placeholder="상품명" readonly>
                                 </div>
                             </div>
+                            
+                            
+                            
                             <!-- <div class="row">
                                 <div class="form-group col-lg-6">
                                     <input id="contractQuantityInput" type="text" th:value="*{customerContract.contractQuantity}" name="contractQuantity" placeholder="계약수량 *" readonly>
@@ -161,11 +150,11 @@
                                 <div class="form-group col-lg-3">
                                     <input id="contractStartDateInput" type="text" th:value="*{customerContract.rentalStartDate}" name="rentalStartDate" placeholder="계약시작일 *" readonly>
                                 </div> -->
-                           	<div class="row">
+                           	<!-- <div class="row">
                                 <div class="form-group col-lg-3">
                                     <input id="contractEndDateInput" type="text" th:value="*{contractEndDate}" name="contractEndDate" placeholder="계약종료일 *" readonly>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row">
                                 <div class="form-group col-lg-6">
                                     <input id="remainingMonthsInput" type="text" th:value="*{remainingMonths}" name="remainingMonths" placeholder="잔여계약일(개월) *" >
@@ -176,19 +165,7 @@
                                     <input id="rentalFeeInput" type="text" th:value="*{rentalFee}" name="rentalFee" placeholder="월렌탈료 *">
                                 </div>
                             </div>
-                            <div class="ship_detail">
-                                <div class="form-group">
-                                    <div class="chek-form">
-                                        <div class="custome-checkbox">
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="differentaddress">
-                                            <label class="form-check-label label_info" data-bs-toggle="collapse" data-target="#collapseAddress" href="#collapseAddress" aria-controls="collapseAddress" for="differentaddress">
-                                            	<span>등록하려는 상품의 정보와 일치합니까?</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="collapseAddress" class="different_address collapse in">
-                                    <div class="row">
+                            <div class="row">
                                         <div class="form-group col-lg-5 d-flex">
                                             <input id="individualGrantsInput" type="text" th:value="*{individualGrants}" name="individualGrants" placeholder="지원금을 입력해주세요.">
                                         </div>
@@ -215,8 +192,7 @@
 									        </a>
 									    </div>
 									</div>
-	                            </div>
-                            </div>
+                            
                    		</div>
             		</div>
             	</div>

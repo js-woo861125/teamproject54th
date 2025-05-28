@@ -72,10 +72,11 @@ public class AdminManageController {
 		
 		Map<String, Object> loginResult = adminManageService.matchAdmin(memberId, memberPw);
 		
-		if (loginResult == null || loginResult.get("adminInfo") == null) {
-	         log.warn("로그인 실패: 존재하지 않거나 비밀번호 불일치: {}", memberId);
-	         return "redirect:/admin/login";
-	     }
+		
+		  if (loginResult == null || loginResult.get("adminInfo") == null) {
+		  log.warn("로그인 실패: 존재하지 않거나 비밀번호 불일치: {}", memberId); return
+		  "redirect:/admin/login"; }
+		 
 		
 		Admin adminInfo = (Admin)loginResult.get("adminInfo");
 		String adminId = adminInfo.getMemberId();

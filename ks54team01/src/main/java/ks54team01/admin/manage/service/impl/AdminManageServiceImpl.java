@@ -3,6 +3,7 @@ package ks54team01.admin.manage.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminManageServiceImpl implements AdminManageService{
 
 	private final AdminManageMapper adminManageMapper;
+	private final PasswordEncoder passwordEncoder;
 	
 	/**
 	 * 관리자 정보 수정
@@ -42,9 +44,14 @@ public class AdminManageServiceImpl implements AdminManageService{
 	    
 	    String adminName = adminInfo.getManagerName();
 	    String memberType = adminInfo.getMemberType();
+	    String encodedPw = adminInfo.getMemberPw(); 
+	    
+	    if (!passwordEncoder.matches(memberPw, encodedPw)) {
+			log.warn("로그인 실패: 비밀번호 불일치"); return null; 
+		}
 	    
 	
-	    if (adminInfo != null && memberPw.equals(adminInfo.getMemberPw())) {
+	    if (adminInfo != null) {
            log.info("관리자 로그인 성공");
            resultMap.put("adminInfo", adminInfo);
            resultMap.put("adminName", adminName);

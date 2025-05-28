@@ -13,5 +13,5 @@ public interface EnterpriseProductMapper {
 	
 	List<EnterpriseProduct> getSellProductList();
 	
-	
+	void addEnterpriseProduct(EnterpriseProduct enterpriseProduct);
 }

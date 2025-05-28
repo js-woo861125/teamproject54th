@@ -1,5 +1,6 @@
 package ks54team01.admin.payment.controller;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import ks54team01.admin.payment.domain.AdminFee;
 import ks54team01.admin.payment.domain.AdminFeeListWrapper;
 import ks54team01.admin.payment.domain.AdminMonthlyFee;
 import ks54team01.admin.payment.domain.AdminPayment;
+import ks54team01.admin.payment.domain.PaymentProcessRequest;
 import ks54team01.admin.payment.domain.SettlementConfirmRequest;
 import ks54team01.admin.payment.service.AdminFeeService;
 import ks54team01.admin.payment.service.AdminPaymentService;
@@ -76,7 +78,7 @@ public class AdminPaymentController {
         // 1. 입점업체 목록 조회
         List<AdminEntList> entList = adminPaymentService.getSearchEnt(searchKey, searchValue);
 
-        // 2. 관리비(AdminFee) 목록 조회
+        // 2. (AdminFee) 목록 조회
         List<AdminFee> adminFeeList = adminPaymentService.getAdminPayFee(searchValue, settlementMonth);
 
         // 3. 월별 정산금액 목록 조회 (처리된 settlementMonth 사용)
@@ -261,7 +263,10 @@ public class AdminPaymentController {
 
 		        return "admin/payment/calculateDetail";
 		    }
-		//마감등록
+	 
+	 
+	 
+	 //마감등록
 	 @PostMapping("/confirmSettlement")
 	    public String confirmSettlement(@ModelAttribute SettlementConfirmRequest request, 
 							            RedirectAttributes redirectAttributes) {
@@ -269,11 +274,15 @@ public class AdminPaymentController {
 	        System.out.println("\n--- 새로운 메서드: 정산 확정 (confirmSettlement) 호출 ---");
 	        System.out.println("정산 연월: " + request.getSettlementMonth());
 	        System.out.println("검색 업체코드: " + request.getSearchValue());
+	        
 	        if (request.getEntCeoNo() == null || request.getEntCeoNo().isEmpty()) {
 		        request.setEntCeoNo(request.getSearchValue());
+		        
 		    System.out.println("entCeoNo가 null이어서 searchValue 값으로 설정: " + request.getEntCeoNo());
+		    
 		    }
 	         
+	        
 	        System.out.println("업체 직원 ID: " + request.getEntEmpId());
 	        System.out.println("플랫폼 직원 ID: " + request.getPlatformEmpId());
 	        
@@ -299,6 +308,32 @@ public class AdminPaymentController {
 	        redirectAttributes.addFlashAttribute("message", "정산이 성공적으로 확정되었습니다.");
 	        
 	        return "redirect:/admin/payment/searchEnterprise"; // 정산 목록 페이지 
+	    }
+	 
+	 
+	 // 지급 처리 요청
+	    @PostMapping("/processPayment")
+	    public String processPayment(@ModelAttribute PaymentProcessRequest request,
+	                                 RedirectAttributes redirectAttributes) {
+	        System.out.println("\n--- 지급 처리 POST 요청 수신 ---");
+	        System.out.println("정산 연월: " + request.getSettlementMonth());
+	        System.out.println("검색 값 (업체): " + request.getSearchValue());
+	        System.out.println("업체 직원 ID: " + request.getEntEmpId());
+	        System.out.println("업체 대표 코드: " + request.getEntCeoNo());
+	        System.out.println("지급 처리할 feeNo 리스트: " + (request.getFeeNoList() != null ? request.getFeeNoList().size() : 0) + "건");
+
+	        // 현재 날짜 설정
+	        request.setCurrentDate(LocalDate.now());
+
+	        // 서비스 호출하여 지급 처리
+	        adminFeeService.processPayment(request);
+
+	        redirectAttributes.addFlashAttribute("message", "지급 처리가 성공적으로 완료되었습니다.");
+	        
+	        // 지급 처리 후 다시 해당 월과 업체로 리다이렉트하여 업데이트된 상태를 보여줌
+	        redirectAttributes.addAttribute("settlementMonth", request.getSettlementMonth());
+	        redirectAttributes.addAttribute("searchValue", request.getSearchValue());
+	        return "redirect:/admin/payment/searchEnterprise";
 	    }
 	 
 	

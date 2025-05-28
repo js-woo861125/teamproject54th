@@ -6,6 +6,8 @@ import ks54team01.customer.wishList.domain.CustomerWishList;
 
 public interface CustomerWishListService {
 
+	boolean addMyWishList(String productsNum);
+	
 	// 관싱상품 삭제
 	boolean removeMyWishLists(List<String> wishListNum);
 	

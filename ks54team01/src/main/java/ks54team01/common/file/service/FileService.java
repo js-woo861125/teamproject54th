@@ -8,6 +8,8 @@ import ks54team01.common.file.domain.FileMetaData;
 
 public interface FileService {
 	
+		String getFileIdx(String transferBoardNum);
+	
 		// 파일 목록 조회
 		List<FileMetaData> getFileList();
 		
