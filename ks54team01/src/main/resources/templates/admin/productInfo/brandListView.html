@@ -13,6 +13,32 @@
 	<th:block layout:fragment="jsScript">
 		<script>
 			/**
+			* 페이징
+			*/
+			const rowPerPage = /*[[${rowPerPage}]]*/'';
+			if (rowPerPage) {
+			  $('.page-link').each((idx, item) => {
+			    let href = $(item).attr('href');
+			    let separator = href.includes('?') ? '&' : '?';
+			    href += `${separator}rowPerPage=${rowPerPage}`;
+			    $(item).attr('href', href);
+			  });
+			}
+
+			$('#rowPerPage').change(function () {
+			  const url = new URL(location.href);
+			  const urlParams = url.searchParams;
+
+			  // currentPage를 1로 초기화 (페이징 변경 시 항상 1페이지부터)
+			  urlParams.set('currentPage', '1');
+			  // rowPerPage는 select값으로 세팅
+			  urlParams.set('rowPerPage', $(this).val());
+
+			  // location.href 갱신
+			  location.href = `${url.pathname}?${urlParams.toString()}`;
+			});
+			
+			/**
 			* 사용유무 셀렉트박스 선택 시 자동 필터
 			*/
 			$(document).ready(function() {
@@ -135,7 +161,15 @@
 	                           <option value="사용불가" th:selected="${useStatus eq '사용불가'}">사용불가</option>
 	                       </select>
 	                   </div>	                   
+	                   <div class="col-lg-2 col-md-3 col-12">
+	                       <select class="form-select" name="rowPerPage" id="rowPerPage">
+	                           <option value="5"  th:selected="${rowPerPage eq 5}">5</option>
+	                           <option value="10" th:selected="${rowPerPage eq 10}">10</option>
+	                           <option value="15" th:selected="${rowPerPage eq 15}">15</option>
+	                       </select>
+	                   </div>	                   
 	               </div>
+	               <input type="hidden" name="currentPage" th:value="currentPage" />
 				</form>
 			</header>
 	        <div class="card-body">
@@ -209,5 +243,35 @@
 	            </div>
 	        </div>
 	    </div>
+	    <div class="pagination-area mt-30 mb-50">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                	<li class="page-item">
+                        <a class="page-link" th:href="@{/admin/productInfo/brandList(rowPerPage=${rowPerPage})}"><i class="material-icons md-first_page"></i></a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin/productInfo/brandList(currentPage=${currentPage - 1}, rowPerPage=${rowPerPage})}">
+                        	<i class="material-icons md-chevron_left"></i>
+                        </a>
+                    </li>
+                    <th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
+	                    <li class="page-item" th:classappend="${num eq currentPage} ? 'active disabled'">
+	                    	<a class="page-link" th:href="@{/admin/productInfo/brandList(currentPage=${num}, rowPerPage=${rowPerPage}, searchKey=${searchKey}, searchValue=${searchValue}, useStatus=${useStatus})}"
+	                    	   th:text="${num < 10 ? '0' + num : num}">01</a>
+	                    </li>                    
+                    </th:block>
+                    <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin/productInfo/brandList(currentPage=${currentPage + 1}, rowPerPage=${rowPerPage})}">
+                        	<i class="material-icons md-chevron_right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{/admin/productInfo/brandList(currentPage=${lastPage}, rowPerPage=${rowPerPage})}">
+                        	<i class="material-icons md-last_page"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
 	</th:block>
 </html>

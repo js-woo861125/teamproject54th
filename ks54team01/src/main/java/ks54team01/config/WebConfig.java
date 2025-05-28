@@ -40,13 +40,15 @@ public class WebConfig implements WebMvcConfigurer{
 				.excludePathPatterns("/favicon.ico")
 				.excludePathPatterns("/error");
 		
-		registry.addInterceptor(adminLoginInterceptor)
+		
+		registry.addInterceptor(adminLoginInterceptor) 
 				.addPathPatterns("/admin/**")
-				.excludePathPatterns("/admin/login")
+				.excludePathPatterns("/admin/login") 
 				.excludePathPatterns("/admin/logout")
-				.excludePathPatterns("/manage/**")
+				.excludePathPatterns("/manage/**") 
 				.excludePathPatterns("/favicon.ico")
 				.excludePathPatterns("/error");
+		 
 		
 		registry.addInterceptor(customerLoginInterceptor)
 				.addPathPatterns("/customer/wishList/**")
@@ -57,6 +59,7 @@ public class WebConfig implements WebMvcConfigurer{
 				.addPathPatterns("/customer/assigneeBoard/addAssigneeBoard")
 				.addPathPatterns("/customer/payment/**")
 				.addPathPatterns("/customer/delivery/**")
+				.addPathPatterns("/enterprise/**")
 				.excludePathPatterns("/customer/member/forgotId")
 				.excludePathPatterns("/customer/member/forgotPw")
 				.excludePathPatterns("/customer/login/**")
@@ -64,6 +67,10 @@ public class WebConfig implements WebMvcConfigurer{
 				.excludePathPatterns("/manage/**")
 				.excludePathPatterns("/favicon.ico")
 				.excludePathPatterns("/error");
+		
+		
+		
+		
 		
 		WebMvcConfigurer.super.addInterceptors(registry);
 	}

@@ -151,7 +151,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		return itemList;
 	}
 	@Override
-	public List<ProductInfoBrand> getSearchBrand(String searchKey, String searchValue, String useStatus) {
+	public List<ProductInfoBrand> getSearchBrand(String searchKey, String searchValue, String useStatus, int currentPage ,int rowPerPage) {
 		
 		switch (searchKey) {
 		case "brandName" -> searchKey = "brand_nm";	
@@ -160,7 +160,7 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		if (useStatus.isBlank()) {
 			useStatus = null; 
 		}		
-		List<ProductInfoBrand> brandList = adminProductInfoMapper.getSearchBrand(searchKey, searchValue, useStatus);
+		List<ProductInfoBrand> brandList = adminProductInfoMapper.getSearchBrand(searchKey, searchValue, useStatus, currentPage, rowPerPage);
 		
 		return brandList;
 	}
@@ -386,9 +386,9 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	}
 	
 	@Override
-	public ProductInfoCategorySpec getCategorySpecInfoByNo(String categorySpecyNo) {
+	public ProductInfoCategorySpec getCategorySpecInfoByNo(String categorySpecNo) {
 		
-		return adminProductInfoMapper.getCategorySpecInfoByNo(categorySpecyNo);
+		return adminProductInfoMapper.getCategorySpecInfoByNo(categorySpecNo);
 	}
 	
 	@Override
@@ -563,11 +563,12 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	}
 
 	@Override
-	public List<ProductInfoBrand> getBrandList() {
+	public PageInfo<ProductInfoBrand> getBrandList(Pageable pageable) {
 		
-		List<ProductInfoBrand> brandList = adminProductInfoMapper.getBrandList();
+		int contentRowCount = adminProductInfoMapper.getBrandListCount();
+		List<ProductInfoBrand> brandList = adminProductInfoMapper.getBrandList(pageable);
 		
-		return brandList;
+		return new PageInfo<>(brandList, pageable, contentRowCount);
 	}
 
 	@Override
