@@ -27,7 +27,21 @@ public class EnterpriseRefundController {
 	private final EnterpriseRefundService enterpriseRefundService;
 	
 	
-	@PostMapping("/approve")
+	
+	@PostMapping("/reject")
+	@ResponseBody
+	public Map<String, Object> rejectRefund(@RequestParam("orderId") String orderId, @RequestParam("paymentKey") String paymentKey) {
+		
+		enterpriseRefundService.rejectRefund(orderId, paymentKey);
+		
+		Map<String, Object> result = new HashMap<>();
+		result.put("message", "환불 요청이 거부되었습니다.");
+		return result;
+	}
+	
+	
+	
+	@PostMapping("/confirm")
 	@ResponseBody
 	public Map<String, String> approveRefund(@RequestParam("orderId") String orderId, @RequestParam("paymentKey") String paymentKey) {
 		Map<String, String> result = new HashMap<>();

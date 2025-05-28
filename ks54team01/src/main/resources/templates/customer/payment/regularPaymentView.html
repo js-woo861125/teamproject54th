@@ -20,9 +20,9 @@
 		
 			document.getElementById("contractBtn").addEventListener("click", function () {
 				
-				const contractNoDone = document.getElementById("rentalContractNo").value.trim();
+				const contractDone = document.getElementById("rentalContractNo").value.trim();
 				
-				if(contractNoDone) {
+				if(contractDone) {
 					Swal.fire("계약 완료", "이미 계약이 등록된 상품입니다.", "info");
 				    return;
 				}

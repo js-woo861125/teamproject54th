@@ -16,5 +16,5 @@ public interface EnterpriseDeliveryMapper {
 	
 	List<EnterpriseDelivery> getSearchDeliveryList(String searchKey, String searchValue);
 
-	List<EnterpriseDelivery> getDeliveryList();
+	List<EnterpriseDelivery> getDeliveryList(String entCeoNo);
 }

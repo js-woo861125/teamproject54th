@@ -24,6 +24,16 @@
 	
 	
 	
+	<update id="modifyRentalContractStatus" parameterType="CustomerContract">
+		UPDATE rental_contract
+		<set>
+			rental_contract_status='취소'
+		</set>
+		WHERE 
+			rental_contract_no= #{rentalContractNo}
+	</update>
+	
+	
 	<insert id="addCustomerContract" parameterType="CustomerContract">
 		INSERT INTO rental_contract
 			(rental_contract_no, ent_ceo_no, ent_emp_id, sell_products_no, cust_id, rental_contract_status, contract_quantity, contract_period, 
