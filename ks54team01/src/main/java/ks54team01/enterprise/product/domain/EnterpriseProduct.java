@@ -1,5 +1,7 @@
 package ks54team01.enterprise.product.domain;
 
+import java.time.LocalDateTime;
+
 import ks54team01.common.file.domain.FileMetaData;
 import lombok.Data;
 
@@ -7,7 +9,7 @@ import lombok.Data;
 public class EnterpriseProduct {
 	   private String sellProductsNo;
 	   private String productName;
-	   private String marginRatioNo;
+	   private String marginRatioNum;
 	   private String entCeoNo;
 	   private String entEmpId;
 	   private String productsNo;
@@ -15,8 +17,8 @@ public class EnterpriseProduct {
 	   private int period;
 	   private int calculatePrice;
 	   private int finalPrice;
-	   private String registerDate;
-	   private String revisionDate;
+	   private LocalDateTime registerDate;
+	   private LocalDateTime revisionDate;
 	   private String useStatus;
 	   private String productImage;
 	   private String modelName;

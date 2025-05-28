@@ -34,11 +34,11 @@
                                         <div class="heading_s1 mb-20">
                                             <h1 class="mb-5" th:text="${title}"></h1>                                         
                                         </div>
-                                        <div th:if="${message}" class="alert alert-danger"><p th:text="${error}"></p></div>
+                                        <div th:if="${message}" class="alert alert-danger"><p th:text="${message}"></p></div>
                                         <div th:if="${error}" class="alert alert-danger"><p th:text="${error}"></p></div>
                                         <form id="forgotIdForm" th:action="@{/customer/member/forgotId}" method="post">
                                             <div class="form-group">
-                                                <input type="text" id="memberName" name="memberName" placeholder="이름" value="홍02" required />
+                                                <input type="text" id="memberName" name="memberName" placeholder="이름" value="홍01" required />
                                             </div>
                                             <div class="form-group">
 												<input type="hidden" id="memberPhone" name="memberPhone"/>
@@ -234,6 +234,7 @@
 		        if (!validateEmailVerification()) return false;
 		        
 		        setPhoneValue();
+		        
 		        return true;
 		    }
 		        
@@ -247,6 +248,19 @@
 		            $('#forgotIdForm').submit();
 		        }
 		    });
+		    
+
+			/**
+		 	 * 아이디찾기 이메일발송 실패
+		 	 */	
+		 	const params = new URLSearchParams(window.location.search);
+		 	
+		 	if (params.get('error') === 'true') {
+			 	  alert('일치하는 아이디가 없습니다. 아이디를 다시한번 확인 해 주세요.');
+			 	}
+		 	
+
+		 	
 		</script>
 	</th:block>
 	

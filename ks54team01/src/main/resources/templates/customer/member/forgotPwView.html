@@ -231,6 +231,15 @@
 		            $('#forgotPwForm').submit();
 		        }
 		    });
+		    
+		    /**
+		 	 * 비밀번호찾기 이메일발송 실패
+		 	 */	
+			const params = new URLSearchParams(window.location.search);
+
+		 	if (params.get('error') === 'emailFailed') {
+		 	  alert('임시비밀번호 발송에 실패했습니다. 아이디 또는 이메일주소를 확인 해 주세요.');
+		 	}
 		</script>
 	</th:block>
 </html>

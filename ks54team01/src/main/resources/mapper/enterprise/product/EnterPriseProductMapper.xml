@@ -3,6 +3,26 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ks54team01.enterprise.product.mapper.EnterpriseProductMapper">
+
+	<resultMap type="EnterpriseProduct" id="EnterpriseProductMap">
+	<id column="sell_products_no" 		property="sellProductsNo"></id>
+	<result column="margin_ratio_no"	property="marginRatioNum"/>
+	<result column="ent_ceo_no" 		property="entCeoNo"/>
+	<result column="ent_emp_id"			property="entEmpId"/>
+	<result column="products_no" 		property="productsNo"/>
+	<result column="lump_sum_pay_price" property="lumpSumPayPrice"/>
+	<result column="period" 			property="period"/>
+	<result column="calculate_price" 	property="calculatePrice"/>
+	<result column="final_price" 		property="finalPrice"/>
+	<result column="register_date" 		property="registerDate"/>
+	<result column="revision_date" 		property="revisionDate"/>
+	<result column="use_status" 		property="useStatus"/>
+	<result column="product_name" 		property="productName"/>
+    <result column="product_image"		property="productImage"/>
+    <result column="model_name" 		property="modelName"/>
+	
+	</resultMap>
+ 
 	
 	<select id="getQuantityList" resultType="EnterpriseProductQuantity">
 	    SELECT
@@ -52,7 +72,36 @@
   		   
 	</select>
 
-	    
+	  <insert id="EnterpriseProduct" parameterType="ks54team01.enterprise.product.domain.EnterpriseProduct">
+		INSERT INTO sell_product (
+	        sell_products_no,
+	        margin_ratio_no,          
+	        ent_ceo_no,               
+	        ent_emp_id,              
+	        products_no,              
+	        lump_sum_pay_price,       
+	        period,                   
+	        calculate_price,          
+	        final_price,              
+	        register_date,            
+	        revision_date,            
+	        use_status              
+	    ) VALUES (
+	        #{sellProductsNo},
+	        #{marginRatioNo},
+	        #{entCeoNo},
+	        #{entEmpId},
+	        #{productsNo},
+	        #{lumpSumPayPrice},
+	        #{period},
+	        #{calculatePrice},
+	        #{finalPrice},
+	        #{registerDate},
+	        #{revisionDate},
+	        #{useStatus}
+   		 )
+		</insert>
+	  
 </mapper>
 
 

@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import ks54team01.customer.login.mapper.LoginMapper;
+import ks54team01.customer.member.domain.CommonMember;
 import ks54team01.customer.member.domain.CustomerMember;
 import ks54team01.customer.member.domain.FindMember;
 import ks54team01.customer.member.mapper.MemberMapper;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
 
+	private final LoginMapper loginMapper;
 	private final MemberMapper memberMapper;
 	private final PasswordEncoder passwordEncoder;
 	
@@ -45,7 +48,7 @@ public class MemberServiceImpl implements MemberService{
 	 */
 	@Override
 	public FindMember findMemberIdByInfo(String memberName, String memberPhone, String memberEmail, String memberType) {
-		return memberMapper.findMemberIdByInfo(memberName, memberPhone, memberType, memberType);
+		return memberMapper.findMemberIdByInfo(memberName, memberPhone, memberEmail, memberType);
 	}
 	
 	
@@ -101,7 +104,8 @@ public class MemberServiceImpl implements MemberService{
 		commonInfoMap.put("memberId", modifyMember.getMemberId());
 
 	    if (newPw != null && !newPw.trim().isEmpty()) {
-	    	commonInfoMap.put("newPw", newPw);
+	    	String encodedPw = passwordEncoder.encode(newPw);
+	    	commonInfoMap.put("newPw", encodedPw);
 	    }
 		
 		int commonUpdateCount = memberMapper.modifyCommonInfo(commonInfoMap);
@@ -122,8 +126,9 @@ public class MemberServiceImpl implements MemberService{
 	 */
 	@Override
 	public boolean isPwCheck(String memberId, String memberPw) {
-		
-		return memberMapper.isPwCheck(Map.of("memberId", memberId, "memberPw", memberPw));
+		CommonMember memberInfo = loginMapper.getMemberInfoById(memberId);
+		String encodedPw = memberInfo.getMemberPw(); 
+		return passwordEncoder.matches(memberPw, encodedPw);
 	}
 	
 	
