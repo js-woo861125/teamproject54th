@@ -62,8 +62,8 @@
 		FROM 
 			wishlist 
 		WHERE 
-			cust_id = 'personalcustid6'
-			AND products_no = 'prod_5'; 
+			cust_id = #{customerId}
+			AND products_no = #{productsNum}; 
 	</select>
 
 	<delete id="removeMyWishLists" parameterType="List">
@@ -123,7 +123,7 @@
 			INNER JOIN sell_products sp
 			ON sp.products_no = w.products_no
 		WHERE
-			w.cust_id = #{custId}
+			w.cust_id = #{customerId}
 			<if test="viewValue != null and viewValue != '' and viewValue != '전체'">
 			    AND pc.middle_category = #{viewValue}
 			</if>

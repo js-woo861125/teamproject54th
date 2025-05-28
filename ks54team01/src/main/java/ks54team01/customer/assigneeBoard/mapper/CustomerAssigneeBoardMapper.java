@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import ks54team01.customer.assigneeBoard.domain.CustomerAssigneeBoard;
 
@@ -17,14 +18,15 @@ public interface CustomerAssigneeBoardMapper {
 	int modifyAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard);
 	
 	// 양수 게시글 등록
-	int addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard);
+	int addAssigneeBoard(@Param("customerAssigneeBoard") CustomerAssigneeBoard customerAssigneeBoard,
+						 @Param("customerId") String customerId);
 	
 	List<CustomerAssigneeBoard> getProduct(String productCategoryNum);
 	
 	List<CustomerAssigneeBoard> getMiddleCategory(String mdCategoryNo);	
 	
 	// 내 양수 게시글 목록 조회
-	List<CustomerAssigneeBoard> getMyAssigneeBoardList();
+	List<CustomerAssigneeBoard> getMyAssigneeBoardList(String customerId);
 	
 	// 양수 게시글 전체 행 수 조회
 	int getAssigneeBoardCount(Map<String, Object> searchParamMap);

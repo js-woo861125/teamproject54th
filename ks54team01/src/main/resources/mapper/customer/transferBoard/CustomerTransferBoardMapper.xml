@@ -115,12 +115,12 @@
   		</association>
   	</resultMap>	
 	
-	<insert id="applyTransfer" parameterType="CustomerTransferBoard">
+	<insert id="applyTransfer">
   		/* 신청 */
   		INSERT INTO transfer_rental_contract
 		(transfer_rental_contract_no, ent_ceo_no, ent_emp_id, sell_products_no, cust_id, rental_contract_no, transfer_board_no, transfer_rental_start_date, transfer_rental_end_date)
 		VALUES
-		(#{transferRentalContractNum}, #{customerSellProduct.entCeoNo}, #{customerSellProduct.entEmpId}, #{sellProductsNum}, 'personalcustid2', #{rentalContractNum}, #{transferBoardNum}, NOW(), #{customerContract.rentalEndDate});
+		(#{customerTransferBoard.transferRentalContractNum}, #{customerTransferBoard.customerSellProduct.entCeoNo}, #{customerTransferBoard.customerSellProduct.entEmpId}, #{customerTransferBoard.sellProductsNum}, #{customerId}, #{customerTransferBoard.rentalContractNum}, #{customerTransferBoard.transferBoardNum}, NOW(), #{customerTransferBoard.customerContract.rentalEndDate});
   	</insert>
 	
 	<update id="removeMyTransferBoard" parameterType="string">
@@ -156,7 +156,7 @@
   		/* 등록 */
   		INSERT INTO transfer_board
 		(transfer_board_no, cust_id, rental_contract_no, sell_products_no, model_no, item_no, product_category_no, del_info_no, transfer_title, transfer_content, rental_fee, remaining_months, contract_end_date, individual_grants, board_valid_date, transfer_rental_processing_status, register_date, revision_date)
-		VALUES(#{transferBoardNum}, 'personalcustid3', #{rentalContractNum}, #{sellProductsNum}, #{modelNum}, #{itemNum}, #{productCategoryNum}, #{customerDeliveryInfo.delInfoNo}, #{transferTitle}, #{transferContent}, #{rentalFee}, #{remainingMonths}, #{contractEndDate}, #{individualGrants}, DATE_ADD(NOW(), INTERVAL 1 MONTH), '대기중', NOW(), NOW());
+		VALUES(#{transferBoardNum}, #{customerId}, #{rentalContractNum}, #{sellProductsNum}, #{modelNum}, #{itemNum}, #{productCategoryNum}, #{customerDeliveryInfo.delInfoNo}, #{transferTitle}, #{transferContent}, #{rentalFee}, #{remainingMonths}, #{contractEndDate}, #{individualGrants}, DATE_ADD(NOW(), INTERVAL 1 MONTH), '대기중', NOW(), NOW());
   	</insert>
 
 	<select id="getMyContractInfo" parameterType="string" resultMap="transferBoardResultMap">
@@ -187,8 +187,7 @@
 			INNER JOIN delivery_list dl
 			ON di.delivery_location_no = dl.delivery_location_no
 		WHERE 
-			rc.cust_id = 'corpcustid4'
-			AND rc.rental_contract_no = #{rentalContractNum};
+			rc.rental_contract_no = #{rentalContractNum};
   	</select>
   	
 	<select id="getMyContractListByCustomerId" parameterType="string" resultMap="transferBoardResultMap">
@@ -203,7 +202,7 @@
 			INNER JOIN products p
 			ON sp.products_no = p.products_no 
 		WHERE 
-			rc.cust_id = 'corpcustid4';
+			rc.cust_id = #{customerId};
   	</select>
 
 
@@ -234,7 +233,7 @@
 			ON tb.transfer_board_no = f.ref_id AND f.file_type = 'mainImage'
 		 WHERE
 		 	tb.transfer_rental_processing_status != '양도공개전'
-		 	AND tb.cust_id = 'personalcustid4'
+		 	AND tb.cust_id = #{customerId}
 		 ORDER BY tb.register_date DESC;
   	</select>
 

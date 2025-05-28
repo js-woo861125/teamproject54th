@@ -122,7 +122,7 @@
             		<div class="col-lg-5">
                   	  	<div class="border p-40 cart-totals ml-30 mb-50">
                         	<div class="d-flex align-items-end mb-30">
-                            	<h4>메인 이미지 첨부</h4>
+                            	<h4>메인 이미지 등록</h4>
                         	</div>
                         	<div class="divider-2 mb-30"></div>
                         	<div class="table-responsive order_table checkout">
@@ -140,12 +140,12 @@
                     	</div>
 	                    <div class="border p-40 cart-totals ml-30 mb-50">
 	                        <div class="d-flex align-items-end mb-30">
-	                            <h4>추가 이미지 첨부</h4>
+	                            <h4>추가 이미지 등록</h4>
                        	 	</div>
                         	<div class="divider-2 mb-30"></div>
                         	<div class="table-responsive order_table checkout">
 	                            <!-- 이미지 파일 업로드 들어갈 부분 -->
-	                            <div class="card-body">
+	                            <!-- <div class="card-body">
 									<div class="input-group">
 										<input type="file" id="extraImage" name="extraImage"
 											   class="form-control form-control-sm" multiple>
@@ -159,10 +159,42 @@
 										<div th:each="fl : ${fileList}" class="col-md-6 img-box1" style="position:relative" >
 											<span class="delete-img1" th:attr="data-remove-key=${fl.fileIdx}">X</span>												
 											<img th:src="@{${fl.filePath}}" alt="이미지">
-											<!-- <input type="hidden" name="deleteFile" th:value="${fl.fileIdx}"> -->
+											<input type="hidden" name="deleteFile" th:value="${fl.fileIdx}">
 										</div>
 									</div>
-								</div>
+								</div> -->
+								<div class="card-body">
+  <!-- 파일 업로드 인풋 -->
+  <div class="input-group">
+    <input type="file" id="extraImage" name="extraImage" class="form-control form-control-sm" multiple>
+  </div>
+
+  <!-- 🔵 추가로 업로드할 이미지 미리보기 -->
+  <div class="mt-4">
+    <h6 class="mb-2">📤 새로 추가할 이미지</h6>
+    <div id="extraModifyImagePreview" class="row g-3">
+      <!-- JS로 추가될 프리뷰 영역 -->
+    </div>
+  </div>
+
+  <hr class="my-4">
+
+  <!-- 🟢 기존 이미지 미리보기 -->
+  <div th:if="${!#lists.isEmpty(fileList)}" class="mt-4">
+    <h6 class="mb-2">📁 기존 업로드 이미지</h6>
+    <div id="extraImagePreview" class="row g-3">
+      <div th:each="fl : ${fileList}" class="col-md-6 img-box1 position-relative">
+        <!-- 삭제 버튼 -->
+        <span class="delete-img1 position-absolute top-0 end-0 m-1 px-2 py-1 bg-danger text-white rounded" 
+              style="cursor:pointer; z-index:10;"
+              th:attr="data-remove-key=${fl.fileIdx}">X</span>
+        <!-- 이미지 -->
+        <img th:src="@{${fl.filePath}}" alt="이미지" class="img-fluid rounded border">
+      </div>
+    </div>
+  </div>
+</div>
+								
 	                        </div>
                   		</div>
                 	</div>

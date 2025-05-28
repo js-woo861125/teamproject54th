@@ -15,8 +15,8 @@ public interface CustomerWishListService {
 	boolean removeMyWishList(String wishListNum);
 	
 	// 아이디 별 추가한 위시리스트 목록의 카테고리 추출
-	List<CustomerWishList> getWishListCategory(String custId);
+	List<CustomerWishList> getWishListCategory(String customerId);
 	
 	// 내 관심상품 목록 조회
-	List<CustomerWishList> getMyWishList(String custId, String viewValue);
+	List<CustomerWishList> getMyWishList(String customerId, String viewValue);
 }
