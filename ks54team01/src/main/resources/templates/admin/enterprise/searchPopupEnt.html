@@ -72,6 +72,7 @@
 		</div>
 	</div>
 </th:block>
+
 <th:block layout:fragment="jsScript">
     <script>
         const entBrNoInput = document.querySelector('input[name="searchValue"]');
@@ -110,6 +111,8 @@
             entBrNoInput.value = '';
         });
         
+
+		
         $('button.popupSearchBtn').click(function(e) {
             const ceoCode = $(this).text(); // 버튼의 텍스트가 업체코드
             console.log('선택된 업체 코드 (팝업):', ceoCode);
