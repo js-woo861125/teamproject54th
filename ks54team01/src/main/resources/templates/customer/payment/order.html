@@ -18,27 +18,50 @@
 	<th:block layout:fragment="jsScript">
 		<script type="text/javascript" th:inline="javascript">
 		
-		    // 배송지 선택 버튼 클릭 시
-		    document.querySelectorAll(".product-cart-wrap .btn").forEach(function (btn) {
-		        btn.addEventListener("click", function (e) {
-		            e.preventDefault();
-
-		            const card = btn.closest(".product-cart-wrap");
-		            const delNo = card.getAttribute("data-del-no");
-		            const delNm = card.getAttribute("data-del-nm");
-		            const delRecipientPhone = card.getAttribute("data-recipient-phone");
-		            const delRequest = card.getAttribute("data-del-request");
-
-		            // 선택한 값 input에 채우기
-		            document.getElementById("delSelected").value = delNo;
-		            document.getElementById("delName").value = delNm;
-		            document.getElementById("delRecipientPhone").value = delRecipientPhone;
-		            document.getElementById("delRequest").value = delRequest;
-		        });
-		    });
-
+			document.addEventListener("DOMContentLoaded", function () {
+				
+			    const deliveryCards = document.querySelectorAll(".product-cart-wrap");
+	
+			    deliveryCards.forEach(function (card) {
+			        const isDefault = card.querySelector("span").textContent.trim();
+	
+			        if (isDefault === "기본배송지") {
+			            const delNo = card.getAttribute("data-del-no");
+			            const delNm = card.getAttribute("data-del-nm");
+			            const delRecipientPhone = card.getAttribute("data-recipient-phone");
+			            const delRequest = card.getAttribute("data-del-request");
+	
+			            // input에 자동 채우기
+			            document.getElementById("delSelected").value = delNo;
+			            document.getElementById("delName").value = delNm;
+			            document.getElementById("delRecipientPhone").value = delRecipientPhone;
+			            document.getElementById("delRequest").value = delRequest;
+			        }
+			    });
+			    
+			    
+			    document.querySelectorAll(".product-cart-wrap .btn").forEach(function (btn) {
+			        btn.addEventListener("click", function (e) {
+			            e.preventDefault();
+	
+			            const card = btn.closest(".product-cart-wrap");
+			            const delNo = card.getAttribute("data-del-no");
+			            const delNm = card.getAttribute("data-del-nm");
+			            const delRecipientPhone = card.getAttribute("data-recipient-phone");
+			            const delRequest = card.getAttribute("data-del-request");
+	
+			            // 선택한 값 input에 채우기
+			            document.getElementById("delSelected").value = delNo;
+			            document.getElementById("delName").value = delNm;
+			            document.getElementById("delRecipientPhone").value = delRecipientPhone;
+			            document.getElementById("delRequest").value = delRequest;
+			        });
+			    });
+			    
+			    
+			    
+			});
 		
-			
 		
 		
 			$('#paymentBtn').click(async () => {
@@ -237,7 +260,7 @@
                         <div class="col-lg-5">
                         	<div class="calculate-shiping p-40 border-radius-15 border">
 	                        	<div class="product-list mb-50">
-									<div class="form-group">
+									<div>
 										<input type="text" id="delName" name="delNm" placeholder="선택한 주소" readonly>
 										<input type="text" id="delRecipientNm" name="delRecipientNm" class="mt-15" placeholder="수령인명">
 										<input type="hidden" id="delSelected" name="delNo">

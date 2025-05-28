@@ -5,17 +5,16 @@
 <head>
 <title>제품 등록</title>
 </head>
-
 <th:block layout:fragment="jsFile">
 	<script
 		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </th:block>
-
 <th:block layout:fragment="content">
 	<form class="user" th:action="@{/enterprise/product/addProduct}"
 		method="post" enctype="multipart/form-data">
 		<div class="row">
 			<div class="col-lg-8">
+				<!-- 제품정보 카드 -->
 				<div class="card mb-4">
 					<div class="card-header">
 						<h4>제품정보</h4>
@@ -86,14 +85,14 @@
 							<div class="col-lg-4">
 								<div class="mb-4">
 									<label class="form-label">위약금등록</label> <input type="text"
-										name="penalty" id="penaltyPeriod" placeholder="위약금"
+										name="penaltyPeriod" id="penaltyPeriod" placeholder="위약금"
 										class="form-control" />
 								</div>
 							</div>
 							<div class="col-lg-4">
 								<div class="mb-4">
 									<label class="form-label">위약금률</label> <input type="text"
-										name="penalty" id="penalty" placeholder="위약금률"
+										name="penaltyRatio" id="penaltyRatio" placeholder="위약금률"
 										class="form-control" />
 								</div>
 							</div>
@@ -123,7 +122,6 @@
 						<div>
 							<button type="button"
 								class="btn btn-sm btn-primary add-sellProduct-btn">등록</button>
-
 						</div>
 					</div>
 				</div>
@@ -135,50 +133,33 @@
 						<h4>최종 등록리스트</h4>
 					</div>
 					<div class="card-body">
-						<ul id="finalList" class="list-group">
-						</ul>
+						<ul id="finalList" class="list-group"></ul>
 					</div>
 				</div>
 				<div class="mb-3">
 					<input type="text" name="quantity" placeholder="등록 수량"
-						class="form-control">
+						class="form-control" />
 				</div>
-				<button class="btn btn-md rounded font-sm hover-up">상품 등록</button>
+				<button type="submit" class="btn btn-md rounded font-sm hover-up">상품
+					등록</button>
 			</div>
 		</div>
 	</form>
 </th:block>
-<!-- card end// -->
-
-
+<!-- JS 라이브러리 -->
 <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
 <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
 <script src="assets/js/vendors/select2.min.js"></script>
 <script src="assets/js/vendors/perfect-scrollbar.js"></script>
 <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-<!-- Main Script -->
 <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
 <th:block layout:fragment="jsScript">
 	<script>
+
 	const finalItems = [];
 
-	// 혜택 중복 방지 이미 선택된 혜택은 다른 행에서 비활성화
-	function updateBenefitSelectOptions() {
-	    const selects = document.querySelectorAll('select[name="benefitNoList"]');
-	    const selectedValues = Array.from(selects).map(sel => sel.value).filter(v => v);
 
-	    selects.forEach(sel => {
-	        Array.from(sel.options).forEach(opt => {
-	            if (opt.value === "") {
-	                opt.disabled = false;
-	                return;
-	            }
-	            opt.disabled = selectedValues.includes(opt.value) && sel.value !== opt.value;
-	        });
-	    });
-	}
 
-	// 마지막 행만 "추가", 나머지는 "삭제"
 	function arrangeBenefitButtons() {
 	    const benefitRows = document.querySelectorAll('#benefit-list .benefit-row');
 	    benefitRows.forEach((row, idx) => {
@@ -195,14 +176,11 @@
 
 	// 혜택 행 추가/삭제 (이벤트 위임)
 	document.addEventListener('click', function(e) {
-	    // 혜택 추가
 	    if (e.target.classList.contains('add-benefit-btn')) {
 	        const row = e.target.closest('.benefit-row');
 	        const clone = row.cloneNode(true);
-	        // 값 초기화
-	        clone.querySelector('select').value = "";
-	        clone.querySelector('input').value = "";
-	        // 버튼 교체
+	        clone.querySelectorAll('select').forEach(sel => sel.value = "");
+	        clone.querySelectorAll('input').forEach(inp => inp.value = "");
 	        const btn = clone.querySelector('button');
 	        btn.textContent = '삭제';
 	        btn.className = 'btn btn-sm btn-danger remove-benefit-btn';
@@ -211,7 +189,6 @@
 	        arrangeBenefitButtons();
 	        updateBenefitSelectOptions();
 	    }
-	    // 혜택 삭제
 	    if (e.target.classList.contains('remove-benefit-btn')) {
 	        const list = document.getElementById('benefit-list');
 	        if (list.querySelectorAll('.benefit-row').length > 1) {
@@ -222,7 +199,6 @@
 	    }
 	});
 
-	// 혜택 select 변경시 중복옵션 즉시 업데이트
 	document.addEventListener('change', function(e) {
 	    if (e.target.name === 'benefitNoList') {
 	        updateBenefitSelectOptions();
@@ -230,11 +206,10 @@
 	});
 
 	// 마진 계산 버튼
-	document.getElementById('addProductBtn').addEventListener('click', function() {
+	document.getElementById('addProductBtn')?.addEventListener('click', function() {
 	    const priceInput = document.getElementById('lumpSumPayPrice').value.replace(/,/g, '');
 	    const marginSelect = document.getElementById('marginSelect');
 	    const selectedOption = marginSelect.options[marginSelect.selectedIndex];
-
 	    const period = parseInt(selectedOption.getAttribute('data-period'));
 	    const margin = parseFloat(selectedOption.getAttribute('data-margin'));
 	    const price = parseFloat(priceInput);
@@ -253,32 +228,42 @@
 	});
 
 	// 최종 등록리스트 추가
-	document.querySelector('.add-sellProduct-btn').addEventListener('click', function() {
+	document.querySelector('.add-sellProduct-btn')?.addEventListener('click', function() {
 	    const marginSelect = document.getElementById('marginSelect');
 	    const period = marginSelect.options[marginSelect.selectedIndex].textContent;
 	    const marginNum = marginSelect.value;
 	    const lumpSum = document.getElementById('lumpSumPayPrice').value;
 	    const platformPrice = document.getElementById('platformPrice').value;
 	    const penaltyPeriod = document.getElementById('penaltyPeriod').value;
+	    const optionLumpSumPrice = document.querySelector('input[name="optionLumpSumPrice"]').value;
+	    const penaltyRatio = document.getElementById('penaltyRatio').value;
 
 	    // 혜택 여러개 추출
 	    const benefitNos = Array.from(document.querySelectorAll('select[name="benefitNoList"]')).map(sel => sel.value);
 	    const benefitDetails = Array.from(document.querySelectorAll('input[name="benefitDetailList"]')).map(inp => inp.value);
 
-	    // 혜택 중복체크
+	    // 혜택 중복 체크
 	    if (new Set(benefitNos.filter(Boolean)).size !== benefitNos.filter(Boolean).length) {
 	        alert("혜택은 중복될 수 없습니다!");
 	        return;
 	    }
+	    const periodText = period.split('/')[0].trim(); 
+	    const isPeriodExist = finalItems.some(item => item.period.split('/')[0].trim() === periodText);
+	    if (isPeriodExist) {
+	        alert("같은 개월수는 한 번만 등록할 수 있습니다!");
+	        return;
+	    }
 
-	    const item = { period, marginNum, lumpSum, platformPrice, penaltyPeriod, benefitNos, benefitDetails };
+	    const item = {
+	    	    period, marginNum, lumpSum, platformPrice, penaltyPeriod,
+	    	    optionLumpSumPrice, penaltyRatio, benefitNos, benefitDetails
+	    	};
 	    finalItems.push(item);
 	    redrawFinalList();
 	});
 
 	// 최종 등록리스트: 삭제/복원
-	document.getElementById('finalList').addEventListener('click', function(e) {
-	    // 삭제
+	document.getElementById('finalList')?.addEventListener('click', function(e) {
 	    if (e.target.classList.contains('del-item-btn')) {
 	        const idx = Number(e.target.dataset.idx);
 	        finalItems.splice(idx, 1);
@@ -294,7 +279,7 @@
 	    if (item) {
 	        // 개월수 select 복원
 	        const marginSelect = document.getElementById('marginSelect');
-	        for (let i=0; i<marginSelect.options.length; i++) {
+	        for (let i = 0; i < marginSelect.options.length; i++) {
 	            if (marginSelect.options[i].textContent === item.period) {
 	                marginSelect.selectedIndex = i;
 	                break;
@@ -303,40 +288,32 @@
 	        document.getElementById('lumpSumPayPrice').value = item.lumpSum;
 	        document.getElementById('platformPrice').value = item.platformPrice;
 	        document.getElementById('penaltyPeriod').value = item.penaltyPeriod;
+	        document.querySelector('input[name="optionLumpSumPrice"]').value = item.optionLumpSumPrice || "";
+	        document.getElementById('penaltyRatio').value = item.penaltyRatio || "";
 
-	        // 혜택 복원
+	        // === [복원] ===
+	        // 행 개수가 부족하면 자동으로 추가
 	        const benefitList = document.getElementById('benefit-list');
-	        benefitList.innerHTML = "";
-	        // select option은 항상 첫번째 행의 select innerHTML에서 가져오기
-	        const optionHtml = document.querySelector('select[name="benefitNoList"]')?.innerHTML || "";
-	        for (let i = 0; i < item.benefitNos.length; i++) {
-	            const row = document.createElement('div');
-	            row.className = "row align-items-end mb-2 benefit-row";
-	            row.innerHTML = `
-	                <div class="col-lg-4">
-	                    <label class="form-label">전체혜택</label>
-	                    <select class="form-select" name="benefitNoList">
-	                        <option value="">혜택을 선택하세요</option>
-	                        ${optionHtml}
-	                    </select>
-	                </div>
-	                <div class="col-lg-4">
-	                    <label class="form-label">혜택상세</label>
-	                    <input type="text" name="benefitDetailList" class="form-control" placeholder="혜택상세" value="${item.benefitDetails[i] || ''}" />
-	                </div>
-	                <div class="col-sm-2">
-	                    <button type="button" class="btn btn-sm btn-danger remove-benefit-btn">삭제</button>
-	                </div>
-	            `;
-	            benefitList.appendChild(row);
-	            row.querySelector('select').value = item.benefitNos[i];
+	        let benefitRows = benefitList.querySelectorAll('.benefit-row');
+	        while (benefitRows.length < item.benefitNos.length) {
+	            benefitList.querySelector('.add-benefit-btn').click();
+	            benefitRows = benefitList.querySelectorAll('.benefit-row');
 	        }
+	        // 행 개수가 더 많으면 삭제
+	        while (benefitRows.length > item.benefitNos.length) {
+	            benefitRows[benefitRows.length-1].remove();
+	            benefitRows = benefitList.querySelectorAll('.benefit-row');
+	        }
+	        // 값 복원
+	        benefitRows.forEach((row, i) => {
+	            row.querySelector('select').value = item.benefitNos[i] || "";
+	            row.querySelector('input').value = item.benefitDetails[i] || "";
+	        });
 	        arrangeBenefitButtons();
 	        updateBenefitSelectOptions();
 	    }
 	});
 
-	// 최종 등록리스트 새로고침
 	function redrawFinalList() {
 	    const list = document.getElementById('finalList');
 	    list.innerHTML = '';
@@ -344,19 +321,20 @@
 	        const li = document.createElement('li');
 	        li.className = 'list-group-item d-flex justify-content-between align-items-center';
 	        li.innerHTML = `
-	          <span>${item.period} / ${item.platformPrice}원</span>
-	          <button type="button" class="btn btn-sm btn-outline-danger del-item-btn" data-idx="${i}">X</button>
+	            <span>${item.period} / ${item.platformPrice}원</span>
+	            <button type="button" class="btn btn-sm btn-outline-danger del-item-btn" data-idx="${i}">X</button>
 	        `;
 	        li.dataset.idx = i;
 	        list.appendChild(li);
 	    });
 	}
 
-	// 페이지 최초 렌더 시 한 번 호출
+	// 최초 한 번 호출
 	arrangeBenefitButtons();
 	updateBenefitSelectOptions();
 
-	</script>
+
+    </script>
 </th:block>
 </body>
 </html>
