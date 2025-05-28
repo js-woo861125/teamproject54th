@@ -24,18 +24,78 @@
 		<result column="login_date" 	property="loginDate"/>
 		<result column="logout_date" 	property="logoutDate"/>
 	</resultMap>
-	
-	 <select id="getSearchMember" resultType="AdminMember">
+
+
+	 <select id="getSearchLoginHistoryList" resultType="AdminLoginHistory">
+	 	/* 회원 로그인 이력 검색 */
     	SELECT
-    		 memberId,
-    		 memberPw,
-    		 memberType,
-    		 memberName,
-    		 dormantStatus,
-    		 withdrawStatus,
-    		 memberRegDate,
-    		 memberRevDate,
-    		 stateTransDate
+    		loginNo,
+    		memberId,
+    		memberType,
+    		loginDate,
+			logoutDate
+	    FROM 
+	    	member_login_log_view
+	    WHERE 
+	    	1=1
+	    <if test="searchValue != null and searchValue != ''">
+	      <choose>
+	        <when test="searchKey == 'memberId'">
+	          AND memberId LIKE CONCAT('%', #{searchValue}, '%')
+	        </when>
+	        <when test="searchKey == 'memberName'">
+	          AND memberName LIKE CONCAT('%', #{searchValue}, '%')
+	        </when>
+	      </choose>
+	    </if>
+	    <if test="memberType != null and memberType != ''">
+	      AND memberType = #{memberType}
+	    </if>
+	    <if test="withdrawStatus != null and withdrawStatus != ''">
+	      AND withdrawStatus = #{withdrawStatus}
+	    </if>
+	    <if test="dormantStatus != null and dormantStatus != ''">
+	      AND dormantStatus = #{dormantStatus}
+	    </if>
+	    ORDER BY 
+	    	memberRegDate;
+	</select>
+	
+	<select id="getLoginHistoryCount" resultType="int">
+		/* 회원 로그인이력 총 row 갯수 조회 */
+		SELECT
+			COUNT(*)
+		FROM
+			member_login_log_view;
+	</select>
+	
+	<select id="getLoginHistoryList" resultType="AdminLoginHistory" parameterType="Pageable">
+		/* 회원 로그인 이력 조회 */
+		SELECT
+			loginNo,
+			memberId,
+			memberType,
+			loginDate,
+			logoutDate
+		FROM
+			member_login_log_view
+		ORDER BY loginNo is null, loginNo
+		limit #{rowPerPage} offset #{offset};
+	</select>
+	
+	
+	<select id="getSearchMember" resultType="AdminMember">
+	 	/* 회원 검색 */
+	   	SELECT
+	   		 memberId,
+	   		 memberPw,
+	   		 memberType,
+	   		 memberName,
+	   		 dormantStatus,
+	   		 withdrawStatus,
+	   		 memberRegDate,
+	   		 memberRevDate,
+	   		 stateTransitionDate
 	    FROM 
 	    	all_member_info_view
 	    WHERE 
@@ -61,24 +121,80 @@
 	    </if>
 	    ORDER BY 
 	    	memberRegDate;
-	  </select>
-	
-	<select id="getLoginHistoryList" resultMap="loginHistoryResultMap">
-		/* 회원 로그인 이력 조회 */
-		select
-			login_no,
-			members_id,
-			login_date,
-			logout_date
-		from
-			login_log
-		order by
-			login_no;
 	</select>
+	
+	
+	<select id="getEntMemberDetail" resultType="AdminMemberDetail">
+		/* 입점업체 상세정보 조회 */
+		SELECT
+			entPosition,
+			entEmpName,
+			entEmpEmail,
+			entEmpPhone,
+			entBrno,
+			entName,
+			entCeoAddr,
+			entCeoDaddr,
+			entBank,
+			entBankNum
+		FROM
+			ent_info_view
+		WHERE
+			memberId = #{memberId};
+	</select>
+
+
+	<select id="getManageMemberDetail" resultType="AdminMemberDetail">
+		/* 입점업체 상세정보 조회 */
+		SELECT
+			managerName,
+			managerPhone,
+			managerBrdt,
+			managerGender
+		FROM
+			manager_info_view
+		WHERE
+			memberId = #{memberId};
+	</select>
+	
+	
+	<select id="getCorpMemberDetail" resultType="AdminMemberDetail">
+		/* 기업고객 상세정보 조회 */
+		SELECT
+			custName,
+			custPhone,
+			custBrdt,
+			custAddr,
+			custDaddr,
+			custEmail,
+			corpName,
+			corpBrno
+		FROM
+			corp_customer_info_view
+		WHERE
+			memberId = #{memberId};
+	</select>
+	
+	
+	<select id="getCustomerMemberDetail" resultType="AdminMemberDetail">
+		/* 개인고객 상세정보 조회 */
+		SELECT
+			custName,
+			custPhone,
+			custBrdt,
+			custAddr,
+			custDaddr,
+			custEmail
+		FROM
+			customer_info_view
+		WHERE
+			memberId = #{memberId};
+	</select>
+	
 	
 	<select id="getMemberList" resultType="AdminMember">
 		/* 회원 목록 조회 */
-		select
+		SELECT
 			memberId,
 			memberPw,
 			memberType,
@@ -87,11 +203,11 @@
 			withdrawStatus,
 			memberRegDate,
 			memberRevDate,
-			stateTransDate
-		from
+			stateTransitionDate
+		FROM
 			all_member_info_view
-		order by
-			memberRegDate; 	 
+		ORDER BY
+			memberRegDate;
 	</select>
 	
 </mapper>
