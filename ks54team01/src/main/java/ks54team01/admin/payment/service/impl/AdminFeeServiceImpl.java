@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ks54team01.admin.payment.domain.AdminMonthlyFee;
+import ks54team01.admin.payment.domain.PaymentProcessRequest;
 import ks54team01.admin.payment.domain.SettlementConfirmRequest;
 import ks54team01.admin.payment.mapper.AdminFeeMapper;
 import ks54team01.admin.payment.service.AdminFeeService;
@@ -23,6 +24,41 @@ public class AdminFeeServiceImpl implements AdminFeeService{
 	        this.adminFeeMapper = adminFeeMapper;
 	    }
 
+	    /**
+	     * 지급 처리 로직
+	     * fee 테이블의 provision_date를 현재 날짜로, payment_status를 '지급'으로 업데이트
+	     * monthly_fee 테이블의 pay_status를 '지급'으로, provision_date를 현재 날짜로 업데이트
+	     * 
+	     */
+	    
+	    @Override
+	    public void processPayment(PaymentProcessRequest request) {
+	        System.out.println("AdminFeeServiceImpl: 지급 처리 시작");
+	        // 1. 개별 매출 건 (fee 테이블) 업데이트
+	        if (request.getFeeNoList() != null && !request.getFeeNoList().isEmpty()) {
+	            adminFeeMapper.updateIndividualFeePaymentStatus(request.getFeeNoList(), request.getCurrentDate());
+	            System.out.println("개별 매출 건 지급일 및 마감 상태 업데이트 완료.");
+	        } else {
+	            System.out.println("지급 처리할 개별 매출 건이 없습니다.");
+	        }
+
+	        // 2. 월별 집계 데이터 (monthly_fee 테이블) 업데이트
+	        // entCeoNo가 null이거나 비어있을 경우 searchValue 사용
+	        String entCeoNoForMonthlyFee = request.getEntCeoNo() != null && !request.getEntCeoNo().isEmpty() ? request.getEntCeoNo() : request.getSearchValue();
+
+	        if (entCeoNoForMonthlyFee != null && !entCeoNoForMonthlyFee.isEmpty()) {
+	            // monthly_fee 테이블의 pay_status를 '지급'으로 업데이트
+	            adminFeeMapper.updateMonthlyFeePaymentStatus(request.getSettlementMonth(), entCeoNoForMonthlyFee);
+	            System.out.println("월별 집계 데이터 지급 상태 업데이트 완료.");
+	        } else {
+	            System.out.println("월별 집계 데이터를 업데이트할 업체 정보가 없습니다.");
+	        }
+	        System.out.println("AdminFeeServiceImpl: 지급 처리 완료");
+	    }
+	    
+	    
+	    
+	    
 	    @Override
 	    public void saveSettlement(SettlementConfirmRequest request) {
 	        System.out.println("--- 정산 데이터 DB 저장 로직 실행 ---");
@@ -131,6 +167,7 @@ public class AdminFeeServiceImpl implements AdminFeeService{
 	            "2.마감(정산)완료" // closing_settlement 상태만 변경
 	        );
 
+	        
 	        System.out.println("DEBUG: 정산 확정 및 개별 매출 건들의 마감 상태가 '2.마감(정산)완료'로 업데이트되었습니다. (지급 상태는 변경 없음)");
 	    }
 
