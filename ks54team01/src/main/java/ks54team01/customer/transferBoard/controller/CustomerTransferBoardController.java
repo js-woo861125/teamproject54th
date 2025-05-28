@@ -45,11 +45,16 @@ public class CustomerTransferBoardController {
 	private final FileService fileService;
 
 	@PostMapping("/applyTransfer")
-	public String applyTransfer(CustomerTransferBoard customerTransferBoard) {
+	public String applyTransfer(CustomerTransferBoard customerTransferBoard
+							  , HttpSession session) {
+		
+		String customerId = (String) session.getAttribute("loginId");
+		
+		log.info("customerId: {}", customerId);
 		
 		log.info("customerTransferBoard : {}", customerTransferBoard);
 		
-		customerTransferBoardService.applyTranfer(customerTransferBoard);
+		customerTransferBoardService.applyTranfer(customerTransferBoard, customerId);
 		
 		
 		return "redirect:/customer/transferBoard/transferBoardList";
@@ -163,7 +168,11 @@ public class CustomerTransferBoardController {
 	@PostMapping("/requestRentalInfo")
 	public String requestRentalInfo(@RequestParam(name="rentalContractNum")  String rentalContractNum,
 			 						HttpSession session) {
-
+		
+		String customerId = (String) session.getAttribute("loginId");
+		
+		log.info("customerId: {}", customerId);
+		
 	    // 계약 정보 가져오기
 	    CustomerTransferBoard myRentalInfo = customerTransferBoardService.getMyContractInfo(rentalContractNum);
 
@@ -186,8 +195,13 @@ public class CustomerTransferBoardController {
 	
 	@GetMapping("/addTransferBoard")
 	public String addTransferBoard(@SessionAttribute("myRentalInfo") CustomerTransferBoard myRentalInfo
-								 , Model model) {
+								 , Model model
+								 , HttpSession session) {
 	    
+		String customerId = (String) session.getAttribute("loginId");
+		
+		log.info("customerId: {}", customerId);
+		
 	    model.addAttribute("title", "양도 게시글 등록 페이지");
 	    model.addAttribute("myRentalInfo", myRentalInfo);
 	    
@@ -195,17 +209,21 @@ public class CustomerTransferBoardController {
 	}
 
 	@GetMapping("/myTransferBoardList")
-	public String getMyTransferBoardList(Model model) {
+	public String getMyTransferBoardList(Model model, HttpSession session) {
 
-		List<CustomerTransferBoard> myTransferBoardList = customerTransferBoardService.getMyTransferBoardList();
+		String customerId = (String) session.getAttribute("loginId");
+		
+		log.info("customerId: {}", customerId);
+		
+		List<CustomerTransferBoard> myTransferBoardList = customerTransferBoardService.getMyTransferBoardList(customerId);
 		model.addAttribute("title", "내 양도 게시글 목록 조회");
 		model.addAttribute("myTransferBoardList", myTransferBoardList);
 		return "customer/myPage/myTransferBoardListView";
 	}
 
 	@GetMapping("/transferBoardDetail")
-	public String getTransferBoardDetail(
-			@RequestParam(name = "transferBoardNum", required = false) String transferBoardNum, Model model) {
+	public String getTransferBoardDetail(@RequestParam(name = "transferBoardNum", required = false) String transferBoardNum
+									   , Model model) {
 
 		CustomerTransferBoard transferBoardInfo = customerTransferBoardService.getTransferBoardInfoByCode(transferBoardNum);
 		List<FileMetaData> fileList = fileService.getFileList(transferBoardNum, "extraImage");
@@ -220,8 +238,10 @@ public class CustomerTransferBoardController {
 	}
 
 	@GetMapping("/transferBoardList")
-	public String getTransferBoardList(@RequestParam(name = "sortValue", required = false) String sortValue,
-			@RequestParam(name = "searchValue", required = false) String searchValue, Pageable pageable, Model model) {
+	public String getTransferBoardList(@RequestParam(name = "sortValue", required = false) String sortValue
+									 , @RequestParam(name = "searchValue", required = false) String searchValue
+									 , Pageable pageable
+									 , Model model) {
 
 		// 한 페이지에 4 X 4 총 16개 노출
 		pageable.setRowPerPage(16);

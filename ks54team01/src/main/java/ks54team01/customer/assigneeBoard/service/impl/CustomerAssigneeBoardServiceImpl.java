@@ -43,11 +43,11 @@ public class CustomerAssigneeBoardServiceImpl implements CustomerAssigneeBoardSe
 	}
 	
 	@Override
-	public void addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard) {
+	public void addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard, String customerId) {
 		
 		String assigneeBoardNum =  "assignee_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
 		customerAssigneeBoard.setAssigneeBoardNum(assigneeBoardNum);	
-		customerAssigneeBoardMapper.addAssigneeBoard(customerAssigneeBoard);
+		customerAssigneeBoardMapper.addAssigneeBoard(customerAssigneeBoard, customerId);
 	}
 	
 	@Override
@@ -85,8 +85,8 @@ public class CustomerAssigneeBoardServiceImpl implements CustomerAssigneeBoardSe
 	 * 내 양수 게시글 목록 조회
 	 */
 	@Override
-	public List<CustomerAssigneeBoard> getMyAssigneeBoardList() {
-		List<CustomerAssigneeBoard> myAssigneeBoardList = customerAssigneeBoardMapper.getMyAssigneeBoardList();
+	public List<CustomerAssigneeBoard> getMyAssigneeBoardList(String customerId) {
+		List<CustomerAssigneeBoard> myAssigneeBoardList = customerAssigneeBoardMapper.getMyAssigneeBoardList(customerId);
 		return myAssigneeBoardList;
 	}
 	

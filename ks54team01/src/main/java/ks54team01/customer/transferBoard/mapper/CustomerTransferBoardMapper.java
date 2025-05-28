@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import ks54team01.customer.transferBoard.domain.CustomerTransferBoard;
 
@@ -11,7 +12,8 @@ import ks54team01.customer.transferBoard.domain.CustomerTransferBoard;
 public interface CustomerTransferBoardMapper {
 	
 	// 양도 신청
-	int applyTransfer(CustomerTransferBoard customerTransferBoard);
+	int applyTransfer(@Param("customerTransferBoard") CustomerTransferBoard customerTransferBoard,
+		    @Param("customerId") String customerId);
 	
 	// 양도 게시글 삭제
 	int removeMyTransferBoard(String transferBoardNum);
@@ -29,7 +31,7 @@ public interface CustomerTransferBoardMapper {
 	List<CustomerTransferBoard> getMyContractListByCustomerId(String customerId);
 	
 	// 내 양도 게시글 목록 조회
-	List<CustomerTransferBoard> getMyTransferBoardList();
+	List<CustomerTransferBoard> getMyTransferBoardList(String customerId);
 	
 	// 양도 게시글 전체 행 수 조회
 	int getTransferBoardCount(Map<String, Object> searchParamMap);

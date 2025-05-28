@@ -40,7 +40,7 @@ public class CustomerWishListController {
 	@PostMapping("/removeMyWishList")
 	@ResponseBody
 	public boolean removeMyWishList(@RequestParam(name="wishListNum") String wishListNum) {
-		
+
 		boolean isRemove = customerWishListService.removeMyWishList(wishListNum);
 		
 		return isRemove;
@@ -52,46 +52,32 @@ public class CustomerWishListController {
 		
 		log.info("productsNum: {}", productsNum);
 		
-		String custId = (String) session.getAttribute("loginId");
+		String customerId = (String) session.getAttribute("loginId");
 		
-		log.info("custId: {}", custId);
+		log.info("customerId: {}", customerId);
 		
 		CustomerWishList customerWishList = new CustomerWishList();
 		customerWishList.setProductsNum(productsNum);
-		customerWishList.setCustomerId(custId);
+		customerWishList.setCustomerId(customerId);
 		
-		int isDuplicate = customerWishListMapper.isDuplicateProductCheck(productsNum, custId);
+		int isDuplicate = customerWishListMapper.isDuplicateProductCheck(productsNum, customerId);
 		
 		if(isDuplicate == 0) customerWishListService.addMyWishList(customerWishList);
 		
 		return "redirect:/customer/product/productDetailByProd?productsNum=" + productsNum;
 	}
 	
-	/*
-	 * @PostMapping("/checkDuplicate")
-	 * 
-	 * @ResponseBody public boolean checkDuplicate() {
-	 * 
-	 * boolean isDuplicate = false;
-	 * 
-	 * log.info("체크상품: {}", productsNum);
-	 * 
-	 * isDuplicate = memberService.isIdCheck(memberId);
-	 * 
-	 * return true; }
-	 */
-	
 	@GetMapping("/myWishList")
 	public String getMyWishList(@RequestParam(name="viewValue", required = false, defaultValue = "전체") String viewValue
 								, HttpSession session
 								, Model model) {
 		
-		String custId = (String) session.getAttribute("loginId");
+		String customerId = (String) session.getAttribute("loginId");
 		
-		log.info("custId: {}", custId);
+		log.info("customerId: {}", customerId);
 		
-		List<CustomerWishList> wishListCategory = customerWishListService.getWishListCategory(custId); // 담은 카테고리 조회
-		List<CustomerWishList> myWishList = customerWishListService.getMyWishList(custId, viewValue); // 관심상품 목록 조회 기본이 전체
+		List<CustomerWishList> wishListCategory = customerWishListService.getWishListCategory(customerId); // 담은 카테고리 조회
+		List<CustomerWishList> myWishList = customerWishListService.getMyWishList(customerId, viewValue); // 관심상품 목록 조회 기본이 전체
 
 		model.addAttribute("wishListCategory", wishListCategory);
 		model.addAttribute("title", "내 관심상품 목록 조회");

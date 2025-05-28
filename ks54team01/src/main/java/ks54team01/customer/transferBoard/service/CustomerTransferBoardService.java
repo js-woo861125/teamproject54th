@@ -12,7 +12,7 @@ import ks54team01.system.util.PageInfo;
 public interface CustomerTransferBoardService {
 	
 	// 양도 신청
-	void applyTranfer(CustomerTransferBoard customerTransferBoard);
+	void applyTranfer(CustomerTransferBoard customerTransferBoard, String customerId);
 	
 	// 양도 게시글 삭제
 	boolean removeMyTransferBoard(String transferBoardNum);
@@ -30,7 +30,7 @@ public interface CustomerTransferBoardService {
 	List<CustomerTransferBoard> getMyContractListByCustomerId(String customerId);
 	
 	// 내 양도 게시글 목록 조회
-	List<CustomerTransferBoard> getMyTransferBoardList();
+	List<CustomerTransferBoard> getMyTransferBoardList(String customerId);
 	
 	// 양도 게시글 정보 조회
 	CustomerTransferBoard getTransferBoardInfoByCode(String transferBoardNum);
