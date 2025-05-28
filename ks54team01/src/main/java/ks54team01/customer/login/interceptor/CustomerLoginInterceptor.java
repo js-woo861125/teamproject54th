@@ -18,20 +18,26 @@ public class CustomerLoginInterceptor implements HandlerInterceptor{
 		HttpSession session = request.getSession();
 		
 		String loginId = (String) session.getAttribute("loginId");
+		String loginMemberType = (String) session.getAttribute("loginMemberType");
 		
 		boolean isProcess = true;
 		
+		
 		if(loginId == null) {
 			isProcess = false;
-			 response.sendRedirect("/customer/login/memberLogin?message=unauthorized");
-		}else {
-			String loginMemberType = (String) session.getAttribute("loginMemberType");
+			response.sendRedirect("/customer/login/memberLogin?message=unauthorized");
+		} else {
 			if(!"개인고객".equals(loginMemberType) && !"기업고객".equals(loginMemberType)) {
 				isProcess = false;
-				 response.sendRedirect("/customer/login/memberLogin?message=unauthorized");
+				response.sendRedirect("/customer/login/memberLogin?message=unauthorized");
 			}
 		}
+		
 		
 		return isProcess;
 	}
 }
+
+
+
+
