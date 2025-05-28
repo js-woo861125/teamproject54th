@@ -10,11 +10,10 @@ public class CustomerWishList {
 
 	private String wishListNum;
 	private String customerId;
-	private String enterpriseCeoNum;
-	private String enterpriseEmployeeId;
 	private String productsNum;
-	private String sellProductsNum;
+	private String managerId;
 	private String registerDate;
+	
 	
 	private int minimumRentalFee;
 	private int minimumPrice;

@@ -6,7 +6,7 @@ import ks54team01.customer.wishList.domain.CustomerWishList;
 
 public interface CustomerWishListService {
 
-	boolean addMyWishList(String productsNum);
+	void addMyWishList(CustomerWishList customerWishList);
 	
 	// 관싱상품 삭제
 	boolean removeMyWishLists(List<String> wishListNum);
@@ -18,5 +18,5 @@ public interface CustomerWishListService {
 	List<CustomerWishList> getWishListCategory(String custId);
 	
 	// 내 관심상품 목록 조회
-	List<CustomerWishList> getMyWishList(String viewValue);
+	List<CustomerWishList> getMyWishList(String custId, String viewValue);
 }
