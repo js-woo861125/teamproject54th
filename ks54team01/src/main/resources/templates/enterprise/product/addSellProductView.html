@@ -10,65 +10,7 @@
 	<script
 		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </th:block>
-<th:block layout:fragment="jsScript">
-	<script>
-document.getElementById('addProductBtn').addEventListener('click', function() {
-    // 1. 입력값 가져오기
-    const priceInput = document.getElementById('lumpSumPayPrice').value.replace(/,/g, '');
-    const marginSelect = document.getElementById('marginSelect');
-    const selectedOption = marginSelect.options[marginSelect.selectedIndex];
 
-    // data 속성에서 마진율, 개월수 얻기
-    const period = parseInt(selectedOption.getAttribute('data-period'));
-    const margin = parseFloat(selectedOption.getAttribute('data-margin'));
-
-    const price = parseFloat(priceInput);
-
-    // 입력값 유효성 체크
-    if (isNaN(price) || isNaN(margin) || isNaN(period)) {
-        alert('가격, 마진율, 개월수를 올바르게 입력/선택해주세요.');
-        return;
-    }
-
-    // 2. 계산
-    const total = price * (1 + (margin / 100));
-    const monthly = Math.round(total / period); // 소수점 버림
-
-    // 3. 결과 입력 (플랫폼 판매가, 개월수, 위약금 개월수)
-    document.getElementById('platformPrice').value = total.toLocaleString();
-    document.getElementById('penaltyPeriod').value = period + '개월';
-    
-});
-    
-    
-    document.addEventListener('click', function(e) {
-    	  // 혜택행 추가
-    	  if(e.target.classList.contains('add-benefit-btn')) {
-    	    const row = e.target.closest('.benefit-row');
-    	    const clone = row.cloneNode(true);
-
-    	    // input/select 값 초기화
-    	    clone.querySelector('select').value = "";
-    	    clone.querySelector('input').value = "";
-
-    	    // 기존 "+"를 "삭제"버튼으로 교체
-    	    const btn = clone.querySelector('button');
-    	    btn.textContent = '삭제';
-    	    btn.classList.remove('add-benefit-btn');
-    	    btn.classList.add('remove-benefit-btn');
-    	    btn.classList.replace('btn-primary', 'btn-danger');
-
-    	    // 새 행 삽입
-    	    document.getElementById('benefit-list').appendChild(clone);
-    	  }
-    	  // 혜택행 삭제
-    	  if(e.target.classList.contains('remove-benefit-btn')) {
-    	    e.target.closest('.benefit-row').remove();
-    	  }
-});
-</script>
-
-</th:block>
 <th:block layout:fragment="content">
 	<form class="user" th:action="@{/enterprise/product/addProduct}"
 		method="post" enctype="multipart/form-data">
@@ -178,6 +120,11 @@ document.getElementById('addProductBtn').addEventListener('click', function() {
 								</div>
 							</div>
 						</div>
+						<div>
+							<button type="button"
+								class="btn btn-sm btn-primary add-sellProduct-btn">등록</button>
+
+						</div>
 					</div>
 				</div>
 			</div>
@@ -187,14 +134,16 @@ document.getElementById('addProductBtn').addEventListener('click', function() {
 					<div class="card-header">
 						<h4>최종 등록리스트</h4>
 					</div>
-					<div class="card-body"></div>
+					<div class="card-body">
+						<ul id="finalList" class="list-group">
+						</ul>
+					</div>
 				</div>
 				<div class="mb-3">
 					<input type="text" name="quantity" placeholder="등록 수량"
 						class="form-control">
 				</div>
-				<button class="btn btn-md rounded font-sm hover-up w-100">상품
-					등록</button>
+				<button class="btn btn-md rounded font-sm hover-up">상품 등록</button>
 			</div>
 		</div>
 	</form>
@@ -209,5 +158,205 @@ document.getElementById('addProductBtn').addEventListener('click', function() {
 <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
 <!-- Main Script -->
 <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+<th:block layout:fragment="jsScript">
+	<script>
+	const finalItems = [];
+
+	// 혜택 중복 방지 이미 선택된 혜택은 다른 행에서 비활성화
+	function updateBenefitSelectOptions() {
+	    const selects = document.querySelectorAll('select[name="benefitNoList"]');
+	    const selectedValues = Array.from(selects).map(sel => sel.value).filter(v => v);
+
+	    selects.forEach(sel => {
+	        Array.from(sel.options).forEach(opt => {
+	            if (opt.value === "") {
+	                opt.disabled = false;
+	                return;
+	            }
+	            opt.disabled = selectedValues.includes(opt.value) && sel.value !== opt.value;
+	        });
+	    });
+	}
+
+	// 마지막 행만 "추가", 나머지는 "삭제"
+	function arrangeBenefitButtons() {
+	    const benefitRows = document.querySelectorAll('#benefit-list .benefit-row');
+	    benefitRows.forEach((row, idx) => {
+	        const btn = row.querySelector('button');
+	        if (idx === benefitRows.length - 1) {
+	            btn.textContent = '추가';
+	            btn.className = 'btn btn-sm btn-primary add-benefit-btn';
+	        } else {
+	            btn.textContent = '삭제';
+	            btn.className = 'btn btn-sm btn-danger remove-benefit-btn';
+	        }
+	    });
+	}
+
+	// 혜택 행 추가/삭제 (이벤트 위임)
+	document.addEventListener('click', function(e) {
+	    // 혜택 추가
+	    if (e.target.classList.contains('add-benefit-btn')) {
+	        const row = e.target.closest('.benefit-row');
+	        const clone = row.cloneNode(true);
+	        // 값 초기화
+	        clone.querySelector('select').value = "";
+	        clone.querySelector('input').value = "";
+	        // 버튼 교체
+	        const btn = clone.querySelector('button');
+	        btn.textContent = '삭제';
+	        btn.className = 'btn btn-sm btn-danger remove-benefit-btn';
+	        document.getElementById('benefit-list').appendChild(clone);
+
+	        arrangeBenefitButtons();
+	        updateBenefitSelectOptions();
+	    }
+	    // 혜택 삭제
+	    if (e.target.classList.contains('remove-benefit-btn')) {
+	        const list = document.getElementById('benefit-list');
+	        if (list.querySelectorAll('.benefit-row').length > 1) {
+	            e.target.closest('.benefit-row').remove();
+	            arrangeBenefitButtons();
+	            updateBenefitSelectOptions();
+	        }
+	    }
+	});
+
+	// 혜택 select 변경시 중복옵션 즉시 업데이트
+	document.addEventListener('change', function(e) {
+	    if (e.target.name === 'benefitNoList') {
+	        updateBenefitSelectOptions();
+	    }
+	});
+
+	// 마진 계산 버튼
+	document.getElementById('addProductBtn').addEventListener('click', function() {
+	    const priceInput = document.getElementById('lumpSumPayPrice').value.replace(/,/g, '');
+	    const marginSelect = document.getElementById('marginSelect');
+	    const selectedOption = marginSelect.options[marginSelect.selectedIndex];
+
+	    const period = parseInt(selectedOption.getAttribute('data-period'));
+	    const margin = parseFloat(selectedOption.getAttribute('data-margin'));
+	    const price = parseFloat(priceInput);
+
+	    if (isNaN(price) || isNaN(margin) || isNaN(period)) {
+	        alert('가격, 마진율, 개월수를 올바르게 입력/선택해주세요.');
+	        return;
+	    }
+
+	    const marginAmount = price * (margin / 100);
+	    const total = price + marginAmount;
+	    const monthly = Math.round(total / period);
+
+	    document.getElementById('platformPrice').value = monthly.toLocaleString();
+	    document.getElementById('penaltyPeriod').value = period + '개월';
+	});
+
+	// 최종 등록리스트 추가
+	document.querySelector('.add-sellProduct-btn').addEventListener('click', function() {
+	    const marginSelect = document.getElementById('marginSelect');
+	    const period = marginSelect.options[marginSelect.selectedIndex].textContent;
+	    const marginNum = marginSelect.value;
+	    const lumpSum = document.getElementById('lumpSumPayPrice').value;
+	    const platformPrice = document.getElementById('platformPrice').value;
+	    const penaltyPeriod = document.getElementById('penaltyPeriod').value;
+
+	    // 혜택 여러개 추출
+	    const benefitNos = Array.from(document.querySelectorAll('select[name="benefitNoList"]')).map(sel => sel.value);
+	    const benefitDetails = Array.from(document.querySelectorAll('input[name="benefitDetailList"]')).map(inp => inp.value);
+
+	    // 혜택 중복체크
+	    if (new Set(benefitNos.filter(Boolean)).size !== benefitNos.filter(Boolean).length) {
+	        alert("혜택은 중복될 수 없습니다!");
+	        return;
+	    }
+
+	    const item = { period, marginNum, lumpSum, platformPrice, penaltyPeriod, benefitNos, benefitDetails };
+	    finalItems.push(item);
+	    redrawFinalList();
+	});
+
+	// 최종 등록리스트: 삭제/복원
+	document.getElementById('finalList').addEventListener('click', function(e) {
+	    // 삭제
+	    if (e.target.classList.contains('del-item-btn')) {
+	        const idx = Number(e.target.dataset.idx);
+	        finalItems.splice(idx, 1);
+	        redrawFinalList();
+	        return;
+	    }
+	    // 복원 (li 클릭)
+	    let li = e.target;
+	    if (li.tagName !== 'LI') li = li.closest('li');
+	    if (!li || li.classList.contains('del-item-btn')) return;
+	    const idx = li.dataset.idx;
+	    const item = finalItems[idx];
+	    if (item) {
+	        // 개월수 select 복원
+	        const marginSelect = document.getElementById('marginSelect');
+	        for (let i=0; i<marginSelect.options.length; i++) {
+	            if (marginSelect.options[i].textContent === item.period) {
+	                marginSelect.selectedIndex = i;
+	                break;
+	            }
+	        }
+	        document.getElementById('lumpSumPayPrice').value = item.lumpSum;
+	        document.getElementById('platformPrice').value = item.platformPrice;
+	        document.getElementById('penaltyPeriod').value = item.penaltyPeriod;
+
+	        // 혜택 복원
+	        const benefitList = document.getElementById('benefit-list');
+	        benefitList.innerHTML = "";
+	        // select option은 항상 첫번째 행의 select innerHTML에서 가져오기
+	        const optionHtml = document.querySelector('select[name="benefitNoList"]')?.innerHTML || "";
+	        for (let i = 0; i < item.benefitNos.length; i++) {
+	            const row = document.createElement('div');
+	            row.className = "row align-items-end mb-2 benefit-row";
+	            row.innerHTML = `
+	                <div class="col-lg-4">
+	                    <label class="form-label">전체혜택</label>
+	                    <select class="form-select" name="benefitNoList">
+	                        <option value="">혜택을 선택하세요</option>
+	                        ${optionHtml}
+	                    </select>
+	                </div>
+	                <div class="col-lg-4">
+	                    <label class="form-label">혜택상세</label>
+	                    <input type="text" name="benefitDetailList" class="form-control" placeholder="혜택상세" value="${item.benefitDetails[i] || ''}" />
+	                </div>
+	                <div class="col-sm-2">
+	                    <button type="button" class="btn btn-sm btn-danger remove-benefit-btn">삭제</button>
+	                </div>
+	            `;
+	            benefitList.appendChild(row);
+	            row.querySelector('select').value = item.benefitNos[i];
+	        }
+	        arrangeBenefitButtons();
+	        updateBenefitSelectOptions();
+	    }
+	});
+
+	// 최종 등록리스트 새로고침
+	function redrawFinalList() {
+	    const list = document.getElementById('finalList');
+	    list.innerHTML = '';
+	    finalItems.forEach((item, i) => {
+	        const li = document.createElement('li');
+	        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+	        li.innerHTML = `
+	          <span>${item.period} / ${item.platformPrice}원</span>
+	          <button type="button" class="btn btn-sm btn-outline-danger del-item-btn" data-idx="${i}">X</button>
+	        `;
+	        li.dataset.idx = i;
+	        list.appendChild(li);
+	    });
+	}
+
+	// 페이지 최초 렌더 시 한 번 호출
+	arrangeBenefitButtons();
+	updateBenefitSelectOptions();
+
+	</script>
+</th:block>
 </body>
 </html>
