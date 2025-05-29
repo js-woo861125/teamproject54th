@@ -1,7 +1,11 @@
 package ks54team01.admin.productInfo.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.xml.transform.Result;
 
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.http.HttpStatus;
@@ -24,8 +28,6 @@ import ks54team01.admin.productInfo.domain.ProductInfoItem;
 import ks54team01.admin.productInfo.domain.ProductInfoModel;
 import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
 import ks54team01.admin.productInfo.service.AdminProductInfoService;
-import ks54team01.system.util.PageInfo;
-import ks54team01.system.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -212,9 +214,9 @@ public class AdminProductInfoController {
 		}
 	
 	@GetMapping("/searchBrand")
-	public String getSearchBrand(String searchKey, String searchValue, String useStatus, Model model, @RequestParam(defaultValue = "1") int currentPage, @RequestParam(defaultValue = "10") int rowPerPage) {
+	public String getSearchBrand(String searchKey, String searchValue, String useStatus, Model model) {
 
-		List<ProductInfoBrand> brandList = adminProductInfoService.getSearchBrand(searchKey, searchValue, useStatus, currentPage, rowPerPage);
+		List<ProductInfoBrand> brandList = adminProductInfoService.getSearchBrand(searchKey, searchValue, useStatus);
 		
 		model.addAttribute("title", "브랜드 목록");
 		model.addAttribute("brandList", brandList);
@@ -223,8 +225,6 @@ public class AdminProductInfoController {
 		model.addAttribute("useStatus", useStatus);
 		model.addAttribute("activeMenu", "productInfo");
 		model.addAttribute("activeSubMenu", "productInfoList");
-		model.addAttribute("currentPage", currentPage);
-		model.addAttribute("rowPerPage", rowPerPage);
 		
 		return "admin/productInfo/brandListView";
 		}
@@ -260,62 +260,110 @@ public class AdminProductInfoController {
 	
 	@PostMapping("/removeCategorySpec")
 	@ResponseBody
-	public boolean removeCategorySpec(String specNo) {
+	public ResponseEntity<Map<String, Object>> removeCategorySpec(String specNo) {
 		log.info("삭제 할 스펙코드 : {}", specNo);
 		
 		boolean isDel = adminProductInfoService.removeCategorySpecInfoByNo(specNo);
+		Map<String, Object> result = new HashMap<>();
 		
-		return isDel;
+		if (isDel) {
+			result.put("success", true);
+			return ResponseEntity.ok(result); // 삭제 성공
+		} else {
+			result.put("success", false);
+			result.put("message", "해당 스펙은 등록된 모델스펙이 있어 삭제할 수 없습니다.");
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(result); 
+		}
 	}	
 	
 	@PostMapping("/removeBenefit")
 	@ResponseBody
-	public boolean removeBenefit(String benefitNo) {
+	public ResponseEntity<Map<String, Object>> removeBenefit(String benefitNo) {
 		log.info("삭제 할 혜택코드 : {}", benefitNo);
 		
 		boolean isDel = adminProductInfoService.removeBenefitInfoByNo(benefitNo);
+		Map<String, Object> result = new HashMap<>();
 		
-		return isDel;
+		if (isDel) {
+			result.put("success", true);
+			return ResponseEntity.ok(result); // 삭제 성공
+		} else {
+			result.put("success", false);
+			result.put("message", "해당 혜택은 등록된 입점업체 혜택상세가 있어 삭제할 수 없습니다.");
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(result); 
+		}
 	}	
 	
 	@PostMapping("/removeModel")
 	@ResponseBody
-	public boolean removeModel(String modelNo) {
+	public ResponseEntity<Map<String, Object>> removeModel(String modelNo) {
 		log.info("삭제 할 모델코드 : {}", modelNo);
 		
 		boolean isDel = adminProductInfoService.removeModelInfoByNo(modelNo);
+		Map<String, Object> result = new HashMap<>();
 		
-		return isDel;
+		if (isDel) {
+			result.put("success", true);
+			return ResponseEntity.ok(result); // 삭제 성공
+		} else {
+			result.put("success", false);
+			result.put("message", "해당 모델은 등록된 모델 스펙이 있어 삭제할 수 없습니다.");
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(result); 
+		}			
 	}
 	
 	@PostMapping("/removeItem")
 	@ResponseBody
-	public boolean removeItem(String itemNo) {
+	public ResponseEntity<Map<String, Object>> removeItem(String itemNo) {
 		log.info("삭제 할 품목코드 : {}", itemNo);
 		
 		boolean isDel = adminProductInfoService.removeItemInfoByNo(itemNo);
+		Map<String, Object> result = new HashMap<>();
 		
-		return isDel;
+		if (isDel) {
+			result.put("success", true);
+			return ResponseEntity.ok(result); // 삭제 성공
+		} else {
+			result.put("success", false);
+			result.put("message", "해당 품목은 등록된 모델이 있어 삭제할 수 없습니다.");
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(result); 
+		}
 	}
 	
 	@PostMapping("/removeBrand")
 	@ResponseBody
-	public boolean removeBrand(String brandNo) {
+	public ResponseEntity<Map<String, Object>> removeBrand(String brandNo) {
 		log.info("삭제 할 브랜드코드: {}", brandNo);
 		
 		boolean isDel = adminProductInfoService.removeBrandInfoByNo(brandNo);
+		Map<String, Object> result = new HashMap<>();
 		
-		return isDel;
+		if (isDel) {
+			result.put("success", true);
+			return ResponseEntity.ok(result); // 삭제 성공
+		} else {
+			result.put("success", false);
+			result.put("message", "해당 브랜드는 등록된 모델이 있어 삭제할 수 없습니다.");
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
+		}
 	}
 	
 	@PostMapping("/removeCategory")
 	@ResponseBody
-	public boolean removeCategory(String categoryNo) {
+	public ResponseEntity<Map<String, Object>> removeCategory(String categoryNo) {
 		log.info("삭제 할 카테고리코드: {}", categoryNo);
 		
 		boolean isDel = adminProductInfoService.removeCategoryInfoByNo(categoryNo);
+		Map<String, Object> result = new HashMap<>();
 		
-		return isDel;
+		if (isDel) {
+			result.put("success", true);
+			return ResponseEntity.ok(result); // 삭제 성공
+		} else {
+			result.put("success", false);
+			result.put("message", "해당 카테고리는 등록된 품목 또는 카테고리스펙이 있어 삭제할 수 없습니다.");
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(result); 
+		}
 	}
 	
 	/**
@@ -506,13 +554,13 @@ public class AdminProductInfoController {
 		
 		ProductInfoModel modelInfo = adminProductInfoService.getModelInfoByNo(modelNo);
 		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
-	//	List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
+//		List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
 		List<ProductInfoItem> itemList = adminProductInfoService.getItemList();
 		
 		model.addAttribute("title", "모델 수정");
 		model.addAttribute("modelInfo", modelInfo);
 		model.addAttribute("categoryList", categoryList);
-	//	model.addAttribute("brandList", brandList);
+//		model.addAttribute("brandList", brandList);
 		model.addAttribute("itemList", itemList);
 		model.addAttribute("activeMenu", "productInfo");
 		
@@ -658,31 +706,33 @@ public class AdminProductInfoController {
 	}
 	
 	@GetMapping("/brandList")
-	public String getBrandList(Pageable pageable, Model model) {
+	public String getBrandList(Model model,
+					           @RequestParam(defaultValue = "1") int page,
+					           @RequestParam(required = false) String searchKey,
+					           @RequestParam(required = false) String searchValue,
+					           @RequestParam(required = false) String useStatus) {
 		
-		pageable.setRowPerPage(5);			
+	    // searchKey가 "brandName"이면 실제 DB 컬럼명으로 변환
+	    if ("brandName".equals(searchKey)) {
+	        searchKey = "brand_nm";
+	    }		
 		
-		pageable.setOffset();
+		int limit = 5;
+		int offset = (page -1) * limit;
 		
-		PageInfo<ProductInfoBrand> brand = adminProductInfoService.getBrandList(pageable);
-		
-		var brandList = brand.getContents();
-		int currentPage = brand.getCurrentPage();
-		int lastPage = brand.getLastPage();
-		int startPageNum = brand.getStartPageNum();
-		int endPageNum = brand.getEndPageNum();
-		int rowPerPage = pageable.getRowPerPage();
+		List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList(offset, limit, searchKey, searchValue, useStatus);
+		int totalCount = adminProductInfoService.getBrandCount(searchKey, searchValue, useStatus);
+		int totalPages = (int)Math.ceil((double)totalCount / limit);
 		
 		model.addAttribute("title", "브랜드 목록");
 		model.addAttribute("brandList", brandList);
 		model.addAttribute("activeMenu", "productInfo");
 		model.addAttribute("activeSubMenu", "productInfoList");
-		model.addAttribute("currentPage", currentPage);
-		model.addAttribute("lastPage", lastPage);
-		model.addAttribute("startPageNum", startPageNum);
-		model.addAttribute("endPageNum", endPageNum);
-		model.addAttribute("rowPerPage", rowPerPage);
-		
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", totalPages);
+	    model.addAttribute("searchKey", searchKey);
+	    model.addAttribute("searchValue", searchValue);
+	    model.addAttribute("useStatus", useStatus);		
 		
 		return "admin/productInfo/brandListView";
 	}	
@@ -725,7 +775,13 @@ public class AdminProductInfoController {
 	 * 상품정보 등록
 	 */
 	@PostMapping("/addModelSpec")
-	public String addModelSpec(ProductInfoModelSpec productInfoModelSpec) {
+	public String addModelSpec(ProductInfoModelSpec productInfoModelSpec, HttpSession session) {
+		
+		String managerId = (String) session.getAttribute("adminId");
+		
+		log.info("adminId : {}", managerId);
+		
+		productInfoModelSpec.setManagerId(managerId);
 		
 		adminProductInfoService.addModelSpec(productInfoModelSpec);
 		
@@ -748,7 +804,13 @@ public class AdminProductInfoController {
 	}
 	
 	@PostMapping("/addCategorySpec")
-	public String addCategorySpec(ProductInfoCategorySpec productInfoCategorySpec) {
+	public String addCategorySpec(ProductInfoCategorySpec productInfoCategorySpec, HttpSession session) {
+		
+		String managerId = (String) session.getAttribute("adminId");
+		
+		log.info("adminId : {}", managerId);
+				
+		productInfoCategorySpec.setManagerId(managerId);
 		
 		adminProductInfoService.addCategorySpec(productInfoCategorySpec);
 		
@@ -769,7 +831,13 @@ public class AdminProductInfoController {
 	}
 	
 	@PostMapping("/addBenefit")
-	public String addBenefit(ProductInfoBenefit productInfoBenefit) {
+	public String addBenefit(ProductInfoBenefit productInfoBenefit, HttpSession session) {
+		
+		String managerId = (String) session.getAttribute("adminId");
+		
+		log.info("adminId : {}", managerId);
+		
+		productInfoBenefit.setManagerId(managerId);
 		
 		adminProductInfoService.addBenefit(productInfoBenefit);
 		
@@ -787,7 +855,13 @@ public class AdminProductInfoController {
 	}
 	
 	@PostMapping("/addModel")
-	public String addModel(ProductInfoModel productInfoModel) {
+	public String addModel(ProductInfoModel productInfoModel, HttpSession session) {
+		
+		String managerId = (String) session.getAttribute("adminId");
+		
+		log.info("adminId : {}", managerId);
+		
+		productInfoModel.setManagerId(managerId);
 		
 		adminProductInfoService.addModel(productInfoModel);
 		
@@ -797,12 +871,12 @@ public class AdminProductInfoController {
 	@GetMapping("/addModel")
 	public String addModel(Model model) {
 		
-	//	List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
+//		List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
 		List<ProductInfoItem> itemList = adminProductInfoService.getItemList();
 		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
 		
 		model.addAttribute("title", "모델 등록");
-	//	model.addAttribute("brandList", brandList);
+//		model.addAttribute("brandList", brandList);
 		model.addAttribute("itemList", itemList);
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("activeMenu", "productInfo");
@@ -812,7 +886,13 @@ public class AdminProductInfoController {
 	}
 	
 	@PostMapping("/addItem")
-	public String addItem(ProductInfoItem productInfoItem) {
+	public String addItem(ProductInfoItem productInfoItem, HttpSession session) {
+		
+		String managerId = (String) session.getAttribute("adminId");
+		
+		log.info("adminId : {}", managerId);
+		
+		productInfoItem.setManagerId(managerId);
 		
 		adminProductInfoService.addItem(productInfoItem);
 		
@@ -833,9 +913,15 @@ public class AdminProductInfoController {
 	}
 	
 	@PostMapping("/addBrand")
-	public String addBrand(ProductInfoBrand productInfoBrand) {
+	public String addBrand(ProductInfoBrand productInfoBrand, HttpSession session) {
 		
-		adminProductInfoService.addBrand(productInfoBrand);
+		String managerId = (String) session.getAttribute("adminId");
+		
+		log.info("adminId : {}", managerId);
+		
+		productInfoBrand.setManagerId(managerId);
+		
+		adminProductInfoService.addBrand(productInfoBrand);		
 		
 		return "redirect:/admin/productInfo/brandList";
 	}
@@ -851,7 +937,13 @@ public class AdminProductInfoController {
 	}
 	
 	@PostMapping("/addCategory")
-	public String addCategory(ProductInfoCategory productInfoCategory) {
+	public String addCategory(ProductInfoCategory productInfoCategory, HttpSession session) {
+
+		String managerId = (String) session.getAttribute("adminId");
+		
+		log.info("adminId : {}", managerId);
+		
+		productInfoCategory.setManagerId(managerId);
 		
 		adminProductInfoService.addCategory(productInfoCategory);
 		

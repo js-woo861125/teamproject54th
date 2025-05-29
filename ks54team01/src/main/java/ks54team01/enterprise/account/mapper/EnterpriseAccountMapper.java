@@ -7,15 +7,9 @@ import ks54team01.customer.member.domain.EntMember;
 @Mapper
 public interface EnterpriseAccountMapper {
 	// 입점업체대표정보 수정
-	int modifyEntCeo(EntMember entMember);
+	int modifyEntCeo(EntMember modifyMember);
 	
 	// 입점업체직원정보 수정
-	int modifyEntEmp(EntMember entMember);
-	
-	// 공통정보 수정
-	int modifyCommonInfo(EntMember entMember);
-
-
-
+	int modifyEntEmp(EntMember modifyMember);
 
 }

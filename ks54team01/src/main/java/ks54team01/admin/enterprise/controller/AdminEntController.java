@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.servlet.http.HttpSession;
 import ks54team01.admin.enterprise.domain.AdminEntAddContract;
 import ks54team01.admin.enterprise.domain.AdminEntDetail;
 import ks54team01.admin.enterprise.domain.AdminEntList;
@@ -27,7 +28,11 @@ public class AdminEntController {
 
 	// 입점업체 계약 등록
 	@PostMapping("/addContract")
-	public String addContract(@ModelAttribute AdminEntAddContract adminEntAddContract) {
+	public String addContract(@ModelAttribute AdminEntAddContract adminEntAddContract, HttpSession session) {
+		
+		String managerId = (String) session.getAttribute("adminId");
+		
+		adminEntAddContract.setManagerId(managerId);
 		
 		adminEntListService.addContract(adminEntAddContract);
 		

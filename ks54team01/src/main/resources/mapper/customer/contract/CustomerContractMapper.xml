@@ -19,9 +19,42 @@
 		<result column="rental_end_date" 			property="rentalEndDate" />
 		<result column="rental_cancel_date" 		property="rentalCancelDate" />
 		<result column="contract_date" 				property="contractDate" />
+		<result column="ent_nm"						property="entName" />
+		<result column="products_nm"				property="productName" />
 		
 	</resultMap>
 	
+	<select id="myCustomerContractList" parameterType="string" resultMap="contractResultMap">
+		select
+			rc.rental_contract_no,
+			rc.cust_id,
+			rc.ent_ceo_no,
+			ec.ent_nm ,
+			rc.sell_products_no,
+			p.products_nm ,
+			rc.rental_contract_status,
+			rc.contract_quantity,
+			rc.contract_period,
+			rc.rental_start_date,
+			rc.rental_end_date,
+			rc.rental_cancel_date,
+			rc.contract_date
+		from
+			rental_contract rc LEFT JOIN  ent_ceo ec 
+			ON rc.ent_ceo_no = ec.ent_ceo_no
+			INNER JOIN sell_products sp 
+			ON rc.sell_products_no = sp.sell_products_no
+			INNER JOIN products p 
+			ON sp.products_no = p.products_no
+		WHERE
+			rc.cust_id=#{custId}
+			<if test="searchKey != null and searchKey != ''">
+				AND rc.rental_contract_status = #{searchKey}
+			</if>
+		ORDER BY
+			ec.ent_nm,	
+			rc.contract_date;
+	</select>
 	
 	
 	<update id="modifyRentalContractStatus" parameterType="CustomerContract">
@@ -42,6 +75,12 @@
 			(#{rentalContractNo}, #{entCeoNo}, #{entEmpId}, #{sellProdNo}, #{custId}, '계약완료', #{contractQuantity}, #{contractPeriod},
 			 NULL, NULL, NULL, CURDATE())
 	</insert>
+	
+	
+
+	
+	
+	
 	
 </mapper>
 

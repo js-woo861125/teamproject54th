@@ -87,13 +87,26 @@ public class AdminProductController {
 		
 	    return "redirect:/admin/product/productList";
 	}
+	
+	// 상품 조회 + 검색기능
+	@GetMapping("/productList")
+	public String getProductList(@RequestParam(required = false) String searchKey,
+								 @RequestParam(required = false) String searchValue,
+								 @RequestParam(required = false) String categoryNo,
+								 @RequestParam(required = false) String status,
+								 Model model) {
+		List<ProductInfoCategory> categoryList = adminProductService.loadCategoryList();
+		List<AdminProduct> adminProductList = adminProductService.searchProductList(searchKey, searchValue, categoryNo, status);
+	  
 		
-		@GetMapping("/productList")
-	public String getProductList(Model model) {
-		List<AdminProduct> adminProductList = adminProductService.getProductList();
-		
+		model.addAttribute("adminProductList", adminProductList);		
 		model.addAttribute("title", "등록상품리스트");
 		model.addAttribute("adminProductList", adminProductList);
+		model.addAttribute("categoryList",categoryList);
+		model.addAttribute("searchKey", searchKey);
+		model.addAttribute("searchValue", searchValue);
+		model.addAttribute("categoryNo", categoryNo);
+		model.addAttribute("status", status);
 		
 		return "admin/product/productListView";
 	}
@@ -102,7 +115,6 @@ public class AdminProductController {
 	
 	@GetMapping("/addProduct")
 	public String addProduct(Model model) {
-		
 		
 		return "admin/product/addProductView";
 	}
@@ -187,7 +199,20 @@ public class AdminProductController {
 	    return adminProductMapper.loadSpecContent(modelNo);
 	}
 	
-	
-	
+	// 등록상품 판매중단
+	@PostMapping("/setSaleStoppage")
+	@ResponseBody
+	public String saleStoppage(@RequestParam("productNo")String productNo) {
+		adminProductService.setSaleStoppage(productNo);
+		
+		return "ok";
+	}
+	// 등록상품 판매중단 해제
+	@PostMapping("/unsetSaleStoppage")
+	@ResponseBody
+	public String unsetSaleStoppage(@RequestParam("productNo") String productNo) {
+	    adminProductService.unsetSaleStoppage(productNo);
+	    return "ok";
+	}
 	
 }

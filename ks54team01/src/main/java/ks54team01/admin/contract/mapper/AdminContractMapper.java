@@ -1,6 +1,7 @@
 package ks54team01.admin.contract.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -14,7 +15,7 @@ public interface AdminContractMapper {
 	List<AdminContractDetail> getContractDetail(String rentalContNo);
 	
 	// 업체&고객 렌탈계약정보 검색
-	List<AdminContract> getSearchContractList(String searchKey, String searchValue);
+	List<AdminContract> getSearchContractList(Map<String, Object> paramMap);
 	
 	// 업체&고객 렌탈계약정보 조회
 	List<AdminContract> getContractList();
