@@ -10,6 +10,30 @@
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	</th:block>
 	
+	<th:block layout:fragment="jsScript">
+		<script th:inline="javascript">
+			const rowPerPage = /*[[${rowPerPage}]]*/'';
+			if(rowPerPage) {
+				$('.page-link').each((idx, item)=>{
+					let href = $(item).attr('href');
+					let separator = '?';
+					if(href.includes('?')) separator = '&';
+					href += `${separator}rowPerPage=${rowPerPage}`;
+					$(item).attr('href', href);
+				});
+			}
+			$('#rowPerPage').change(function(){
+				const href = location.href;
+				const url = new URL(href);
+				const urlParams = url.searchParams;
+				const currentPage = urlParams.get('currentPage');
+				if(currentPage) urlParams.set('currentPage', currentPage);
+				urlParams.set('rowPerPage', $(this).val());
+				location.href = `${url.pathname}?${urlParams.toString()}`;
+			});
+		</script>
+	</th:block>
+	
 	<th:block layout:fragment="content">
 		<div class="content-header">
             <div>
@@ -61,6 +85,9 @@
                                 </td>
                                 <td th:text="${l.memberRegDate}">2023-03-01 16:00:00</td>
                             </tr>
+                            <tr th:unless="${!#lists.isEmpty(employeeList)}">
+	                                	<td colspan="7">목록없음</td>
+	                            </tr>
                         </tbody>
                     </table>
                     <!-- table-responsive.// -->
@@ -69,19 +96,5 @@
             <!-- card-body end// -->
         </div>
         <!-- card end// -->
-        <div class="pagination-area mt-15 mb-50">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-start">
-                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                    <li class="page-item"><a class="page-link" href="#">02</a></li>
-                    <li class="page-item"><a class="page-link" href="#">03</a></li>
-                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                    <li class="page-item"><a class="page-link" href="#">16</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                    </li>
-                </ul>
-            </nav>
-    	</div>
 	</th:block>
 </html>
