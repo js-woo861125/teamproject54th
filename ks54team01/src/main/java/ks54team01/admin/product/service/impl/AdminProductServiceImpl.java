@@ -1,7 +1,9 @@
 package ks54team01.admin.product.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -32,13 +34,14 @@ public class AdminProductServiceImpl implements AdminProductService{
 		
 		
 		@Override
-		public List<AdminProduct> getSearchProduct(String searchKey, String searchValue) {
-		switch (searchKey) {
-		
-		
-		}
-		return null;
-		}
+	    public List<AdminProduct> searchProductList(String searchKey, String searchValue, String categoryNo, String status) {
+	        Map<String, Object> paramMap = new HashMap<>();
+	        paramMap.put("searchKey", searchKey);
+	        paramMap.put("searchValue", searchValue);
+	        paramMap.put("categoryNo", categoryNo);
+	        paramMap.put("status", status);
+	        return adminProductMapper.searchProductList(paramMap);
+	    }
 		
 		
 		
@@ -129,5 +132,16 @@ public class AdminProductServiceImpl implements AdminProductService{
 	        //  파일 메타데이터 DB에 등록   
 	        fileService.addFiles(mainImage, "mainImage", product.getModelNo());
 	        fileService.addFiles(thumbnails, "thumbnail", product.getModelNo());
+		}
+		
+		
+		@Override
+		public void setSaleStoppage(String productNo) {
+		 adminProductMapper.setSaleStoppage(productNo);;
+		}
+		@Override
+		public void unsetSaleStoppage(String productNo) {
+		 adminProductMapper.unsetSaleStoppage(productNo);
+		
 		}
 }
