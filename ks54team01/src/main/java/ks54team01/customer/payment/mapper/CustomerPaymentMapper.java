@@ -13,6 +13,11 @@ import ks54team01.customer.payment.domain.CustomerRefund;
 @Mapper
 public interface CustomerPaymentMapper {
 	
+	
+	CustomerPayment getFirstPaymentDetail(String rentalContractNo);
+	
+	List<CustomerPayment> getPaymentDetailList(String rentalContractNo);
+	
 	String getRentalContractNo(String paymentCompletedNo);
 	
 	void modifyCancelQuantity(String ProdNo, String entCeoNo, Integer cancelQuantity);

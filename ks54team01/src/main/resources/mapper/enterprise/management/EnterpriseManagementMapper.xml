@@ -11,6 +11,9 @@
 			<if test="entEmpName != null and entEmpName != ''">
 				ent_ceo_nm = #{entEmpName}, 			
 			</if>
+			<if test="entName != null and entName != ''">
+				ent_nm = #{entName}, 			
+			</if>
 			<if test="entEmpEmail != null and entEmpEmail != ''">
 				ent_ceo_email = #{entEmpEmail}, 			
 			</if>
@@ -24,10 +27,10 @@
 				ent_ceo_daddr = #{entCeoDaddr}, 			
 			</if>
 			<if test="entBank != null and entBank != ''">
-				ent_bank = #{entBank}, 			
+				ent_bank = #{entBank}, 
 			</if>
 			<if test="entBankNum != null and entBankNum != ''">
-				ent_bank_num = #{entBankNum}, 			
+				ent_bank_num = #{entBankNum}, 
 			</if>
 				revision_date = CURDATE()	
 		</set>		 

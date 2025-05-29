@@ -77,10 +77,10 @@ public class EnterpriseDeliveryController {
 	@GetMapping("/searchDeliveryList")
 	public String getSearchDeliveryList(String searchKey, String searchValue, Model model) {
 		
-		List <EnterpriseDelivery> DeliveryList = enterpriseDeliveryService.getSearchDeliveryList(searchKey, searchValue);
+		List <EnterpriseDelivery> deliveryList = enterpriseDeliveryService.getSearchDeliveryList(searchKey, searchValue);
 		
 		model.addAttribute("title", "배송정보 목록");
-		model.addAttribute("DeliveryList", DeliveryList);
+		model.addAttribute("deliveryList", deliveryList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
 		
@@ -93,10 +93,10 @@ public class EnterpriseDeliveryController {
 		
 		String entCeoNo = (String) session.getAttribute("entCeoNo");
 		
-		List <EnterpriseDelivery> DeliveryList = enterpriseDeliveryService.getDeliveryList(entCeoNo);
+		List <EnterpriseDelivery> deliveryList = enterpriseDeliveryService.getDeliveryList(entCeoNo);
 		
 		model.addAttribute("title", "배송정보 목록");
-		model.addAttribute("DeliveryList", DeliveryList);
+		model.addAttribute("deliveryList", deliveryList);
 		
 		return "enterprise/delivery/deliveryListView";
 	}

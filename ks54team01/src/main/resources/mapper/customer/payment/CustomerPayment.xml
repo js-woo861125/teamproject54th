@@ -104,6 +104,57 @@
 	</resultMap>
 	
 	
+	<select id="getFirstPaymentDetail" resultMap="paymentResultMap">
+		/* 첫 결제 조회 */
+		select
+			p.payment_completed_no,
+			pd.products_nm,
+			p.rental_contract_no,
+			p.payment_count,
+			p.product_unit_price,
+			p.total_price,
+			p.payment_type,
+			p.payment_completed_date,
+			p.payment_status,
+			p.payment_count_period,
+			p.contract_period,
+			p.next_payment_date
+		from
+			payment p inner join sell_products sp
+			on p.sell_products_no = sp.sell_products_no
+			inner join products pd
+			on sp.products_no = pd.products_no
+		where
+			p.rental_contract_no = #{rentalContractNo} and p.payment_count_period = (select min(pm.payment_count_period)from payment pm)
+	</select>
+	
+	
+	<select id="getPaymentDetailList" resultMap="paymentResultMap">
+		select
+			p.payment_completed_no,
+			pd.products_nm,
+			p.rental_contract_no,
+			p.payment_count,
+			p.product_unit_price,
+			p.total_price,
+			p.payment_type,
+			p.payment_completed_date,
+			p.payment_status,
+			p.payment_count_period,
+			p.contract_period,
+			p.next_payment_date
+		from
+			payment p inner join sell_products sp
+			on p.sell_products_no = sp.sell_products_no
+			inner join products pd
+			on sp.products_no = pd.products_no
+		where
+			p.rental_contract_no = #{rentalContractNo}
+		order by
+			p.payment_completed_date DESC
+	</select>
+	
+	
 	
 	<select id="getRentalContractNo" resultType="String">
 		select

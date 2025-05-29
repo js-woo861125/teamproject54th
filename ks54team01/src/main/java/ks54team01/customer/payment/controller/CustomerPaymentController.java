@@ -35,6 +35,40 @@ public class CustomerPaymentController {
 	private final CustomerContractService customerContractService;
 	
 	
+	
+	@GetMapping("/detail")
+	public String getPaymentDetailList(@RequestParam("rentalContractNo") String rentalContractNo, Model model) {
+		
+		List<CustomerPayment> paymentDetail =  customerPaymentService.getPaymentDetailList(rentalContractNo);
+		
+		CustomerPayment firstPaymentDetail = customerPaymentService.getFirstPaymentDetail(rentalContractNo);
+		
+		String prodNm = firstPaymentDetail.getProdNm();
+		
+		String rentalContactNo = firstPaymentDetail.getRentalContractNo();
+		
+		String paymentType = firstPaymentDetail.getPaymentType();
+		
+		Integer paymentCount = firstPaymentDetail.getPaymentCount();
+		
+		Integer totalPrice = firstPaymentDetail.getTotalPrice();
+		
+		
+		
+		model.addAttribute("title", "주문상세내역");
+		model.addAttribute("paymentDetail", paymentDetail);
+		model.addAttribute("prodNm", prodNm);
+		model.addAttribute("rentalContactNo", rentalContactNo);
+		model.addAttribute("paymentType", paymentType);
+		model.addAttribute("paymentCount", paymentCount);
+		model.addAttribute("totalPrice", totalPrice);
+		
+		
+		return "customer/myPage/myPaymentDetailView";
+	}
+	
+	
+	
 	@PostMapping("/refund")
 	public ResponseEntity<String> addRefund(@RequestParam("orderId") String orderId, @RequestParam("paymentCompletedNo") String paymentCompletedNo
 										  , @RequestParam("paymentKey") String paymentKey, @RequestParam String refundReason
@@ -99,11 +133,11 @@ public class CustomerPaymentController {
 	    model.addAttribute("custId", custId);
 		
 		
-        List<CustomerDelivery> DeliveryList = customerPaymentService.getDeliveryListById(custId);
+        List<CustomerDelivery> deliveryList = customerPaymentService.getDeliveryListById(custId);
         
         int quantity = customerPaymentService.getQuantity(productsNum, entCeoNo);
         
-        model.addAttribute("DeliveryList", DeliveryList);
+        model.addAttribute("deliveryLists", deliveryList);
         model.addAttribute("quantity", quantity);
         
         log.info("quantity: {}", quantity);
@@ -161,11 +195,11 @@ public class CustomerPaymentController {
 		
 		
 		
-		List<CustomerPayment> PaymentList = customerPaymentService.getPaymentList(custId);
+		List<CustomerPayment> paymentList = customerPaymentService.getPaymentList(custId);
 		
 		
 		model.addAttribute("title", "주문 목록");
-		model.addAttribute("PaymentList", PaymentList);
+		model.addAttribute("paymentList", paymentList);
 		model.addAttribute("custId", custId);
 		
 		
@@ -282,11 +316,11 @@ public class CustomerPaymentController {
 	    model.addAttribute("custId", custId);
 		
 		
-        List<CustomerDelivery> DeliveryList = customerPaymentService.getDeliveryListById(custId);
+        List<CustomerDelivery> deliveryList = customerPaymentService.getDeliveryListById(custId);
         
         int quantity = customerPaymentService.getQuantity(productsNum, entCeoNo);
         
-        model.addAttribute("DeliveryList", DeliveryList);
+        model.addAttribute("deliveryList", deliveryList);
         model.addAttribute("quantity", quantity);
         
         log.info("quantity: {}", quantity);

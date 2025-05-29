@@ -75,7 +75,8 @@ public class WebConfig implements WebMvcConfigurer{
 		registry.addInterceptor(enterpriseLoginInterceptor)
 				.addPathPatterns("/enterprise/**")
 				.excludePathPatterns("/customer/member/pwCheck")
-				.excludePathPatterns("/manage/**") .excludePathPatterns("/favicon.ico")
+				.excludePathPatterns("/manage/**") 
+				.excludePathPatterns("/favicon.ico")
 				.excludePathPatterns("/error");
 		 
 		

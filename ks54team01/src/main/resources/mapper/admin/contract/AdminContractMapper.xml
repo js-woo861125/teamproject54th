@@ -22,6 +22,8 @@
 		<result column="contract_date" 					property="contDate" />
 		<result column="ent_nm"							property="entName" />
 		<result column="products_nm"					property="productName" />
+		<result column="ent_brno"						property="entBrno" />
+		
 	</resultMap>
 
 	<resultMap type="AdminContractDetail" id="contractDetailResultMap">	
@@ -62,9 +64,11 @@
 	<select id="getSearchContractList" parameterType="string" resultMap="contractResultMap">
 		/* 입점업체과 고객 렌탈 계약정보 조회 */
 		select
+			ec.ent_ceo_no,
 			rc.cust_id,
 			rc.ent_ceo_no,
 			ec.ent_nm ,
+			ec.ent_brno,
 			rc.sell_products_no,
 			p.products_nm ,
 			rc.rental_contract_status,
@@ -83,10 +87,23 @@
 			INNER JOIN products p 
 			ON sp.products_no = p.products_no
 		<where>
-			<if test="searchValue != null and searchValue !=''">
-				${searchKey} LIKE CONCAT('%', #{searchValue}, '%');
-			</if>
-		</where>
+        <if test="searchValue != null and searchValue != ''">
+            <choose>
+                <when test="searchKey == 'entBrno'">
+                    ec.ent_brno LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+                <when test="searchKey == 'entName'">
+                    ec.ent_nm LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+                <when test="searchKey == 'custId'">
+                    rc.cust_id LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+                <when test="searchKey == 'sellProdNo'">
+                    rc.sell_products_no LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+                </choose>
+        </if>
+    </where>
 	</select>	
 	
 	
