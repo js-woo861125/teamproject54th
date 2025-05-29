@@ -60,10 +60,10 @@ public class EnterprisePaymentController {
 	@GetMapping("/searchPaymentList")
 	public String getSearchPaymentList(String searchKey, String searchValue, Model model) {
 		
-		List<EnterprisePayment> PaymentList = enterprisePaymentService.getSearchPaymentList(searchKey, searchValue);
+		List<EnterprisePayment> paymentList = enterprisePaymentService.getSearchPaymentList(searchKey, searchValue);
 		
 		model.addAttribute("title", "주문 목록");
-		model.addAttribute("PaymentList", PaymentList);
+		model.addAttribute("paymentList", paymentList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
 		
@@ -75,10 +75,10 @@ public class EnterprisePaymentController {
 	@GetMapping("/paymentList")
 	public String getPaymentList(Model model) {
 		
-		List<EnterprisePayment> PaymentList = enterprisePaymentService.getPaymentList();
+		List<EnterprisePayment> paymentList = enterprisePaymentService.getPaymentList();
 		
 		model.addAttribute("title", "주문 목록");
-		model.addAttribute("PaymentList", PaymentList);
+		model.addAttribute("paymentList", paymentList);
 		
 		
 		return "enterprise/payment/paymentListView";

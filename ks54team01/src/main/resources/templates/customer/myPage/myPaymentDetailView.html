@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{customer/layout/myPageDefault}">
+	
+	
+	<!-- head 삽입공간 -->
+	
+	<head>
+		<style>
+			.tableFixed {
+				table-layout: fixed;
+				width: 100%;
+			}
+		
+			.tableFixed th {
+				width: 20%;
+			}
+		
+			.tableFixed td {
+				width: 80%;
+			}
+		</style>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+	</th:block>
+	
+	
+	<th:block layout:fragment="jsScript">
+	</th:block>
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+		<div>
+			<h2 class="text-center mb-10" th:text="${title}"></h2>
+		</div>
+		<div style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
+			<table>
+				<thead>
+					<tr>
+						<th class="text-muted font-heading" style="background-color: #f8f8f8;">상품정보</th>
+						<th class="text-muted font-heading" style="background-color: #f8f8f8;">결제금액</th>
+						<th class="text-muted font-heading" style="background-color: #f8f8f8;">상태</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<p th:text="${prodNm}" style="color: black; font-size: 20px;">상품명</p>
+							<span class="font-sm" th:text=" '계약번호: ' + ${rentalContactNo} + ' / '">계약번호</span>
+							<span class="font-sm" th:text="'수량: ' + ${paymentCount} + '개'">수량</span>
+						</td>
+						<td><span th:text="|₩${#numbers.formatInteger(totalPrice, 3, 'COMMA')}|" style="color: black; font-size: 20px;">결제금액</span></td>
+						<td><span th:text="${paymentType}" style="color: black; font-size: 20px;">상태</span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		
+		
+		<th:block th:if="${!#lists.isEmpty(paymentDetail)}" th:each="l : ${paymentDetail}">
+			<div class="table-responsive mt-100">
+				<h3 th:text="${l.paymentCompletedDate}">결제일자</h3>
+				<table class="table tableFixed">
+					<tbody style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
+						<tr>
+							<th class="text-muted font-heading" style="background-color: #f8f8f8;">결제번호</th>
+							<td><span class="ml-10" th:text="${l.paymentCompletedNo}">결제번호</span></td>
+						</tr>
+						<tr>
+							<th class="text-muted font-heading" style="background-color: #f8f8f8;">계약번호</th>
+							<td><span class="ml-10" th:text="${l.rentalContractNo}">계약번호</span></td>
+						</tr>
+						<tr>
+							<th class="text-muted font-heading" style="background-color: #f8f8f8;">결제방식</th>
+							<td><span class="ml-10" th:text="${l.paymentType}">결제방식</span></td>
+						</tr>
+						<tr>
+							<th class="text-muted font-heading" style="background-color: #f8f8f8;">결제금액</th>
+							<td><span class="ml-10" th:text="|₩${#numbers.formatInteger(l.totalPrice, 3, 'COMMA')}|">결제금액</span></td>
+						</tr>
+						<tr>
+							<th class="text-muted font-heading" style="background-color: #f8f8f8;">결제횟수</th>
+							<td><span class="ml-10" th:text="${l.paymentCountPeriod} + ' | ' +  ${l.contractPeriod}">결제횟수</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</th:block>
+		<th:block th:unless="${!#lists.isEmpty(paymentDetail)}">
+			<div>
+				<span>계약 없음</span>
+			</div>
+		</th:block>
+	</th:block>
+</html>

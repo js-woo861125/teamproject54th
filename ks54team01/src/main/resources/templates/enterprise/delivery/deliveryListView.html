@@ -101,7 +101,7 @@
 							</tr>
 						</thead>
 						<tbody class="text-center">
-							<tr th:if="${!#lists.isEmpty(DeliveryList)}" th:each="l : ${DeliveryList}">
+							<tr th:if="${!#lists.isEmpty(deliveryList)}" th:each="l : ${deliveryList}">
 								<td th:text="${l.adminDeliveryInfo.sellProdNo}">상품코드</td>
 								<td th:text="${l.adminDeliveryInfo.recipientNm}">Marvin McKinney</td>
 								<td th:text="${l.adminDeliveryInfo.delCompany}">직접배송</td>
@@ -125,7 +125,7 @@
 									</form>
 								</td>
 							</tr>
-							<tr th:unless="${!#lists.isEmpty(DeliveryList)}">
+							<tr th:unless="${!#lists.isEmpty(deliveryList)}">
                           		<td colspan="12">등록없음</td>
                             </tr>																						
 	

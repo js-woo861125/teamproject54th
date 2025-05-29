@@ -76,7 +76,7 @@
 								</tr>
 							</thead>
 							<tbody class="text-center">
-								<tr th:if="${!#lists.isEmpty(ContractList)}" th:each="l : ${ContractList}">
+								<tr th:if="${!#lists.isEmpty(contractList)}" th:each="l : ${contractList}">
 									
 									<td th:text="${l.entCeoNo}">입점업체코드 </td>
 									<td th:text="${l.entName}">상호 </td>
@@ -100,7 +100,7 @@
 									<td th:text="${l.rentCancelDate}">계약해지일자</td>
 									<td th:text="${l.contDate}">계약등록일자</td>
 								</tr>
-								<tr th:unless="${!#lists.isEmpty(ContractList)}">
+								<tr th:unless="${!#lists.isEmpty(contractList)}">
                                 	<td colspan="12">등록없음</td>
                                 </tr>
 								

@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <div class="dashboard-menu" th:fragment="myPageAsideFragment">
+    <div class="dashboard-menu sticky-top" th:fragment="myPageAsideFragment" style="top: 80px; z-index: 520;">
         <ul class="nav flex-column" role="tablist">
-            <li class="nav-item">
+            <li class="nav-item" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
                 <a class="nav-link" th:href="@{/customer/member/myAccount}"><i class="fi-rs-settings-sliders mr-10"></i>내 프로필</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
            		<a class="nav-link" th:href="@{/customer/payment/paymentList}">
                    <i class="fi-rs-shopping-bag mr-10"></i>주문내역
             	</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
             	<a class="nav-link" th:href="@{/customer/delivery/deliveryList}">
                    <i class="fi-rs-home mr-10"></i>배송지
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
             	<a class="nav-link" data-bs-toggle="collapse" href="#postSubmenu" role="button"
                    aria-expanded="false" aria-controls="postSubmenu">
                    <i class="fi-rs-marker mr-10"></i>게시글관리
                 </a>
-                <div class="collapse" id="postSubmenu">
+                <div class="collapse" id="postSubmenu" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
                     <ul class="nav flex-column ms-4">
                         <li class="nav-item">
                         	<a class="nav-link" th:href="@{/customer/transferBoard/myTransferBoardList}">양도</a>
@@ -31,13 +31,13 @@
                     </ul>
                 </div>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
             	<a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail"
                    role="tab" aria-controls="account-detail" aria-selected="true">
                    <i class="fi-rs-user mr-10"></i>계약
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
             	<a class="nav-link" th:href="@{/customer/login/memberLogin}">
             		<i class="fi-rs-sign-out mr-10"></i>Logout
             	</a>
