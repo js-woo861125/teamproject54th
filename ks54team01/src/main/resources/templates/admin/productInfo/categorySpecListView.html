@@ -92,18 +92,42 @@
 				            data: { 'specNo': specNo },
 				            dataType: 'json',
 				            success: function(response) {
-							    Swal.fire({
-							      title: "삭제 완료",
-							      text: "삭제되었습니다.",
-							      icon: "success"
-							    }).then(() => {
-							    	location.reload();
-		                        });
-		                    }
-		                });
-		            }
-		        });
-		    });	
+								if (response.success) {
+									Swal.fire({
+										title: "삭제 완료",
+										text: "삭제되었습니다.",
+										icon: "success"
+									}).then(() => {
+										location.reload();
+									});
+								} else {
+									Swal.fire({
+										title: "삭제 불가",
+										text: response.message || "삭제할 수 없습니다.",
+										icon: "error"
+									});
+								}
+							},
+							error: function(xhr) {
+								try {
+									const response = JSON.parse(xhr.responseText);
+									Swal.fire({
+										title: "삭제 불가",
+										text: response.message || "삭제할 수 없습니다.",
+										icon: "error"
+									});
+								} catch (e) {
+									Swal.fire({
+										title: "오류",
+										text: "삭제 중 오류가 발생했습니다.",
+										icon: "error"
+									});
+								}
+							}
+						});
+					}
+				});
+			});	
 		</script>	
 	</th:block>
 	
