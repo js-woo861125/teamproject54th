@@ -69,11 +69,13 @@ public class CustomerDeliveryController {
 		
 		log.info("회원아이디 : {}", custId);
 		
-		
-		List<CustomerDeliveryList> DeliveryList = customerDeliveryService.getDeliveryList(custId);
+
+		List<CustomerDeliveryList> deliveryList = customerDeliveryService.getDeliveryList(custId);
+
+
 		
 		model.addAttribute("title", "배송지 목록");
-		model.addAttribute("DeliveryList", DeliveryList);
+		model.addAttribute("deliveryList", deliveryList);
 		
 		
 		return "customer/myPage/myDeliveryListView";

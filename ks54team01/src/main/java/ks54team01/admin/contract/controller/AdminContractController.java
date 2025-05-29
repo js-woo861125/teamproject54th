@@ -28,9 +28,16 @@ public class AdminContractController {
 										@RequestParam(name = "searchValue", required = false) String searchValue, 
 										Model model) {
 		
+
+
 		List<AdminContract> contractList;
+
 		
-//		 MyBatis 매퍼의 parameterType이 Map이므로, Map을 생성하여 파라미터로 전달합니다.
+
+		model.addAttribute("title", "입점업체&고객 계약목록");
+		model.addAttribute("searchKey", searchKey);
+		model.addAttribute("searchValue", searchValue);
+
 		
 		
 		Map<String, Object> paramMap = new HashMap<>();
@@ -81,10 +88,10 @@ public class AdminContractController {
 	@GetMapping("/contractList")
 	public String getContractList(Model model) {
 		
-		List<AdminContract> ContractList = adminContractService.getContractList();
+		List<AdminContract> contractList = adminContractService.getContractList();
 		
 		model.addAttribute("title", "입점업체&고객 계약목록");
-		model.addAttribute("ContractList", ContractList);
+		model.addAttribute("contractList", contractList);
 		
 		return "admin/contract/contractListView";
 	}

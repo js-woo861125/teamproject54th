@@ -222,7 +222,7 @@
                                     
 								<div class="product-list mb-50">
 									<div class="overflow-auto" style="height: 200px;">
-										<th:block th:if="${!#lists.isEmpty(DeliveryList)}" th:each="l : ${DeliveryList}">
+										<th:block th:if="${!#lists.isEmpty(deliveryList)}" th:each="l : ${deliveryList}">
 											<!-- 상품1 -->
 											<div class="product-cart-wrap border col-12" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);"
 												 th:data-del-no="${l.delNo}" th:data-del-nm="${l.delNm}" th:data-recipient-phone="${l.recipientPhone}" th:data-del-request="${l.delRequest}">
@@ -244,11 +244,11 @@
 													</div>
 												</div>
 											</div>
-											<div th:unless="${!#lists.isEmpty(DeliveryList)}">
+											<div th:unless="${!#lists.isEmpty(deliveryList)}">
 												<div class="product-cart-wrap border col-12" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);" th:text="${사용가능한 배송지가 없습니다.}"></div>
 											</div>
 										</th:block>
-										<th:block th:unless="${!#lists.isEmpty(DeliveryList)}">
+										<th:block th:unless="${!#lists.isEmpty(deliveryList)}">
 											<div class="product-cart-wrap border col-12 justify-content-center mt-30" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
 												<span class="mt-50 mb-50" style="color: black; font-size: 20px;"> 배송지가 없습니다.</span>
 											</div>

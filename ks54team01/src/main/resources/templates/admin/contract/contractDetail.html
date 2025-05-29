@@ -42,7 +42,7 @@
 								</tr>
 							</thead>
 							<tbody class="text-center">
-								<tr th:if="${!#lists.isEmpty(ContractDetailList)}" th:each="l : ${ContractDetailList}">
+								<tr th:if="${!#lists.isEmpty(contractDetailList)}" th:each="l : ${contractDetailList}">
 									<td th:text="${l.paidInRound}+'회차'">회차</td>
 									<td th:text="|₩ ${#numbers.formatInteger(l.paymentAmount,3,'COMMA')}|"></td>			
 									<td th:text="|₩ ${#numbers.formatInteger(l.penaltyFee,3,'COMMA')}|">위약금</td>
@@ -51,7 +51,7 @@
 									<td th:text="${l.unpaidStatus}">납입여부</td>
 									<td th:text="${l.rentalContType}">계약유형</td>
 								</tr>
-								<tr th:unless="${!#lists.isEmpty(ContractDetailList)}">
+								<tr th:unless="${!#lists.isEmpty(contractDetailList)}">
                                 	<td colspan="12">등록없음</td>
                                 </tr>
 							</tbody>

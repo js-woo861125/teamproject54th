@@ -46,6 +46,25 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 	
 	
 	@Override
+	public CustomerPayment getFirstPaymentDetail(String rentalContractNo) {
+		
+		CustomerPayment customerPayment = customerPaymentMapper.getFirstPaymentDetail(rentalContractNo);
+		
+		return customerPayment;
+	}
+	
+	
+	@Override
+	public List<CustomerPayment> getPaymentDetailList(String rentalContractNo) {
+		
+		List<CustomerPayment> customerPayment = customerPaymentMapper.getPaymentDetailList(rentalContractNo);
+		
+		return customerPayment;
+	}
+	
+	
+	
+	@Override
 	public String getRentalContractNo(String paymentCompletedNo) {
 
 		String contractNo = customerPaymentMapper.getRentalContractNo(paymentCompletedNo);
@@ -130,7 +149,7 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 	
 	private boolean requestAutoBilling(CustomerPayment payment) {
 	    try {
-	        String newOrderId = "orderId_" + UUID.randomUUID().toString().replace("-", "");
+	        String newOrderId = "order_id_" + UUID.randomUUID().toString().replace("-", "");
 	        String billingKey = payment.getBillingKey();
 	        
 	        String body = String.format("""
@@ -195,7 +214,7 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 				// 새 결제 데이터 준비
 				payment.setPaymentCountPeriod(nowPeriod + 1); // 회차 +1
 				payment.setPaymentCompletedNo("pay_" + UUID.randomUUID().toString().replace("-", ""));
-				payment.setOrderId("orderId_" + UUID.randomUUID().toString().replace("-", ""));
+				payment.setOrderId("order_id_" + UUID.randomUUID().toString().replace("-", ""));
 				payment.setPaymentStatus("정상결제상태");
 				payment.setNextPaymentDate(null);
 				if(maxPeriod > nowPeriod + 1) {					
@@ -325,7 +344,7 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 	@Override
 	public void addBillingPayment(CustomerPayment customerPayment, String rentalContractNo) {
 		
-		String orderId = "orderId_" + UUID.randomUUID().toString().replace("-", "");
+		String orderId = "order_id_" + UUID.randomUUID().toString().replace("-", "");
 		customerPayment.setOrderId(orderId);
 		
 		String billingKey = customerPayment.getBillingKey();
