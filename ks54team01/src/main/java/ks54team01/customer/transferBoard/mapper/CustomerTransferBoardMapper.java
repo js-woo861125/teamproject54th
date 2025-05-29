@@ -12,8 +12,7 @@ import ks54team01.customer.transferBoard.domain.CustomerTransferBoard;
 public interface CustomerTransferBoardMapper {
 	
 	// 양도 신청
-	int applyTransfer(@Param("customerTransferBoard") CustomerTransferBoard customerTransferBoard,
-		    @Param("customerId") String customerId);
+	int applyTransfer(CustomerTransferBoard customerTransferBoard);
 	
 	// 양도 게시글 삭제
 	int removeMyTransferBoard(String transferBoardNum);
@@ -41,5 +40,4 @@ public interface CustomerTransferBoardMapper {
 	
 	// 양도 게시글 목록 조회
 	List<CustomerTransferBoard> getTransferBoardList(Map<String, Object> searchParamMap);
-	
 }

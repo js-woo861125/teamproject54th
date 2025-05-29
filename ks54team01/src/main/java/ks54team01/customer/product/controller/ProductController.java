@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -27,7 +28,9 @@ public class ProductController {
 	
 	
 	@GetMapping("/productDetailByProd")
-	public String getProductDetailByProd(@RequestParam(value="productsNum") String productsNum, Model model) {
+	public String getProductDetailByProd(@RequestParam(value="productsNum") String productsNum
+									   , Model model
+									   , @ModelAttribute("addResult") String addResult) {
 		
 		List<CustomerProduct> productDetailByProd = customerProductService.getProductDetailByProd(productsNum);
 		
@@ -36,6 +39,8 @@ public class ProductController {
 		log.info("productDetailByProd:{}", productDetailByProd);
 		
 		model.addAttribute("productDetailByProd", productDetailByProd);
+		
+		model.addAttribute("addResult", addResult);
 		
 		
 		return "customer/product/productDetailView";

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 import ks54team01.customer.transferBoard.domain.CustomerTransferBoard;
@@ -48,7 +49,8 @@ public class CustomerWishListController {
 	
 	@PostMapping("/addMyWishList")
 	public String addMyWishList(@RequestParam(name="productsNum") String productsNum
-							   , HttpSession session) {
+							   , HttpSession session
+							   , RedirectAttributes redirectAttributes) {
 		
 		log.info("productsNum: {}", productsNum);
 		
@@ -62,8 +64,13 @@ public class CustomerWishListController {
 		
 		int isDuplicate = customerWishListMapper.isDuplicateProductCheck(productsNum, customerId);
 		
-		if(isDuplicate == 0) customerWishListService.addMyWishList(customerWishList);
+		redirectAttributes.addFlashAttribute("addResult", "duplicate");
 		
+		if(isDuplicate == 0) {
+			customerWishListService.addMyWishList(customerWishList);			
+			redirectAttributes.addFlashAttribute("addResult", "success");
+		}
+
 		return "redirect:/customer/product/productDetailByProd?productsNum=" + productsNum;
 	}
 	
