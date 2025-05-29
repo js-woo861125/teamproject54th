@@ -14,24 +14,32 @@ public class AdminLoginInterceptor implements HandlerInterceptor{
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		System.out.println("====[ 인터셉터 진입 ]====");
 		
-		HttpSession session = request.getSession();
-		
-		String adminId = (String) session.getAttribute("adminId");
-		
-		boolean isProcess = true;
-		
-		if(adminId == null) {
-			isProcess = false;
+		HttpSession session = request.getSession(false);
+		if (session == null) {
 			response.sendRedirect("/admin/login");
-		}else {
-			String memberType = (String) session.getAttribute("memberType");
-			if(!"플랫폼직원".equals(memberType)) {
-				isProcess = false;
-				response.sendRedirect("/admin/login");
-			}
+			return false;
 		}
 		
-		return isProcess;
+		Object loginAdmin = session.getAttribute("loginAdmin");
+		if (loginAdmin == null) {
+			response.sendRedirect("/admin/login");
+			return false;
+		}
+
+		
+	    
+		
+		String adminId = (String) session.getAttribute("adminId");
+		String memberType = (String) session.getAttribute("memberType");
+		
+		
+		if(adminId == null || !"플랫폼직원".equals(memberType)) {
+			response.sendRedirect("/admin/login");
+	        return false;
+		}
+		
+		return true;
 	}
 }
