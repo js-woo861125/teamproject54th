@@ -21,6 +21,7 @@ public class AdminContractDetailController {
 	
 	private final AdminContractService adminContractService;
 	
+	//계약상세조회
 	@GetMapping("/contractDetail")
 	public String getContractDetail(@RequestParam(value = "rentalContNo") String rentalContNo, Model model) {
 		
