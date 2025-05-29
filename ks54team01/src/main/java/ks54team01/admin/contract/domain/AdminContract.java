@@ -17,6 +17,7 @@ public class AdminContract {
 	private String rentEndDate;
 	private String rentCancelDate;
 	private String contDate;
+	private String entBrno;
 	
 	private String entName;
 	private String productName;

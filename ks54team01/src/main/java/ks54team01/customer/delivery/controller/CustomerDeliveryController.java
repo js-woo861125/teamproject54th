@@ -69,6 +69,7 @@ public class CustomerDeliveryController {
 		
 		log.info("회원아이디 : {}", custId);
 		
+		
 		List<CustomerDeliveryList> DeliveryList = customerDeliveryService.getDeliveryList(custId);
 		
 		model.addAttribute("title", "배송지 목록");
