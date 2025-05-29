@@ -74,7 +74,9 @@ public class CustomerAssigneeBoardController {
 		
 		log.info("customerId: {}", customerId);
 		
-		customerAssigneeBoardService.addAssigneeBoard(customerAssigneeBoard, customerId);
+		customerAssigneeBoard.setCustomerId(customerId);
+		
+		customerAssigneeBoardService.addAssigneeBoard(customerAssigneeBoard);
 		
 		return "redirect:/customer/assigneeBoard/assigneeBoardList";
 	}

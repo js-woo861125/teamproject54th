@@ -115,12 +115,12 @@
   		</association>
   	</resultMap>	
 	
-	<insert id="applyTransfer">
+	<insert id="applyTransfer" parameterType="CustomerTransferBoard">
   		/* 신청 */
   		INSERT INTO transfer_rental_contract
 		(transfer_rental_contract_no, ent_ceo_no, ent_emp_id, sell_products_no, cust_id, rental_contract_no, transfer_board_no, transfer_rental_start_date, transfer_rental_end_date)
 		VALUES
-		(#{customerTransferBoard.transferRentalContractNum}, #{customerTransferBoard.customerSellProduct.entCeoNo}, #{customerTransferBoard.customerSellProduct.entEmpId}, #{customerTransferBoard.sellProductsNum}, #{customerId}, #{customerTransferBoard.rentalContractNum}, #{customerTransferBoard.transferBoardNum}, NOW(), #{customerTransferBoard.customerContract.rentalEndDate});
+		(#{transferRentalContractNum}, #{customerSellProduct.entCeoNo}, #{customerSellProduct.entEmpId}, #{sellProductsNum}, #{customerId}, #{rentalContractNum}, #{transferBoardNum}, NOW(), #{customerContract.rentalEndDate});
   	</insert>
 	
 	<update id="removeMyTransferBoard" parameterType="string">
@@ -156,42 +156,45 @@
   		/* 등록 */
   		INSERT INTO transfer_board
 		(transfer_board_no, cust_id, rental_contract_no, sell_products_no, model_no, item_no, product_category_no, del_info_no, transfer_title, transfer_content, rental_fee, remaining_months, contract_end_date, individual_grants, board_valid_date, transfer_rental_processing_status, register_date, revision_date)
-		VALUES(#{transferBoardNum}, #{customerId}, #{rentalContractNum}, #{sellProductsNum}, #{modelNum}, #{itemNum}, #{productCategoryNum}, #{customerDeliveryInfo.delInfoNo}, #{transferTitle}, #{transferContent}, #{rentalFee}, #{remainingMonths}, #{contractEndDate}, #{individualGrants}, DATE_ADD(NOW(), INTERVAL 1 MONTH), '대기중', NOW(), NOW());
+		VALUES
+		(#{transferBoardNum}, #{customerId}, #{rentalContractNum}, #{sellProductsNum}, #{modelNum}, #{itemNum}, #{productCategoryNum}, #{customerDeliveryInfo.delInfoNo}, #{transferTitle}, #{transferContent}, #{rentalFee}, #{remainingMonths}, #{contractEndDate}, #{individualGrants}, DATE_ADD(NOW(), INTERVAL 1 MONTH), '대기중', NOW(), NOW());
   	</insert>
 
 	<select id="getMyContractInfo" parameterType="string" resultMap="transferBoardResultMap">
   		/* 양도 게시글 등록 시 선택한 계약 정보 조회 */
   		SELECT 
-			rc.rental_contract_no ,
-			p.products_nm ,
-			p.model_no ,
-			p.item_no ,
-			product_category_no ,
-			sp.sell_products_no ,
-			rc.sell_products_no ,
-			rc.contract_quantity ,
-			rc.contract_period,
-			rc.rental_start_date ,
-			rc.rental_end_date ,
-			CEIL(DATEDIFF(rc.rental_end_date, NOW()) / 30) AS remaining_months,
-			sp.final_price ,
-			di.del_info_no ,
-			dl.delivery_addr 
+			rc.rental_contract_no,
+		    p.products_nm,
+		    p.model_no,
+		    p.item_no,
+		    p.product_category_no,
+		    sp.sell_products_no,
+		    rc.sell_products_no,
+		    rc.contract_quantity,
+		    rc.contract_period,
+		    rc.rental_start_date,
+		    rc.rental_end_date,
+		    CEIL(DATEDIFF(rc.rental_end_date, NOW()) / 30) AS remaining_months,
+		    sp.final_price,
+		    di.del_info_no,
+		    dl.delivery_addr
 		FROM 
 			rental_contract rc LEFT JOIN sell_products sp
-			ON rc.sell_products_no = sp.sell_products_no 
+		    ON rc.sell_products_no = sp.sell_products_no
 			INNER JOIN products p
-			ON sp.products_no = p.products_no
+		    ON sp.products_no = p.products_no
+			INNER JOIN payment pm
+			ON rc.rental_contract_no = pm.rental_contract_no 
 			INNER JOIN delivery_information di
-			ON rc.cust_id = di.cust_id 
+		    ON pm.payment_completed_no = di.payment_completed_no 
 			INNER JOIN delivery_list dl
-			ON di.delivery_location_no = dl.delivery_location_no
+		    ON di.delivery_location_no = dl.delivery_location_no
 		WHERE 
 			rc.rental_contract_no = #{rentalContractNum};
   	</select>
   	
 	<select id="getMyContractListByCustomerId" parameterType="string" resultMap="transferBoardResultMap">
-  		/* 양도 게시글 등록 클릭 시 유효한 렌탈 목록 조회 */
+  		/* 양도 게시글 등록 클릭 시 유효한 렌탈 목록 조회 ㅠ*/
   		SELECT 
 			rc.rental_contract_no ,
 			p.products_nm ,
@@ -202,7 +205,8 @@
 			INNER JOIN products p
 			ON sp.products_no = p.products_no 
 		WHERE 
-			rc.cust_id = #{customerId};
+			rc.cust_id = #{customerId}
+			AND rc.rental_contract_no = '2. 계약최종완료';
   	</select>
 
 

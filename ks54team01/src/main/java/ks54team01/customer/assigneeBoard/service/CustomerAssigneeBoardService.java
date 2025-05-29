@@ -16,7 +16,7 @@ public interface CustomerAssigneeBoardService {
 	void modifyAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard);
 	
 	// 양수 게시글 등록
-	void addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard, String customerId);
+	void addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard);
 	
 	// 양수 게시글 등록 시 카테고리 선택
 	List<CustomerAssigneeBoard> selectAssigneeBoardProduct(String productCategoryNum);
