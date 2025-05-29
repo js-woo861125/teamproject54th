@@ -39,10 +39,10 @@ public class AdminPaymentController {
 	@GetMapping("/searchPaymentList")
 	public String getSearchPaymentList(String searchKey, String searchValue, Model model) {
 		
-		List<AdminPayment> PaymentList = adminPaymentService.getSearchPaymentList(searchKey, searchValue);
+		List<AdminPayment> paymentList = adminPaymentService.getSearchPaymentList(searchKey, searchValue);
 		
 		model.addAttribute("title", "결제내역");
-		model.addAttribute("PaymentList", PaymentList);
+		model.addAttribute("paymentList", paymentList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
 		
@@ -53,10 +53,10 @@ public class AdminPaymentController {
 	@GetMapping("/paymentList")
 	public String getPaymentList(Model model) {
 		
-		List <AdminPayment> PaymentList = adminPaymentService.getPaymentList();
+		List <AdminPayment> paymentList = adminPaymentService.getPaymentList();
 		
 		model.addAttribute("title", "결제내역");
-		model.addAttribute("PaymentList", PaymentList);
+		model.addAttribute("paymentList", paymentList);
 		
 		return "admin/payment/paymentListView";
 	}

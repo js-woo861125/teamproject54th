@@ -74,6 +74,7 @@
 			*/
 			$('.remove-btn').click(e => {
 				e.preventDefault();
+				
 				const modelNo = $(e.target).data('modelNo');
 				
 				Swal.fire({
@@ -89,16 +90,40 @@
 						$.ajax({  
 				            url: '/admin/productInfo/removeModel',
 				            method: 'post',
-				            data: { 'modelNo': modelNo },
+				            data: { modelNo },
 				            dataType: 'json',
 				            success: function(response) {
-							    Swal.fire({
-							      title: "삭제 완료",
-							      text: "삭제되었습니다.",
-							      icon: "success"
-							    }).then(() => {
-							    	location.reload();
-		                        });
+								if (response.success) {
+									Swal.fire({
+										title: "삭제 완료",
+										text: "삭제되었습니다.",
+										icon: "success"
+									}).then(() => {
+										location.reload();
+									});
+								} else {
+									Swal.fire({
+										title: "삭제 불가",
+										text: response.message || "삭제할 수 없습니다.",
+										icon: "error"
+									});
+								}
+							},
+							error: function(xhr) {
+								try {
+									const response = JSON.parse(xhr.responseText);
+									Swal.fire({
+										title: "삭제 불가",
+										text: response.message || "삭제할 수 없습니다.",
+										icon: "error"
+									});
+								} catch (e) {
+									Swal.fire({
+										title: "오류",
+										text: "삭제 중 오류가 발생했습니다.",
+										icon: "error"
+									});
+								}
 		                    }
 		                });
 		            }
@@ -121,8 +146,8 @@
 	                   <div class="col-lg-2 col-md-3 col-12">
 	                       <select class="form-select" name="searchKey">
 	                           <option value="modelName" th:selected="${searchKey == 'modelName'}">모델명</option>
-	                           <option value="brandInfo.brandName" th:selected="${searchKey == 'brandInfo.brandName'}">브랜드</option>
 	                           <option value="itemInfo.itemName" th:selected="${searchKey == 'itemInfo.itemName'}">품목</option>
+	                           <option value="brandInfo.brandName" th:selected="${searchKey == 'brandInfo.brandName'}">브랜드</option>
 	                       </select>
 	                   </div>
 	                   <div class="col-lg-4 col-md-5">
