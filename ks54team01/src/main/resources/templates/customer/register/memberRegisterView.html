@@ -89,8 +89,8 @@
 	<th:block layout:fragment="jsScript">
 		<script>
 			/**
-			* 아이디 중복체크
-			*/
+			 * 아이디 중복체크
+			 */
 			$('#idCheckBtn').click(function() {
 			    let memberId = $('#memberId').val().trim();
 			
@@ -137,8 +137,8 @@
 			});
 			
 			/**
-			* 비밀번호 유효성 검증
-			*/
+			 * 비밀번호 유효성 검증
+			 */
 			$(function () {
 			    const $pw = $('#memberPw'), $cf = $('#memberPwConfirm'), $msg = $('#passwordMatchMessage');
 			    
@@ -159,8 +159,8 @@
 			
 			    
 			    /**
-				* 비밀번호 일치 여부
-				*/
+				 * 비밀번호 일치 여부
+				 */
 			    function checkPasswordMatch() {
 			        const pw = $pw.val();
 			        const cf = $cf.val();
@@ -192,8 +192,8 @@
 
 			
 			/**
-			* 회원등록 폼 유효성 검증 및 페이지 이동
-			*/
+			 * 회원등록 폼 유효성 검증 및 페이지 이동
+			 */
 			$('#goNextBtn').click((e) => {
 			    e.preventDefault();
 			    

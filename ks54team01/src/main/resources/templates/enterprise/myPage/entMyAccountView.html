@@ -11,26 +11,6 @@
 		
 	</th:block>
 	
-	<th:block layout:fragment="jsScript">
-		<script>
-			/**
-			 * 전화번호 조합
-			 */
-			function setPhoneValue() {
-			    const phone = `${$('#entEmpPhone1').val()}-${$('#entEmpPhone2').val()}-${$('#entEmpPhone3').val()}`;
-			    $('#entEmpPhone').val(phone);
-			}
-			
-			
-			$('#modifyMemberBtn').click(function(e) {
-		        e.preventDefault();
-		        
-		        setPhoneValue();
-	                  $('#modifyMemberForm').submit();
-		    });
-			
-		</script>
-	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
 	<th:block layout:fragment="content">
@@ -40,11 +20,11 @@
 	        </div>
 	    </div>
 	     <div class="card mb-4 col-10">
-        	<form id="modifyMemberForm" th:action="@{/enterprise/myAccount}" method="post">
+        	<form id="entModifyForm" th:action="@{/enterprise/myAccount}" method="post">
 	            <header class="card-header">
 	                <div class="row align-items-end">
 	                    <div class="col-md-2 col-2 ms-auto">
-	                        <button type="submit" id="modifyMemberBtn"
+	                        <button type="submit" id="entModifyBtn"
 	                        		class="btn btn-success w-100 rounded font-lg hover-up text-white justify-content-center fs-6">수정완료</button>
 	                    </div>
 	                    <div class="col-md-2 col-2">
@@ -57,7 +37,7 @@
 	                <div class="card-body">
 	                    <div class="row">
 	                        <div class="col-md-2">
-	                            <h4>1. 수정 항목</h4>
+	                            <h4>수정 항목</h4>
 	                        </div>
 	                        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
 							<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
@@ -70,36 +50,31 @@
 			                                	   placeholder="회원의 아이디를 입력해주세요" class="form-control col-8 fs-6" readonly />
 			                            </div>                        		
 	                        		</div>                        		
-	                        		<div class="col-6">	                        		
-			                            <div class="mb-4">
-			                                <label class="form-label fs-6" for="memberPw">비밀번호</label>
-			                                <input type="text" id="memberPw" name="memberPw" th:value="*{memberPw}"
-			                                	   placeholder="회원의 비밀번호를 입력해주세요" class="form-control fs-6" />
-			                            </div>
-	                        		</div>
-	                        	</div>                     		
+	                        	</div>
 	          					<div class="row">
 	                            	<div class="col-6">
 	                            		<div class="row align-items-end">
-	                            			<input type="hidden" id="entEmpPhone" name="entEmpPhone" class="form-control " />
-	                            			<div class="col-4">
-					                            <div class="mb-4">
-					                                <label class="form-label fs-6" for="entEmpPhone">연락처</label>
-					                            	<input type="text" class="form-control" id ="entEmpPhone1" name="entEmpPhone1" th:value="${entEmpPhone1}" readonly />
-					                            </div>
-	                            			</div>
-	                            			<div class="col-4">
-	                            				<div class="mb-4">
-					                                <input type="text" id="entEmpPhone2" name="entEmpPhone2" th:value="${entEmpPhone2}"
-					                                	   placeholder="중간 연락처" class="form-control fs-6" />
-	                            				</div>
-	                            			</div>
-	                            			<div class="col-4">
-	                            				<div class="mb-4">
-					                                <input type="text" id="entEmpPhone3" name="entEmpPhone3" th:value="${entEmpPhone3}"
-					                                	   placeholder="마지막 연락처" class="form-control fs-6" />
-	                            				</div>
-	                            			</div>
+	                            			<fieldset class="row align-items-end border-0">
+				                                <legend class="form-label fs-6">연락처</legend>
+		                            				<input type="hidden" id="entEmpPhone" name="entEmpPhone" class="form-control " />
+			                            			<div class="col-4">
+							                            <div class="mb-4">
+							                            	<input type="text" class="form-control" id ="entEmpPhone1" name="entEmpPhone1" th:value="${entEmpPhone1}" readonly />
+							                            </div>
+			                            			</div>
+			                            			<div class="col-4">
+			                            				<div class="mb-4">
+							                                <input type="text" id="entEmpPhone2" name="entEmpPhone2" th:value="${entEmpPhone2}"
+							                                	   placeholder="중간 연락처" class="form-control fs-6" />
+			                            				</div>
+			                            			</div>
+			                            			<div class="col-4">
+			                            				<div class="mb-4">
+							                                <input type="text" id="entEmpPhone3" name="entEmpPhone3" th:value="${entEmpPhone3}"
+							                                	   placeholder="마지막 연락처" class="form-control fs-6" />
+			                            				</div>
+			                            			</div>
+		                            		</fieldset>
 	                            		</div>
 	                            	</div>
 	                            </div>
@@ -108,14 +83,14 @@
 							    	<div class="row">
 						           		<div class="col-6">
 							                <div class="mb-4">
-							                     <label class="form-label fs-6" for="entEmpName">대표 이름</label>
+							                     <label class="form-label fs-6" for="entEmpName">이름</label>
 							                     <input type="text" id="entEmpName" name="entCeoName" th:value="*{entEmpName}"
 							                     	   placeholder="이름을 입력해주세요" class="form-control fs-6" />
 							                </div>
 						           		</div>
 						           		<div class="col-6">
 							                <div class="mb-4">
-							                     <label class="form-label fs-6" for="entEmpEmail">대표 이메일</label>
+							                     <label class="form-label fs-6" for="entEmpEmail">이메일</label>
 							                     <input type="text" id="entEmpEmail" name="entEmpEmail" th:value="*{entEmpEmail}"
 							                     	   placeholder="이메일을 입력해주세요" class="form-control fs-6" />
 							                </div>
@@ -124,14 +99,18 @@
 							    	<div class="row">
 						           		<div class="col-6">
 							                <div class="mb-4">
-							                     <label class="form-label fs-6" for="entCeoAddr">대표 주소</label>
+							                     <label class="form-label fs-6" for="entCeoAddr">주소</label>
+							                     <div class="d-flex align-items-center mb-2">
+				                                    <input type="text" class="form-control me-2" id="memberZip" name="memberZip" placeholder="우편번호" readonly disabled />
+				                                    <button type="button" id="daumPostBtn" class="btn btn-outline-secondary py-1 px-2">우편번호찾기</button>
+				                                 </div>
 							                     <input type="text" id="entCeoAddr" name="entCeoAddr" th:value="*{entCeoAddr}"
 							                     	   placeholder="주소를 입력해주세요" class="form-control fs-6" />
 							                </div>
 						           		</div>
 						           		<div class="col-6">
 							                <div class="mb-4">
-							                     <label class="form-label fs-6" for="entCeoDaddr">대표 상세주소</label>
+							                     <label class="form-label fs-6" for="entCeoDaddr">상세주소</label>
 							                     <input type="text" id="entCeoDaddr" name="entCeoDaddr" th:value="*{entCeoDaddr}"
 							                     	   placeholder="상세주소를 입력해주세요" class="form-control fs-6" />
 							                </div>
@@ -140,14 +119,14 @@
 							    	<div class="row">
 						           		<div class="col-6">
 							                <div class="mb-4">
-							                     <label class="form-label fs-6" for="entBank">대표 은행명</label>
+							                     <label class="form-label fs-6" for="entBank">은행명</label>
 							                     <input type="text" id="entBank" name="entBank" th:value="*{entBank}"
 							                     	   placeholder="은행명을 입력해주세요" class="form-control fs-6" />
 							                </div>
 						           		</div>
 						           		<div class="col-6">
 							                <div class="mb-4">
-							                     <label class="form-label fs-6" for="entBank">대표 계좌번호</label>
+							                     <label class="form-label fs-6" for="entBankNum">계좌번호</label>
 							                     <input type="text" id="entBankNum" name="entBankNum" th:value="*{entBankNum}"
 							                     	   placeholder="계좌번호를 입력해주세요" class="form-control fs-6" />
 							                </div>
@@ -159,14 +138,14 @@
 							    	<div class="row">
 						           		<div class="col-6">
 							                <div class="mb-4">
-							                     <label class="form-label fs-6" for="entEmpName">직원 이름</label>
+							                     <label class="form-label fs-6" for="entEmpName">이름</label>
 							                     <input type="text" id="entEmpName" name="entEmpName" th:value="${entInfo != null and entInfo.entEmpName != null ? entInfo.entEmpName : ''}"
 							                     	   placeholder="이름을 입력해주세요" class="form-control fs-6" />
 							                </div>
 						           		</div>
 						           		<div class="col-6">
 							                <div class="mb-4">
-							                     <label class="form-label fs-6" for="entEmpEmail">직원 이메일</label>
+							                     <label class="form-label fs-6" for="entEmpEmail">이메일</label>
 							                     <input type="text" id="entEmpEmail" name="entEmpEmail" th:value="${entInfo != null and entInfo.entEmpEmail != null ? entInfo.entEmpEmail : ''}"
 							                     	   placeholder="이메일을 입력해주세요" class="form-control fs-6" />
 							                </div>
@@ -175,13 +154,27 @@
 							    	<div class="row">
 						           		<div class="col-6">
 							                <div class="mb-4">
-							                     <label class="form-label fs-6" for="entPosition">직원 직책</label>
+							                     <label class="form-label fs-6" for="entPosition">직책</label>
 							                     <input type="text" id="entPosition" name="entPosition" th:value="*{entPosition}"
 							                     	   placeholder="직책을 입력해주세요" class="form-control fs-6" readonly />
 							                </div>
 						           		</div>
 					           		</div>
 						    	</div>
+						    	<div class="row">
+		                            <div class="col-md-6 mb-3">
+		                                <label class="form-label" for="memberPw">비밀번호</label>
+		                                <input type="password" class="form-control" id="memberPw" name="memberPw" placeholder="기존 비밀번호" />
+		                            </div>
+		                      	</div>
+	                            <div class="row">
+		                            <div class="col-md-6 mb-3">
+		                                <input type="password" class="form-control" id="newPw" name="newPw" placeholder="새 비밀번호 (**변경시)" />
+		                            </div>
+		                            <div class="col-md-6 mb-3">
+		                                <input type="password" class="form-control" id="newPwConfirm" name="newPwConfirm" placeholder="새 비밀번호 확인 (**변경시)" />
+		                            </div>
+	                            </div>
 						    </div>
 						</div>
 					</div>
@@ -189,4 +182,157 @@
 			</form>
 		</div>
 	</th:block>
+	<th:block layout:fragment="jsScript">
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+		<script>
+			/**
+			 * 주소입력
+			 */
+			$('#daumPostBtn').click(function(e){
+				new daum.Postcode({
+		            oncomplete: function(data) {
+		                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+		
+		                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+		                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+		                var addr = ''; // 주소 변수
+		                var extraAddr = ''; // 참고항목 변수
+		
+		                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+		                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+		                    addr = data.roadAddress;
+		                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+		                    addr = data.jibunAddress;
+		                }
+		
+		                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+		                if(data.userSelectedType === 'R'){
+		                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+		                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+		                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+		                        extraAddr += data.bname;
+		                    }
+		                    // 건물명이 있고, 공동주택일 경우 추가한다.
+		                    if(data.buildingName !== '' && data.apartment === 'Y'){
+		                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+		                    }
+		                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+		                    if(extraAddr !== ''){
+		                        extraAddr = ' (' + extraAddr + ')';
+		                    }
+		                    // 조합된 참고항목을 해당 필드에 넣는다.
+		                    document.getElementById("entCeoAddr").value = extraAddr;
+		                
+		                } else {
+		                    document.getElementById("entCeoAddr").value = '';
+		                }
+		                document.getElementById("memberZip").value = data.zonecode;
+		                document.getElementById("entCeoAddr").value = addr;
+		                $('#entCeoDaddr').prop('disabled', false);
+		                // 커서를 상세주소 필드로 이동한다.
+		                document.getElementById("entCeoDaddr").focus();
+		            }
+		        }).open();
+			});
+		
+			
+		
+			/**
+			 * 전화번호 조합
+			 */
+			function setPhoneValue() {
+			    const phone = `${$('#entEmpPhone1').val()}-${$('#entEmpPhone2').val()}-${$('#entEmpPhone3').val()}`;
+			    $('#entEmpPhone').val(phone);
+			}
+			
+			
+			
+			/**
+			  * 비밀번호 유효성 검증
+			  */	
+			 function validateNewPasswordFields() {
+				    const newPw = $('input[name="newPw"]').val().trim();
+				    const newPwConfirm = $('input[name="newPwConfirm"]').val().trim();
+				    
+				    if (!newPw && !newPwConfirm) {
+				        return true;
+				    }
+	
+				    if (!newPw) {
+				        alert('새 비밀번호를 입력해주세요.');
+				        $('input[name="newPw"]').focus();
+				        return false;
+				    }
+	
+				    const pattern = /^(?=.*[!@#$%^&*()_+~`{}\[\]:;"'<>,.?\/\\|\-]).{8,}$/;
+				    if (!pattern.test(newPw)) {
+				        alert('비밀번호는 8자 이상, 특수문자 포함 필수입니다.');
+				        $('input[name="newPw"]').focus();
+				        return false;
+				    }
+	
+				    if (!newPwConfirm) {
+				        alert('새 비밀번호 확인을 입력해주세요.');
+				        $('input[name="newPwConfirm"]').focus();
+				        return false;
+				    }
+	
+				    if (newPw !== newPwConfirm) {
+				        alert('새 비밀번호와 확인이 일치하지 않습니다.');
+				        $('input[name="newPwConfirm"]').focus();
+				        return false;
+				    }
+	
+				    return true;
+				}
+			
+			 	/**
+			     * 검증유형별 함수 실행
+			     */
+			    function validateForm() {
+			        if (!validateNewPasswordFields()) return false;
+			        setPhoneValue();
+			        return true;
+			    }
+			   
+			    
+			 $('#entModifyBtn').click(function(e) {
+				 e.preventDefault();
+
+				    const memberPw = $('#memberPw').val().trim();
+				    if (!memberPw) {
+				        alert('기존 비밀번호를 입력해주세요.');
+				        $('#memberPw').focus();
+				        return;
+				    }
+
+				    $.ajax({
+			            url: '/enterprise/pwCheck',
+			            method: 'POST',
+			            data: { 
+			                memberId: $('#memberId').val(),	
+			                memberPw: memberPw 
+			            },
+			            dataType: 'json',
+			            success: function(result) {
+			                if (result.match) {
+			                	if (result.match) {
+			                		 if (validateForm()) {
+				                            $('#entModifyForm').submit();
+				                        }
+			                	}
+		                	} else {
+			                    alert('기존 비밀번호가 일치하지 않습니다.');
+			                    $('#memberPw').focus();
+			                }
+			            },
+			            error: function() {
+			                alert('비밀번호 확인 중 오류가 발생했습니다.');
+			            }
+			     
+				    });
+			    });
+		</script>
+	</th:block>
+	
 </html>
