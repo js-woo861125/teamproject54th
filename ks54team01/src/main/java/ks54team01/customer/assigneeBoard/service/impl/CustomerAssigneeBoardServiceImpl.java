@@ -43,11 +43,11 @@ public class CustomerAssigneeBoardServiceImpl implements CustomerAssigneeBoardSe
 	}
 	
 	@Override
-	public void addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard, String customerId) {
+	public void addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard) {
 		
 		String assigneeBoardNum =  "assignee_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
 		customerAssigneeBoard.setAssigneeBoardNum(assigneeBoardNum);	
-		customerAssigneeBoardMapper.addAssigneeBoard(customerAssigneeBoard, customerId);
+		customerAssigneeBoardMapper.addAssigneeBoard(customerAssigneeBoard);
 	}
 	
 	@Override

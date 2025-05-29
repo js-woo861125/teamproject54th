@@ -33,12 +33,11 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	 * 양도 신청
 	 */
 	@Override
-	public void applyTranfer(CustomerTransferBoard customerTransferBoard, String customerId) {
+	public void applyTranfer(CustomerTransferBoard customerTransferBoard) {
 		
 		String transferRentalContractNum =  "transfer_rental_contract_" + UUID.randomUUID().toString().replace("-", "");
 		customerTransferBoard.setTransferRentalContractNum(transferRentalContractNum);
-		customerTransferBoard.setCustomerId(customerId);
-		customerTransferBoardMapper.applyTransfer(customerTransferBoard, customerId);
+		customerTransferBoardMapper.applyTransfer(customerTransferBoard);
 	}
 	
 	/**
@@ -101,9 +100,9 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	 */
 	@Override
 	public void addTransferBoard(CustomerTransferBoard customerTransferBoard
-								, MultipartFile[] mainImage, MultipartFile[] extraImage) {
+							   , MultipartFile[] mainImage, MultipartFile[] extraImage) {
 		
-		String transferBoardNum =  "transfer_board_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+		String transferBoardNum =  "transfer_board_" + UUID.randomUUID().toString().replace("-", "");
 		customerTransferBoard.setTransferBoardNum(transferBoardNum);	
 		customerTransferBoardMapper.addTransferBoard(customerTransferBoard);
 	

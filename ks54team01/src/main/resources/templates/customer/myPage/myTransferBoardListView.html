@@ -76,7 +76,7 @@
 						<div class="totall-product">
 							<h5 class="text-body">
 								내가 쓴 글
-								<span class="text-brand">&emsp;
+								<span class="text-brand">
 									<span th:text="${myTransferBoardList.size()}">5</span>
 								</span>
 								<span>개</span>
@@ -99,19 +99,19 @@
 											</div>
 										</div>
 										<div class="product-content-wrap">
-											<div class="product-category d-flex justify-content-between">
-												<a th:text="${l.productInfoCategory.smCategory}" href="shop-grid-right.html">TV</a>
-											<div class="dropdown">
-	                                        	<a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> 
-	                                        		<i class="bi bi-three-dots-vertical text-muted" style="font-size: 0.65rem;"></i> 
-	                                        	</a>
-	                                        	<div class="dropdown-menu">
-	                                            	<a th:data-transfer-board-num="${l.transferBoardNum}" 
-	                                            	   class="deleteBtn dropdown-item" href="#">
-                                               			게시글 삭제
-	                                        		</a>
-	                                        	</div>
-                                    		</div>
+											<div class="product-category d-flex justify-content-between mt-3 mb-2">
+												<span th:text="${l.productInfoCategory.smCategory}"></span>
+												<div class="dropdown">
+		                                        	<a href="#" data-bs-toggle="dropdown" class="btn-light rounded btn-sm font-sm"> 
+		                                        		<i class="bi bi-three-dots-vertical text-muted fs-6"></i> 
+		                                        	</a>
+		                                        	<div class="dropdown-menu">
+		                                            	<a th:data-transfer-board-num="${l.transferBoardNum}" 
+		                                            	   class="deleteBtn dropdown-item" href="#">
+	                                               			게시글 삭제
+		                                        		</a>
+		                                        	</div>
+	                                    		</div>
 											</div>
 											<h2 th:text="${l.transferTitle}">
 												<a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a>

@@ -12,7 +12,7 @@ import ks54team01.system.util.PageInfo;
 public interface CustomerTransferBoardService {
 	
 	// 양도 신청
-	void applyTranfer(CustomerTransferBoard customerTransferBoard, String customerId);
+	void applyTranfer(CustomerTransferBoard customerTransferBoard);
 	
 	// 양도 게시글 삭제
 	boolean removeMyTransferBoard(String transferBoardNum);

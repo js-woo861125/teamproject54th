@@ -58,7 +58,6 @@
 				      	if (!contracts || contracts.length === 0) {
 				     	   Swal.fire({
 				       		    icon: "error",
-				    	   		title: "Oops...",
 				   	  		    text: "진행 중인 렌탈 계약이 없습니다.",
 				   	  	     	confirmButtonText: "확인"
 				   	     });
@@ -157,35 +156,47 @@
 							</h5>
 						</div>
 						<th:block th:if="${contentRowCount > 0}">
-							<div class="sort-by-product-area">
-								<div class="sort-by-cover mr-10">
+							<div class="d-flex align-items-center gap-3 flex-wrap sort-by-product-area">
+  								<div class="sort-by-cover">
 									<div class="sort-by">
-										<a th:href="@{#}" th:data-sort-value="recentReg">
-											<span>최신등록순</span>
-										</a>
-									</div>
-								</div>
-								<div class="sort-by-cover mr-10">
-									<div class="sort-by">
-										<a th:href="@{#}" th:data-sort-value="highPrice">
-											<span>높은가격순</span>
-										</a>
-									</div>
-								</div>
-								<div class="sort-by-cover mr-10">
-									<div class="sort-by">
-										<a th:href="@{#}" th:data-sort-value="rowPrice">
-											<span>낮은가격순</span>
-										</a>
-									</div>
-								</div>
-								<div class="sort-by-cover mr-10">
-									<div class="sort-by">
-										<a th:href="@{#}" th:data-sort-value="deadline">
-											<span>마감임박순</span>
-										</a>
-									</div>
-								</div>
+							      		<a href="#"
+								           th:data-sort-value="recentReg"
+								           th:classappend="${sortValue} == null or ${sortValue} == 'recentReg' ? ' text-primary fw-bold fs-6' : ' text-dark fw-medium'"
+								           class="text-decoration-none">
+								        	<span>최근등록순</span>
+								     	</a>
+								    </div>
+						  		</div>
+								<div class="sort-by-cover">
+							    	<div class="sort-by">
+							      		<a href="#"
+								           th:data-sort-value="highPrice"
+								           th:classappend="${sortValue} == 'highPrice' ? ' text-primary fw-bold fs-6' : ' text-dark fw-medium'"
+								           class="text-decoration-none">
+								        	<span>높은가격순</span>
+							      		</a>
+					    			</div>
+						  		</div>
+								<div class="sort-by-cover">
+							    	<div class="sort-by">
+							      		<a href="#"
+								           th:data-sort-value="rowPrice"
+								           th:classappend="${sortValue} == 'rowPrice' ? ' text-primary fw-bold fs-6' : ' text-dark fw-medium'"
+								           class="text-decoration-none">
+								        	<span>낮은가격순</span>
+								      	</a>
+								    </div>
+					 			</div>
+								<div class="sort-by-cover">
+							    	<div class="sort-by">
+							      		<a href="#"
+								           th:data-sort-value="deadline"
+								           th:classappend="${sortValue} == 'deadline' ? ' text-primary fw-bold fs-6' : ' text-dark fw-medium'"
+								           class="text-decoration-none">
+								        	<span>마감임박순</span>
+								      	</a>
+						    		</div>
+						  		</div>
 							</div>
 						</th:block>
 					</div>

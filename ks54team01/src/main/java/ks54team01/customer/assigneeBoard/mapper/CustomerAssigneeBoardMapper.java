@@ -18,8 +18,7 @@ public interface CustomerAssigneeBoardMapper {
 	int modifyAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard);
 	
 	// 양수 게시글 등록
-	int addAssigneeBoard(@Param("customerAssigneeBoard") CustomerAssigneeBoard customerAssigneeBoard,
-						 @Param("customerId") String customerId);
+	int addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard);
 	
 	List<CustomerAssigneeBoard> getProduct(String productCategoryNum);
 	

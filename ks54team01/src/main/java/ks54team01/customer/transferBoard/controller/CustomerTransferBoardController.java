@@ -51,10 +51,11 @@ public class CustomerTransferBoardController {
 		String customerId = (String) session.getAttribute("loginId");
 		
 		log.info("customerId: {}", customerId);
-		
 		log.info("customerTransferBoard : {}", customerTransferBoard);
 		
-		customerTransferBoardService.applyTranfer(customerTransferBoard, customerId);
+		customerTransferBoard.setCustomerId(customerId);
+		
+		customerTransferBoardService.applyTranfer(customerTransferBoard);
 		
 		
 		return "redirect:/customer/transferBoard/transferBoardList";
@@ -121,8 +122,15 @@ public class CustomerTransferBoardController {
 	
 	@PostMapping("/addTransferBoard") 
 	public String addTransferBoard(CustomerTransferBoard customerTransferBoard
-								  , @RequestParam("mainImage") MultipartFile[] mainImage,
-								    @RequestParam("extraImage") MultipartFile[] extraImage) {
+								  , @RequestParam("mainImage") MultipartFile[] mainImage
+								  , @RequestParam("extraImage") MultipartFile[] extraImage
+								  , HttpSession session) {
+		
+		String customerId = (String) session.getAttribute("loginId");
+		
+		log.info("customerId: {}", customerId);
+		
+		customerTransferBoard.setCustomerId(customerId);
 		
 		customerTransferBoardService.addTransferBoard(customerTransferBoard, mainImage, extraImage);
 		
@@ -169,13 +177,17 @@ public class CustomerTransferBoardController {
 	public String requestRentalInfo(@RequestParam(name="rentalContractNum")  String rentalContractNum,
 			 						HttpSession session) {
 		
-		String customerId = (String) session.getAttribute("loginId");
-		
-		log.info("customerId: {}", customerId);
+		/*
+		 * String customerId = (String) session.getAttribute("loginId");
+		 * 
+		 * log.info("customerId: {}", customerId);
+		 */
 		
 	    // 계약 정보 가져오기
 	    CustomerTransferBoard myRentalInfo = customerTransferBoardService.getMyContractInfo(rentalContractNum);
 
+//	    myRentalInfo.setCustomerId(customerId);
+	    
 	    session.setAttribute("myRentalInfo", myRentalInfo);
 	    // 등록 페이지로 이동
 	    return "redirect:/customer/transferBoard/addTransferBoard";
@@ -209,7 +221,8 @@ public class CustomerTransferBoardController {
 	}
 
 	@GetMapping("/myTransferBoardList")
-	public String getMyTransferBoardList(Model model, HttpSession session) {
+	public String getMyTransferBoardList(Model model
+									   , HttpSession session) {
 
 		String customerId = (String) session.getAttribute("loginId");
 		
