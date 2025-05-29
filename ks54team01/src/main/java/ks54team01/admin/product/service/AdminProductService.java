@@ -16,7 +16,7 @@ import ks54team01.admin.productInfo.domain.ProductInfoModel;
 public interface AdminProductService {
 	
 	// 상품 검색 조회
-	List<AdminProduct> getSearchProduct(String searchKey, String searchValue);
+	List<AdminProduct> searchProductList(String searchKey, String searchValue, String categoryNo, String status);
 	
 	
 	// 상품 목록 조회
@@ -31,11 +31,16 @@ public interface AdminProductService {
 	public void addProduct(AdminAddProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails);
 	
 	List<AdminProductSpecContent> loadSpecContent(@Param("modelNo") String modelNo);
-	
 	List<ProductInfoCategory> loadCategoryList();
 	List<ProductInfoItem> loadItemList(String categoryNo);
 	List<ProductInfoBrand> loadBrandList(String categoryNo, String itemNo);
 	List<ProductInfoModel> loadModelList(String categoryNo, String itemNo, String brandNo);
 	
+	// 상품 판매중단, 되돌리기
+	public void setSaleStoppage(String productNo);
+	void unsetSaleStoppage(String productNo);
+	
+	
 	
 }
+

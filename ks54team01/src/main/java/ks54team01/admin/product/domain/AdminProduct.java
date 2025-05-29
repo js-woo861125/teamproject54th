@@ -18,6 +18,7 @@ public class AdminProduct {
 	    private String itemNo;
 	    private String productImage;
 	    private String modelName;
+	    private String brandName;
 	    
 	    private FileMetaData mainImageData; 
 	}

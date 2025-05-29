@@ -11,6 +11,8 @@
 		<result column="product_category_no" 	property="categoryNo"/>
 		<result column="brand_no" 				property="brandNo"/>
 		<result column="products_nm" 			property="productName"/>
+		<result column="brand_nm" 				property="brandName"/>		 
+   		<result column="small_category" 		property="smallCategory"/>
 		<result column="products_status" 		property="productStatus"/>
 		<result column="register_date" 			property="registerDate"/>
 		<result column="revision_date" 			property="revisionDate"/>
@@ -25,22 +27,75 @@
 			<result column="file_type" 			property="fileType"/>
 		</association> -->
 	</resultMap>
+	
+	<select id="searchProductList" resultMap="adminProductResultMap">
+    SELECT
+        p.products_no,
+        p.products_nm,
+        m.model_no,
+        m.model_nm,
+        b.brand_nm,
+        CASE
+            WHEN p.products_status = '판매중단' THEN '판매중단'
+            WHEN EXISTS (
+                SELECT 1 FROM sell_products sp
+                WHERE sp.products_no = p.products_no
+                AND sp.use_status = '사용중'
+            ) THEN '활성화'
+            ELSE '비활성화'
+        END AS products_status,
+        IFNULL(f.file_path, '/manage/assets/imgs/theme/upload.svg') AS products_image,
+        DATE_FORMAT(p.register_date, '%Y-%m-%d %H:%i:%s') AS register_date,
+        DATE_FORMAT(p.revision_date, '%Y-%m-%d %H:%i:%s') AS revision_date
+    FROM products p
+    INNER JOIN model m ON p.model_no = m.model_no
+    INNER JOIN brand b ON m.brand_no = b.brand_no
+    LEFT JOIN files f ON m.model_no = f.ref_id AND f.file_type = 'mainImage'
+    <where>
+        <if test="searchKey != null and searchValue != null and searchValue != ''">
+            <choose>
+                <when test="searchKey == 'productName'">
+                    AND p.products_nm LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+                <when test="searchKey == 'brandName'">
+                    AND b.brand_nm LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+            </choose>
+        </if>
+        <if test="categoryNo != null and categoryNo != ''">
+            AND m.product_category_no = #{categoryNo}
+        </if>
+        <if test="status != null and status != ''">
+            AND products_status = #{status}
+        </if>
+    </where>
+</select>
+	
+	
+	
 	<select id="getProductList" resultMap="adminProductResultMap">
 		/* 상품 목록 조회 */
-		SELECT 
-			p.products_no,
-			p.products_nm,
-			m.model_no,
-			m.model_nm,
-			p.products_status,
-			IFNULL(f.file_path, '/manage/assets/imgs/theme/upload.svg') AS products_image,
-			DATE_FORMAT(p.register_date, '%Y-%m-%d %H:%i:%s') AS register_date,
-			DATE_FORMAT(p.revision_date, '%Y-%m-%d %H:%i:%s') AS revision_date
-		FROM 
-			products p INNER JOIN model m 
-			ON p.model_no = m.model_no 
-			LEFT JOIN files f
-			ON m.model_no = f.ref_id AND f.file_type = 'mainImage';	
+		 SELECT 
+	        p.products_no,
+	        p.products_nm,
+	        m.model_no,
+	        m.model_nm,
+			CASE
+			    WHEN p.products_status = '판매중단' THEN '판매중단'
+			    WHEN EXISTS (
+			        SELECT 1 FROM sell_products sp
+			        WHERE sp.products_no = p.products_no
+			          AND sp.use_status = '사용중'
+			    ) THEN '활성화'
+			    ELSE '비활성화'
+			END AS products_status,
+	        IFNULL(f.file_path, '/manage/assets/imgs/theme/upload.svg') AS products_image,
+	        DATE_FORMAT(p.register_date, '%Y-%m-%d %H:%i:%s') AS register_date,
+	        DATE_FORMAT(p.revision_date, '%Y-%m-%d %H:%i:%s') AS revision_date
+	    FROM 
+	        products p
+	        INNER JOIN model m ON p.model_no = m.model_no 
+	        LEFT JOIN files f ON m.model_no = f.ref_id AND f.file_type = 'mainImage'
 	</select>
 	
 		
@@ -265,6 +320,24 @@
 		    p.products_no = #{productNo}
 	</select>
     
+    <update id="setSaleStoppage">
+    UPDATE 
+    	products
+    SET 
+   	 products_status = '판매중단', 
+  	  revision_date = NOW()
+    WHERE 
+    	products_no = #{productNo}
+	</update>
     
-    
+   <update id="unsetSaleStoppage">
+    UPDATE 
+    	products
+    SET 
+    	products_status = '비활성화', 
+        revision_date = NOW()
+    WHERE 
+    	products_no = #{productNo}
+	</update>
+	    
 </mapper>
