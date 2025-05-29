@@ -16,19 +16,19 @@
         <header class="card card-header">
             <form id="mainSearchForm" th:action="@{/admin/payment/searchEnterprise}" method="get">
                 <div class="row gx-3">
-                    <div class="col-12 d-flex justify-content-center">
+                    <div class="col-12 d-flex justify-content-center text-center">
                         <div class="col-2">
                             <input type="month" name="settlementMonth" th:value="${settlementMonth}" id="monthSelector" class="form-control"/>
                         </div>
                         <div class="col-8">
-                            <div class="col-5 ml-5 d-flex justify-content-start">
+                            <div class="col-5 ml-5 d-flex justify-content-start  text-center">
                                 <input type="text" id="searchInput" name="searchValue" 
                                     th:value="${searchValue}"
                                     placeholder=" 업체 먼저 찾아보고 검색해 주세요!" 
                                     class="form-control" disabled/>
                                 <div class="col-2 ml-5">
                                     <button type="submit" id="searchButton" 
-                                        class="form-control btn-sm btn btn-outline-dark center-text text-center" 
+                                        class="form-control btn-sm text-center" 
                                         style="font-size: 1.2rem;" disabled>🔎
                                     </button>
                                 </div>
@@ -37,7 +37,7 @@
                         <div class="col-2 ml-5">
                             <button type="button" class="form-control btn btn-outline-dark" style="font-size: 1.2rem;"
                             th:onclick="'javascript:openEnterPricseList(\'' + @{/admin/enterprise/searchPopup} + '\'); return false;'">
-                            <i class="bi bi-list-ul ml-40 text-center">📚 업체 찾기</i>
+                            <i class="bi bi-list-ul ml-40">📚업체찾기</i>
                         </button>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                                             <div class="d-flex align-items-center">
                                                 <img th:src="@{/manage/assets/imgs/vendor/vendor-1.png}" alt="vendorImage" class="vendor mr-50 ml-30" />
                                                 <div>
-                                                    <h4 th:text=" ' 대표자 : '+${el.entCeoName}">대표님 성함</h4>
+                                                    <h4 th:text=" ' 대표자 : '+${el.entCeoName}">대표자</h4>
                                                     <small class="text-warning" name="entEmpId" th:text=" ' ID : '+${el.entEmpId}">아이디</small>
                                                     
                                                     <ul class="mt-20" >

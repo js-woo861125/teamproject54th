@@ -2,7 +2,9 @@ package ks54team01.admin.contract.service.impl;
 
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,17 +30,14 @@ public class AdminContractServiceImpl implements AdminContractService{
 	
 	
 	@Override
-	public List<AdminContract> getSearchContractList(String searchKey, String searchValue) {
+	public List<AdminContract> getSearchContractList(Map<String, Object> paramMap) {
+	
+		// searchKey와 searchValue는 이미 paramMap에 담겨 있으므로, 별도의 switch-case 변환은 필요 없습니다.
+        // Mapper XML에서 paramMap.searchKey와 paramMap.searchValue를 직접 사용합니다.
 
-		switch (searchKey) {
-			case "custId" 	-> searchKey = "cust_id";
-			case "entCeoNo" 	-> searchKey = "ent_ceo_no";		
-			case "sellProdNo" 	-> searchKey = "sell_products_no";		
-		}
-		
-		
-		List<AdminContract> adminSearchContractList = adminContractMapper.getSearchContractList(searchKey, searchValue);
-		
+        // Mapper 인터페이스에 정의된 getSearchContractList 메서드 호출
+			List<AdminContract> adminSearchContractList = adminContractMapper.getSearchContractList(paramMap);
+	
 		return adminSearchContractList;
 	}
 	
