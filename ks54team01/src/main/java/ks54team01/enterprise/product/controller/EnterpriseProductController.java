@@ -42,7 +42,9 @@ public class EnterpriseProductController {
 	
 	
 	
-	
+	/*
+	 * 입점업체 등록 상품 리스트
+	 */
 	@GetMapping("/product/sellProductList")
 	public String getsellProductList(Model model) {
 		List<EnterpriseProduct> sellProductList = enterpriseProductService.getSellProductList();
@@ -52,7 +54,9 @@ public class EnterpriseProductController {
 		
 		return "enterprise/product/enterpriseProductListView";
 	}
-	
+	/*
+	 * 플랫폼 등록 상품 리스트
+	 */
 	@GetMapping("/product/productList")
 	public String getproductList(Model model) {
 		List<AdminProduct> getProductList = enterpriseProductService.getProductList();
