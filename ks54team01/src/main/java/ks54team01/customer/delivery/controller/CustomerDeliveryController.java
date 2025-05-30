@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.servlet.http.HttpSession;
 import ks54team01.customer.delivery.domain.CustomerDeliveryList;
 import ks54team01.customer.delivery.service.CustomerDeliveryService;
-import ks54team01.customer.member.domain.CustomerMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,7 +37,11 @@ public class CustomerDeliveryController {
 	
 	
 	@PostMapping("/modifyDeliveryList")
-	public String modifyDeliveryList(CustomerDeliveryList modifyDeliveryList) {
+	public String modifyDeliveryList(CustomerDeliveryList modifyDeliveryList, HttpSession session) {
+		
+		String custId = (String) session.getAttribute("loginId");
+		
+		modifyDeliveryList.setCustId(custId);
 		
 		customerDeliveryService.modifyDeliveryList(modifyDeliveryList);
 		

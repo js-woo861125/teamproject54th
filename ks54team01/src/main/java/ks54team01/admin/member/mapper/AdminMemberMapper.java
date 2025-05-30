@@ -35,6 +35,9 @@ public interface AdminMemberMapper {
 	// 개인고객 상세정보 조회
 	AdminMemberDetail getCustomerMemberDetail(String memberId);
 	
+	// 회원 로그인이력 총 row 갯수 조회
+	int getMemberListCount();
+	
 	// 회원 목록 조회
 	List<AdminMember> getMemberList();
 

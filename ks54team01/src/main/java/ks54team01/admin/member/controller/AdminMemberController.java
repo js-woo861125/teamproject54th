@@ -133,13 +133,27 @@ public class AdminMemberController {
 	
 	
 	@GetMapping("/memberList") 
-	public String getMemberList(Model model) {
+	public String getMemberList(Pageable pageable, Model model) {
 		
-		List<AdminMember> memberList = adminMemberService.getMemberList();
+		pageable.setRowPerPage(10);
+		
+		PageInfo<AdminMember> memberList = adminMemberService.getMemberList(pageable);
 		log.info("memberList: {}", memberList);
+		
+		var loginHistoryList = memberList.getContents();
+		int currentPage = memberList.getCurrentPage();
+		int lastPage = memberList.getLastPage();
+ 		int startPageNum = memberList.getStartPageNum();
+		int endPageNum = memberList.getEndPageNum();
+		int rowPerPage = pageable.getRowPerPage();
 		
 		model.addAttribute("title", "회원목록");
 		model.addAttribute("memberList", memberList);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("lastPage", lastPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("rowPerPage", rowPerPage);
 		
 		
 		return "admin/member/memberListView";
