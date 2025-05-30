@@ -301,7 +301,7 @@ public class AdminPaymentController {
 	        System.out.println("플랫폼 수수료 총합(전달됨): " + request.getTotalNetPlatformFee());
 
 
-	        // ⭐️ 중요: 이 부분에서 실제 정산 DB 저장 로직을 구현.
+	        // 실제 정산 DB 저장 로직.
 	        adminFeeService.saveSettlement(request); // DTO 전체를 서비스로 넘길 수 있습니다.
 
 	        // 정산 완료 후, 성공 메시지와 함께 다른 페이지로 리다이렉트
