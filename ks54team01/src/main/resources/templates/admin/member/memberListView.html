@@ -56,11 +56,11 @@
 					      <button type="submit" class="btn btn-primary">검색</button>
 					    </div>
 	                   	<div class="col-lg-2 col-md-3 col-12">
-	                       <select class="form-select">
-	                           <option>Show 20</option>
-	                           <option>Show 30</option>
-	                           <option>Show 40</option>
-	                       </select>
+		                       <select class="form-select" name="rowPerPage" id="rowPerPage">
+		                           <option value="10" th:selected="${rowPerPage eq 10}">Show 10</option>
+		                           <option value="20" th:selected="${rowPerPage eq 20}">Show 20</option>
+		                           <option value="30" th:selected="${rowPerPage eq 30}">Show 30</option>
+		                       </select>
 	                   	</div>
 	               </div>          	
             	</form>
@@ -120,20 +120,36 @@
             <!-- card-body end// -->
         </div>
         <!-- card end// -->
-        <div class="pagination-area mt-15 mb-50">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-start">
-                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                    <li class="page-item"><a class="page-link" href="#">02</a></li>
-                    <li class="page-item"><a class="page-link" href="#">03</a></li>
-                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                    <li class="page-item"><a class="page-link" href="#">16</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+        <div class="pagination-area mt-30 mb-50">
+	            <nav aria-label="Page navigation example">
+	                <ul class="pagination justify-content-center">
+	                	 <li class="page-item text-center">
+	                        <a class="page-link" th:href="@{/admin/member/memberList}"><i class="material-icons md-first_page"></i></a>
+	                     </li>
+	                     <li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
+	                        <a class="page-link" th:href="@{/admin/member/memberList(currentPage=${currentPage - 1})}">
+	                        	<i class="material-icons md-chevron_left"></i>
+	                        </a>
+	                     </li>
+	                     <th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
+		                    <li class="page-item" th:classappend="${num eq currentPage} ? 'active disabled'">
+		                    	<a class="page-link" th:href="@{/admin/member/memberList(currentPage=${num})}"
+		                    		th:text="${num < 10 ? '0' + num : num}">01</a>
+		                   	</li>                    
+	                     </th:block>                 
+	                     <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
+	                        <a class="page-link" th:href="@{/admin/member/memberList(currentPage=${currentPage + 1})}">
+	                        	<i class="material-icons md-chevron_right"></i>
+	                        </a>
+	                     </li>
+	                     <li class="page-item">
+	                        <a class="page-link" th:href="@{/admin/member/memberList(currentPage=${lastPage})}">
+	                        	<i class="material-icons md-last_page"></i>
+	                        </a>
+	                    </li>
+	                </ul>
+	            </nav>
+	        </div>
         <!-- content-main end// -->
         <div id="memberDetailModal" class="modal fade" tabindex="-1">
 		  <div class="modal-dialog modal-lg">
@@ -261,5 +277,26 @@
 			    });
 			}
     	</script>
+    	<script th:inline="javascript">
+			const rowPerPage = /*[[${rowPerPage}]]*/'';
+			if(rowPerPage) {
+				$('.page-link').each((idx, item)=>{
+					let href = $(item).attr('href');
+					let separator = '?';
+					if(href.includes('?')) separator = '&';
+					href += `${separator}rowPerPage=${rowPerPage}`;
+					$(item).attr('href', href);
+				});
+			}
+			$('#rowPerPage').change(function(){
+				const href = location.href;
+				const url = new URL(href);
+				const urlParams = url.searchParams;
+				const currentPage = urlParams.get('currentPage');
+				if(currentPage) urlParams.set('currentPage', currentPage);
+				urlParams.set('rowPerPage', $(this).val());
+				location.href = `${url.pathname}?${urlParams.toString()}`;
+			});
+		</script>
     </th:block>
 </html>

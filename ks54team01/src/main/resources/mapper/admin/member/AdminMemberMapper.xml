@@ -191,6 +191,13 @@
 			memberId = #{memberId};
 	</select>
 	
+	<select id="getMemberListCount" resultType="int">
+		/* 회원 목록 총 row 갯수 조회 */
+		SELECT
+			COUNT(*)
+		FROM
+			members;
+	</select>
 	
 	<select id="getMemberList" resultType="AdminMember">
 		/* 회원 목록 조회 */
