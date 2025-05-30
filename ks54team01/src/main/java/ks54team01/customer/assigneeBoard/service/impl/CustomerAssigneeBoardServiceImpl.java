@@ -85,8 +85,8 @@ public class CustomerAssigneeBoardServiceImpl implements CustomerAssigneeBoardSe
 	 * 내 양수 게시글 목록 조회
 	 */
 	@Override
-	public List<CustomerAssigneeBoard> getMyAssigneeBoardList() {
-		List<CustomerAssigneeBoard> myAssigneeBoardList = customerAssigneeBoardMapper.getMyAssigneeBoardList();
+	public List<CustomerAssigneeBoard> getMyAssigneeBoardList(String customerId) {
+		List<CustomerAssigneeBoard> myAssigneeBoardList = customerAssigneeBoardMapper.getMyAssigneeBoardList(customerId);
 		return myAssigneeBoardList;
 	}
 	

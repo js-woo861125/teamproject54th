@@ -20,9 +20,9 @@
 		
 			document.getElementById("contractBtn").addEventListener("click", function () {
 				
-				const contractNoDone = document.getElementById("rentalContractNo").value.trim();
+				const contractDone = document.getElementById("rentalContractNo").value.trim();
 				
-				if(contractNoDone) {
+				if(contractDone) {
 					Swal.fire("계약 완료", "이미 계약이 등록된 상품입니다.", "info");
 				    return;
 				}
@@ -67,26 +67,49 @@
 			});
 
 		
-			
-			// 배송지 선택 버튼 클릭 시
-		    document.querySelectorAll(".product-cart-wrap .btn").forEach(function (btn) {
-		        btn.addEventListener("click", function (e) {
-		            e.preventDefault();
+			document.addEventListener("DOMContentLoaded", function () {
+				
+			    const deliveryCards = document.querySelectorAll(".product-cart-wrap");
 	
-		            const card = btn.closest(".product-cart-wrap");
-		            const delNo = card.getAttribute("data-del-no");
-		            const delNm = card.getAttribute("data-del-nm");
-		            const delRecipientPhone = card.getAttribute("data-recipient-phone");
-		            const delRequest = card.getAttribute("data-del-request");
+			    deliveryCards.forEach(function (card) {
+			        const isDefault = card.querySelector("span").textContent.trim();
 	
-		            // 선택한 값 input에 채우기
-		            document.getElementById("delSelected").value = delNo;
-		            document.getElementById("delName").value = delNm;
-		            document.getElementById("delRecipientPhone").value = delRecipientPhone;
-		            document.getElementById("delRequest").value = delRequest;
-		        });
-		    });
-			
+			        if (isDefault === "기본배송지") {
+			            const delNo = card.getAttribute("data-del-no");
+			            const delNm = card.getAttribute("data-del-nm");
+			            const delRecipientPhone = card.getAttribute("data-recipient-phone");
+			            const delRequest = card.getAttribute("data-del-request");
+	
+			            // input에 자동 채우기
+			            document.getElementById("delSelected").value = delNo;
+			            document.getElementById("delName").value = delNm;
+			            document.getElementById("delRecipientPhone").value = delRecipientPhone;
+			            document.getElementById("delRequest").value = delRequest;
+			        }
+			    });
+			    
+			    
+			    document.querySelectorAll(".product-cart-wrap .btn").forEach(function (btn) {
+			        btn.addEventListener("click", function (e) {
+			            e.preventDefault();
+	
+			            const card = btn.closest(".product-cart-wrap");
+			            const delNo = card.getAttribute("data-del-no");
+			            const delNm = card.getAttribute("data-del-nm");
+			            const delRecipientPhone = card.getAttribute("data-recipient-phone");
+			            const delRequest = card.getAttribute("data-del-request");
+	
+			            // 선택한 값 input에 채우기
+			            document.getElementById("delSelected").value = delNo;
+			            document.getElementById("delName").value = delNm;
+			            document.getElementById("delRecipientPhone").value = delRecipientPhone;
+			            document.getElementById("delRequest").value = delRequest;
+			        });
+			    });
+			    
+			    
+			    
+			});
 			
 		    document.getElementById("paymentBtn").addEventListener("click", function (e) {
 		    	
@@ -225,7 +248,7 @@
                                     
 								<div class="product-list mb-50">
 									<div class="overflow-auto" style="height: 200px;">
-										<th:block th:if="${!#lists.isEmpty(DeliveryList)}" th:each="l : ${DeliveryList}">
+										<th:block th:if="${!#lists.isEmpty(deliveryList)}" th:each="l : ${deliveryList}">
 											<!-- 상품1 -->
 											<div class="product-cart-wrap border col-12" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);"
 												 th:data-del-no="${l.delNo}" th:data-del-nm="${l.delNm}" th:data-recipient-phone="${l.recipientPhone}" th:data-del-request="${l.delRequest}">
@@ -247,7 +270,7 @@
 													</div>
 												</div>
 											</div>
-											<div th:unless="${!#lists.isEmpty(DeliveryList)}">
+											<div th:unless="${!#lists.isEmpty(deliveryList)}">
 												<div class="product-cart-wrap border col-12" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);" th:text="${사용가능한 배송지가 없습니다.}"></div>
 											</div>
 										</th:block>

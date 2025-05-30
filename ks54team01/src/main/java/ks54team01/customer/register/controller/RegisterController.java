@@ -1,5 +1,8 @@
 package ks54team01.customer.register.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -75,7 +78,10 @@ public class RegisterController {
 	
 	
 	@PostMapping("/customerRegister")
-	public String addCustomerMember(CustomerMember memberInfo, HttpSession session) {
+	@ResponseBody
+	public Map<String, Object> addCustomerMember(@ModelAttribute CustomerMember memberInfo, HttpSession session) {
+		Map<String, Object> registerResult = new HashMap<>();
+		
 	    // 세션에서 공통등록정보 가져온 후 memberInfo로 저장
 		CommonMember common = (CommonMember) session.getAttribute("memberInfo");
 		
@@ -83,14 +89,19 @@ public class RegisterController {
 			memberInfo.setMemberId(common.getMemberId());
 			memberInfo.setMemberPw(common.getMemberPw());
 	    }
+		
+		 try {
+		        log.info("회원 등록 시작: {}", memberInfo);
+		        registerService.addCustomerMember(memberInfo);
+		        log.info("회원 등록 완료: {}", memberInfo);
+		        registerResult.put("status", "success");
+		    } catch (Exception e) {
+		        log.error("회원 등록 오류", e);
+		        registerResult.put("status", "error");
+		        registerResult.put("message", "서버 오류: " + e.getMessage());
+		    }
 
-	    log.info("회원 등록 시작: {}", memberInfo);
-
-	    registerService.addCustomerMember(memberInfo);
-
-	    log.info("회원 등록 완료: {}", memberInfo);
-
-	    return "redirect:/customer/login/memberLogin";
+	    return registerResult;
 	}
 	
 	

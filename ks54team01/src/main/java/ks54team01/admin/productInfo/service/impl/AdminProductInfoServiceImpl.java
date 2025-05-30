@@ -28,6 +28,62 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	// DI 의존성 주입
 	private final AdminProductInfoMapper adminProductInfoMapper;
 	
+	/**
+	 * 상품정보 행의 갯수
+	 */
+	// 브랜드 행의 갯수
+	@Override
+	public int getBrandCount(String searchKey, String searchValue, String useStatus) {
+		
+		return adminProductInfoMapper.getBrandCount(searchKey, searchValue, useStatus);
+	}
+	
+	/**
+	 *  상품정보 등록 조회
+	 */
+	// 카테고리별/상세스펙코드로 등록된 모델별/상세스펙 조회
+	@Override
+	public int countModelSpecsBySpecNo(String specNo) {
+		
+		return adminProductInfoMapper.countModelSpecsBySpecNo(specNo);
+	}
+	// 혜택코드로 등록된 입점업체 혜택상세 조회
+	@Override
+	public int countBenefitDetailsByBenefitNo(String benefitNo) {
+		
+		return adminProductInfoMapper.countBenefitDetailsByBenefitNo(benefitNo);
+	}
+	// 모델코드로 등록된 모델별/상세스펙 조회 
+	@Override
+	public int countModelSpecsByModelNo(String modelNo) {
+		
+		return adminProductInfoMapper.countModelSpecsByModelNo(modelNo);
+	}
+	// 품목코드로 등록된 모델 조회 
+	@Override
+	public int countModelsByItemNo(String itemNo) {
+		
+		return adminProductInfoMapper.countModelsByItemNo(itemNo);
+	}
+	// 브랜드코드로 등록된 모델 조회
+	@Override
+	public int countModelsByBrandNo(String brandNo) {
+		
+		return adminProductInfoMapper.countModelsByBrandNo(brandNo);
+	}
+	// 카테고리코드로 등록된 카테고리별/상세스펙 조회
+	@Override
+	public int countSpecsByCategoryNo(String categoryNo) {
+		
+		return adminProductInfoMapper.countSpecsByCategoryNo(categoryNo);
+	}
+	// 카테고리코드로 등록된 품목 조회
+	@Override
+	public int countItemsByCategoryNo(String categoryNo) {
+		
+		return adminProductInfoMapper.countItemsByCategoryNo(categoryNo);
+	}
+	
 	// 사용유무 상태 변경
 	@Override
 	public void updateModelSpecUseStatus(String modelSpecNo, String useStatus) {
@@ -93,7 +149,6 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		switch (searchKey) {
 		case "specName" -> searchKey = "spec_nm";
-		case "categoryInfo.smCategory" -> searchKey = "pc.small_category";
 		}
 		
 		if (useStatus.isBlank()) {
@@ -125,7 +180,6 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		case "modelName" -> searchKey = "model_nm";
 		case "brandInfo.brandName" -> searchKey ="b.brand_nm";
 		case "itemInfo.itemName" -> searchKey ="i.item_nm";
-		case "categoryInfo.smCategory" -> searchKey = "pc.small_category";
 		}
 		
 		if (useStatus.isBlank()) {
@@ -141,7 +195,6 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 		
 		switch (searchKey) {
 		case "itemName" -> searchKey = "item_nm";
-		case "categoryInfo.smCategory" -> searchKey = "pc.small_category";
 		}
 		
 		if (useStatus.isBlank()) {
@@ -198,9 +251,15 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	@Override
 	public boolean removeCategorySpecInfoByNo(String specNo) {
 		
-		int delCount = 0;
+		// 1. 해당 스펙이 등록된 모델스펙이 있는지 확인
+		int modelSpecCount = adminProductInfoMapper.countModelSpecsBySpecNo(specNo);
 		
-		delCount += adminProductInfoMapper.removeCategorySpecInfoByNo(specNo);
+		if (modelSpecCount > 0) {
+			return false; // 스펙이 모델스펙에 등록되어 있어 삭제 불가
+		}
+		
+		// 2. 등록된 모델스펙이 없으면 삭제
+		int delCount = adminProductInfoMapper.removeCategorySpecInfoByNo(specNo);
 		
 		boolean isDel = delCount > 0 ? true : false;
 		
@@ -210,9 +269,15 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	@Override
 	public boolean removeBenefitInfoByNo(String benefitNo) {
 		
-		int delCount = 0;
+		// 1. 해당 혜택이 등록된 입점업체 혜택상세가 있는지 확인
+		int benefitDetailCount = adminProductInfoMapper.countBenefitDetailsByBenefitNo(benefitNo);
 		
-		delCount += adminProductInfoMapper.removeBenefitInfoByNo(benefitNo);
+		if (benefitDetailCount > 0) {
+			return false; // 혜택이 입점업체 혜택상세에 등록되어 있어 삭제 불가
+		}
+		
+		// 2. 등록된 혜택상세가 없으면 삭제
+		int delCount = adminProductInfoMapper.removeBenefitInfoByNo(benefitNo);
 		
 		boolean isDel = delCount > 0 ? true : false;
 		
@@ -222,20 +287,33 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	@Override
 	public boolean removeModelInfoByNo(String modelNo) {
 		
-		int delCount = 0;
+		// 1. 해당 모델이 등록된 모델스펙이 있는지 확인
+		int modelSpecCount = adminProductInfoMapper.countModelSpecsByModelNo(modelNo);
 		
-		delCount += adminProductInfoMapper.removeModelInfoByNo(modelNo);
+		if (modelSpecCount > 0) {
+			return false; // 모델이 모델스펙이 등록되어 있어 삭제 불가
+		}
+		
+		// 2. 등록된 모델스펙이 없으면 삭제
+		int delCount = adminProductInfoMapper.removeModelInfoByNo(modelNo);
 		
 		boolean isDel = delCount > 0 ? true : false;
 		
 		return isDel;
 	}
+	
 	@Override
 	public boolean removeItemInfoByNo(String itemNo) {
 		
-		int delCount = 0;
+		// 1. 해당 품목이 등록된 모델이 있는지 확인
+		int modelCount = adminProductInfoMapper.countModelsByItemNo(itemNo);
 		
-		delCount += adminProductInfoMapper.removeItemInfoByNo(itemNo);
+		if (modelCount > 0) {
+			return false; // 품목이 모델에 등록되어 있어 삭제 불가
+		}
+		
+		// 2. 등록된 모델이 없으면 삭제
+		int delCount = adminProductInfoMapper.removeItemInfoByNo(itemNo);
 		
 		boolean isDel = delCount > 0 ? true : false;
 		
@@ -245,9 +323,15 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	@Override
 	public boolean removeBrandInfoByNo(String brandNo) {
 		
-		int delCount = 0;
+		// 1. 해당 브랜드가 등록된 모델이 있는지 확인
+		int modelCount = adminProductInfoMapper.countModelsByBrandNo(brandNo);
 		
-		delCount += adminProductInfoMapper.removeBrandInfoByNo(brandNo);
+		if (modelCount > 0) {
+			return false; // 브랜드가 모델에 등록되어 있어 삭제 불가
+		}
+		
+		// 2. 등록된 모델이 없으면 삭제
+		int delCount = adminProductInfoMapper.removeBrandInfoByNo(brandNo);
 		
 		boolean isDel = delCount > 0 ? true : false;
 		
@@ -257,9 +341,16 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	@Override
 	public boolean removeCategoryInfoByNo(String categoryNo) {
 		
-		int delCount = 0;
+		// 1. 해당 카테고리가 등록된 품목 또는 카테고리스펙이 있는지 확인
+		int itemCount = adminProductInfoMapper.countItemsByCategoryNo(categoryNo);
+		int specCount = adminProductInfoMapper.countSpecsByCategoryNo(categoryNo);
 		
-		delCount += adminProductInfoMapper.removeCategoryInfoByNo(categoryNo);
+		if (itemCount > 0 || specCount > 0) {
+			return false; // 카테고리가 품목 또는 카테고리스펙에 등록되어 있어 삭제 불가
+		}
+		
+		// 2. 아무것도 등록되어 있지 않다면 삭제 
+		int delCount = adminProductInfoMapper.removeCategoryInfoByNo(categoryNo);
 		
 		boolean isDel = delCount > 0 ? true : false; 
 		
@@ -387,9 +478,9 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	}
 	
 	@Override
-	public ProductInfoCategorySpec getCategorySpecInfoByNo(String categorySpecyNo) {
+	public ProductInfoCategorySpec getCategorySpecInfoByNo(String categorySpecNo) {
 		
-		return adminProductInfoMapper.getCategorySpecInfoByNo(categorySpecyNo);
+		return adminProductInfoMapper.getCategorySpecInfoByNo(categorySpecNo);
 	}
 	
 	@Override
@@ -564,9 +655,9 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	}
 
 	@Override
-	public List<ProductInfoBrand> getBrandList() {
+	public List<ProductInfoBrand> getBrandList(int offset, int limit, String searchKey, String searchValue, String useStatus) {
 		
-		List<ProductInfoBrand> brandList = adminProductInfoMapper.getBrandList();
+		List<ProductInfoBrand> brandList = adminProductInfoMapper.getBrandList(offset, limit, searchKey, searchValue, useStatus);
 		
 		return brandList;
 	}

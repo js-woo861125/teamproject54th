@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
-import ks54team01.admin.manage.domain.Admin;
 import ks54team01.customer.login.service.LoginService;
-import ks54team01.customer.member.domain.CommonMember;
 import ks54team01.customer.member.domain.EntMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,22 +41,28 @@ public class LoginController {
 
 	     Map<String, Object> loginResult = loginService.matchMember(memberId, memberPw);
 
-	     if (loginResult == null || loginResult.get("memberInfo") == null) {
+	     if (loginResult == null) {
+	         log.warn("로그인 실패: 로그인 결과가 null (memberId={})", memberId);
+	         return "redirect:/customer/login/memberLogin?error=true";
+	     }
+	     
+	     if ("Y".equals(loginResult.get("memberWithdrawStatus"))) {
+	    	 log.warn("탈퇴 회원 로그인 시도: {}", memberId);
+	    	 return "redirect:/customer/login/memberLogin?withdrawn=true";
+	     }
+	     
+	     if (memberId == null || loginResult.get("memberInfo") == null) {
 	         log.warn("로그인 실패: 존재하지 않거나 비밀번호 불일치: {}", memberId);
 	         return "redirect:/customer/login/memberLogin?error=true";
 	     }
 
-	     if ("Y".equals(loginResult.get("memberWithdrawStatus"))) {
-	         log.warn("탈퇴 회원 로그인 시도: {}", memberId);
-	         return "redirect:/customer/login/memberLogin?withdrawn=true";
-	     }
 
 	     // 세션 저장
 	     String loginMemberType = (String) loginResult.get("memberType");
 	     session.setAttribute("loginId", memberId);
 	     session.setAttribute("loginMemberType", loginMemberType);
 
-	     log.info("로그인 성공: memberId={} memberType={}", memberId, loginMemberType);
+	     log.info("로그인 성공: memberId: {} memberType: {} loginResult: {}", memberId, loginMemberType, loginResult);
 
 	     if ("입점업체 대표".equals(loginMemberType) || "입점업체 직원".equals(loginMemberType)) {
 	    	 EntMember entCeo = (EntMember) loginResult.get("memberInfo");

@@ -1,6 +1,7 @@
 package ks54team01.admin.product.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.data.repository.query.Param;
@@ -39,5 +40,12 @@ public interface AdminProductMapper {
     List<ProductInfoItem> loadItemList(String categoryNo); // 품목
     List<ProductInfoBrand> loadBrandList(@Param("categoryNo") String categoryNo, @Param("itemNo") String itemNo);
     List<ProductInfoModel> loadModelList(@Param("categoryNo") String categoryNo, @Param("itemNo") String itemNo, @Param("brandNo") String brandNo);
+    
+    void setSaleStoppage(@Param("productNo")String productNo);
+    
+    void unsetSaleStoppage(@Param("productNo") String productNo);
+    
+    // 상품 검색
+    List<AdminProduct> searchProductList(Map<String, Object> paramMap);
 }
 

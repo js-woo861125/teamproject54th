@@ -3,6 +3,60 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ks54team01.enterprise.management.mapper.EnterpriseManagementMapper">
 
+
+	<update id="modifyEntCeo" parameterType="EntMember">
+  		/* 입점업체대표정보 수정 */
+		UPDATE ent_ceo
+		<set>
+			<if test="entEmpName != null and entEmpName != ''">
+				ent_ceo_nm = #{entEmpName}, 			
+			</if>
+			<if test="entName != null and entName != ''">
+				ent_nm = #{entName}, 			
+			</if>
+			<if test="entEmpEmail != null and entEmpEmail != ''">
+				ent_ceo_email = #{entEmpEmail}, 			
+			</if>
+			<if test="entEmpPhone != null and entEmpPhone != ''">
+				ent_ceo_phone = #{entEmpPhone}, 			
+			</if>
+			<if test="entCeoAddr != null and entCeoAddr != ''">
+				ent_ceo_addr = #{entCeoAddr}, 			
+			</if>
+			<if test="entCeoDaddr != null and entCeoDaddr != ''">
+				ent_ceo_daddr = #{entCeoDaddr}, 			
+			</if>
+			<if test="entBank != null and entBank != ''">
+				ent_bank = #{entBank}, 
+			</if>
+			<if test="entBankNum != null and entBankNum != ''">
+				ent_bank_num = #{entBankNum}, 
+			</if>
+				revision_date = CURDATE()	
+		</set>		 
+		WHERE 
+			ent_ceo_id = #{memberId};
+  	</update>
+  	
+	<update id="modifyEntEmp" parameterType="EntMember">
+  		/* 입점업체직원정보 수정 */
+		UPDATE ent_emp
+		<set>
+			<if test="entEmpName != null and entEmpName != ''">
+				ent_emp_nm = #{entEmpName}, 			
+			</if>
+			<if test="entEmpEmail != null and entEmpEmail != ''">
+				ent_emp_email = #{entEmpEmail}, 			
+			</if>
+			<if test="entEmpPhone != null and entEmpPhone != ''">
+				ent_emp_phone = #{entEmpPhone}, 			
+			</if>
+				revision_date = CURDATE()	
+		</set>		 
+		WHERE 
+			ent_emp_id = #{memberId};
+  	</update>
+
 	<insert id="addEntEmpMember" parameterType="EntMember">
 		/* 입점업체직원정보 등록 */
 		INSERT INTO ent_emp
@@ -34,7 +88,7 @@
 		WHERE 
 			memberType = '입점업체 직원' AND entCeoNo = #{entCeoNo}
 		ORDER BY
-			memberRegDate; 	 
+			memberRegDate;
 	</select>
 
 </mapper>

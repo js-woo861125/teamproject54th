@@ -68,7 +68,7 @@ public class CustomerDeliveryServiceImpl implements CustomerDeliveryService {
 		customerDeliveryList.setRecipientPhone(formatPhone);
 		
 		// pk값 랜덤으로 나오게 설정(delNo_ + 랜덤코드8자리)
-		String delNo =  "delNo_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+		String delNo =  "del_no_" + UUID.randomUUID().toString().replace("-", "");
 		customerDeliveryList.setDelNo(delNo);
 			
 		customerDeliveryMapper.addDeliveryList(customerDeliveryList);

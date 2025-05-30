@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.servlet.http.HttpSession;
 import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.admin.productInfo.service.AdminProductInfoService;
 import ks54team01.customer.assigneeBoard.domain.CustomerAssigneeBoard;
@@ -67,7 +68,13 @@ public class CustomerAssigneeBoardController {
 	}
 	
 	@PostMapping("/addAssigneeBoard")
-	public String addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard) {
+	public String addAssigneeBoard(CustomerAssigneeBoard customerAssigneeBoard, HttpSession session) {
+		
+		String customerId = (String) session.getAttribute("loginId");
+		
+		log.info("customerId: {}", customerId);
+		
+		customerAssigneeBoard.setCustomerId(customerId);
 		
 		customerAssigneeBoardService.addAssigneeBoard(customerAssigneeBoard);
 		
@@ -121,9 +128,13 @@ public class CustomerAssigneeBoardController {
 	}
 	
 	@GetMapping("/myAssigneeBoardList")
-	public String getMyAssigneeBoardList(Model model) {
+	public String getMyAssigneeBoardList(Model model, HttpSession session) {
 		
-		List<CustomerAssigneeBoard> myAssigneeBoardList = customerAssigneeBoardService.getMyAssigneeBoardList();
+		String customerId = (String) session.getAttribute("loginId");
+		
+		log.info("customerId: {}", customerId);
+		
+		List<CustomerAssigneeBoard> myAssigneeBoardList = customerAssigneeBoardService.getMyAssigneeBoardList(customerId);
 		
 		model.addAttribute("title", "내 양수 게시글 목록 조회");
 		model.addAttribute("myAssigneeBoardList", myAssigneeBoardList);

@@ -28,7 +28,7 @@ public interface CustomerAssigneeBoardService {
 	List<ProductInfoCategory> addAssigneeBoard();
 	
 	// 내 양수 게시글 목록 조회
-	List<CustomerAssigneeBoard> getMyAssigneeBoardList();
+	List<CustomerAssigneeBoard> getMyAssigneeBoardList(String customerId);
 	
 	// 양수 게시글 정보 조회
 	CustomerAssigneeBoard getAssigneeBoardInfoByCode(String assigneeBoardNum);

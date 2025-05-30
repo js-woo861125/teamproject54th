@@ -8,6 +8,7 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</th:block>
 	
 	
@@ -121,7 +122,27 @@
 			    });
 			});
 
-				
+			
+			// 관심상품 등록 체크
+			$(function() {
+				 // 1. 서버에서 받은 결과 처리
+			 	 const addResult = /*[[${addResult}]]*/ 'none';
+			     console.log("addResult:", addResult);
+		
+			    if (addResult === 'success') {
+			      Swal.fire({
+			        /* text: "관심상품 등록되었습니다.", */
+			        html: '<p>관심상품 등록되었습니다.<a href="@{/customer/wishList/myWishList}">찜목록 보러가기</a></p>',
+			        confirmButtonText: "계속 쇼핑하기"
+			      });
+			    } else if (addResult === 'duplicate') {
+			      Swal.fire({
+			    	/* text: "이미 등록된 상품입니다.", */
+			        html: '<p>이미 등록된 상품입니다.<a href="/customer/wishList/myWishList">찜목록 보러가기</a></p>',
+			        confirmButtonText: "계속 쇼핑하기"
+			      });
+			    }
+			});
 		</script>
 	</th:block>
 	
@@ -136,7 +157,6 @@
 						<div class="row mb-50 mt-30">
 							<div class="col-md-5 col-sm-12 col-xs-12 mb-md-0 mb-sm-5">
 								<div class="detail-gallery">
-									<span class="zoom-icon"><i class="fi-rs-search"></i></span>
 									<!-- MAIN SLIDES -->
 									<div class="product-image-slider">
 										<figure class="border-radius-10">
@@ -206,10 +226,15 @@
 								<div class="detail-info pr-30 pl-30 d-flex mb-30">
 	
 									<h2 class="title-detail" th:text="${productDetailByProd[0].productsName}">LG 그램 Pro</h2>
-								
-	
-	
-	
+									<div class="d-flex justify-content-start mt-2">
+										<!-- 관심상품 등록 버튼 -->
+									    <form th:action="@{/customer/wishList/addMyWishList}" method="post" class="d-inline">
+									        <input type="hidden" name="productsNum" th:value="${productDetailByProd[0].productsNum}" />
+									        <button type="submit" class="btn btn-outline-danger d-flex align-items-center px-2" style="height: 40px;" aria-label="Add to Wishlist">
+									            <i class="fi-rs-heart" style="font-size: 24px;"></i>
+									        </button>
+									    </form>
+									</div>
 								</div>
 								<!-- Detail Info -->
 	

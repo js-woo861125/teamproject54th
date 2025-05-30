@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import ks54team01.common.file.mapper.FileMapper;
 import ks54team01.common.file.service.FileService;
 import ks54team01.customer.transferBoard.domain.CustomerTransferBoard;
 import ks54team01.customer.transferBoard.mapper.CustomerTransferBoardMapper;
@@ -26,6 +27,18 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	// DI 의존성주입
 	private final CustomerTransferBoardMapper customerTransferBoardMapper;
 	private final FileService fileService;
+	private final FileMapper fileMapper;
+	
+	/**
+	 * 양도 신청
+	 */
+	@Override
+	public void applyTranfer(CustomerTransferBoard customerTransferBoard) {
+		
+		String transferRentalContractNum =  "transfer_rental_contract_" + UUID.randomUUID().toString().replace("-", "");
+		customerTransferBoard.setTransferRentalContractNum(transferRentalContractNum);
+		customerTransferBoardMapper.applyTransfer(customerTransferBoard);
+	}
 	
 	/**
 	 * 양도 게시글 삭제
@@ -44,9 +57,42 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	 * 양도 게시글 수정
 	 */
 	@Override
-	public void modifyTransferBoard(CustomerTransferBoard customerTransferBoard) {
+	public void modifyTransferBoard(CustomerTransferBoard customerTransferBoard
+								   , MultipartFile[] mainImage
+								   , MultipartFile[] extraImage) {
 		
 		customerTransferBoardMapper.modifyTransferBoard(customerTransferBoard);
+		
+		// 기존 이미지 delete -> 새 이미지 insert
+	
+	    //기존 이미지 delete
+	    
+	    fileService.deleteFileByIdx(null);
+	    // 새 이미지 업로드 (mainImage)
+	    if (mainImage != null) {
+	        for (MultipartFile file : mainImage) {
+	            if (!file.isEmpty()) {
+	                fileService.addFiles(mainImage, "mainImage", customerTransferBoard.getTransferBoardNum());
+	            }
+	        }
+	    }
+
+	    // 새 이미지 업로드 (extraImage)
+	    if (extraImage != null) {
+	        for (MultipartFile file : extraImage) {
+	            if (!file.isEmpty()) {
+	                fileService.addFiles(extraImage, "extraImage", customerTransferBoard.getTransferBoardNum());
+	            }
+	        }
+	    }
+		
+//		fileService.deleteFiles(fileIdx);
+		/*
+		 * fileService.addFiles(mainImage, "mainImage",
+		 * customerTransferBoard.getTransferBoardNum());
+		 * fileService.addFiles(extraImage, "extraImage",
+		 * customerTransferBoard.getTransferBoardNum());
+		 */
 	}
 	
 	/**
@@ -54,9 +100,9 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	 */
 	@Override
 	public void addTransferBoard(CustomerTransferBoard customerTransferBoard
-								, MultipartFile[] mainImage, MultipartFile[] extraImage) {
+							   , MultipartFile[] mainImage, MultipartFile[] extraImage) {
 		
-		String transferBoardNum =  "transfer_board_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+		String transferBoardNum =  "transfer_board_" + UUID.randomUUID().toString().replace("-", "");
 		customerTransferBoard.setTransferBoardNum(transferBoardNum);	
 		customerTransferBoardMapper.addTransferBoard(customerTransferBoard);
 	
@@ -89,8 +135,8 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	 * 내 양도 게시글 목록 조회
 	 */
 	@Override
-	public List<CustomerTransferBoard> getMyTransferBoardList() {
-		List<CustomerTransferBoard> myTransferBoardList = customerTransferBoardMapper.getMyTransferBoardList();
+	public List<CustomerTransferBoard> getMyTransferBoardList(String customerId) {
+		List<CustomerTransferBoard> myTransferBoardList = customerTransferBoardMapper.getMyTransferBoardList(customerId);
 		return myTransferBoardList;
 	}
 	

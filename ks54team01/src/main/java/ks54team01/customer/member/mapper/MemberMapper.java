@@ -5,9 +5,19 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import ks54team01.customer.member.domain.CustomerMember;
+import ks54team01.customer.member.domain.FindMember;
 
 @Mapper
 public interface MemberMapper {
+	// 임시비밀번호 업데이트
+	void updatePassword(String memberId, String encodedPw);
+	
+	// 비밀번호 찾기
+	FindMember findMemberPwByInfo(String memberId, String memberEmail, String memberType);
+	
+	// 아이디 찾기
+	FindMember findMemberIdByInfo(String memberName, String memberPhone, String memberEmail, String memberType);
+	
 	// 공통정보 테이블 탈퇴처리
 	int deactivateCommonMember(String memberId);
 	
@@ -29,9 +39,6 @@ public interface MemberMapper {
 	// 공통정보 수정
 	int modifyCommonInfo(Map<String, Object> commonInfoMap);
 	
-	// 비밀번호 일치여부 체크
-	public boolean isPwCheck(Map<String, Object> params);
-	
 	// 기업고객 정보 조회
 	CustomerMember getCorpInfoById(String memberId);
 	
@@ -39,16 +46,6 @@ public interface MemberMapper {
 	CustomerMember getCustomerInfoById(String memberId);
 
 
-
-
-
-
-
-
-
-
-
-	
 
 
 

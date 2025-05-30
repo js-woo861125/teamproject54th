@@ -41,9 +41,19 @@
 				      return;
 				    }
 				  }
+				  
+				  const deliveryCount = parseInt(document.getElementById('deliveryCount').value || '0');
 	
 				  // 기본배송지 체크 반영
 				  const isChecked = document.getElementById('agreeCheckbox').checked;
+				  if (deliveryCount === 0 && !isChecked) {
+					    e.preventDefault();
+					    Swal.fire('입력 오류', '첫 번째 배송지는 기본배송지로 설정해야 합니다.', 'warning');
+					    return;
+				  }
+				  
+				  
+				  
 				  document.getElementById('primaryLocationChk').value = isChecked ? '기본배송지' : '추가배송지';
 	
 				  // 모든 조건 통과 시 폼 제출
@@ -110,7 +120,19 @@
 
 		    $('.removeDeliveryBtn').click( e => {
 				e.preventDefault();
+				
+				const button = e.target;
 				const delNo = $(e.target).data('delNo');
+				
+				
+				
+				const isPrimary = $(button).closest('tr').find('.product-cart-wrap').text().trim() === '기본배송지';
+				
+				if(isPrimary) {
+					Swal.fire('삭제 불가', '기본배송지는 삭제할 수 없습니다.', 'error');
+					return;
+				}
+				
 				const swalWithBootstrapButtons = Swal.mixin({
 					  customClass: {
 						  	actions: 'w-50 justify-content-around',
@@ -309,7 +331,7 @@
 			                        </tr>
 			                    </thead>
 			                    <tbody>
-			                        <tr th:if="${!#lists.isEmpty(DeliveryList)}" th:each="l : ${DeliveryList}">
+			                        <tr th:if="${!#lists.isEmpty(deliveryList)}" th:each="l : ${deliveryList}">
 			                            <td>
 			                            	<input type="hidden" th:value="${l.delNo}">
 			                            	
@@ -332,8 +354,8 @@
 			                            	<a href="#" class="btn btn-xs removeDeliveryBtn" th:data-del-no="${l.delNo}">삭제</a>
 			                            </td>
 			                        </tr>
-			                        <tr th:unless="${!#lists.isEmpty(DeliveryList)}">
-			                        	<td>등록없음</td>
+			                        <tr th:unless="${!#lists.isEmpty(deliveryList)}">
+			                        	<td colspan="12">등록없음</td>
 			                        </tr>
 			                    </tbody>
 			                </table>
@@ -342,5 +364,6 @@
 			    </div>
 			</div>	
 		</div>
+		<input type="hidden" id="deliveryCount" th:value="${#lists.size(deliveryList)}" />
 	</th:block> 
 </html>

@@ -1,175 +1,166 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{enterprise/layout/default}">
-	
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{enterprise/layout/default}">
 	<!-- head 삽입공간 -->
 	<head>
-	
 	</head>
 	
 	<th:block layout:fragment="jsFile">
-	
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</th:block>
 	
 	<th:block layout:fragment="jsScript">
-	
+		<script type="text/javascript">
+			$(function() {
+				$('.confirmBtn').click(function(){
+					const orderId = $(this).attr('data-order-id');
+					const paymentKey = $(this).attr('data-payment-key');
+					
+					Swal.fire({
+						title: '환불 승인',
+						text: '정말로 이 요청을 승인하고 환불하시겠습니까?',
+						icon: 'warning',
+						showCancelButton: true,
+						confirmButtonText: '예',
+						cancelButtonText: '아니오'
+					}).then((result) => {
+						if(result.isConfirmed) {
+							$.ajax({
+								type: 'POST',
+								url: '/enterprise/refund/confirm',
+								data: {
+									orderId: orderId,
+									paymentKey: paymentKey
+								},
+								success: function(res) {
+									Swal.fire('완료', res.message, 'success').then(() => {
+										location.reload();
+									});
+								},
+								error: function() {
+									Swal.fire('오류', '환불 처리 중 문제가 발생했습니다.', 'error');
+								}
+							});
+						}
+					});
+				});
+				
+				
+				
+				
+				
+				$('.rejectBtn').click(function(){
+					const orderId = $(this).attr('data-order-id');
+					const paymentKey = $(this).attr('data-payment-key');
+					
+					
+					Swal.fire({
+						title: '환불 거부',
+						text: '정말로 이 요청을 거부하시겠습니까?',
+						icon: 'warning',
+						showCancelButton: true,
+						confirmButtonText: '예',
+						cancelButtonText: '아니오'
+					}).then((result) => {
+						if(result.isConfirmed) {
+							$.ajax({
+								type: 'POST',
+								url: '/enterprise/refund/reject',
+								data: {
+									orderId: orderId,
+									paymentKey: paymentKey
+								},
+								success: function(res) {
+									Swal.fire('완료', res.message, 'success').then(() => {
+										location.reload();
+									});
+								},
+								error: function() {
+									Swal.fire('오류', '환불 처리 중 문제가 발생했습니다.', 'error');
+								}
+							});
+						}
+					});
+				});
+				
+				
+				
+				
+				
+				
+			});
+		
+		
+		</script>
 	</th:block>
 	
-	<!-- 페이지 삽입공간 -->
 	<th:block layout:fragment="content">
 		<div class="content-header">
 			<div>
-				<h2 class="content-title card-title">배송정보(관리자)</h2>
+				<h2 class="content-title card-title" th:text="${title}">환불요청</h2>
 			</div>
 	
 		</div>
 		<div class="card mb-4">
 			<header class="card-header">
-				<form th:action="@{/admin/delivery/searchDeliveryInfoList}"
-					method="get">
-					<div class="row gx-3">
-						<div class="col-lg-2 col-md-3 col-12">
-							<select class="form-select" name="searchKey">
-								<option value="delCompany"
-									th:selected="${searchKey == 'delCompany'}">택배사</option>
-								<option value="delProgress"
-									th:selected="${searchKey == 'delProgress'}">배송진행상황</option>
-								<option value="recipientNm"
-									th:selected="${searchKey == 'recipientNm'}">수령인명</option>
-							</select>
-						</div>
-						<div class="col-lg-4 col-md-5">
-							<input type="text" name="searchValue" th:value="${searchValue}"
-								placeholder="검색어를 입력해주세요" class="form-control" />
-						</div>
-						<div class="col-lg-1 col-md-1 me-auto">
-							<button type="submit"
-								class="form-control btn btn-primary p-0 justify-content-center">검색</button>
-						</div>
-						<div class="col-lg-2 col-md-3 col-12">
-							<select class="form-select">
-								<option>Show 20</option>
-								<option>Show 30</option>
-								<option>Show 40</option>
-							</select>
-						</div>
+				<div class="row gx-3">
+					<div class="col-lg-2 col-md-3 col-12">
+						<select class="form-select" name="searchKey">
+							<option value="delCompany" th:selected="${searchKey == 'delCompany'}">택배사</option>
+							<option value="recipientNm" th:selected="${searchKey == 'recipientNm'}">수령인명</option>
+						</select>
 					</div>
-				</form>
+					<div class="col-lg-4 col-md-5">
+						<input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
+					</div>
+					<div class="col-lg-1 col-md-1 me-auto">
+						<button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
+					</div>
+				</div>
 			</header>
 			<!-- card-header end// -->
 			<div class="card-body">
 				<div class="table-responsive">
-					<table class="table table-hover">
-						<thead>
+					<table class="table align-middle table-nowrap mb-0">
+						<thead class="table-light text-center">
 							<tr>
-								<th>#ID</th>
-								<th>Product</th>
-								<th>환불사유</th>
-								<th>Name</th>
-								<th>처리상태</th>
-								<th>Date</th>
-								<th class="text-end">Action</th>
+								<th class="align-middle" scope="col">주문자ID</th>
+								<th class="align-middle" scope="col">상품명</th>
+								<th class="align-middle" scope="col">환불사유</th>
+								<th class="align-middle" scope="col">환불신청날짜</th>
+								<th class="align-middle" scope="col">상태</th>
+								<th class="align-middle" scope="col">결과통보일</th>
+								<th class="align-middle" scope="col">설정</th>								
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td>23</td>
-								<td><b>Organic Quinoa, Brown, & Red Rice</b></td>
-								<td>초기불량</td>
-								<td>Devon Lane</td>
+						<tbody class="text-center">
+							<tr th:if="${!#lists.isEmpty(refundList)}" th:each="l : ${refundList}">
+								<td><p th:text="${l.custId}"></td>
+								<td><p th:text="${l.prodNm}"></td>
+								<td><p th:text="${l.refundReason}"></td>
+								<td><p th:text="${l.refundDate}"></td>
+								<td><p th:text="${l.requestStatus}"></td>
+								<td><p th:text="${l.reviewNotificationDate}"></td>
 								<td>
-									<ul>
-										<li><span class="badge rounded-pill alert-warning">처리</span>
-										</li>
-									</ul>
+									<button type="button" class="btn btn-xs confirmBtn" th:if="${l.requestStatus == '입점업체검토중'}" th:data-order-id="${l.orderId}" th:data-payment-key="${l.paymentKey}">승인</button>
+									<button type="button" class="btn btn-xs rejectBtn" th:if="${l.requestStatus == '입점업체검토중'}" th:data-order-id="${l.orderId}" th:data-payment-key="${l.paymentKey}" >거부</button>
+									 <p th:if="${l.requestStatus == '환불승인'}">승인 완료
+									 <p th:if="${l.requestStatus == '환불거부'}">신청 거부
+									 
 								</td>
-								<td>10.03.2020</td>
-								<td class="text-end"><a href="#"
-									class="btn btn-md rounded font-sm">Detail</a></td>
 							</tr>
-							<tr>
-								<td>24</td>
-								<td><b>All Natural Italian-Style</b></td>
-								<td>초기불량</td>
-								<td>Guy Hawkins</td>
-								<td>
-									<ul>
-										<li><span class="badge rounded-pill alert-warning">처리</span>
-										</li>
-									</ul>
-								</td>
-								<td>04.12.2019</td>
-								<td class="text-end"><a href="#"
-									class="btn btn-md rounded font-sm">Detail</a></td>
+							<tr th:unless="${!#lists.isEmpty(refundList)}">
+								<td colspan="12"><p>환불 요청 없음</p></td>
 							</tr>
-							<tr>
-								<td>25</td>
-								<td><b>Angie’s Boomchickapop Sweet</b></td>
-								<td>초기불량</td>
-								<td>Steven John</td>
-								<td>
-									<ul>
-										<li><span class="badge rounded-pill alert-warning">처리</span>
-										</li>
-									</ul>
-								</td>
-								<td>25.05.2020</td>
-								<td class="text-end"><a href="#"
-									class="btn btn-md rounded font-sm">Detail</a></td>
-							</tr>
-							<tr>
-								<td>26</td>
-								<td><b>Foster Farms Takeout Crispy Classic</b></td>
-								<td>초기불량</td>
-								<td>Kristin Watson</td>
-								<td>
-									<ul>
-										<li><span class="badge rounded-pill alert-success">취소</span>
-										</li>
-									</ul>
-								</td>
-								<td>01.06.2020</td>
-								<td class="text-end"><a href="#"
-									class="btn btn-md rounded font-sm">Detail</a></td>
-							</tr>
-							<tr>
-								<td>27</td>
-								<td><b>Blue Diamond Almonds Lightly Salted</b></td>
-								<td>초기불량</td>
-								<td>Jane Cooper</td>
-								<td>
-									<ul>
-										<li><span class="badge rounded-pill alert-success">취소</span>
-										</li>
-									</ul>
-								</td>
-								<td>13.03.2020</td>
-								<td class="text-end"><a href="#"
-									class="btn btn-md rounded font-sm">Detail</a></td>
-							</tr>
-							<tr>
-								<td>28</td>
-								<td><b>Chobani Complete Vanilla Greek Yogurt</b></td>
-								<td>초기불량</td>
-								<td>Courtney Henry</td>
-								<td>
-									<ul>
-										<li><span class="badge rounded-pill alert-success">취소</span>
-										</li>
-									</ul>
-								</td>
-								<td>21.02.2020</td>
-								<td class="text-end"><a href="#"
-									class="btn btn-md rounded font-sm">Detail</a></td>
-							</tr>
-							
 						</tbody>
 					</table>
 				</div>
-				<!-- table-responsive//end -->
+				<!-- table-responsive //end -->
 			</div>
+			<!-- card-body end// -->
 		</div>
+		<!-- card end// -->
+		
 	</th:block>
-
 </html>

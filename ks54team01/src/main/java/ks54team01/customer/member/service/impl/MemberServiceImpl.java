@@ -3,9 +3,13 @@ package ks54team01.customer.member.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import ks54team01.customer.login.mapper.LoginMapper;
+import ks54team01.customer.member.domain.CommonMember;
 import ks54team01.customer.member.domain.CustomerMember;
+import ks54team01.customer.member.domain.FindMember;
 import ks54team01.customer.member.mapper.MemberMapper;
 import ks54team01.customer.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -16,16 +20,45 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
 
+	private final LoginMapper loginMapper;
 	private final MemberMapper memberMapper;
+	private final PasswordEncoder passwordEncoder;
 	
-
+	/**
+	 * 임시비밀번호 업데이트
+	 */
+	@Override
+	public void updateRandomPw(String memberId, String tempPw) {
+		String encodedPw = passwordEncoder.encode(tempPw);
+	   
+	    memberMapper.updatePassword(memberId, encodedPw);
+		
+	}
+	
+	/**
+	 * 비밀번호 찾기
+	 */
+	@Override
+	public FindMember findMemberPwByInfo(String memberId, String memberEmail, String memberType) {
+		return memberMapper.findMemberPwByInfo(memberId, memberEmail, memberType);
+	}
+	
+	/**
+	 * 아이디 찾기
+	 */
+	@Override
+	public FindMember findMemberIdByInfo(String memberName, String memberPhone, String memberEmail, String memberType) {
+		return memberMapper.findMemberIdByInfo(memberName, memberPhone, memberEmail, memberType);
+	}
+	
+	
 	/**
 	 * 회원탈퇴
 	 */
 	@Override
 	public boolean customerLeave(String memberType, String memberId) {
 		 int result = 0;
-		 log.info("탈퇴시작: {}",memberId);
+		 log.info("탈퇴시작: {}", memberId);
 
 		    switch (memberType) {
 		        case "개인고객":
@@ -71,7 +104,8 @@ public class MemberServiceImpl implements MemberService{
 		commonInfoMap.put("memberId", modifyMember.getMemberId());
 
 	    if (newPw != null && !newPw.trim().isEmpty()) {
-	    	commonInfoMap.put("newPw", newPw);
+	    	String encodedPw = passwordEncoder.encode(newPw);
+	    	commonInfoMap.put("newPw", encodedPw);
 	    }
 		
 		int commonUpdateCount = memberMapper.modifyCommonInfo(commonInfoMap);
@@ -92,8 +126,9 @@ public class MemberServiceImpl implements MemberService{
 	 */
 	@Override
 	public boolean isPwCheck(String memberId, String memberPw) {
-		
-		return memberMapper.isPwCheck(Map.of("memberId", memberId, "memberPw", memberPw));
+		CommonMember memberInfo = loginMapper.getMemberInfoById(memberId);
+		String encodedPw = memberInfo.getMemberPw(); 
+		return passwordEncoder.matches(memberPw, encodedPw);
 	}
 	
 	

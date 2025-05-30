@@ -38,10 +38,10 @@
                                         </div>
                                         <form method="post" th:action="@{/customer/login/memberLogin}">
                                             <div class="form-group">
-                                                <input type="text" id="memberId" name="memberId" placeholder="ID" value="personalcustid1" required />
+                                                <input type="text" id="memberId" name="memberId" placeholder="ID" value="personalcustid6" required />
                                             </div>
                                             <div class="form-group">
-                                                <input type="password" id="memberPw" name="memberPw" placeholder="Password" value ="personalcustpw1" required />
+                                                <input type="password" id="memberPw" name="memberPw" placeholder="Password" value ="111111!#" required />
                                             </div>
                                          
                                             <div class="login_footer form-group mb-50 d-flex justify-content-end">                                              
@@ -75,9 +75,18 @@
 		 	  alert('탈퇴한 회원입니다. 로그인할 수 없습니다.');
 		 	}
 		
-			if(params.get('message') === 'unauthorized') {
-			  alert("회원만 이용 가능한 기능입니다. 로그인 후 이용해주세요.");
-			}
+		 	switch (params.get('message')) {
+		 	  case 'unauthorized':
+		 	    alert('회원만 이용 가능한 기능입니다. 로그인 후 이용해주세요.');
+		 	    break;
+		 	  case 'emailSuccess':
+		 	    alert('이메일로 아이디를 발송했습니다. 로그인해주세요.');
+		 	    break;
+		 	  case 'tempPwSent':
+		 	    alert('이메일로 임시비밀번호를 발송했습니다. 로그인 후 비밀번호를 변경해주세요.');
+		 	    break;
+		 	}
+
 			
 		</script>
 	</th:block>

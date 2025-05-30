@@ -8,10 +8,25 @@ import org.apache.ibatis.annotations.Param;
 import ks54team01.customer.payment.domain.CustomerDelivery;
 import ks54team01.customer.payment.domain.CustomerDeliveryInfo;
 import ks54team01.customer.payment.domain.CustomerPayment;
+import ks54team01.customer.payment.domain.CustomerRefund;
 
 @Mapper
 public interface CustomerPaymentMapper {
 	
+	
+	CustomerPayment getFirstPaymentDetail(String rentalContractNo);
+	
+	List<CustomerPayment> getPaymentDetailList(String rentalContractNo);
+	
+	String getRentalContractNo(String paymentCompletedNo);
+	
+	void modifyCancelQuantity(String ProdNo, String entCeoNo, Integer cancelQuantity);
+	
+	CustomerPayment getProductByOrderId(String orderId);
+	
+	int getQuantityByOrderId(String orderId);
+	
+	int addRefund(CustomerRefund customerRefund);
 	
 	CustomerPayment getLastBillingPayment(@Param ("custId")String custId, @Param("rentalContractNo") String rentalContractNo);
 	

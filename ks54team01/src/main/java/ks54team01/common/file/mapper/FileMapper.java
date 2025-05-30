@@ -9,6 +9,10 @@ import ks54team01.common.file.domain.FileMetaData;
 
 @Mapper
 public interface FileMapper {
+	
+		// 특정 파일 메타데이터 삭제
+		int deleteFileByIdx(String fileIdx);
+		
 		// 단일 파일 메타데이터 테이블 저장
 		int addFile(FileMetaData fileMetaData);
 		

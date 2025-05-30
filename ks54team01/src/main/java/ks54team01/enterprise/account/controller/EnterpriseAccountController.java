@@ -1,5 +1,7 @@
 package ks54team01.enterprise.account.controller;
 
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
@@ -41,13 +44,14 @@ public class EnterpriseAccountController {
 	    log.info("입점업체 회원수정 시작: {}", loginId);
 	    
 	    if ("입점업체 대표".equals(loginMemberType)) {
-	        enterpriseAccountService.modifyEntInfo(modifyMember, loginMemberType);
+	        enterpriseAccountService.modifyEntInfo(modifyMember, loginMemberType, newPw);
 	    } else if ("입점업체 직원".equals(loginMemberType)) {
-	        enterpriseAccountService.modifyEntInfo(modifyMember, loginMemberType);
+	        enterpriseAccountService.modifyEntInfo(modifyMember, loginMemberType, newPw);
 	    }
 	    
-	    boolean result = enterpriseAccountService.modifyEntInfo(modifyMember, loginMemberType);
-
+	    boolean result = enterpriseAccountService.modifyEntInfo(modifyMember, loginMemberType, newPw);
+	    log.info("정보수정 성공 여부: {}", result);	    
+	    
 	    if (result) {
 	        redirectAttributes.addFlashAttribute("message", "회원정보가 성공적으로 수정되었습니다.");
 	    } else {
@@ -57,6 +61,19 @@ public class EnterpriseAccountController {
 	    return "redirect:/enterprise/myAccount";
 	}
 
+	
+	@PostMapping("/pwCheck")
+	@ResponseBody
+	public Map<String, Boolean> pwCheck(@RequestParam String memberId, 
+										@RequestParam String memberPw){
+		
+		log.info("비밀번호 체크 시도 :memberId={}, memberPw={}", memberId, memberPw);
+		
+	    boolean isMatched = enterpriseAccountService.isPwCheck(memberId, memberPw);
+	    
+	    return Map.of("match", isMatched);
+	}
+	
 	
 	@GetMapping("/myAccount")
 	public String enterpriseMyAccountPage(HttpSession session, Model model) {
@@ -73,14 +90,20 @@ public class EnterpriseAccountController {
 	    }
 
 	    EntMember entMemberInfo = enterpriseAccountService.getEntInfoById(loginId);
-	    String[] phoneArray = entMemberInfo.getEntEmpPhone().split("-");
-	    
-	    model.addAttribute("title", "내 프로필");
-	    model.addAttribute("entInfo", entMemberInfo);
+	    String phone = entMemberInfo.getEntEmpPhone();
+	    model.addAttribute("entMemberInfo", entMemberInfo);
 	    model.addAttribute("memberType", loginMemberType);
-        model.addAttribute("entEmpPhone1", phoneArray[0]);
-        model.addAttribute("entEmpPhone2", phoneArray[1]);
-        model.addAttribute("entEmpPhone3", phoneArray[2]);
+	    
+	    if (phone != null && phone.matches("\\d{2,4}-\\d{3,4}-\\d{4}")) {
+	        String[] phoneArray = phone.split("-");
+	        model.addAttribute("entEmpPhone1", phoneArray[0]);
+	        model.addAttribute("entEmpPhone2", phoneArray[1]);
+	        model.addAttribute("entEmpPhone3", phoneArray[2]);
+	    } else {
+	        model.addAttribute("entEmpPhone1", "");
+	        model.addAttribute("entEmpPhone2", "");
+	        model.addAttribute("entEmpPhone3", "");
+	    }
 
 	    return "enterprise/myPage/entMyAccountView";
 	}

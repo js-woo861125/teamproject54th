@@ -1,134 +1,209 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{admin/layout/default}">
-	<!-- head 삽입공간 -->
-	<head>
-	</head>
-	
-	<th:block layout:fragment="jsFile">
-		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-	</th:block>
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/default}">
+<head>
+</head>
 
-    <th:block layout:fragment="content">
-        <div class="content-header">
-            <div>
-                <h2 class="content-title card-title" th:text="@{#}"></h2>
-            </div>
-            <div>
-                <a th:href="@{/admin/product/addProduct}" class="btn btn-primary btn-sm rounded">등록하기</a>
-            </div>
-         </div>
-        <div class="card mb-4">
-            <header class="card-header">
+<th:block layout:fragment="jsFile">
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</th:block>
+<th:block layout:fragment="jsScript">
+<script>
+function setSaleStoppage(el) {
+    const productNo = el.getAttribute('data-product-no');
+    Swal.fire({
+        title: "정말 판매중단 하시겠습니까?",
+        text: "입점업체에서 등록이 불가합니다.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "판매중단!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('/admin/product/setSaleStoppage', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'productNo=' + encodeURIComponent(productNo)
+            })
+            .then(resp => {
+                if (resp.ok) {
+                    Swal.fire({
+                        title: "처리 완료!",
+                        text: "상품이 판매중단 처리되었습니다.",
+                        icon: "success"
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        title: "실패!",
+                        text: "판매중단 처리에 실패했습니다.",
+                        icon: "error"
+                    });
+                }
+            });
+        }
+    });
+}
+function unsetSaleStoppage(el) {
+    const productNo = el.getAttribute('data-product-no');
+    Swal.fire({
+        title: "판매중단 해제하시겠습니까?",
+        text: "상품이 다시 비활성화 상태로 돌아갑니다.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "해제"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('/admin/product/unsetSaleStoppage', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'productNo=' + encodeURIComponent(productNo)
+            })
+            .then(resp => {
+                if (resp.ok) {
+                    Swal.fire({
+                        title: "처리 완료!",
+                        text: "상품이 '비활성화' 상태로 변경되었습니다.",
+                        icon: "success"
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        title: "실패!",
+                        text: "해제 처리에 실패했습니다.",
+                        icon: "error"
+                    });
+                }
+            });
+        }
+    });
+}
+</script>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="content-header d-flex justify-content-between align-items-center mb-3">
+        <h2 class="content-title card-title" th:text="${title}">상품관리</h2>
+        <a th:href="@{/admin/product/addProduct}" class="btn btn-primary btn-sm rounded">등록하기</a>
+    </div>
+    <div class="card mb-4">
+        <header class="card-header">
+            <form th:action="@{/admin/product/productList}" method="get">
                 <div class="row align-items-center">
-					   <div class="col-lg-1 col-md-3 col-12">
-	                       <select class="form-select" name="searchKey">
-	                           <option>상품명</option>
-	                       </select>
-	                   </div>
-	                   <div class="col-lg-3 col-md-5">
-	                       <input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
-	                   </div>
-	                   <div class="col-lg-1 col-md-1 me-auto">
-						   <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
-	                   </div>
+                    <div class="col-lg-1">
+                        <select class="form-select form-select-sm" name="searchKey">
+                            <option th:value="productName" th:selected="${searchKey == 'productName'}">상품명</option>
+                            <option th:value="brandName" th:selected="${searchKey == 'brandName'}">브랜드</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-3">
+                        <input type="text" name="searchValue" th:value="${searchValue}" class="form-control form-control-sm" placeholder="검색어 입력">
+                    </div>
                     <div class="col-lg-2">
-                        <select class="form-select">
-                            <option>모든 카테고리</option>
-                            <option>TV</option>
-                            <option>노트북</option>
-                            <option>전기레인지</option>
-                            <option>냉장고</option>
-                            <option>식탁</option>
-                            <option>소파</option>
-                            <option>침대</option>
+                        <select class="form-select form-select-sm" name="categoryNo">
+                            <option th:value="''" th:text="'전체 카테고리'" th:selected="${categoryNo == null or categoryNo == ''}"></option>
+                            <option th:each="cat : ${categoryList}" 
+                                    th:value="${cat.categoryNo}" 
+                                    th:text="${cat.smCategory}" 
+                                    th:selected="${categoryNo == cat.categoryNo}">
+                            </option>
                         </select>
                     </div>
                     <div class="col-lg-2">
-                        <select class="form-select">
-                            <option>판매상태</option>
-                            <option>활성화</option>
-                            <option>비활성화</option>
-                            <option>판매중단</option>
+                        <select class="form-select form-select-sm" name="productStatus">
+                            <option th:value="''" th:selected="${productStatus == null or productStatus == ''}">전체 상태</option>
+                            <option th:value="활성화" th:selected="${productStatus == '활성화'}">활성화</option>
+                            <option th:value="비활성화" th:selected="${productStatus == '비활성화'}">비활성화</option>
+                            <option th:value="판매중단" th:selected="${productStatus == '판매중단'}">판매중단</option>
                         </select>
+                    </div>
+                    <div class="col-lg-1">
+                        <button type="submit" class="btn btn-primary btn-sm w-100">검색</button>
                     </div>
                 </div>
-            </header>
-            <!-- card-header end// -->
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr class=text-center>
-                                <th>상품명</th>
-                                <th>상품이미지</th>                            
-                                <th>모델명</th>
-                                <th>판매상태</th>
-                                <th>등록일자</th>
-                                <th>수정일자</th>
-                                <th>수정/삭제</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-center">
-                        <th:block th:if="${!#lists.isEmpty(adminProductList)}" th:each="l : ${adminProductList}">
-                            <tr>
-                                <td><a class="fw-bold" th:text="${l.productName}"></a></td>
-                               <td>
-								    <a class="item" href="#">
-								        <div class="img">
-								            <img th:if="${l.productImage != null}" 
-								                 th:src="${l.productImage}" 
-								                 class="img-sm img-main" 
-								                 alt="상품이미지" />
-								                 
-								            <div th:if="${l.productImage == null}" 
-								                 class="img-sm img-main bg-light d-inline-block" 
-								                 style="width: 100px; height: 100px;"></div>
-								        </div>							       
-								    </a>
-								</td>
-                                <td th:text="${l.modelName}">모델명</td>
-                                <td class="col-lg-2 col-sm-2 col-4 col-status">
-                                    <span class="badge rounded-pill alert-success">활성화</span>
-                                    <div class="dropdown">
-                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="#">활성화</a>
-                                            <a class="dropdown-item" href="#">비활성화</a>
-                                            <a class="dropdown-item text-danger" href="#">판매중단</a>
-                                        </div>
+            </form>
+        </header>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="text-center">
+                            <th>상품명</th>
+                            <th>상품이미지</th>
+                            <th>모델명</th>
+                            <th>판매상태</th>
+                            <th>등록일자</th>
+                            <th>수정일자</th>
+                            <th>수정/삭제</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                    <th:block th:if="${!#lists.isEmpty(adminProductList)}" th:each="l : ${adminProductList}">
+                        <tr>
+                            <td><a class="fw-bold" th:text="${l.productName}"></a></td>
+                            <td>
+                                <a class="item" href="#">
+                                    <div class="img">
+                                        <img th:if="${l.productImage != null}" 
+                                             th:src="${l.productImage}" 
+                                             class="img-sm img-main" 
+                                             alt="상품이미지" />
+                                        <div th:if="${l.productImage == null}" 
+                                             class="img-sm img-main bg-light d-inline-block" 
+                                             style="width: 100px; height: 100px;"></div>
                                     </div>
-                                </td>
-                                <td th:text="${l.registerDate}">2023-01-01 13:00:00</td>
-                                <td th:text="${l.revisionDate}">2023-01-01 13:00:00</td>
-                                <td class="col-lg-2 col-sm-2 col-4 col-action">
-                                    <a th:href="@{/admin/product/modifyProduct(productNo=${l.productNo})}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
-                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
-                                </td>
-                            </tr>
-                          </th:block>
-                          	 <tr th:unless="${!#lists.isEmpty(entList)}">
-							 	<td colspan="11">등록없음</td>
-							 </tr>  
-                        </tbody>
-                    </table>
-                </div>
-                <!-- table-responsive //end -->
+                                </a>
+                            </td>
+                            <td th:text="${l.modelName}">모델명</td>
+                            <td class="col-lg-2 col-sm-2 col-4 col-status">
+                                <span th:switch="${l.productStatus}">
+                                    <span th:case="'활성화'" class="badge rounded-pill alert-success">활성화</span>
+                                    <span th:case="'비활성화'" class="badge rounded-pill alert-secondary">비활성화</span>
+                                    <span th:case="'판매중단'" class="badge rounded-pill alert-danger">판매중단</span>
+                                </span>
+                                <div class="dropdown">
+                                    <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm">
+                                        <i class="material-icons md-more_horiz"></i>
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item text-danger"
+                                           href="#"
+                                           th:attr="data-product-no=${l.productNo}"
+                                           onclick="setSaleStoppage(this)">판매중단</a>
+                                        <a class="dropdown-item text-success"
+                                           href="#"
+                                           th:if="${l.productStatus == '판매중단'}"
+                                           th:attr="data-product-no=${l.productNo}"
+                                           onclick="unsetSaleStoppage(this)">판매중단 해제</a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td th:text="${l.registerDate}">2023-01-01 13:00:00</td>
+                            <td th:text="${l.revisionDate}">2023-01-01 13:00:00</td>
+                            <td class="col-lg-2 col-sm-2 col-4 col-action">
+                                <a th:href="@{/admin/product/modifyProduct(productNo=${l.productNo})}" class="btn btn-sm font-sm rounded btn-brand">
+                                    <i class="material-icons md-edit"></i> 수정
+                                </a>
+                                <a href="#" class="btn btn-sm font-sm btn-light rounded">
+                                    <i class="material-icons md-delete_forever"></i> 삭제
+                                </a>
+                            </td>
+                        </tr>
+                      </th:block>
+                         <tr th:unless="${!#lists.isEmpty(adminProductList)}">
+                            <td colspan="11">등록없음</td>
+                         </tr>
+                    </tbody>
+                </table>
             </div>
-            <!-- card-body end// -->
         </div>
-   </th:block>    
-        <!-- card end// -->
-       
-    <!-- content-main end// -->
-
-        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-        <script src="assets/js/vendors/select2.min.js"></script>
-        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
-        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-        <!-- Main Script -->
-        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-    </body>
+    </div>
+</th:block>
 </html>

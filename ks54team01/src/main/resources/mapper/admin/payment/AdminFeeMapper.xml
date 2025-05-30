@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.admin.payment.mapper.AdminFeeMapper">
+
+	<resultMap id="settlementConfirmRequestMap" 	type="SettlementConfirmRequest">
+	
+        <id property="monthlyFeeNo" 				column="monthly_fee_no"/>
+        <result property="searchValue" 				column="ent_ceo_no"/>
+        <result property="entEmpId" 				column="manager_id"/>
+        <result property="paymentDetails" 			column="payment_details"/>
+        <result property="totalEntFeeRental" 		column="platform_fee"/>
+        <result property="totalPlatFormFeeRental" 	column="ent_fee"/> 
+        <result property="payStatus" 				column="pay_status"/> 
+        <result property="provisionDate" 		column="provision_date"/>
+        <result property="settlementMonth" 			column="settlement_month"/>
+
+        </resultMap>
+	
+	
+	<select id="getMaxMonthlyFeeNumber" resultType="java.lang.Integer">
+        SELECT
+            COALESCE(MAX(CAST(SUBSTRING_INDEX(monthly_fee_no, '_', -1) AS UNSIGNED)), 0)
+        FROM
+            monthly_fee
+        WHERE
+            monthly_fee_no LIKE 'monthly_fee_%';
+    </select>
+
+    <insert id="insertMonthlyFeeDetail" parameterType="ks54team01.admin.payment.domain.AdminMonthlyFee">
+        INSERT INTO monthly_fee (
+            monthly_fee_no,
+            ent_ceo_no,
+            ent_emp_id,
+            manager_id,
+            payment_details,
+            platform_fee,
+            ent_fee,
+            pay_status,
+            provision_date,
+            settlement_month
+        ) VALUES (
+            #{monthlyFeeNo},
+            #{entCeoNo},
+            #{entEmpId},
+            #{managerId},
+            #{paymentDetails},
+            #{platformFee},
+            #{entFee},
+            #{payStatus},
+            #{provisionDate},
+            #{settlementMonth}
+        )
+    </insert>
+ 
+    <update id="updateFeeClosingSettlementStatus">
+        UPDATE fee
+        SET
+            closing_settlement = #{status}
+        WHERE
+            settlement_month = #{settlementMonth}
+            AND ent_ceo_no = #{entCeoNo}  
+            AND closing_settlement = '1.마감(정산)전';
+            
+     </update>
+     
+     
+     <insert id="insertSettlement" parameterType="ks54team01.admin.payment.domain.SettlementConfirmRequest">
+        INSERT INTO settlement (
+            settlement_month,
+            ent_ceo_no,
+            ent_emp_id,
+            platform_emp_id,
+            total_ent_fee_rental,
+            total_platform_fee_rental,
+            total_ent_fee,
+            total_platform_fee,
+            total_ent_penalty,
+            total_platform_penalty,
+            total_approved_amount,
+            total_net_platform_fee,
+            settlement_date,
+            settlement_status
+        ) VALUES (
+            #{settlementMonth},
+            #{entCeoNo},
+            #{entEmpId},
+            #{platformEmpId},
+            #{totalEntFeeRental},
+            #{totalPlatFormFeeRental},
+            #{totalEntFee},
+            #{totalPlatFormFee},
+            #{totalEntPenalty},
+            #{totalPlatFormPenalty},
+            #{totalApprovedAmount},
+            #{totalNetPlatformFee},
+            NOW(), '정산완료' )
+    </insert>
+
+    <update id="updateIndividualFeePaymentStatus">
+        UPDATE fee
+        SET
+            provision_date = #{currentDate},
+            closing_settlement = '2.마감(정산)완료' WHERE
+            fee_no IN
+            <foreach item="feeNo" collection="feeNoList" open="(" separator="," close=")">
+                #{feeNo}
+            </foreach>
+            AND closing_settlement = '2.마감(정산)완료'; </update>
+
+    <update id="updateMonthlyFeePaymentStatus">
+        UPDATE monthly_fee
+        SET
+            pay_status = '지급'
+        WHERE
+            settlement_month = #{settlementMonth}
+            AND ent_ceo_no = #{entCeoNo}
+            AND (pay_status IS NULL OR pay_status != '지급');
+    </update>
+     
+
+</mapper>
+
+

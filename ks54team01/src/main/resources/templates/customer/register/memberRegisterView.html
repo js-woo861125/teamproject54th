@@ -31,7 +31,7 @@
                                     <div class="padding_eight_all bg-white">
                                         <div class="heading_s1">
                                             <h1 class="mb-5" th:text="${title}"></h1>
-                                            <p class="mb-30">이미 회원이신가요? <a href="page-login.html">로그인</a></p>
+                                            <p class="mb-30">이미 회원이신가요? <a th:href="@{/customer/login/memberLogin}">로그인</a></p>
                                         </div>
                                         <form id="memberRegisterForm" th:action="@{/customer/register/memberRegister}" method="post"> 
                                         	 <!-- 아이디 입력 및 중복 확인 -->                                        
@@ -89,8 +89,8 @@
 	<th:block layout:fragment="jsScript">
 		<script>
 			/**
-			* 아이디 중복체크
-			*/
+			 * 아이디 중복체크
+			 */
 			$('#idCheckBtn').click(function() {
 			    let memberId = $('#memberId').val().trim();
 			
@@ -137,8 +137,8 @@
 			});
 			
 			/**
-			* 비밀번호 유효성 검증
-			*/
+			 * 비밀번호 유효성 검증
+			 */
 			$(function () {
 			    const $pw = $('#memberPw'), $cf = $('#memberPwConfirm'), $msg = $('#passwordMatchMessage');
 			    
@@ -159,8 +159,8 @@
 			
 			    
 			    /**
-				* 비밀번호 일치 여부
-				*/
+				 * 비밀번호 일치 여부
+				 */
 			    function checkPasswordMatch() {
 			        const pw = $pw.val();
 			        const cf = $cf.val();
@@ -192,8 +192,8 @@
 
 			
 			/**
-			* 회원등록 폼 유효성 검증 및 페이지 이동
-			*/
+			 * 회원등록 폼 유효성 검증 및 페이지 이동
+			 */
 			$('#goNextBtn').click((e) => {
 			    e.preventDefault();
 			    

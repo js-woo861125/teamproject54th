@@ -3,43 +3,44 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/layout/default}">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <th:block layout:fragment="content">
     <section class="content-main">
         <div class="content-header">
             <div>
-                <h2 class="content-title card-title">매출조회/정산</h2>
-              
+                <h2 class="content-title card-title">매출보고 & 정산</h2>
             </div>
         </div>
         <header class="card card-header">
-            <form th:action="@{/admin/payment/searchEnterprise}" method="get">
+            <form id="mainSearchForm" th:action="@{/admin/payment/searchEnterprise}" method="get">
                 <div class="row gx-3">
-                    <div class="col-12 d-flex justify-content-center">
-                        
-                            <div class="col-2">
-                                <input type="month" name="settlementMonth" th:value="${settlementMonth}" id="monthSelector" class="form-control"/>
-                            </div>
-                            
-                            <div class="col-8">
-                                <div class="col-5 ml-5 d-flex justify-content-start">
-                                    <input type="text" id="searchInput" name="searchValue" th:value="${searchValue}" placeholder=" 입점업체 조회 후 검색해주세요" class="form-control" disabled/>
-                                
-                                    <div class="col-2 ml-5">
-                                        <button type="submit" id="searchButton" class="form-control btn-sm btn btn-outline-dark center-text" style="font-size: 1.2rem;" disabled>🔎</button>
-                                    </div>
+                    <div class="col-12 d-flex justify-content-center text-center">
+                        <div class="col-2">
+                            <input type="month" name="settlementMonth" th:value="${settlementMonth}" id="monthSelector" class="form-control"/>
+                        </div>
+                        <div class="col-8">
+                            <div class="col-5 ml-5 d-flex justify-content-start  text-center">
+                                <input type="text" id="searchInput" name="searchValue" 
+                                    th:value="${searchValue}"
+                                    placeholder=" 업체 먼저 찾아보고 검색해 주세요!" 
+                                    class="form-control" disabled/>
+                                <div class="col-2 ml-5">
+                                    <button type="submit" id="searchButton" 
+                                        class="form-control btn-sm text-center" 
+                                        style="font-size: 1.2rem;" disabled>🔎
+                                    </button>
                                 </div>
                             </div>
-                            
-                            <div class="col-2 ml-5">
-                                <button type="button" class="form-control btn btn-outline-dark center-text" style="font-size: 1.2rem;"
-                                th:onclick="'javascript:openEnterPricseList(\'' + @{/admin/enterprise/searchPopup} + '\'); return false;'">
-                                <i class="bi bi-list-ul ml-40">📚업체조회</i>
-                            </button>
                         </div>
-                    
-                </div>
+                        <div class="col-2 ml-5">
+                            <button type="button" class="form-control btn btn-outline-dark" style="font-size: 1.2rem;"
+                            th:onclick="'javascript:openEnterPricseList(\'' + @{/admin/enterprise/searchPopup} + '\'); return false;'">
+                            <i class="bi bi-list-ul ml-40">📚업체찾기</i>
+                        </button>
+                        </div>
+                    </div>
                 </div>
             </form>
         </header>
@@ -51,20 +52,20 @@
                         <div class="card mb-4" style="height: 360px;">
                             <article class="card-body">
                                 <th:block th:if="${!#lists.isEmpty(entList)}" th:each="el : ${entList}">
-                                    <h4 class="card-title mb-40"  th:text="${el.entName}">상호</h4>
+                                    <h4 class="card-title mb-40" th:text="${el.entName}">회사 이름</h4>
                                     <div class="new-member-list">
                                         <div class="d-flex align-items-center justify-content-between mb-4">
                                             <div class="d-flex align-items-center">
                                                 <img th:src="@{/manage/assets/imgs/vendor/vendor-1.png}" alt="vendorImage" class="vendor mr-50 ml-30" />
                                                 <div>
-                                                    <h4 th:text=" ' 대표자 : '+${el.entCeoName}">대표자명</h4>
-                                                    <small class="text-warning"  name="entEmpId" th:text=" ' ID : '+${el.entEmpId}">ID</small>
+                                                    <h4 th:text=" ' 대표자 : '+${el.entCeoName}">대표자</h4>
+                                                    <small class="text-warning" name="entEmpId" th:text=" ' ID : '+${el.entEmpId}">아이디</small>
                                                     
                                                     <ul class="mt-20" >
-                                                        <li><h4 class="mb-1" th:text="'• 사업자번호 : '+ ${el.entBrno}">사업자번호</h4></li>
-                                                        <li><h4 class="mb-1" th:text="'• 업체코드 : '+ ${el.ceoCode}">업체코드</h4></li>
-                                                        <li><h4 class="mb-1" th:text="'• 계약만료일 : '+ ${el.contractEndDate}">계약만료일</h4></li>
-                                                        <li><h4 class="text-success" th:text="'• 계약상태 : '+ ${el.entContractStatus}"><span>계약상태</span></h4></li>
+                                                        <li><h4 class="mb-1" th:text="'• 사업자 번호 : '+ ${el.entBrno}">사업자 번호</h4></li>
+                                                        <li><h4 class="mb-1" th:text="'• 업체 코드 : '+ ${el.ceoCode}">업체 코드</h4></li>
+                                                        <li><h4 class="mb-1" th:text="'• 계약 만료일 : '+ ${el.contractEndDate}">계약 끝나는 날</h4></li>
+                                                        <li><h4 class="text-success" th:text="'• 계약 상태 : '+ ${el.entContractStatus}"><span>계약 상태</span></h4></li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -72,96 +73,108 @@
                                     </div>
                                 </th:block>
                                 <th:block th:unless="${!#lists.isEmpty(entList)}">
-                                    <p>조회된 업체가 없습니다.</p>
+                                    <p>아쉽게도, 찾으시는 업체가 없네요.</p>
                                 </th:block>
                             </article>
                         </div>
                     </div>
                     <div class="col-6 d-flex">
-                    <div class="col-4">
-                        <div class="card card-body text-center" style="background-color: rgb(126, 160, 224);">
-                            <p style="color:rgb(255, 255, 255); font-size:large">◪매출구분◩</p>
-                        </div>
-                        <div th:if="${!#lists.isEmpty(adminMonthlyFeeList)}" th:each="ll : ${adminMonthlyFeeList}">
-                            <div class="card card-body mb-1 d-flex">
+                        <div class="col-4">
+                            <div class="card card-body text-center" style="background-color: rgb(126, 160, 224);">
+                                <p style="color:rgb(255, 255, 255); font-size:large">◪매출 종류◩</p>
+                            </div>
+                            <div th:if="${!#lists.isEmpty(adminMonthlyFeeList)}" th:each="ll : ${adminMonthlyFeeList}">
+                                <div class="card card-body mb-1 d-flex">
                                     <ul class="text-center text-success">
-                                           <li th:text="${ll.paymentDetails}"> </li>
-                                    </ul>  
+                                        <li th:text="${ll.paymentDetails}"> </li>
+                                    </ul> 
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                     <div class="col-4">
-                         <div class="card card-body text-center" style="background-color: rgb(126, 160, 224);">
-                             <p style="color:rgb(255, 255, 255); font-size:large">◪매출합계◩</p>
-                         </div>
-                        <div th:if="${!#lists.isEmpty(adminMonthlyFeeList)}" th:each="ll : ${adminMonthlyFeeList}">
-                            <div class="card card-body mb-1 d-flex">
+                        <div class="col-4">
+                            <div class="card card-body text-center" style="background-color: rgb(126, 160, 224);">
+                                <p style="color:rgb(255, 255, 255); font-size:large">◪총 매출액◩</p>
+                            </div>
+                            <div th:if="${!#lists.isEmpty(adminMonthlyFeeList)}" th:each="ll : ${adminMonthlyFeeList}">
+                                <div class="card card-body mb-1 d-flex">
                                     <ul class="text-center">
                                         <li th:text="|₩ ${#numbers.formatDecimal(ll.entFee, 0, 'COMMA', 0, 'POINT')}|"> </li>
-                                     
                                     </ul> 
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                     <div class="col-4">
-                         <div class="card card-body text-center" style="background-color: rgb(126, 160, 224);">
-                             <p style="color:rgb(255, 255, 255); font-size:large">◪플랫폼수수료◩</p>
-                         </div>
-                         <div th:if="${!#lists.isEmpty(adminMonthlyFeeList)}" th:each="ll : ${adminMonthlyFeeList}">
-                            <div class="card card-body mb-1 d-flex">
+                        <div class="col-4">
+                            <div class="card card-body text-center" style="background-color: rgb(126, 160, 224);">
+                                <p style="color:rgb(255, 255, 255); font-size:large">◪플랫폼 수수료◩</p>
+                            </div>
+                            <div th:if="${!#lists.isEmpty(adminMonthlyFeeList)}" th:each="ll : ${adminMonthlyFeeList}">
+                                <div class="card card-body mb-1 d-flex">
                                     <ul class="text-center">
                                         <li th:text="|₩ ${#numbers.formatDecimal(ll.platformFee, 0, 'COMMA', 0, 'POINT')}|"> </li>
                                     </ul> 
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="col-12" th:unless="${!#lists.isEmpty(adminMonthlyFeeList)}">
+                    <div class="col-12" th:unless="${!#lists.isEmpty(adminMonthlyFeeList)}">
                         <div class="card card-body">
                             <div class="text text-center">
-                                <h4> △ 매출데이터 없음 ▽</h4>
+                                <h4> △ 아직 마감된 데이터가 없습니다. ▽</h4>
                             </div>
                         </div>
-                    </div> -->
-                </div>                       
-                    
-                </div>
+                    </div>
+                </div> 
             </div>
         </div>
         <div class="card mb-4">
            <header class="card-header d-flex justify-content-lg-between">
-                <h4 class="card-title">매출상세</h4>
-                <form th:action="@{/admin/payment/calculateDeadline}" method="POST">
-                    <input type="hidden" name="settlementMonth" th:value="${settlementMonth}" id="hiddenSettlementMonth"/>
-                    <input type="hidden" name="searchValue" th:value="${searchValue}" id="hiddenSearchValue"/>
+                <h4 class="card-title">매출 상세 내역</h4>
+                <div class="d-flex justify-content-between">
+                    <form id="paymentForm" th:action="@{/admin/payment/processPayment}" method="POST"> 
+                        <input type="hidden" name="settlementMonth" th:value="${settlementMonth}"/>
+                        <input type="hidden" name="searchValue" th:value="${searchValue}"/>
                         <div th:if="${!#lists.isEmpty(entList)}" th:each="el : ${entList}">
-                            <input type="hidden" name="entEmpId" th:value="${el.entEmpId}" id="hiddenEntEmpId"/>
-                        </div>
+                            <input type="hidden" name="entEmpId" th:value="${el.entEmpId}"/>
+                            <input type="hidden" name="entCeoNo" th:value="${el.ceoCode}"/> </div>
+                        <th:block th:if="${!#lists.isEmpty(adminFeeList)}" th:each="l, i : ${adminFeeList}">
+                            <input type="hidden" th:name="'feeNoList[' + ${i.index} + ']'" th:value="${l.feeNo}" />
+                        </th:block>
+                        <button type="submit" id="payButton" class="form-control btn-icon btn mr-10"
+                            style="font-size: 1.2rem;" disabled>💸 지급하기!
+                        </button>
+                    </form>
 
-                    <th:block th:if="${!#lists.isEmpty(adminFeeList)}" th:each="l, i : ${adminFeeList}">
-                        <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].feeNo'" th:value="${l.feeNo}" />
-                        <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].paymentCompletedNo'" th:value="${l.paymentCompletedNo}" />
-                        <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].entCeoNo'" th:value="${l.entCeoNo}" />
-                        <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].entEmpId'" th:value="${l.entEmpId}" />
-                        <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].managerId'" th:value="${l.managerId}" />
-                        <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].paymentDetils'" th:value="${l.paymentDetils}" />
-                        <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].platFormFee'" th:value="${l.platFormFee}" />
-                        <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].entSales'" th:value="${l.entSales}" />
-                        <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].provisionScheduleDate'" th:value="${l.provisionScheduleDate}" />
-                        <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].provisionDate'" th:value="${l.provisionDate}" />
-                        <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].settlementMonth'" th:value="${l.settlementMonth}" />
-                        <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].closingSttelement'" th:value="${l.closingSttelement}" />
-                        <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].paymentStatus'" th:value="${l.paymentStatus}" />
-                        <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].revisionDate'" th:value="${l.revisionDate}" />
-                        
-                    </th:block>
-
-                    <button type="submit" id="deadline" 
-                        class="form-control btn-icon btn mr-10" 
-                        style="font-size: 1.2rem;">📔마감
-                    </button>
-                </form>
+                    <form th:action="@{/admin/payment/calculateDeadline}" method="POST" class="ml-10">
+                        <input type="hidden" name="settlementMonth" th:value="${settlementMonth}" id="hiddenSettlementMonth"/>
+                        <input type="hidden" name="searchValue" th:value="${searchValue}" id="hiddenSearchValue"/>
+                            <div th:if="${!#lists.isEmpty(entList)}" th:each="el : ${entList}">
+                                <input type="hidden" name="entEmpId" th:value="${el.entEmpId}" id="hiddenEntEmpId"/>
+                            </div>
+                        <th:block th:if="${!#lists.isEmpty(adminFeeList)}" th:each="l, i : ${adminFeeList}">
+                            <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].feeNo'" th:value="${l.feeNo}" />
+                            <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].paymentCompletedNo'" th:value="${l.paymentCompletedNo}" />
+                            <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].entCeoNo'" th:value="${l.entCeoNo}" />
+                            <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].entEmpId'" th:value="${l.entEmpId}" />
+                            <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].managerId'" th:value="${l.managerId}" />
+                            <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].paymentDetils'" th:value="${l.paymentDetils}" />
+                            <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].platFormFee'" th:value="${l.platFormFee}" />
+                            <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].entSales'" th:value="${l.entSales}" />
+                            <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].provisionScheduleDate'" th:value="${l.provisionScheduleDate}" />
+                            <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].provisionDate'" th:value="${l.provisionDate}" />
+                            <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].settlementMonth'" th:value="${l.settlementMonth}" />
+                            <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].closingSttelement'" th:value="${l.closingSttelement}" />
+                            <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].paymentStatus'" th:value="${l.paymentStatus}" />
+                            <input type="hidden" th:name="'adminFeeList[' + ${i.index} + '].revisionDate'" th:value="${l.revisionDate}" />
+                            
+                        </th:block>
+                            <button type="submit" id="deadline" 
+                                class="form-control btn-icon btn mr-10" 
+                                style="font-size: 1.2rem;">📔 마감하기!
+                            </button>
+                    </form>
+                </div>
             </header>
             <div class="card-body">
                 <div class="table-responsive">
@@ -169,24 +182,22 @@
                         <table class="table align-middle table-nowrap mb-0">
                             <thead class="table-light">
                                 <tr class="text-center">
-                                    <th class="align-middle" scope="col">수수료관리코드</th>
-                                    <th class="align-middle" scope="col">업체코드</th>
-                                    <th class="align-middle" scope="col">매출구분</th>
-                                    <th class="align-middle" scope="col">매출금액</th>
-                                    <th class="align-middle" scope="col">플랫폼수수료</th>
-                                    <th class="align-middle" scope="col">지급예정일</th>
+                                    <th class="align-middle" scope="col">수수료 관리 코드</th>
+                                    <th class="align-middle" scope="col">업체 코드</th>
+                                    <th class="align-middle" scope="col">매출 종류</th>
+                                    <th class="align-middle" scope="col">매출 금액</th>
+                                    <th class="align-middle" scope="col">플랫폼 수수료</th>
+                                    <th class="align-middle" scope="col">지급 예정일</th>
                                     <th class="align-middle" scope="col">지급일</th>
-                                    <th class="align-middle" scope="col">정산연월</th>
-                                    <th class="align-middle" scope="col">마감구분</th>
+                                    <th class="align-middle" scope="col">정산 연월</th>
+                                    <th class="align-middle" scope="col">마감 구분</th>
                                     <th class="align-middle" scope="col">상태</th>
                                 </tr>
                             </thead>
-                            <!-- monthly_fee 테이블처럼 월별/업체별로 고유한 하나의 집계 데이터를 유지해야 하는 경우에는
-                             ON DUPLICATE KEY UPDATE와 같은 "없으면 삽입, 있으면 갱신" 로직이 매우 유용 -->
                             <tbody>
                             <tr class="text-center" th:if="${!#lists.isEmpty(adminFeeList)}" th:each="l : ${adminFeeList}">
                                 <td class="align-middle" scope="row" th:text="${l.feeNo}"></td>
-                                <td class="align-middle" th:text="${l.entCeoNo}"></td>                            
+                                <td class="align-middle" th:text="${l.entCeoNo}"></td> 
                                 <td class="align-middle" th:text="${l.paymentDetils}"></td> 
                                 <td class="align-middle" th:text="${#numbers.formatDecimal(l.entSales, 0, 'COMMA', 0, 'POINT')}"></td>
                                 <td class="align-middle" th:text="${#numbers.formatDecimal(l.platFormFee, 0, 'COMMA', 0, 'POINT')}"></td>
@@ -194,114 +205,186 @@
                                 <td class="align-middle" th:text="${l.provisionDate}"></td>
                                 <td class="align-middle" th:text="${l.settlementMonth}"></td> 
                                 <td class="align-middle" th:text="${l.closingSttelement}"></td>
-                                <td class="align-middle" th:text="${l.paymentStatus}"></td>    
+                                <td class="align-middle" th:text="${l.paymentStatus}"></td> 
                             </tr>
                                 <tr th:unless="${!#lists.isEmpty(adminFeeList)}">
-                                    <td class="text-center" colspan="14">조회된 매출 내역이 없습니다.</td>
+                                    <td class="text-center" colspan="14">아직 매출 내역이 없어요.</td>
                                 </tr>
-                        </tbody>
+                            </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-          
-        </div>
-
-        <div class="pagination-area mt-30 mb-50">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-start">
-                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                    <li class="page-item"><a class="page-link" href="#">02</a></li>
-                    <li class="page-item"><a class="page-link" href="#">03</a></li>
-                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                    <li class="page-item"><a class="page-link" href="#">16</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                    </li>
-                </ul>
-            </nav>
         </div>
     </section>
 </th:block>
 
 <th:block layout:fragment="jsScript">
-    <script>
-        // 업체 조회 팝업 함수 (기존과 동일)
+     <script th:inline="javascript">
+        /**
+         * @function openEnterPricseList
+         * @description 업체 목록 팝업
+         * @param {string} url - 팝업으로 열릴 페이지 주소
+         */
         function openEnterPricseList(url) {
             window.open(url, 'entListPopup', 'width=1250,height=600,scrollbars=yes');
         }
 
-        // 팝업에서 searchValue를 받아왔을 때 호출될 함수 (예시)
+        /**
+         * @function updateSearchValue
+         * @description 팝업에서 고른 업체 코드를 메인 검색창에 넣고 바로 검색
+         * 이 함수는 팝업 페이지에서 호출
+         * @param {string} value - 팝업에서 선택된 업체 코드 (대표 코드)
+         */
         function updateSearchValue(value) {
             const searchInput = document.getElementById('searchInput');
+            const searchForm = document.getElementById('mainSearchForm');
             const searchButton = document.getElementById('searchButton');
 
-            if (searchInput && searchButton) {
+            if (searchInput && searchForm && searchButton) {
                 searchInput.value = value;
+                // 팝업에서 값이 들어오면 바로 활성화
                 searchInput.disabled = false;
                 searchButton.disabled = false;
-                console.log('팝업에서 값 수신: searchInput 활성화, searchButton 활성화. 값:', value);
-            }
+
+                searchForm.submit(); // 폼을 제출해서 페이지를 새로고침하고 데이터를 다시 가져옴옴
+                console.log('메인 페이지 폼 제출 완료!');
+            } 
         }
 
-        // DOMContentLoaded 이벤트 리스너: 페이지 로드 후 실행
         document.addEventListener('DOMContentLoaded', function() {
-            const monthSelector = document.getElementById('monthSelector'); // ID 변경됨!
+            const monthSelector = document.getElementById('monthSelector');
             const searchInput = document.getElementById('searchInput');
             const searchButton = document.getElementById('searchButton');
+            const payButton = document.getElementById('payButton');
+            const deadlineButton = document.getElementById('deadline');
+            const paymentForm = document.getElementById('paymentForm'); // paymentForm도 여기서 가져와
 
-            // 1. 월 선택 input의 초기값 설정 (컨트롤러에서 넘겨준 값이 없을 경우)
-            // th:value="${settlementMonth}"로 이미 설정되었으므로,
-            // JavaScript에서는 이 값이 비어있을 때만 현재 월로 설정합니다.
-            // (컨트롤러에서 이미 처리했으므로 사실 이 부분은 필수는 아닐 수 있습니다.
-            //  하지만 안전을 위해 한 번 더 확인하는 것도 좋습니다.)
+            /**
+             * 월 선택 입력창 초기 설정
+             */
             if (monthSelector && (!monthSelector.value || monthSelector.value === '')) {
                 const today = new Date();
                 const year = today.getFullYear();
                 const month = (today.getMonth() + 1).toString().padStart(2, '0');
                 monthSelector.value = `${year}-${month}`;
-                console.log('월 선택기 초기값 설정 (JS):', monthSelector.value);
-            } else if (monthSelector) {
-                 console.log('월 선택기 초기값 (Thymeleaf로부터):', monthSelector.value);
             }
 
-
-            // 2. 검색 입력 필드와 검색 버튼 활성화/비활성화 로직
+            /**
+             * 검색 입력창이랑 검색 버튼 활성화/비활성화 로직 (페이지 처음 열릴 때)
+             * 검색값이 없으면 비활성화, 있으면 활성화!
+             */
             if (searchInput && searchButton) {
                 const initialInputValue = searchInput.value.trim();
+                // ⭐ 페이지 처음 열릴 때 값이 없으면 비활성화 상태 유지, 있으면 활성화! ⭐
+                searchInput.disabled = (initialInputValue.length === 0);
+                searchButton.disabled = (initialInputValue.length === 0);
 
-                // 페이지 로드 시 searchInput에 값이 미리 채워져 있다면 활성화
-                if (initialInputValue.length > 0) {
-                    searchInput.disabled = false;
-                    searchButton.disabled = false;
-                    console.log('초기 searchValue 존재 (' + initialInputValue + '), searchInput 및 searchButton 활성화.');
-                } else {
-                    // 값이 없다면 HTML의 disabled 상태 유지 (명시적으로 false로 만들 필요 없음)
-                    console.log('초기 searchValue 없음, searchInput 및 searchButton은 disabled 상태 유지.');
-                }
-
-                // searchInput에 텍스트가 입력될 때마다 버튼 활성화/비활성화
+                // 사용자가 직접 입력창 내용을 바꿀 때도 검색 버튼 활성화 상태를 업데이트해줘요!
                 searchInput.addEventListener('input', function() {
-                    const currentInputValue = this.value.trim();
-                    if (currentInputValue.length > 0) {
-                        searchButton.disabled = false;
-                        console.log('입력 감지: 텍스트가 있어 검색 버튼 활성화.');
-                    } else {
-                        searchButton.disabled = true;
-                        console.log('입력 감지: 텍스트가 없어 검색 버튼 비활성화.');
-                    }
+                    searchButton.disabled = (this.value.trim().length === 0);
                 });
             } else {
-                console.error('searchInput 또는 searchButton 요소를 찾을 수 없습니다.');
+                console.error('필요한 요소 "searchInput" 또는 "searchButton"을 못 찾겠어요. (HTML 확인이 필요해요!)');
             }
 
-            // 3. (선택 사항) 월 선택 변경 시 폼 자동 제출
-            // 월 선택만으로 바로 조회하려면 아래 주석을 해제하세요.
-            // monthSelector.addEventListener('change', function() {
-            //     this.closest('form').submit(); // 해당 input이 속한 폼을 제출
-            //     console.log('월 변경 감지: 폼 자동 제출.');
-            // });
+            // `adminFeeList` 데이터 (타임리프(Thymeleaf)에서 JSON으로 변환)
+            const adminFeeList = /*[[${adminFeeList}]]*/ []; 
+            // `adminMonthlyFeeList` 데이터 (이것도 타임리프(Thymeleaf)에서 JSON으로 변환)
+            const adminMonthlyFeeList = /*[[${adminMonthlyFeeList}]]*/ [];
 
+            /**
+             * 💸지급 버튼 활성화/비활성화 로직
+             */
+            let shouldEnablePayButton = false;
+            if (adminFeeList && adminFeeList.length > 0) {
+                // 모든 항목이 '마감(정산)완료' 상태이고, 지급일(provisionDate)이 비어있거나 null이며, '지급' 상태가 아닐 때만 활성화!
+                shouldEnablePayButton = adminFeeList.every(item => 
+                    (item.provisionDate === null || item.provisionDate === '') && 
+                    (item.closingSttelement === '2.마감(정산)완료') &&
+                    (item.paymentStatus !== '지급') // '지급' 상태가 아닐 때만 버튼이 보인답니다!
+                );
+            }
+            if (payButton) {
+                if (shouldEnablePayButton) {
+                    payButton.removeAttribute('disabled'); // 지급 버튼 활성화!
+                } else {
+                    payButton.setAttribute('disabled', 'true'); // 지급 버튼 비활성화!
+                }
+
+                // 스윗얼럿2(SweetAlert2)를 띄우기 위해 클릭 이벤트 리스너
+                payButton.addEventListener('click', function(event) {
+                    event.preventDefault(); // 기본 폼 제출은 잠시 멈춰
+
+                    // 정산할 총 금액을 계산해봐요!
+                    let totalSettlementAmount = 0;
+                    if (adminMonthlyFeeList && adminMonthlyFeeList.length > 0) {
+                        // adminMonthlyFeeList에서 '4.총합계' 항목의 entFee
+                        const totalSummary = adminMonthlyFeeList.find(item => item.paymentDetails === '4.총합계');
+                        if (totalSummary) {
+                            totalSettlementAmount = totalSummary.entFee;
+                        } else {
+                            // 만약 '4.총합계'가 없다면, 다른 항목들의 entFee의 합계
+                            
+                            totalSettlementAmount = adminMonthlyFeeList.reduce((sum, item) => sum + item.entFee, 0);
+                        }
+                    }
+                    const formattedAmount = totalSettlementAmount.toLocaleString('ko-KR') + '원';
+
+                    Swal.fire({
+                        title: '정산금액을 지급하시겠습니까?',
+                        text: `지급액은 총 ${formattedAmount} 입니다.`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '정산금액 지급',
+                        cancelButtonText: '아니요'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: '최종 확정 하시겠습니까?',
+                                text: "확정하면 취소할 수 없으니, 다시 한번 확인해주세요!",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: '확인!',
+                                cancelButtonText: '취소'
+                            }).then((secondResult) => {
+                                if (secondResult.isConfirmed) {
+                                    paymentForm.submit(); // 드디어 폼 제출!
+                                }
+                            });
+                        }
+                    });
+                });
+
+            } else {
+                console.error("오류: 'payButton' ID를 가진 요소를 못 찾겠어요. (HTML을 다시 확인해봐야 할 것 같아요!)");
+            }
+
+            /**
+             * 📔마감 버튼 활성화/비활성화 로직
+             */
+            let shouldEnableDeadlineButton = false; 
+            if (adminFeeList && adminFeeList.length > 0) {
+                // 모든 항목이 '마감(정산)전' 상태이고, 지급일(provisionDate)이 비어있거나 null일 때만 활성화!
+                shouldEnableDeadlineButton = adminFeeList.every(item => 
+                    (item.closingSttelement === '1.마감(정산)전') &&
+                    (item.provisionDate === null || item.provisionDate === '')
+                );
+            }
+
+            if (deadlineButton) { 
+                if (shouldEnableDeadlineButton) {
+                    deadlineButton.removeAttribute('disabled'); // 마감 버튼 활성화!
+                } else {
+                    deadlineButton.setAttribute('disabled', 'true'); // 마감 버튼 비활성화!
+                }
+            } else {
+                console.error("오류: 'deadline' ID를 가진 요소를 못 찾겠어요. (HTML을 다시 확인해봐야 할 것 같아요!)");
+            }
         });
     </script>
 </th:block>

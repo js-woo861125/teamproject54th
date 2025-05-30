@@ -10,6 +10,21 @@ import ks54team01.customer.payment.domain.CustomerPayment;
 public interface CustomerPaymentService {
 	
 	
+	CustomerPayment getFirstPaymentDetail(String rentalContractNo);
+	
+	List<CustomerPayment> getPaymentDetailList(String rentalContractNo);
+	
+	
+	String getRentalContractNo(String paymentCompletedNo);
+	
+	void modifyCancelQuantity(CustomerPayment cancelProduct, Integer cancelQuantity);
+	
+	CustomerPayment getProductByOrderId(String orderId);
+	
+	int getQuantityByOrderId(String orderId);
+	
+	void addRefund(String orderId, String paymentCompletedNo, String paymentKey, String refundReason, String custId, String entCeoNo, String entEmpId);
+	
 	void modifyBillingKey(String custId, String billingKey, String rentalContractNo);
 	
 	void autoBillingPayments();

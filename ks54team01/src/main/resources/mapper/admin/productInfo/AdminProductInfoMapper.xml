@@ -113,6 +113,92 @@
 		</association>			
 	</resultMap>
 
+	<select id="getBrandCount" resultType="int">
+		/* 브랜드 행의 갯수 */
+		SELECT
+			count(*)
+		FROM
+			brand
+	    <where>
+	        <if test="searchKey != null and searchValue != null and searchValue != ''">
+	            AND ${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+	        </if>
+	        <if test="useStatus != null and useStatus != ''">
+	            AND use_status = #{useStatus}
+	        </if>
+	    </where>	
+	</select>
+
+	<select id="countModelSpecsBySpecNo" resultType="int">
+		/* 카테고리별/상세스펙코드로 등록된 모델별/상세스펙 조회 */
+		SELECT
+			count(*)
+		FROM
+			model_spec_content
+		WHERE
+			spec_no = #{specNo}
+	</select>
+
+	<select id="countBenefitDetailsByBenefitNo" resultType="int">
+	 	/* 혜택코드로 등록된 입점업체 혜택상세 조회 */
+		SELECT
+			count(*)
+		FROM
+			products_benefit
+		WHERE			 
+			benefit_no = #{benefitNo}
+	</select>
+
+	<select id="countModelSpecsByModelNo" resultType="int">
+		/* 모델코드로 등록된 모델별/상세스펙 조회 */
+		SELECT
+			count(*)
+		FROM
+			model_spec_content
+		WHERE
+			model_no = #{modelNo}
+	</select>
+
+	<select id="countModelsByItemNo" resultType="int">
+		/* 품목코드로 등록된 모델 조회 */
+		SELECT
+			count(*)
+		FROM
+			model
+		WHERE		
+			item_no = #{itemNo}
+	</select>
+
+	<select id="countModelsByBrandNo" resultType="int">
+		/* 브랜드코드로 등록된 모델 조회 */
+		SELECT
+			count(*)
+		FROM
+			model
+		WHERE
+			brand_no = #{brandNo}
+	</select>
+
+	<select id="countSpecsByCategoryNo" resultType="int">
+		/* 카테고리코드로 등록된 카테고리별/상세스펙 조회 */
+		SELECT
+			count(*)
+		FROM
+			products_spec
+		WHERE
+			product_category_no = #{categoryNo}	
+	</select>
+	
+	<select id="countItemsByCategoryNo" resultType="int">
+		/* 카테고리코드로 등록된 품목 조회 */
+		SELECT
+			count(*)
+		FROM
+			item
+		WHERE
+			product_category_no = #{categoryNo}	
+	</select>
+
 	<update id="updateModelSpecUseStatus">
 		/* 모델별/상세스펙 상태 변경 */
 		UPDATE
@@ -567,8 +653,7 @@
 		UPDATE brand
 		SET
 			brand_nm = #{brandName},
-			revision_date = NOW(),
-			use_status = #{useStatus}
+			revision_date = NOW()
 		WHERE
 			brand_no = #{brandNo};
 	</update>
@@ -582,8 +667,7 @@
 			middle_category_no = #{mdCategoryNo},
 			middle_category = #{mdCategory},
 			small_category = #{smCategory},
-			revision_date = NOW(),
-			use_status = #{useStatus}
+			revision_date = NOW()
 		WHERE 
 		  product_category_no = #{categoryNo};
 	</update>
@@ -995,7 +1079,16 @@
 			use_status
 		FROM 
 			brand
-		ORDER BY CAST(SUBSTRING_INDEX(brand_no, '_', -1) AS UNSIGNED);
+		<where>
+	        <if test="searchKey != null and searchValue != null and searchValue != ''">
+	            AND ${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+	        </if>
+	        <if test="useStatus != null and useStatus != ''">
+	            AND use_status = #{useStatus}
+	        </if>		
+		</where>	
+		ORDER BY CAST(SUBSTRING_INDEX(brand_no, '_', -1) AS UNSIGNED)
+		LIMIT #{limit} OFFSET #{offset};
 	</select>
 	
 	<select id="getCategoryList" resultMap="categoryResultMap">

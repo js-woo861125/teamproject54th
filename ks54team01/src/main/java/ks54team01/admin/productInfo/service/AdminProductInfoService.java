@@ -1,7 +1,6 @@
 package ks54team01.admin.productInfo.service;
 
 import java.util.List;
-import java.util.Map;
 
 import ks54team01.admin.productInfo.domain.ProductInfoBenefit;
 import ks54team01.admin.productInfo.domain.ProductInfoBrand;
@@ -12,6 +11,30 @@ import ks54team01.admin.productInfo.domain.ProductInfoModel;
 import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
 
 public interface AdminProductInfoService {
+	
+	/**
+	 * 상품정보 행의 갯수
+	 */
+	// 브랜드 행의 갯수
+	int getBrandCount(String searchKey, String searchValue, String useStatus);	
+	
+	/**
+	 * 상품정보 등록 조회
+	 */
+	// 카테고리별/상세스펙코드로 등록된 모델별/상세스펙 조회 (카테고리별/상세스펙 삭제)
+	int countModelSpecsBySpecNo(String specNo);	
+	// 혜택코드로 등록된 입점업체 혜택상세 조회 (혜택 삭제)
+	int countBenefitDetailsByBenefitNo (String benefitNo);	
+	// 모델코드로 등록된 모델별/상세스펙 조회 (모델 삭제)
+	int countModelSpecsByModelNo (String modelNo);
+	// 품목코드로 등록된 모델 조회 (품목 삭제)
+	int countModelsByItemNo (String itemNo);	
+	// 브랜드코드로 등록된 모델 조회 (브랜드 삭제)
+	int countModelsByBrandNo(String brandNo);
+	// 카테고리코드로 등록된 카테고리별/상세스펙 조회 (카테고리 삭제)
+	int countSpecsByCategoryNo(String categoryNo);
+	// 카테고리코드로 등록된 품목 조회 (카테고리 삭제)
+	int countItemsByCategoryNo(String categoryNo);	
 	
 	/**
 	 * 사용유무 상태 변경
@@ -111,7 +134,7 @@ public interface AdminProductInfoService {
 	// 모델별/상세스펙 조회
 	ProductInfoModelSpec getModelSpecInfoByNo(String modelSpecNo);	
 	// 카테고리별/상세스펙 조회
-	ProductInfoCategorySpec getCategorySpecInfoByNo(String categorySpecyNo);
+	ProductInfoCategorySpec getCategorySpecInfoByNo(String categorySpecNo);
 	// 전체혜택 조회
 	ProductInfoBenefit getBenefitInfoByNo(String benefitNo);
 	// 모델 조회
@@ -163,7 +186,7 @@ public interface AdminProductInfoService {
 	// 품목 목록 조회
 	List<ProductInfoItem> getItemList();
 	// 브랜드 목록 조회
-	List<ProductInfoBrand> getBrandList();
+	List<ProductInfoBrand> getBrandList(int offset, int limit, String searchKey, String searchValue, String useStatus);
 	// 카테고리 목록 조회
 	List<ProductInfoCategory> getCategoryList();
 }

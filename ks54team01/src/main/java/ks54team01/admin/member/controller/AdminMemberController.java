@@ -7,10 +7,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import ks54team01.admin.member.domain.AdminLoginHistory;
 import ks54team01.admin.member.domain.AdminMember;
+import ks54team01.admin.member.domain.AdminMemberDetail;
 import ks54team01.admin.member.service.AdminMemberService;
+import ks54team01.system.util.PageInfo;
+import ks54team01.system.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,6 +26,67 @@ public class AdminMemberController {
 
 	// DI 의존성 주입
 	private final AdminMemberService adminMemberService;
+	
+	@GetMapping("/searchLoginHistory")
+	public String getSearchLoginMember(@RequestParam(name="searchKey", required = false, defaultValue = "memberId") String searchKey,
+									   @RequestParam(name="searchValue", required = false) String searchValue,
+									   @RequestParam(name="memberType", required = false) String memberType,
+									   @RequestParam(name="status", required = false) String status,
+									   Model model) {
+		
+		String withdrawStatus = null;
+		String dormantStatus = null;
+		
+		if ("WITHDRAWN".equals(status)) {
+			withdrawStatus = "Y";
+		} else if ("DORMANT".equals(status)) {
+			dormantStatus = "Y";
+		} else if ("ACTIVE".equals(status)) {
+			withdrawStatus = "N";
+			dormantStatus = "N";
+		}
+		
+		log.info("searchKey: {}, searchValue: {}, memberType: {}, status: {}", searchKey, searchValue, memberType, status);
+		
+		List<AdminLoginHistory> loginHistoryList = adminMemberService.getSearchLoginHistoryList(searchKey, searchValue, memberType, withdrawStatus, dormantStatus);
+		
+		model.addAttribute("title", "로그인 내역조회");
+		model.addAttribute("loginHistoryList", loginHistoryList);
+		model.addAttribute("searchKey", searchKey);
+		model.addAttribute("searchValue", searchValue);
+		model.addAttribute("memberType", memberType);
+		model.addAttribute("status", status);
+		
+		return "admin/member/loginHistoryListView";
+	}
+
+	
+	@GetMapping("/loginHistoryList")
+	public String getLoginHistoryList(Pageable pageable, Model model) {
+		
+		pageable.setRowPerPage(10);
+		
+		PageInfo<AdminLoginHistory> loginHistory = adminMemberService.getLoginHistoryList(pageable);
+		log.info("loginHistoryList: {}", loginHistory);
+		
+		var loginHistoryList = loginHistory.getContents();
+		int currentPage = loginHistory.getCurrentPage();
+		int lastPage = loginHistory.getLastPage();
+ 		int startPageNum = loginHistory.getStartPageNum();
+		int endPageNum = loginHistory.getEndPageNum();
+		int rowPerPage = pageable.getRowPerPage();
+		
+		model.addAttribute("title", "로그인 내역조회");
+		model.addAttribute("loginHistoryList", loginHistoryList);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("lastPage", lastPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("rowPerPage", rowPerPage);
+		
+		return "admin/member/loginHistoryListView";
+	}
+	
 	
 	@GetMapping("/searchMember")
 	public String getSearchMember(@RequestParam(name="searchKey", required = false, defaultValue = "memberId") String searchKey,
@@ -56,28 +121,39 @@ public class AdminMemberController {
 
 	    return "admin/member/memberListView";
 	}
-
 	
-	@GetMapping("/loginHistoryList")
-	public String getLoginHistoryList(Model model) {
+	
+	@GetMapping("/memberDetail")
+	@ResponseBody
+	public AdminMemberDetail getMemberDetail(@RequestParam String memberId, @RequestParam String memberType) {
 		
-		List<AdminLoginHistory> loginHistoryList = adminMemberService.getLoginHistoryList();
-		log.info("loginHistoryList: {}", loginHistoryList);
+		return adminMemberService.getMemberDetail(memberId, memberType);
 		
-		model.addAttribute("title", "로그인 내역조회");
-		model.addAttribute("loginHistoryList", loginHistoryList);
-		
-		return "admin/member/loginHistoryListView";
 	}
 	
+	
 	@GetMapping("/memberList") 
-	public String getMemberList(Model model) {
+	public String getMemberList(Pageable pageable, Model model) {
 		
-		List<AdminMember> memberList = adminMemberService.getMemberList();
+		pageable.setRowPerPage(10);
+		
+		PageInfo<AdminMember> memberList = adminMemberService.getMemberList(pageable);
 		log.info("memberList: {}", memberList);
+		
+		var loginHistoryList = memberList.getContents();
+		int currentPage = memberList.getCurrentPage();
+		int lastPage = memberList.getLastPage();
+ 		int startPageNum = memberList.getStartPageNum();
+		int endPageNum = memberList.getEndPageNum();
+		int rowPerPage = pageable.getRowPerPage();
 		
 		model.addAttribute("title", "회원목록");
 		model.addAttribute("memberList", memberList);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("lastPage", lastPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("rowPerPage", rowPerPage);
 		
 		
 		return "admin/member/memberListView";

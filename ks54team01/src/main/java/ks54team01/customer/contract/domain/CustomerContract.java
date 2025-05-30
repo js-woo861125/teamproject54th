@@ -17,4 +17,7 @@ public class CustomerContract {
 	private String rentalEndDate;
 	private String rentalCancelDate;
 	private String contractDate;
+	
+	private String entName;
+	private String productName;
 }

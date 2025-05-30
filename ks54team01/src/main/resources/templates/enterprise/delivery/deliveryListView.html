@@ -76,13 +76,7 @@
 	                   <div class="col-lg-1 col-md-1 me-auto">
 						   <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
 	                   </div>
-	                   <div class="col-lg-2 col-md-3 col-12">
-	                       <select class="form-select">
-	                           <option>Show 20</option>
-	                           <option>Show 30</option>
-	                           <option>Show 40</option>
-	                       </select>
-	                   </div>
+	                  
 	               </div>
 				</form>
 			</header>
@@ -107,7 +101,7 @@
 							</tr>
 						</thead>
 						<tbody class="text-center">
-							<tr th:if="${!#lists.isEmpty(DeliveryList)}" th:each="l : ${DeliveryList}">
+							<tr th:if="${!#lists.isEmpty(deliveryList)}" th:each="l : ${deliveryList}">
 								<td th:text="${l.adminDeliveryInfo.sellProdNo}">상품코드</td>
 								<td th:text="${l.adminDeliveryInfo.recipientNm}">Marvin McKinney</td>
 								<td th:text="${l.adminDeliveryInfo.delCompany}">직접배송</td>
@@ -131,7 +125,7 @@
 									</form>
 								</td>
 							</tr>
-							<tr th:unless="${!#lists.isEmpty(DeliveryList)}">
+							<tr th:unless="${!#lists.isEmpty(deliveryList)}">
                           		<td colspan="12">등록없음</td>
                             </tr>																						
 	

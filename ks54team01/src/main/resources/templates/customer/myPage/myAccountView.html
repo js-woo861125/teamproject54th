@@ -15,6 +15,7 @@
 	
 	 <!-- 페이지 삽입 공간 -->
 	<th:block layout:fragment="customContents">
+		
 		<div class="container">
     		<div class="row">
 		        <div class="col-xl-10 col-lg-12 col-md-12">
@@ -304,7 +305,7 @@
 				    }
 
 				    if (newPw !== newPwConfirm) {
-				        alert('새 비밀번호와 확인이 일치하지 않습니다.');
+				        alert('새 비밀번호가 일치하지 않습니다.');
 				        $('input[name="newPwConfirm"]').focus();
 				        return false;
 				    }

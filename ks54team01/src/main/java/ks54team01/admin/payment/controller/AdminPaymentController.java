@@ -1,5 +1,6 @@
 package ks54team01.admin.payment.controller;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -21,7 +22,9 @@ import ks54team01.admin.payment.domain.AdminFee;
 import ks54team01.admin.payment.domain.AdminFeeListWrapper;
 import ks54team01.admin.payment.domain.AdminMonthlyFee;
 import ks54team01.admin.payment.domain.AdminPayment;
+import ks54team01.admin.payment.domain.PaymentProcessRequest;
 import ks54team01.admin.payment.domain.SettlementConfirmRequest;
+import ks54team01.admin.payment.service.AdminFeeService;
 import ks54team01.admin.payment.service.AdminPaymentService;
 import lombok.RequiredArgsConstructor;
 
@@ -31,15 +34,15 @@ import lombok.RequiredArgsConstructor;
 public class AdminPaymentController {
 
 	private final AdminPaymentService adminPaymentService;
-	
+	private final AdminFeeService adminFeeService;
 	
 	@GetMapping("/searchPaymentList")
 	public String getSearchPaymentList(String searchKey, String searchValue, Model model) {
 		
-		List<AdminPayment> PaymentList = adminPaymentService.getSearchPaymentList(searchKey, searchValue);
+		List<AdminPayment> paymentList = adminPaymentService.getSearchPaymentList(searchKey, searchValue);
 		
 		model.addAttribute("title", "결제내역");
-		model.addAttribute("PaymentList", PaymentList);
+		model.addAttribute("paymentList", paymentList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
 		
@@ -50,10 +53,10 @@ public class AdminPaymentController {
 	@GetMapping("/paymentList")
 	public String getPaymentList(Model model) {
 		
-		List <AdminPayment> PaymentList = adminPaymentService.getPaymentList();
+		List <AdminPayment> paymentList = adminPaymentService.getPaymentList();
 		
 		model.addAttribute("title", "결제내역");
-		model.addAttribute("PaymentList", PaymentList);
+		model.addAttribute("paymentList", paymentList);
 		
 		return "admin/payment/paymentListView";
 	}
@@ -75,7 +78,7 @@ public class AdminPaymentController {
         // 1. 입점업체 목록 조회
         List<AdminEntList> entList = adminPaymentService.getSearchEnt(searchKey, searchValue);
 
-        // 2. 관리비(AdminFee) 목록 조회
+        // 2. (AdminFee) 목록 조회
         List<AdminFee> adminFeeList = adminPaymentService.getAdminPayFee(searchValue, settlementMonth);
 
         // 3. 월별 정산금액 목록 조회 (처리된 settlementMonth 사용)
@@ -124,7 +127,6 @@ public class AdminPaymentController {
 		        List<AdminFee> adminFeeList = adminFeeListWrapper != null ? adminFeeListWrapper.getAdminFeeList() : null;
 
 		        System.out.println("POST 요청으로 수신된 상세 매출 건수: " + (adminFeeList != null ? adminFeeList.size() : 0) + "건");
-
 
 		        Map<String, Map<String, Object>> summaryMap = new HashMap<>();
 
@@ -261,7 +263,10 @@ public class AdminPaymentController {
 
 		        return "admin/payment/calculateDetail";
 		    }
-		//마감등록
+	 
+	 
+	 
+	 //마감등록
 	 @PostMapping("/confirmSettlement")
 	    public String confirmSettlement(@ModelAttribute SettlementConfirmRequest request, 
 							            RedirectAttributes redirectAttributes) {
@@ -269,23 +274,66 @@ public class AdminPaymentController {
 	        System.out.println("\n--- 새로운 메서드: 정산 확정 (confirmSettlement) 호출 ---");
 	        System.out.println("정산 연월: " + request.getSettlementMonth());
 	        System.out.println("검색 업체코드: " + request.getSearchValue());
+	        
+	        if (request.getEntCeoNo() == null || request.getEntCeoNo().isEmpty()) {
+		        request.setEntCeoNo(request.getSearchValue());
+		        
+		    System.out.println("entCeoNo가 null이어서 searchValue 값으로 설정: " + request.getEntCeoNo());
+		    
+		    }
+	         
+	        
 	        System.out.println("업체 직원 ID: " + request.getEntEmpId());
 	        System.out.println("플랫폼 직원 ID: " + request.getPlatformEmpId());
-	        System.out.println("매출총합 (전달됨): " + request.getTotalApprovedAmount());
-	        System.out.println("취소/환불 (전달됨): " + request.getTotalCancelledAmount());
-	        System.out.println("플랫폼 수수료 (전달됨): " + request.getTotalNetPlatformFee());
-	        System.out.println("최종 정산 총계 (전달됨): " + request.getFinalSettlementAmount());
+	        
 
-	        List<AdminMonthlyFee> adminMonthlyFeeList = request.getAdminMonthlyFeeList();
-	        System.out.println("전달된 상세 매출 건수: " + (adminMonthlyFeeList != null ? adminMonthlyFeeList.size() : 0) + "건");
+	        System.out.println("입점업체 수수료 렌탈요금합 (전달됨): " + request.getTotalEntFeeRental());
+	        System.out.println("플렛폼 수수료 렌탈요금합 (전달됨): " + request.getTotalPlatFormFeeRental());
+	        
+	        System.out.println("입점업체 일반판매 수수료합 (전달됨): " + request.getTotalEntFee());
+	        System.out.println("플렛폼 일반판매 수수료합(전달됨): " + request.getTotalPlatFormFee());
 
-	        // ⭐️ 중요: 이 부분에서 실제 정산 DB 저장 로직을 구현합니다.
-	        // adminFeeService.saveSettlement(request); // 예시: DTO 전체를 서비스로 넘길 수 있습니다.
+	        System.out.println("입점업체 위약금합 (전달됨): " + request.getTotalEntPenalty());
+	        System.out.println("플렛폼 위약금합 (전달됨): " + request.getTotalPlatFormPenalty());
+	        
+
+	        System.out.println("입점업체 매출총합 (전달됨): " + request.getTotalApprovedAmount());
+	        System.out.println("플랫폼 수수료 총합(전달됨): " + request.getTotalNetPlatformFee());
+
+
+	        // ⭐️ 중요: 이 부분에서 실제 정산 DB 저장 로직을 구현.
+	        adminFeeService.saveSettlement(request); // DTO 전체를 서비스로 넘길 수 있습니다.
 
 	        // 정산 완료 후, 성공 메시지와 함께 다른 페이지로 리다이렉트
 	        redirectAttributes.addFlashAttribute("message", "정산이 성공적으로 확정되었습니다.");
 	        
-	        return "redirect:/admin/payment/searchEnterprise"; // 정산 목록 페이지 등으로 리다이렉트
+	        return "redirect:/admin/payment/searchEnterprise"; // 정산 목록 페이지 
+	    }
+	 
+	 
+	 // 지급 처리 요청
+	    @PostMapping("/processPayment")
+	    public String processPayment(@ModelAttribute PaymentProcessRequest request,
+	                                 RedirectAttributes redirectAttributes) {
+	        System.out.println("\n--- 지급 처리 POST 요청 수신 ---");
+	        System.out.println("정산 연월: " + request.getSettlementMonth());
+	        System.out.println("검색 값 (업체): " + request.getSearchValue());
+	        System.out.println("업체 직원 ID: " + request.getEntEmpId());
+	        System.out.println("업체 대표 코드: " + request.getEntCeoNo());
+	        System.out.println("지급 처리할 feeNo 리스트: " + (request.getFeeNoList() != null ? request.getFeeNoList().size() : 0) + "건");
+
+	        // 현재 날짜 설정
+	        request.setCurrentDate(LocalDate.now());
+
+	        // 서비스 호출하여 지급 처리
+	        adminFeeService.processPayment(request);
+
+	        redirectAttributes.addFlashAttribute("message", "지급 처리가 성공적으로 완료되었습니다.");
+	        
+	        // 지급 처리 후 다시 해당 월과 업체로 리다이렉트하여 업데이트된 상태를 보여줌
+	        redirectAttributes.addAttribute("settlementMonth", request.getSettlementMonth());
+	        redirectAttributes.addAttribute("searchValue", request.getSearchValue());
+	        return "redirect:/admin/payment/searchEnterprise";
 	    }
 	 
 	

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
-import ks54team01.customer.member.domain.CustomerMember;
+import ks54team01.customer.contract.service.CustomerContractService;
 import ks54team01.customer.payment.domain.CustomerDelivery;
 import ks54team01.customer.payment.domain.CustomerDeliveryInfo;
 import ks54team01.customer.payment.domain.CustomerPayment;
@@ -31,6 +31,61 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomerPaymentController {
 	
 	private final CustomerPaymentService customerPaymentService;
+	
+	private final CustomerContractService customerContractService;
+	
+	
+	
+	@GetMapping("/detail")
+	public String getPaymentDetailList(@RequestParam("rentalContractNo") String rentalContractNo, Model model) {
+		
+		List<CustomerPayment> paymentDetail =  customerPaymentService.getPaymentDetailList(rentalContractNo);
+		
+		CustomerPayment firstPaymentDetail = customerPaymentService.getFirstPaymentDetail(rentalContractNo);
+		
+		String prodNm = firstPaymentDetail.getProdNm();
+		
+		String rentalContactNo = firstPaymentDetail.getRentalContractNo();
+		
+		String paymentType = firstPaymentDetail.getPaymentType();
+		
+		Integer paymentCount = firstPaymentDetail.getPaymentCount();
+		
+		Integer totalPrice = firstPaymentDetail.getTotalPrice();
+		
+		
+		
+		model.addAttribute("title", "주문상세내역");
+		model.addAttribute("paymentDetail", paymentDetail);
+		model.addAttribute("prodNm", prodNm);
+		model.addAttribute("rentalContactNo", rentalContactNo);
+		model.addAttribute("paymentType", paymentType);
+		model.addAttribute("paymentCount", paymentCount);
+		model.addAttribute("totalPrice", totalPrice);
+		
+		
+		return "customer/myPage/myPaymentDetailView";
+	}
+	
+	
+	
+	@PostMapping("/refund")
+	public ResponseEntity<String> addRefund(@RequestParam("orderId") String orderId, @RequestParam("paymentCompletedNo") String paymentCompletedNo
+										  , @RequestParam("paymentKey") String paymentKey, @RequestParam String refundReason
+										  , @RequestParam("entCeoNo") String entCeoNo, @RequestParam("entEmpId") String entEmpId, HttpSession session) {
+			
+		String custId = (String) session.getAttribute("loginId");
+		
+		
+		
+		customerPaymentService.addRefund(orderId, paymentCompletedNo, paymentKey, refundReason, custId, entCeoNo, entEmpId);
+		
+		customerPaymentService.modifyPaymentStatus(orderId, "환불요청");
+		
+		return ResponseEntity.ok("환불 요청이 접수되었습니다.");
+	}
+	
+	
 	
 	
 	@GetMapping("/modifyBilling/success")
@@ -78,11 +133,11 @@ public class CustomerPaymentController {
 	    model.addAttribute("custId", custId);
 		
 		
-        List<CustomerDelivery> DeliveryList = customerPaymentService.getDeliveryListById(custId);
+        List<CustomerDelivery> deliveryList = customerPaymentService.getDeliveryListById(custId);
         
         int quantity = customerPaymentService.getQuantity(productsNum, entCeoNo);
         
-        model.addAttribute("DeliveryList", DeliveryList);
+        model.addAttribute("deliveryLists", deliveryList);
         model.addAttribute("quantity", quantity);
         
         log.info("quantity: {}", quantity);
@@ -105,12 +160,22 @@ public class CustomerPaymentController {
 				return ResponseEntity.badRequest().body("결제 정보가 존재하지 않습니다.");
 			}
 			
+			
 			customerPaymentService.cancelPayment(paymentKey, "고객 요청 취소");
 			
 			customerPaymentService.modifyPaymentStatus(orderId, "주문취소");
 			
+			int cancelQuantity = customerPaymentService.getQuantityByOrderId(orderId);
+			
+			CustomerPayment cancelProduct = customerPaymentService.getProductByOrderId(orderId);
+			
+			customerPaymentService.modifyCancelQuantity(cancelProduct, cancelQuantity);
+			
 			customerPaymentService.removeDeliveryInfo(paymentCompletedNo);
 			
+			String rentalContractNo = customerPaymentService.getRentalContractNo(paymentCompletedNo);
+			
+			customerContractService.modifyRentalContractStatus(rentalContractNo);
 			
 			return ResponseEntity.ok("주문이 취소되었습니다.");
 			
@@ -130,11 +195,11 @@ public class CustomerPaymentController {
 		
 		
 		
-		List<CustomerPayment> PaymentList = customerPaymentService.getPaymentList(custId);
+		List<CustomerPayment> paymentList = customerPaymentService.getPaymentList(custId);
 		
 		
 		model.addAttribute("title", "주문 목록");
-		model.addAttribute("PaymentList", PaymentList);
+		model.addAttribute("paymentList", paymentList);
 		model.addAttribute("custId", custId);
 		
 		
@@ -166,7 +231,7 @@ public class CustomerPaymentController {
 		
 		CustomerDeliveryInfo customerDeliveryInfo = new CustomerDeliveryInfo();
 		
-		String delInfoNo = "del_info_" + UUID.randomUUID().toString().replace("-", "").substring(0, 10);
+		String delInfoNo = "del_info_" + UUID.randomUUID().toString().replace("-", "");
 		customerDeliveryInfo.setDelInfoNo(delInfoNo);
 		
 		customerDeliveryInfo.setDelNo(delNo);
@@ -208,7 +273,7 @@ public class CustomerPaymentController {
 		
 		CustomerDeliveryInfo customerDeliveryInfo = new CustomerDeliveryInfo();
 		
-		String delInfoNo = "del_info_" + UUID.randomUUID().toString().replace("-", "").substring(0, 10);
+		String delInfoNo = "del_info_" + UUID.randomUUID().toString().replace("-", "");
 		customerDeliveryInfo.setDelInfoNo(delInfoNo);
 		
 		customerDeliveryInfo.setDelNo(delNo);
@@ -251,11 +316,11 @@ public class CustomerPaymentController {
 	    model.addAttribute("custId", custId);
 		
 		
-        List<CustomerDelivery> DeliveryList = customerPaymentService.getDeliveryListById(custId);
+        List<CustomerDelivery> deliveryList = customerPaymentService.getDeliveryListById(custId);
         
         int quantity = customerPaymentService.getQuantity(productsNum, entCeoNo);
         
-        model.addAttribute("DeliveryList", DeliveryList);
+        model.addAttribute("deliveryList", deliveryList);
         model.addAttribute("quantity", quantity);
         
         log.info("quantity: {}", quantity);

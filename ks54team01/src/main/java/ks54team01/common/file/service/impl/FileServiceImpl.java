@@ -23,10 +23,26 @@ public class FileServiceImpl implements FileService {
 	
 
 	@Override
-	public void deleteFiles(String fileIdx) {
-		fileMapper.deleteFiles(fileIdx);
-		
+	public void deleteFileByIdx(String fileIdx) {
+		// TODO Auto-generated method stub
+		FileMetaData fileMetaData = fileMapper.getFileInfoByIdx(fileIdx);
+		if(fileMetaData != null) {
+			String path = fileMetaData.getFilePath();
+			// 실제 파일 삭제
+			boolean isDelete = filesUtils.deleteFileByPath(path);
+			log.info("isDelete: {}", isDelete);
+			// 파일 삭제 여부 (true: 테이블 row 삭제)
+			if(isDelete) fileMapper.deleteFileByIdx(fileIdx);
+		}
 	}
+	
+	
+	
+	  @Override public void deleteFiles(String fileIdx) {
+	  fileMapper.deleteFiles(fileIdx);
+	  
+	  }
+	 
 	
 
 	

@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ks54team01.customer.payment.domain.CustomerDelivery;
 import ks54team01.customer.payment.domain.CustomerDeliveryInfo;
 import ks54team01.customer.payment.domain.CustomerPayment;
+import ks54team01.customer.payment.domain.CustomerRefund;
 import ks54team01.customer.payment.mapper.CustomerPaymentMapper;
 import ks54team01.customer.payment.service.CustomerPaymentService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,83 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 	private final ObjectMapper objectMapper;
 	
 	private final CustomerPaymentMapper customerPaymentMapper;
+	
+	
+	
+	@Override
+	public CustomerPayment getFirstPaymentDetail(String rentalContractNo) {
+		
+		CustomerPayment customerPayment = customerPaymentMapper.getFirstPaymentDetail(rentalContractNo);
+		
+		return customerPayment;
+	}
+	
+	
+	@Override
+	public List<CustomerPayment> getPaymentDetailList(String rentalContractNo) {
+		
+		List<CustomerPayment> customerPayment = customerPaymentMapper.getPaymentDetailList(rentalContractNo);
+		
+		return customerPayment;
+	}
+	
+	
+	
+	@Override
+	public String getRentalContractNo(String paymentCompletedNo) {
+
+		String contractNo = customerPaymentMapper.getRentalContractNo(paymentCompletedNo);
+		
+		return contractNo;
+	}
+	
+	
+	@Override
+	public void modifyCancelQuantity(CustomerPayment cancelProduct, Integer cancelQuantity) {
+
+		String ProdNo = cancelProduct.getProdNo();
+		String entCeoNo = cancelProduct.getEntCeoNo();
+		
+		customerPaymentMapper.modifyCancelQuantity(ProdNo, entCeoNo, cancelQuantity);
+		
+	}
+	
+	
+	@Override
+	public CustomerPayment getProductByOrderId(String orderId) {
+		CustomerPayment customerPayment = customerPaymentMapper.getProductByOrderId(orderId);
+		
+		return customerPayment;
+	}
+	
+	@Override
+	public int getQuantityByOrderId(String orderId) {
+		int quantity = customerPaymentMapper.getQuantityByOrderId(orderId);
+		
+		return quantity;
+	}
+	
+	
+	
+	@Override
+	public void addRefund(String orderId, String paymentCompletedNo, String paymentKey, String refundReason, String custId, String entCeoNo, String entEmpId) {
+		
+		String refundNo = "refund_" + UUID.randomUUID().toString().replace("-", "");
+		
+		CustomerRefund customerRefund = new CustomerRefund();
+		
+		customerRefund.setRefundRequestNo(refundNo);
+		customerRefund.setCustId(custId);
+		customerRefund.setPaymentCompletedNo(paymentCompletedNo);
+		customerRefund.setPaymentKey(paymentKey);
+		customerRefund.setRefundReason(refundReason);
+		customerRefund.setOrderId(orderId);
+		customerRefund.setEntCeoNo(entCeoNo);
+		customerRefund.setEntEmpId(entEmpId);
+		
+		customerPaymentMapper.addRefund(customerRefund);
+		
+	}
 	
 	
 	
@@ -71,7 +149,7 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 	
 	private boolean requestAutoBilling(CustomerPayment payment) {
 	    try {
-	        String newOrderId = "orderId_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+	        String newOrderId = "order_id_" + UUID.randomUUID().toString().replace("-", "");
 	        String billingKey = payment.getBillingKey();
 	        
 	        String body = String.format("""
@@ -135,8 +213,8 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 			if (success) {
 				// 새 결제 데이터 준비
 				payment.setPaymentCountPeriod(nowPeriod + 1); // 회차 +1
-				payment.setPaymentCompletedNo("payCompletedNo_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12));
-				payment.setOrderId("orderId_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12));
+				payment.setPaymentCompletedNo("pay_" + UUID.randomUUID().toString().replace("-", ""));
+				payment.setOrderId("order_id_" + UUID.randomUUID().toString().replace("-", ""));
 				payment.setPaymentStatus("정상결제상태");
 				payment.setNextPaymentDate(null);
 				if(maxPeriod > nowPeriod + 1) {					
@@ -255,7 +333,7 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 	@Override
 	public void addPayment(CustomerPayment customerPayment) {
 
-		String paymentCompletedNo = "payCompletedNo_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+		String paymentCompletedNo = "pay_" + UUID.randomUUID().toString().replace("-", "");
 		customerPayment.setPaymentCompletedNo(paymentCompletedNo);
 		
 		customerPaymentMapper.addPayment(customerPayment);
@@ -266,7 +344,7 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 	@Override
 	public void addBillingPayment(CustomerPayment customerPayment, String rentalContractNo) {
 		
-		String orderId = "orderId_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+		String orderId = "order_id_" + UUID.randomUUID().toString().replace("-", "");
 		customerPayment.setOrderId(orderId);
 		
 		String billingKey = customerPayment.getBillingKey();
@@ -309,7 +387,7 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 				customerPayment.setPaymentKey(paymentKey);
 				customerPayment.setPaymentStatus("정상결제상태");
 			
-				String paymentCompletedNo = "payCompletedNo_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+				String paymentCompletedNo = "pay_" + UUID.randomUUID().toString().replace("-", "");
 				customerPayment.setPaymentCompletedNo(paymentCompletedNo);
 				customerPayment.setRentalContractNo(rentalContractNo);
 				

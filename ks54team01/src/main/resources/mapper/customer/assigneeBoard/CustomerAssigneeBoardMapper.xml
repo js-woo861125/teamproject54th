@@ -117,7 +117,7 @@
   		/* 등록 */
   		INSERT INTO assignee_board
 		(assignee_no, cust_id, product_category_no, products_nm, rental_fee, remaining_months, desired_install_area, quantity, assignee_content, board_valid_date, register_date, revision_date)
-		VALUES(#{assigneeBoardNum}, 'personalcustid2', #{productCategoryNum}, #{productName}, #{rentalFee}, #{remainingMonths}, #{desiredInstallArea}, 1, #{assigneeContent}, DATE_ADD(NOW(), INTERVAL 1 MONTH), NOW(), NOW());
+		VALUES(#{assigneeBoardNum}, #{customerId}, #{productCategoryNum}, #{productName}, #{rentalFee}, #{remainingMonths}, #{desiredInstallArea}, 1, #{assigneeContent}, DATE_ADD(NOW(), INTERVAL 1 MONTH), NOW(), NOW());
   	</insert>
   	
   	<select id="getProduct" parameterType="string" resultMap="productResultMap">
@@ -175,7 +175,7 @@
 			INNER JOIN products_category pc
 			USING (product_category_no)
 		WHERE
-			ab.cust_id = 'personalcustid3'
+			ab.cust_id = #{customerId}
 		ORDER BY ab.register_date DESC;
   	</select>
   	
@@ -250,8 +250,9 @@
 			INNER JOIN products_category pc
 			USING (product_category_no)
   		<where>
+  			DATEDIFF(ab.board_valid_date, NOW()) >= 0
 			<if test="searchValue != null and searchValue != ''">
-				ab.products_nm LIKE CONCAT('%', #{searchValue}, '%')
+				AND ab.products_nm LIKE CONCAT('%', #{searchValue}, '%')
 			</if>
 		</where>
 		ORDER BY 

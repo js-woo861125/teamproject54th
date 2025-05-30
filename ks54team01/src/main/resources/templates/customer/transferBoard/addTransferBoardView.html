@@ -12,7 +12,7 @@
 	</th:block>
 	
 	<th:block layout:fragment="jsScript">
-		<script>
+		<script th:inline="javascript">
 			// 메인 이미지 미리보기
 			$('#mainImage').change(function(){
 			    $('#mainImagePreview').empty();
@@ -89,6 +89,31 @@
 					if(isSubmit) $('#addTransferBoardForm').submit();
 				});
 		   	}); */
+		   	
+		   	$(document).ready(function () {
+		   	    const $checkbox = $('#differentaddress');
+		   	    const $collapse = $('#collapseAddress');
+
+		   	    // 체크박스 클릭 이벤트
+		   	    $checkbox.on('change', function () {
+		   	        if ($checkbox.is(':checked')) {
+		   	            // 1. 영역 펼치기
+		   	            $collapse.collapse('show');
+
+		   	            // 2. 다시 접히지 않도록 막기
+		   	            $collapse.on('hide.bs.collapse', function (e) {
+		   	                e.preventDefault();
+		   	            });
+
+		   	            // 3. 다시 체크 해제 못하게 (값은 유지하되 클릭 방지)
+		   	            $checkbox.prop('checked', true); // 혹시 모르니 강제 체크 상태 유지
+		   	            $checkbox.on('click.prevent', function (e) {
+		   	                e.preventDefault(); // 클릭 무효화
+		   	                return false;
+		   	            });
+		   	        }
+		   	    });
+		   	});
 		</script>
 	</th:block>
 	
@@ -166,12 +191,12 @@
 	                            </div>
 	                            <div class="row">
 	                                <div class="form-group col-lg-6">
-	                                    <input id="remainingMonthsInput" type="text" th:value="${myRentalInfo.remainingMonths}" name="remainingMonths" placeholder="잔여계약일(개월) *" >
+	                                    <input id="remainingMonthsInput" type="text" th:value="${myRentalInfo.remainingMonths}" name="remainingMonths" placeholder="잔여계약일(개월) *" readonly>
 	                                </div>
 	                            </div>
 	                            <div class="row">
 	                                <div class="form-group col-lg-6">
-	                                    <input id="rentalFeeInput" type="text" th:value="${myRentalInfo.customerSellProduct.finalPrice}" name="rentalFee" placeholder="월렌탈료 *">
+	                                    <input id="rentalFeeInput" type="text" th:value="${myRentalInfo.customerSellProduct.finalPrice}" name="rentalFee" placeholder="월렌탈료 *" readonly>
 	                                </div>
 	                            </div>
 	                            <div class="ship_detail">

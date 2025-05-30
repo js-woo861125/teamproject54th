@@ -33,7 +33,7 @@ public class EnterpriseDeliveryController {
 		
 		delivery.getAdminDeliveryInfo().setDelCompany("직접배송");
 		
-		delivery.getAdminDeliveryInfo().setDelProgress("2.배송중");
+		delivery.getAdminDeliveryInfo().setDelProgress("배송중");
 		
 		String currentDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		
@@ -56,7 +56,7 @@ public class EnterpriseDeliveryController {
 		
 		EnterpriseDelivery delivery = enterpriseDeliveryService.getDeliveryInfoByCode(deliveryNo);
 		
-		delivery.getAdminDeliveryInfo().setDelProgress("3.배송완료(설치완료)");
+		delivery.getAdminDeliveryInfo().setDelProgress("배송완료");
 		
 		String currentDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		
@@ -77,10 +77,10 @@ public class EnterpriseDeliveryController {
 	@GetMapping("/searchDeliveryList")
 	public String getSearchDeliveryList(String searchKey, String searchValue, Model model) {
 		
-		List <EnterpriseDelivery> DeliveryList = enterpriseDeliveryService.getSearchDeliveryList(searchKey, searchValue);
+		List <EnterpriseDelivery> deliveryList = enterpriseDeliveryService.getSearchDeliveryList(searchKey, searchValue);
 		
 		model.addAttribute("title", "배송정보 목록");
-		model.addAttribute("DeliveryList", DeliveryList);
+		model.addAttribute("deliveryList", deliveryList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
 		
@@ -89,12 +89,14 @@ public class EnterpriseDeliveryController {
 	
 	
 	@GetMapping("/deliveryList")
-	public String getDeliveryList(Model model) {
+	public String getDeliveryList(HttpSession session, Model model) {
 		
-		List <EnterpriseDelivery> DeliveryList = enterpriseDeliveryService.getDeliveryList();
+		String entCeoNo = (String) session.getAttribute("entCeoNo");
+		
+		List <EnterpriseDelivery> deliveryList = enterpriseDeliveryService.getDeliveryList(entCeoNo);
 		
 		model.addAttribute("title", "배송정보 목록");
-		model.addAttribute("DeliveryList", DeliveryList);
+		model.addAttribute("deliveryList", deliveryList);
 		
 		return "enterprise/delivery/deliveryListView";
 	}

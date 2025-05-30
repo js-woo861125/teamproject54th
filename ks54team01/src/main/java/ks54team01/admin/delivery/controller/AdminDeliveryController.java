@@ -24,10 +24,10 @@ public class AdminDeliveryController {
 	@GetMapping("/searchDeliveryInfoList")
 	public String getSearchDeliveryInfoList(String searchKey, String searchValue, Model model) {
 		
-		List <AdminDeliveryInfo> DeliveryInfoList = adminDeliveryService.getSearchDeliveryInfoList(searchKey, searchValue);
+		List <AdminDeliveryInfo> deliveryInfoList = adminDeliveryService.getSearchDeliveryInfoList(searchKey, searchValue);
 		
 		model.addAttribute("title", "배송정보 목록");
-		model.addAttribute("DeliveryInfoList", DeliveryInfoList);
+		model.addAttribute("deliveryInfoList", deliveryInfoList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
 		
@@ -38,10 +38,10 @@ public class AdminDeliveryController {
 	@GetMapping("/deliveryInfoList")
 	public String getDeliveryInfoList(Model model) {
 		
-		List <AdminDeliveryInfo> DeliveryInfoList = adminDeliveryService.getDeliveryInfoList();
+		List <AdminDeliveryInfo> deliveryInfoList = adminDeliveryService.getDeliveryInfoList();
 		
 		model.addAttribute("title", "배송정보 목록");
-		model.addAttribute("DeliveryInfoList", DeliveryInfoList);
+		model.addAttribute("deliveryInfoList", deliveryInfoList);
 		
 		return "admin/deliveryInfo/deliveryInfoListView";
 	}
@@ -51,10 +51,10 @@ public class AdminDeliveryController {
 	@GetMapping("/searchDeliveryList")
 	public String getSearchDeliveryList(String searchKey, String searchValue, Model model) {
 		
-		List<AdminDelivery> DeliveryList = adminDeliveryService.getSearchDeliveryList(searchKey, searchValue);
+		List<AdminDelivery> deliveryList = adminDeliveryService.getSearchDeliveryList(searchKey, searchValue);
 		
 		model.addAttribute("title", "배송지 목록");
-		model.addAttribute("DeliveryList", DeliveryList);
+		model.addAttribute("deliveryList", deliveryList);
 		model.addAttribute("searchKey", searchKey);
 		model.addAttribute("searchValue", searchValue);
 		return "admin/delivery/deliveryListView";
@@ -65,10 +65,10 @@ public class AdminDeliveryController {
 	@GetMapping("/deliveryList")
 	public String getDeliveryList(Model model) {
 		
-		List<AdminDelivery> DeliveryList = adminDeliveryService.getDeliveryList();
+		List<AdminDelivery> deliveryList = adminDeliveryService.getDeliveryList();
 		
 		model.addAttribute("title", "배송지 목록");
-		model.addAttribute("DeliveryList", DeliveryList);
+		model.addAttribute("deliveryList", deliveryList);
 		
 		return "admin/delivery/deliveryListView";
 		
