@@ -378,8 +378,22 @@
 		        e.preventDefault();
 
 		        if (validateForm()) {
-		            alert("회원가입이 완료되었습니다.");
-		            $('#customerRegisterForm').submit();
+		        	$.ajax({
+			            url: '/customer/register/customerRegister',
+			            method: 'POST',
+			            data: $('#customerRegisterForm').serialize(),
+			            success: function(response) {
+			            	if (registerResult.status === 'success') {
+			            	    alert("회원가입이 완료되었습니다.");
+			            	    location.href = "/customer/login/memberLogin";
+			            	} else {
+			                    alert(response.message || "회원가입 실패");
+			                }
+			            },
+			            error: function() {
+			                alert("회원등록 중 오류가 발생했습니다.");
+			            }
+		       	 	});
 		        }
 		    });
 		</script>

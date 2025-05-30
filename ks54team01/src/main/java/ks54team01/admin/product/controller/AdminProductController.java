@@ -165,25 +165,25 @@ public class AdminProductController {
 		return response;
 	}
 
-	
+	// 카테고리를 불러오는 메소드
 	@GetMapping("/categoryList")
 	@ResponseBody
 	public List<ProductInfoCategory> loadCategoryList() {
 	    return adminProductService.loadCategoryList();
 	}
-
+	// 카테고리 > 해당 품목 가져오는 메소드
 	@GetMapping("/itemList")
 	@ResponseBody
 	public List<ProductInfoItem> loadItemList(@RequestParam String categoryNo) {
 	    return adminProductService.loadItemList(categoryNo);
 	}
-
+	
 	@GetMapping("/brandList")
 	@ResponseBody
 	public List<ProductInfoBrand> loadBrandList(@RequestParam String categoryNo, @RequestParam String itemNo) {
 	    return adminProductService.loadBrandList(categoryNo, itemNo);
 	}
-
+	
 	@GetMapping("/modelList")
 	@ResponseBody
 	public List<ProductInfoModel> loadModelList(@RequestParam String categoryNo,
@@ -193,6 +193,7 @@ public class AdminProductController {
 	    return adminProductService.loadModelList(categoryNo, itemNo, brandNo);
 	}
 	
+	// 상품 세부스펙 불러오기
 	@GetMapping("/specContent")
 	@ResponseBody
 	public List<AdminProductSpecContent> loadSpecContent(@RequestParam String modelNo) {

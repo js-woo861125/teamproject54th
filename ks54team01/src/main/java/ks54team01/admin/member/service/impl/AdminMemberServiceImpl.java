@@ -28,8 +28,11 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	 * 회원 로그인 이력 검색
 	 */	
 	@Override
-	public List<AdminLoginHistory> getSearchLoginHistoryList(String searchKey, String searchValue, String memberType,
+	public PageInfo<AdminLoginHistory> getSearchLoginHistoryList(Pageable pageable, String searchKey, String searchValue, String memberType,
 														String withdrawStatus, String dormantStatus) {
+		
+		int contentRowCount = adminMemberMapper.getLoginHistoryCount();
+		
 		if (searchKey == null || (!searchKey.equals("memberId") && !searchKey.equals("memberType"))) {
 	        searchKey = "memberId";
 	    }
@@ -51,7 +54,8 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 
 	    List<AdminLoginHistory> loginHistoryList = adminMemberMapper.getSearchLoginHistoryList(searchKey, searchValue, memberType, withdrawStatus, dormantStatus);
 
-	    return loginHistoryList;
+	  
+	    return new PageInfo<>(loginHistoryList, pageable, contentRowCount);
 	}
 	
 	
@@ -75,9 +79,10 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	 * 회원 검색
 	 */	
 	@Override
-	public List<AdminMember> getSearchMember(String searchKey, String searchValue, 
+	public PageInfo<AdminMember> getSearchMember(Pageable pageable, String searchKey, String searchValue, 
 	                                         String memberType, String withdrawStatus, String dormantStatus) {
-
+		int contentRowCount = adminMemberMapper.getMemberListCount();
+		
 	    if (searchKey == null || (!searchKey.equals("memberId") && !searchKey.equals("memberName"))) {
 	        searchKey = "memberId";
 	    }
@@ -99,7 +104,8 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 
 	    List<AdminMember> memberList = adminMemberMapper.getSearchMember(searchKey, searchValue, memberType, withdrawStatus, dormantStatus);
 
-	    return memberList;
+	    return new PageInfo<>(memberList, pageable, contentRowCount);
+	  
 	}
 
 
@@ -137,10 +143,14 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	 * 회원 목록 조회
 	 */
 	@Override
-	public List<AdminMember> getMemberList() {
+	public PageInfo<AdminMember> getMemberList(Pageable pageable) {
+		// 마지막페이지를 구하기 위해 전체 행의 갯수를 조회
+		int contentRowCount = adminMemberMapper.getMemberListCount();
+		List<AdminMember> memberList = adminMemberMapper.getMemberList(pageable);
 		
-		List<AdminMember> memberList = adminMemberMapper.getMemberList();
+		log.info("contentRowCount: {}", contentRowCount);
+		log.info("memberList: {}", memberList);
 		
-		return memberList;
+		return new PageInfo<>(memberList, pageable, contentRowCount);
 	}
 }

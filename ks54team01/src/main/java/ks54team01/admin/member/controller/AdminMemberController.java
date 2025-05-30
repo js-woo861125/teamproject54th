@@ -32,7 +32,7 @@ public class AdminMemberController {
 									   @RequestParam(name="searchValue", required = false) String searchValue,
 									   @RequestParam(name="memberType", required = false) String memberType,
 									   @RequestParam(name="status", required = false) String status,
-									   Model model) {
+									   Pageable pageable, Model model) {
 		
 		String withdrawStatus = null;
 		String dormantStatus = null;
@@ -48,7 +48,16 @@ public class AdminMemberController {
 		
 		log.info("searchKey: {}, searchValue: {}, memberType: {}, status: {}", searchKey, searchValue, memberType, status);
 		
-		List<AdminLoginHistory> loginHistoryList = adminMemberService.getSearchLoginHistoryList(searchKey, searchValue, memberType, withdrawStatus, dormantStatus);
+		pageable.setRowPerPage(10);
+		
+		PageInfo<AdminLoginHistory> loginHistory = adminMemberService.getSearchLoginHistoryList(pageable, searchKey, searchValue, memberType, withdrawStatus, dormantStatus);
+		
+		var loginHistoryList = loginHistory.getContents();
+		int currentPage = loginHistory.getCurrentPage();
+		int lastPage = loginHistory.getLastPage();
+ 		int startPageNum = loginHistory.getStartPageNum();
+		int endPageNum = loginHistory.getEndPageNum();
+		int rowPerPage = pageable.getRowPerPage();
 		
 		model.addAttribute("title", "로그인 내역조회");
 		model.addAttribute("loginHistoryList", loginHistoryList);
@@ -56,6 +65,11 @@ public class AdminMemberController {
 		model.addAttribute("searchValue", searchValue);
 		model.addAttribute("memberType", memberType);
 		model.addAttribute("status", status);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("lastPage", lastPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("rowPerPage", rowPerPage);
 		
 		return "admin/member/loginHistoryListView";
 	}
@@ -93,7 +107,8 @@ public class AdminMemberController {
 								  @RequestParam(name="searchValue", required = false) String searchValue,
 								  @RequestParam(name="memberType", required = false) String memberType,
 								  @RequestParam(name="status", required = false) String status,
-								  Model model) {
+								  Pageable pageable, Model model) {
+		pageable.setRowPerPage(10);
 		
 	    String withdrawStatus = null;
 	    String dormantStatus = null;
@@ -108,16 +123,28 @@ public class AdminMemberController {
 	    }
 
 	    log.info("searchKey: {}, searchValue: {}, memberType: {}, status: {}", searchKey, searchValue, memberType, status);
+	    
 
-	    List<AdminMember> memberList = adminMemberService.getSearchMember(searchKey, searchValue, memberType, 
+	    PageInfo<AdminMember> AdminMember = adminMemberService.getSearchMember(pageable, searchKey, searchValue, memberType, 
 	    																  withdrawStatus, dormantStatus);
-
+	    var AdminMemberList = AdminMember.getContents();
+		int currentPage = AdminMember.getCurrentPage();
+		int lastPage = AdminMember.getLastPage();
+ 		int startPageNum = AdminMember.getStartPageNum();
+		int endPageNum = AdminMember.getEndPageNum();
+		int rowPerPage = pageable.getRowPerPage();
+	    
 	    model.addAttribute("title", "회원목록");
-	    model.addAttribute("memberList", memberList);
+	    model.addAttribute("memberList", AdminMemberList);
 	    model.addAttribute("searchKey", searchKey);
 	    model.addAttribute("searchValue", searchValue);
 	    model.addAttribute("memberType", memberType);
 	    model.addAttribute("status", status);
+	    model.addAttribute("currentPage", currentPage);
+		model.addAttribute("lastPage", lastPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("rowPerPage", rowPerPage);
 
 	    return "admin/member/memberListView";
 	}
@@ -133,13 +160,27 @@ public class AdminMemberController {
 	
 	
 	@GetMapping("/memberList") 
-	public String getMemberList(Model model) {
+	public String getMemberList(Pageable pageable, Model model) {
 		
-		List<AdminMember> memberList = adminMemberService.getMemberList();
-		log.info("memberList: {}", memberList);
+		pageable.setRowPerPage(10);
+		
+		PageInfo<AdminMember> AdminMember = adminMemberService.getMemberList(pageable);
+		log.info("AdminMemberList: {}", AdminMember);
+		
+		var AdminMemberList = AdminMember.getContents();
+		int currentPage = AdminMember.getCurrentPage();
+		int lastPage = AdminMember.getLastPage();
+ 		int startPageNum = AdminMember.getStartPageNum();
+		int endPageNum = AdminMember.getEndPageNum();
+		int rowPerPage = pageable.getRowPerPage();
 		
 		model.addAttribute("title", "회원목록");
-		model.addAttribute("memberList", memberList);
+		model.addAttribute("memberList", AdminMemberList);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("lastPage", lastPage);
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
+		model.addAttribute("rowPerPage", rowPerPage);
 		
 		
 		return "admin/member/memberListView";

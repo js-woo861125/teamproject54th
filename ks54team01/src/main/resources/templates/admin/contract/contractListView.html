@@ -85,15 +85,8 @@
 								</tr>
 							</thead>
 							<tbody class="text-center">
-<<<<<<< HEAD
-								<tr th:if="${!#lists.isEmpty(contractList)}" th:each="l : ${contractList}">
-									
-									<td th:text="${l.entCeoNo}">입점업체코드 </td>
-									<td th:text="${l.entName}">상호 </td>
-=======
 								<tr th:if="${!#lists.isEmpty(ContractList)}" th:each="l : ${ContractList}">
 															
->>>>>>> refs/heads/develop
 									<td th:text="${l.custId}">주문자아이디</td>
 									<td th:text="${l.sellProdNo}">상품코드</td>
 									<td th:text="${l.productName}">상품명</td>
@@ -114,7 +107,7 @@
 									<td th:text="${l.rentCancelDate}">계약해지일자</td>
 									<td th:text="${l.contDate}">계약등록일자</td>
 								</tr>
-								<tr th:unless="${!#lists.isEmpty(contractList)}">
+								<tr th:unless="${!#lists.isEmpty(ContractList)}">
                                 	<td colspan="12">등록없음</td>
                                 </tr>
 								
