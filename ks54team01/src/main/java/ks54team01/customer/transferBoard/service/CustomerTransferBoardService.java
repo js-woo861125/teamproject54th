@@ -18,7 +18,7 @@ public interface CustomerTransferBoardService {
 	boolean removeMyTransferBoard(String transferBoardNum);
 	
 	// 양도 게시글 수정
-	void modifyTransferBoard(CustomerTransferBoard customerTransferBoard, MultipartFile[] mainImage, MultipartFile[] extraImage);
+	void modifyTransferBoard(CustomerTransferBoard customerTransferBoard, MultipartFile[] mainImage, MultipartFile[] extraImage, List<String> deleteFile);
 	
 	// 양도 게시글 등록
 	void addTransferBoard(CustomerTransferBoard customerTransferBoard, MultipartFile[] mainImage, MultipartFile[] extraImage);

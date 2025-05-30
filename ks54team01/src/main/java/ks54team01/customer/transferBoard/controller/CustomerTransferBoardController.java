@@ -89,18 +89,18 @@ public class CustomerTransferBoardController {
 	}
 	
 	@PostMapping("/modifyTransferBoard")
-	public String modifyTransferBoard(CustomerTransferBoard customerTrnasferBoard
+	public String modifyTransferBoard(CustomerTransferBoard customerTransferBoard
 									, @RequestPart(name="mainImage") MultipartFile[] mainImage
 									, @RequestPart(name="extraImage") MultipartFile[] extraImage
 									, @RequestParam(name="deleteFile", required = false) List<String> deleteFile) {
 		
-		log.info("customerTrnasferBoard:{}", customerTrnasferBoard);
+		log.info("customerTrnasferBoard:{}", customerTransferBoard);
 		
 		log.info("mainImage:{}", mainImage[0].isEmpty());
 		log.info("extraImage:{}", extraImage[0].isEmpty());
 		log.info("deleteFile:{}", deleteFile != null);
-		//customerTransferBoardService.modifyTransferBoard(customerTrnasferBoard, mainImage, extraImage);
-		
+		customerTransferBoardService.modifyTransferBoard(customerTransferBoard, mainImage, extraImage, deleteFile);
+//		customerTransferBoardService.addTransferBoard(customerTransferBoard, mainImage, extraImage);
 		return "redirect:/customer/transferBoard/myTransferBoardList";
 	}
 	
