@@ -22,7 +22,7 @@ public interface AdminMemberService {
 	AdminMemberDetail getMemberDetail(String memberId, String memberType);
 	
 	// 회원 목록 조회
-	List<AdminMember> getMemberList();
+	PageInfo<AdminMember> getMemberList(Pageable pageable);
 
 
 

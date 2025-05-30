@@ -137,10 +137,14 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	 * 회원 목록 조회
 	 */
 	@Override
-	public List<AdminMember> getMemberList() {
-		
+	public PageInfo<AdminMember> getMemberList(Pageable pageable) {
+		// 마지막페이지를 구하기 위해 전체 행의 갯수를 조회
+		int contentRowCount = adminMemberMapper.getMemberListCount();
 		List<AdminMember> memberList = adminMemberMapper.getMemberList();
 		
-		return memberList;
+		log.info("contentRowCount: {}", contentRowCount);
+		log.info("memberList: {}", memberList);
+		
+		return new PageInfo<>(memberList, pageable, contentRowCount);
 	}
 }
