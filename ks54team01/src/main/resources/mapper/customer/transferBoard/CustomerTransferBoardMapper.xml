@@ -206,7 +206,7 @@
 			ON sp.products_no = p.products_no 
 		WHERE 
 			rc.cust_id = #{customerId}
-			AND rc.rental_contract_no = '2. 계약최종완료';
+			AND rc.rental_contract_status = '계약최종완료';
   	</select>
 
 
@@ -235,6 +235,18 @@
 			ON p.product_category_no = pc.product_category_no
 			LEFT JOIN files f
 			ON tb.transfer_board_no = f.ref_id AND f.file_type = 'mainImage'
+			INNER JOIN 
+			(
+				SELECT 
+					f.ref_id,
+					MAX(f.register_date) AS register_date
+				FROM 
+					files f
+				WHERE 
+					f.file_type = 'mainImage'
+				GROUP BY f.ref_id
+			) f2
+			ON  tb.transfer_board_no = f.ref_id AND f.register_date = f2.register_date
 		 WHERE
 		 	tb.transfer_rental_processing_status != '양도공개전'
 		 	AND tb.cust_id = #{customerId}
@@ -289,8 +301,21 @@
 			USING (del_info_no)
 			INNER JOIN rental_contract rc
 			ON tb.rental_contract_no = rc.rental_contract_no 
-			LEFT JOIN files f
-			ON tb.transfer_board_no = f.ref_id AND f.file_type = 'mainImage'
+			LEFT JOIN 
+			(
+				SELECT
+					f.ref_id,
+					f.file_path
+				FROM 
+					files f 
+				WHERE 
+					f.ref_id  = #{transferBoardNum}
+					AND
+					f.file_type = 'mainImage'
+				ORDER BY f.register_date DESC 
+				LIMIT 1
+			) f
+			ON tb.transfer_board_no = f.ref_id
 		WHERE
 			tb.transfer_board_no = #{transferBoardNum};
   	</select>

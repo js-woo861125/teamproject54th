@@ -59,7 +59,8 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	@Override
 	public void modifyTransferBoard(CustomerTransferBoard customerTransferBoard
 								   , MultipartFile[] mainImage
-								   , MultipartFile[] extraImage) {
+								   , MultipartFile[] extraImage
+								   , List<String> deleteFile) {
 		
 		customerTransferBoardMapper.modifyTransferBoard(customerTransferBoard);
 		
@@ -70,21 +71,23 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	    fileService.deleteFileByIdx(null);
 	    // 새 이미지 업로드 (mainImage)
 	    if (mainImage != null) {
-	        for (MultipartFile file : mainImage) {
-	            if (!file.isEmpty()) {
-	                fileService.addFiles(mainImage, "mainImage", customerTransferBoard.getTransferBoardNum());
-	            }
-	        }
+	    	fileService.addFiles(mainImage, "mainImage", customerTransferBoard.getTransferBoardNum());
 	    }
 
 	    // 새 이미지 업로드 (extraImage)
 	    if (extraImage != null) {
-	        for (MultipartFile file : extraImage) {
-	            if (!file.isEmpty()) {
-	                fileService.addFiles(extraImage, "extraImage", customerTransferBoard.getTransferBoardNum());
+	    	fileService.addFiles(extraImage, "extraImage", customerTransferBoard.getTransferBoardNum());
+	    }
+	    
+	    //다중 파일 삭제
+	    if (deleteFile != null) {
+	    	for (String fileIdx : deleteFile) {
+	            if (!fileIdx.isEmpty()) {
+	                fileService.deleteFiles(fileIdx);
 	            }
 	        }
 	    }
+	    
 		
 //		fileService.deleteFiles(fileIdx);
 		/*

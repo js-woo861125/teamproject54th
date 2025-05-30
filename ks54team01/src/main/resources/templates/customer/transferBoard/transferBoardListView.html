@@ -54,7 +54,7 @@
 				    url: "/customer/transferBoard/getMyContracts",
 				    method: "POST",
 				    success: function (contracts) {
-				    	console.log("✅ 받은 계약 목록:", contracts); // ← 꼭 추가해서 확인하세요
+				    	console.log("받은 계약 목록:", contracts); // ← 꼭 추가해서 확인하세요
 				      	if (!contracts || contracts.length === 0) {
 				     	   Swal.fire({
 				       		    icon: "error",
@@ -138,7 +138,7 @@
 						<div class="search-form col-4">
 							<form th:action="@{/customer/transferBoard/transferBoardList}" method="get">
 								<input type="text" name="searchValue" th:value="${searchValue}"
-									   placeholder="게시글 검색어를 입력해주세요." />
+									   placeholder="찾는 상품명을 입력해주세요." />
 								<button class="transfer-search" type="submit">
 									<i class="fi-rs-search"></i>
 								</button>

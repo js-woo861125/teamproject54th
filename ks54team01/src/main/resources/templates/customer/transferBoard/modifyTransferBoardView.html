@@ -32,6 +32,7 @@
 		 	// 추가 이미지 미리보기 & 삭제
 		   	$('#extraImage').change(function(){
 		   	    $('#extraModifyImagePreview').empty();
+		   	    console.log('tset');
 		   	    const files = this.files;
 		   	    const fileList = [...files];
 		   	    fileList.forEach(function(file, idx){
@@ -64,6 +65,7 @@
 		   	// X버튼 클릭 시 상세 이미지 파일 삭제
 		   	$(document).on('click', '.delete-img1', function(){
 		   	    const input = document.getElementById('extraImage');
+		   	    console.log('test');
 		   	    const files = input.files;
 		   	    const dataTransfer = new DataTransfer();
 		   	    const removeTargetId = $(this).attr('data-remove-key');
@@ -132,6 +134,7 @@
 										<input type="file" id="mainImage" name="mainImage"
 											   class="form-control">
 									</div>
+
 									<div class="mt-3" id="mainImagePreview">
 										<img th:src="*{uploadImage}">
 									</div>
@@ -185,7 +188,7 @@
 										              th:attr="data-remove-key=${fl.fileIdx}">X</span>
 										        <!-- 이미지 -->
 										        <img th:src="@{${fl.filePath}}" alt="이미지" class="img-fluid rounded border">
-									      		<input type="hidden" name="deleteFile" th:value="${fl.fileIdx}">
+									      		<input type="hidden" name="basicFile" th:value="${fl.fileIdx}">
 									      	</div>
 									    </div>
 								 	</div>
