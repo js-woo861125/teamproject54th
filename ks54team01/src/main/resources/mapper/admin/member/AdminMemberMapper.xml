@@ -58,7 +58,8 @@
 	      AND dormantStatus = #{dormantStatus}
 	    </if>
 	    ORDER BY 
-	    	memberRegDate;
+	    	memberRegDate
+	    LIMIT #{rowPerPage} offset #{offset};
 	</select>
 	
 	<select id="getLoginHistoryCount" resultType="int">
@@ -80,7 +81,7 @@
 		FROM
 			member_login_log_view
 		ORDER BY loginNo is null, loginNo
-		limit #{rowPerPage} offset #{offset};
+		LIMIT #{rowPerPage} offset #{offset};
 	</select>
 	
 	
@@ -120,7 +121,8 @@
 	      AND dormantStatus = #{dormantStatus}
 	    </if>
 	    ORDER BY 
-	    	memberRegDate;
+	    	memberRegDate
+	    LIMIT #{rowPerPage} offset #{offset};
 	</select>
 	
 	
@@ -214,7 +216,8 @@
 		FROM
 			all_member_info_view
 		ORDER BY
-			memberRegDate;
+			memberRegDate
+		LIMIT #{rowPerPage} offset #{offset};
 	</select>
 	
 </mapper>

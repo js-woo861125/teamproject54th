@@ -172,6 +172,30 @@
 			});
 			
 			/**
+			 * 상세주소 유효성 검증
+			 */
+			function validateDetailAddress() {
+				const detailAddress = $('#custDaddr').val().trim();
+
+				if (detailAddress.length < 2 || detailAddress.length > 50) {
+					    alert("상세주소는 2자 이상 50자 이하로 입력해주세요.");
+					    $('#custDaddr').focus();
+					    return false;
+					}
+
+				const regex = /^[가-힣a-zA-Z0-9\s\-\,\(\)\.]+$/;
+				if (!regex.test(detailAddress)) {
+				    alert("상세주소는 한글, 영문, 숫자, 일부 특수문자(,-().)만 입력 가능합니다.");
+				    $('#custDaddr').focus();
+				    return false;
+				}
+					
+			     return true;
+			 }
+
+		    
+			
+			/**
 			 * 전화번호 조합
 			 */
 			function setPhoneValue() {
@@ -372,6 +396,7 @@
 		        if (!validateRequiredFields()) return false;
 		        if (!validateEmailVerification()) return false;
 		        if (!validateNewPasswordFields()) return false;
+		        if (!validateDetailAddress()) return false;
 		        
 	
 		        // 기업회원

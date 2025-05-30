@@ -39,7 +39,7 @@ public interface AdminMemberMapper {
 	int getMemberListCount();
 	
 	// 회원 목록 조회
-	List<AdminMember> getMemberList();
+	List<AdminMember> getMemberList(Pageable pageable);
 
 
 }
