@@ -1,6 +1,8 @@
 package ks54team01.admin.member.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +33,6 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	public PageInfo<AdminLoginHistory> getSearchLoginHistoryList(Pageable pageable, String searchKey, String searchValue, String memberType,
 														String withdrawStatus, String dormantStatus) {
 		
-		int contentRowCount = adminMemberMapper.getLoginHistoryCount();
-		
 		if (searchKey == null || (!searchKey.equals("memberId") && !searchKey.equals("memberType"))) {
 	        searchKey = "memberId";
 	    }
@@ -52,8 +52,20 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	        dormantStatus = null;
 	    }
 
-	    List<AdminLoginHistory> loginHistoryList = adminMemberMapper.getSearchLoginHistoryList(searchKey, searchValue, memberType, withdrawStatus, dormantStatus);
-
+	    Map<String, Object> searchLoginMap = new HashMap<>();
+	    searchLoginMap.put("rowPerPage", pageable.getRowPerPage());
+	    searchLoginMap.put("offset", pageable.getOffset());
+	    searchLoginMap.put("searchKey", searchKey);
+	    searchLoginMap.put("searchValue", searchValue);
+	    searchLoginMap.put("memberType", memberType);
+	    searchLoginMap.put("withdrawStatus", withdrawStatus);
+	    searchLoginMap.put("dormantStatus", dormantStatus);
+	    
+	    int contentRowCount = adminMemberMapper.getSearchLoginHistoryCount(searchLoginMap);
+	    
+	    List<AdminLoginHistory> loginHistoryList = adminMemberMapper.getSearchLoginHistoryList(searchLoginMap);
+	    log.info("contentRowCount: {}", contentRowCount);
+		log.info("loginHistoryList: {}", loginHistoryList);
 	  
 	    return new PageInfo<>(loginHistoryList, pageable, contentRowCount);
 	}
@@ -81,7 +93,6 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	@Override
 	public PageInfo<AdminMember> getSearchMember(Pageable pageable, String searchKey, String searchValue, 
 	                                         String memberType, String withdrawStatus, String dormantStatus) {
-		int contentRowCount = adminMemberMapper.getMemberListCount();
 		
 	    if (searchKey == null || (!searchKey.equals("memberId") && !searchKey.equals("memberName"))) {
 	        searchKey = "memberId";
@@ -101,8 +112,19 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	    if (dormantStatus != null && dormantStatus.trim().isEmpty()) {
 	        dormantStatus = null;
 	    }
-
-	    List<AdminMember> memberList = adminMemberMapper.getSearchMember(searchKey, searchValue, memberType, withdrawStatus, dormantStatus);
+	    
+	    Map<String, Object> searcMemberhMap = new HashMap<>();
+	    searcMemberhMap.put("rowPerPage", pageable.getRowPerPage());
+	    searcMemberhMap.put("offset", pageable.getOffset());
+	    searcMemberhMap.put("searchKey", searchKey);
+	    searcMemberhMap.put("searchValue", searchValue);
+	    searcMemberhMap.put("memberType", memberType);
+	    searcMemberhMap.put("withdrawStatus", withdrawStatus);
+	    searcMemberhMap.put("dormantStatus", dormantStatus);
+	    
+	    int contentRowCount = adminMemberMapper.getSearchMemberListCount(searcMemberhMap);
+	    
+	    List<AdminMember> memberList = adminMemberMapper.getSearchMember(searcMemberhMap);
 
 	    return new PageInfo<>(memberList, pageable, contentRowCount);
 	  

@@ -35,7 +35,7 @@
 		                            </div>
 		                            <div class="col-md-6 mb-3">
 		                                <label class="form-label" for="custName">이름</label>
-		                                <input type="text" class="form-control" th:field="*{custName}" required />
+		                                <input type="text" class="form-control" th:field="*{custName}" placeholder="이름" required />
 		                            </div>
 	                        	</div>
 	                        	<div class="row">
@@ -47,11 +47,11 @@
 		                            </div>
 		                            <div class="col-md-6 mb-3">
 		                                <label class="form-label" for="custPhone">연락처</label>
-		                                <input type="hidden" id="custPhone" name="custPhone"/>
+		                                <input type="hidden" id="custPhone" name="custPhone" placeholder="연락처" />
 			                                <div class="d-flex gap-2">
 			                                    <input type="text" class="form-control" id ="custPhone1" name="custPhone1" th:value="${custPhone1}" readonly />
-			                                    <input type="text" class="form-control" id ="custPhone2" name="custPhone2" th:value="${custPhone2}" maxlength="4" />
-			                                    <input type="text" class="form-control" id ="custPhone3" name="custPhone3" th:value="${custPhone3}" maxlength="4" />
+			                                    <input type="text" class="form-control" id ="custPhone2" name="custPhone2" th:value="${custPhone2}" placeholder="중간연락처" maxlength="4" />
+			                                    <input type="text" class="form-control" id ="custPhone3" name="custPhone3" th:value="${custPhone3}" placeholder="마지막연락처" maxlength="4" />
 			                                </div>
 		                            </div>
 	                            </div>
@@ -76,7 +76,7 @@
 		                            <div class="col-md-6 mb-3">
 		                                <label class="form-label" for="custEmail">이메일</label>
 		                                <div class="input-group">
-								            <input type="email" id="custEmail" class="form-control" th:field="*{custEmail}" th:attr="data-original-email=${custEmail}" placeholder="example@domain.com" />
+								            <input type="email" id="custEmail" class="form-control" th:field="*{custEmail}" th:attr="data-original-email=${custEmail}" placeholder="Email" />
 								            <button type="button" class="btn btn-outline-secondary py-1 px-2" onclick="sendVerificationCode()">인증요청</button>
 								        </div>
 							        </div>
@@ -193,8 +193,30 @@
 			     return true;
 			 }
 
-		    
-			
+			/**
+			 * 전화번호 유효성 검증
+			 */
+			function validatePhoneNumber() {
+			    const phone2 = $('#custPhone2').val().trim();
+			    const phone3 = $('#custPhone3').val().trim();
+
+			    const digitOnly = /^[0-9]+$/;
+
+			    if (!digitOnly.test(phone2) || phone2.length < 3 || phone2.length > 4) {
+			        alert("중간연락처는 3~4자리 숫자여야 합니다.");
+			        $('#custPhone2').focus();
+			        return false;
+			    }
+
+			    if (!digitOnly.test(phone3) || phone3.length !== 4) {
+			        alert("마지막연락처는 4자리 숫자여야합니다.");
+			        $('#custPhone3').focus();
+			        return false;
+			    }
+
+			    return true;
+			}
+
 			/**
 			 * 전화번호 조합
 			 */
@@ -203,6 +225,21 @@
 			    $('#custPhone').val(phone);
 			}
 			
+			/**
+		     * 이름 유효성 검증
+		     */
+			function validateName() {
+			    const name = $('#custName').val().trim();
+			    const nameRegex = /^[가-힣]{2,10}$/;
+
+			    if (!nameRegex.test(name)) {
+			        alert("이름은 한글 2~10자로 입력해주세요. (영문, 숫자, 특수문자 불가)");
+			        $('#custName').focus();
+			        return false;
+			    }
+			    return true;
+			}
+
 			/**
 		     * email 유효성검증 및 인증코드 전송
 		     */
@@ -397,7 +434,8 @@
 		        if (!validateEmailVerification()) return false;
 		        if (!validateNewPasswordFields()) return false;
 		        if (!validateDetailAddress()) return false;
-		        
+		        if (!validatePhoneNumber()) return false;
+		        if (!validateName()) return false;
 	
 		        // 기업회원
 		        const isCorpMember = $('#memberType').val() === '기업고객';
