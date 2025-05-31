@@ -28,7 +28,9 @@ public class RegisterController {
 	private final RegisterService registerService;
 
 	@PostMapping("/entRegister")
-	public String addEntMember(EntMember memberInfo, HttpSession session) {
+	@ResponseBody
+	public Map<String, Object> addEntMember(@ModelAttribute EntMember memberInfo, HttpSession session) {
+		Map<String, Object> registerResult = new HashMap<>();
 		// 세션에서 공통등록정보 가져온 후 memberInfo로 저장
 		CommonMember common = (CommonMember) session.getAttribute("memberInfo");
 		
@@ -45,13 +47,19 @@ public class RegisterController {
 	    // 세션에 entCeoNo 저장
 	    session.setAttribute("memberInfo", memberInfo);
 	    
-	    log.info("회원 등록 시작: {}", memberInfo);
+	    try {
+	        log.info("회원 등록 시작: {}", memberInfo);
+	        registerService.addEntCeoMember(memberInfo);
+	        log.info("회원 등록 완료: {}", memberInfo);
+	        registerResult.put("status", "success");
+	    } catch (Exception e) {
+	        log.error("회원 등록 오류", e);
+	        registerResult.put("status", "error");
+	        registerResult.put("message", "서버 오류: " + e.getMessage());
+	    }
+
+	    return registerResult;
 	    
-	    registerService.addEntCeoMember(memberInfo);
-
-	    log.info("회원 등록 완료: {}", memberInfo);
-
-	    return "redirect:/customer/login/memberLogin";
 	}
 	
 	
@@ -135,7 +143,7 @@ public class RegisterController {
 	    // 회원 유형에 따른 페이지 이동
 		switch (commonMember.getMemberType()) {
 	        case "customer": return "redirect:/customer/register/customerRegister";
-	        case "입점업체": return "redirect:/customer/register/entRegister";
+	        case "입점업체 대표": return "redirect:/customer/register/entRegister";
 	        default: return "redirect:/error";
 	    }
 	}

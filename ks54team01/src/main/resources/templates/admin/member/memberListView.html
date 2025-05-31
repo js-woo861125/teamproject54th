@@ -7,7 +7,6 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
-		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
@@ -123,27 +122,39 @@
         <div class="pagination-area mt-30 mb-50">
 	            <nav aria-label="Page navigation example">
 	                <ul class="pagination justify-content-center">
-	                	 <li class="page-item text-center">
+	                	 <li class="page-item" th:classappend="${currentPage eq startPageNum} ? 'disabled'">
 	                        <a class="page-link" th:href="@{/admin/member/memberList}"><i class="material-icons md-first_page"></i></a>
 	                     </li>
 	                     <li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
-	                        <a class="page-link" th:href="@{/admin/member/memberList(currentPage=${currentPage - 1})}">
+	                        <a class="page-link" th:href="${searchKey != null} 
+	                        							  ?  @{/admin/member/searchMember(currentPage=${currentPage - 1}, searchKey=${searchKey},
+																						   		searchValue=${searchValue}, memberType=${memberType}, status=${status})}
+	                        							  :  @{/admin/member/memberList(currentPage=${currentPage - 1})}">
 	                        	<i class="material-icons md-chevron_left"></i>
 	                        </a>
 	                     </li>
 	                     <th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
 		                    <li class="page-item" th:classappend="${num eq currentPage} ? 'active disabled'">
-		                    	<a class="page-link" th:href="@{/admin/member/memberList(currentPage=${num})}"
+		                    	<a class="page-link" th:href="${searchKey != null} 
+	                        							  	  ?  @{/admin/member/searchMember(currentPage=${num}, searchKey=${searchKey},
+																						   			searchValue=${searchValue}, memberType=${memberType}, status=${status}, rowPerPage=${rowPerPage})}
+	                        							      :  @{/admin/member/memberList(currentPage=${num}, rowPerPage=${rowPerPage})}"
 		                    		th:text="${num < 10 ? '0' + num : num}">01</a>
 		                   	</li>                    
 	                     </th:block>                 
 	                     <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
-	                        <a class="page-link" th:href="@{/admin/member/memberList(currentPage=${currentPage + 1})}">
+	                        <a class="page-link" th:href="${searchKey != null} 
+	                        							  ?  @{/admin/member/searchMember(currentPage=${currentPage + 1}, searchKey=${searchKey},
+																						   		searchValue=${searchValue}, memberType=${memberType}, status=${status})}
+	                        							  :  @{/admin/member/memberList(currentPage=${currentPage + 1})}">
 	                        	<i class="material-icons md-chevron_right"></i>
 	                        </a>
 	                     </li>
 	                     <li class="page-item">
-	                        <a class="page-link" th:href="@{/admin/member/memberList(currentPage=${lastPage})}">
+	                        <a class="page-link" th:href="${searchKey != null} 
+	                        							  ?  @{/admin/member/searchMember(currentPage=${lastPage}, searchKey=${searchKey},
+																						   		searchValue=${searchValue}, memberType=${memberType}, status=${status})}
+	                        							  :  @{/admin/member/memberList(currentPage=${lastPage})}">
 	                        	<i class="material-icons md-last_page"></i>
 	                        </a>
 	                    </li>
@@ -195,108 +206,88 @@
 		    </div>
 		  </div>
 		</div>
-        <footer class="main-footer font-xs">
-            <div class="row pb-30 pt-15">
-                <div class="col-sm-6">
-                    <script>
-                        document.write(new Date().getFullYear());
-                    </script>
-                    &copy; Nest - HTML Ecommerce Template .
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end">All rights reserved</div>
-                </div>
-            </div>
-        </footer>
-        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-        <script src="assets/js/vendors/select2.min.js"></script>
-        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
-        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-        <!-- Main Script -->
-        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-    </body>
-    <th:block layout:fragment="jsScript">
-    	<script>
-    
-		    function openMemberDetailModal(data) {
-
-		    	const memberId = data.getAttribute('data-member-id');
-		        const memberType = data.getAttribute('data-member-type');
-
-		    $.ajax({
-		        url: "/admin/member/memberDetail",
-		        data: { memberId: memberId, memberType: memberType },
-		        success: function(data) {
-		            $('.detail-row').hide();
-		
-		            // 공통 + 개인/기업 
-		            if (memberType === '개인고객' || memberType === '기업고객') {
-		                $('#custBrdtRow').show().find('td').text(data.custBrdt || '-');
-		                $('#custAddrRow').show().find('td').text(data.custAddr || '-');
-		                $('#custDaddrRow').show().find('td').text(data.custDaddr || '-');
-		                $('#custEmailRow').show().find('td').text(data.custEmail || '-');
-		                $('#custPhoneRow').show().find('td').text(data.custPhone || '-');
-		            }
-		
-		            if (memberType === '기업고객') {
-		                $('#corpNameRow').show().find('td').text(data.corpName || '-');
-		                $('#corpBrnoRow').show().find('td').text(data.corpBrno || '-');
-		            }
-		            
-		            if (memberType === '플랫폼직원') {
-		                $('#managerNameRow').show().find('td').text(data.managerName || '-');
-		                $('#managerGender').show().find('td').text(data.managerGender || '-');
-		                $('#managerBrdt').show().find('td').text(data.managerBrdt || '-');
-		                $('#managerPhone').show().find('td').text(data.managerPhone || '-');
-		            }
-		
-		            // 입점업체 대표/직원
-		            if (memberType === '입점업체 대표' || memberType === '입점업체 직원') {
-		                $('#entPositionRow').show().find('td').text(data.entPosition || '-');
-		                $('#entEmpNameRow').show().find('td').text(data.entEmpName || '-');
-		                $('#entEmpEmailRow').show().find('td').text(data.entEmpEmail || '-');
-		                $('#entEmpPhoneRow').show().find('td').text(data.entEmpPhone || '-');
-		                $('#entBrnoRow').show().find('td').text(data.entBrno || '-');
-		                $('#entNameRow').show().find('td').text(data.entName || '-');
-		                $('#entCeoAddrRow').show().find('td').text(data.entCeoAddr || '-');
-		                $('#entCeoDaddrRow').show().find('td').text(data.entCeoDaddr || '-');
-		            }
-		
-		            // 입점업체 대표
-		            if (memberType === '입점업체 대표') {
-		                $('#entBankRow').show().find('td').text(data.entBank || '-');
-		                $('#entBankNumRow').show().find('td').text(data.entBankNum || '-');
-		            }
-		           
-		            $('#memberDetailModal').modal('show');
-		        	},
-			        error: function() {
-			            alert('회원 상세정보 조회 실패');
-			        }
-			    });
-			}
-    	</script>
-    	<script th:inline="javascript">
-			const rowPerPage = /*[[${rowPerPage}]]*/'';
-			if(rowPerPage) {
-				$('.page-link').each((idx, item)=>{
-					let href = $(item).attr('href');
-					let separator = '?';
-					if(href.includes('?')) separator = '&';
-					href += `${separator}rowPerPage=${rowPerPage}`;
-					$(item).attr('href', href);
+    	<th:block layout:fragment="jsScript">
+	    	<script>
+			    function openMemberDetailModal(data) {
+	
+			    	const memberId = data.getAttribute('data-member-id');
+			        const memberType = data.getAttribute('data-member-type');
+	
+			    $.ajax({
+			        url: "/admin/member/memberDetail",
+			        data: { memberId: memberId, memberType: memberType },
+			        success: function(data) {
+			            $('.detail-row').hide();
+			
+			            // 공통 + 개인/기업 
+			            if (memberType === '개인고객' || memberType === '기업고객') {
+			                $('#custBrdtRow').show().find('td').text(data.custBrdt || '-');
+			                $('#custAddrRow').show().find('td').text(data.custAddr || '-');
+			                $('#custDaddrRow').show().find('td').text(data.custDaddr || '-');
+			                $('#custEmailRow').show().find('td').text(data.custEmail || '-');
+			                $('#custPhoneRow').show().find('td').text(data.custPhone || '-');
+			            }
+			
+			            if (memberType === '기업고객') {
+			                $('#corpNameRow').show().find('td').text(data.corpName || '-');
+			                $('#corpBrnoRow').show().find('td').text(data.corpBrno || '-');
+			            }
+			            
+			            if (memberType === '플랫폼직원') {
+			                $('#managerNameRow').show().find('td').text(data.managerName || '-');
+			                $('#managerGender').show().find('td').text(data.managerGender || '-');
+			                $('#managerBrdt').show().find('td').text(data.managerBrdt || '-');
+			                $('#managerPhone').show().find('td').text(data.managerPhone || '-');
+			            }
+			
+			            // 입점업체 대표/직원
+			            if (memberType === '입점업체 대표' || memberType === '입점업체 직원') {
+			                $('#entPositionRow').show().find('td').text(data.entPosition || '-');
+			                $('#entEmpNameRow').show().find('td').text(data.entEmpName || '-');
+			                $('#entEmpEmailRow').show().find('td').text(data.entEmpEmail || '-');
+			                $('#entEmpPhoneRow').show().find('td').text(data.entEmpPhone || '-');
+			                $('#entBrnoRow').show().find('td').text(data.entBrno || '-');
+			                $('#entNameRow').show().find('td').text(data.entName || '-');
+			                $('#entCeoAddrRow').show().find('td').text(data.entCeoAddr || '-');
+			                $('#entCeoDaddrRow').show().find('td').text(data.entCeoDaddr || '-');
+			            }
+			
+			            // 입점업체 대표
+			            if (memberType === '입점업체 대표') {
+			                $('#entBankRow').show().find('td').text(data.entBank || '-');
+			                $('#entBankNumRow').show().find('td').text(data.entBankNum || '-');
+			            }
+			           
+			            $('#memberDetailModal').modal('show');
+			        	},
+				        error: function() {
+				            alert('회원 상세정보 조회 실패');
+				        }
+				    });
+				}
+	    	</script>
+	    	<script th:inline="javascript">
+				const rowPerPage = /*[[${rowPerPage}]]*/'';
+				if(rowPerPage) {
+					$('.page-link').each((idx, item)=>{
+						let href = $(item).attr('href');
+						let separator = '?';
+						if(href.includes('?')) separator = '&';
+						href += `${separator}rowPerPage=${rowPerPage}`;
+						$(item).attr('href', href);
+					});
+				}
+				$('#rowPerPage').change(function(){
+					const href = location.href;
+					const url = new URL(href);
+					const urlParams = url.searchParams;
+					// 페이지 초기화
+					urlParams.set('currentPage', 1);
+					urlParams.set('rowPerPage', $(this).val());
+					location.href = `${url.pathname}?${urlParams.toString()}`;
 				});
-			}
-			$('#rowPerPage').change(function(){
-				const href = location.href;
-				const url = new URL(href);
-				const urlParams = url.searchParams;
-				const currentPage = urlParams.get('currentPage');
-				if(currentPage) urlParams.set('currentPage', currentPage);
-				urlParams.set('rowPerPage', $(this).val());
-				location.href = `${url.pathname}?${urlParams.toString()}`;
-			});
-		</script>
-    </th:block>
+			</script>
+		</th:block>
+   </body>
+    
 </html>

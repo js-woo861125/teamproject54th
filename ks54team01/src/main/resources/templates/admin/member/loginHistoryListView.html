@@ -26,8 +26,8 @@
 				const href = location.href;
 				const url = new URL(href);
 				const urlParams = url.searchParams;
-				const currentPage = urlParams.get('currentPage');
-				if(currentPage) urlParams.set('currentPage', currentPage);
+				// 페이지 초기화
+				urlParams.set('currentPage', 1);
 				urlParams.set('rowPerPage', $(this).val());
 				location.href = `${url.pathname}?${urlParams.toString()}`;
 			});
@@ -109,10 +109,9 @@
 		                                <td th:text="${l.logoutDate}">2023-03-01 00:00:00</td>
 		                            </th:block>
 		                            <th:block th:unless="${l.loginNo ne null}">
-		                            	<td th:text="${l.loginNo}">login_1</td>
+	                                    <td colspan="1">로그인 이력 없음</td>
 		                                <td th:text="${l.memberId}">ent_ceo_1</td>
 		                                <td th:text="${l.memberType}">ent_ceo_1</td>
-	                                    	<td colspan="1">로그인 이력 없음</td>
 	                                </th:block>
 	                            </tr>
 	                            <tr th:unless="${!#lists.isEmpty(loginHistoryList)}">
@@ -128,27 +127,39 @@
 	        <div class="pagination-area mt-30 mb-50">
 	            <nav aria-label="Page navigation example">
 	                <ul class="pagination justify-content-center">
-	                	 <li class="page-item text-center">
+	                	 <li class="page-item" th:classappend="${currentPage eq startPageNum} ? 'disabled'">
 	                        <a class="page-link" th:href="@{/admin/member/loginHistoryList}"><i class="material-icons md-first_page"></i></a>
 	                     </li>
 	                     <li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
-	                        <a class="page-link" th:href="@{/admin/member/loginHistoryList(currentPage=${currentPage - 1})}">
+	                        <a class="page-link" th:href="${searchKey != null} 
+	                        							  ?  @{/admin/member/searchLoginHistory(currentPage=${currentPage - 1}, searchKey=${searchKey},
+																						   		searchValue=${searchValue}, memberType=${memberType}, status=${status})}
+	                        							  :  @{/admin/member/loginHistoryList(currentPage=${currentPage - 1})}">
 	                        	<i class="material-icons md-chevron_left"></i>
 	                        </a>
 	                     </li>
 	                     <th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
 		                    <li class="page-item" th:classappend="${num eq currentPage} ? 'active disabled'">
-		                    	<a class="page-link" th:href="@{/admin/member/loginHistoryList(currentPage=${num})}"
+		                    	<a class="page-link" th:href="${searchKey != null} 
+	                        							  	  ?  @{/admin/member/searchLoginHistory(currentPage=${num}, searchKey=${searchKey},
+																						   			searchValue=${searchValue}, memberType=${memberType}, status=${status}, rowPerPage=${rowPerPage})}
+	                        							      :  @{/admin/member/loginHistoryList(currentPage=${num}, rowPerPage=${rowPerPage})}"
 		                    		th:text="${num < 10 ? '0' + num : num}">01</a>
 		                   	</li>                    
 	                     </th:block>                 
 	                     <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
-	                        <a class="page-link" th:href="@{/admin/member/loginHistoryList(currentPage=${currentPage + 1})}">
+	                        <a class="page-link" th:href="${searchKey != null} 
+	                        							  ?  @{/admin/member/searchLoginHistory(currentPage=${currentPage + 1}, searchKey=${searchKey},
+																						   		searchValue=${searchValue}, memberType=${memberType}, status=${status})}
+	                        							  :  @{/admin/member/loginHistoryList(currentPage=${currentPage + 1})}">
 	                        	<i class="material-icons md-chevron_right"></i>
 	                        </a>
 	                     </li>
 	                     <li class="page-item">
-	                        <a class="page-link" th:href="@{/admin/member/loginHistoryList(currentPage=${lastPage})}">
+	                        <a class="page-link" th:href="${searchKey != null} 
+	                        							  ?  @{/admin/member/searchLoginHistory(currentPage=${lastPage}, searchKey=${searchKey},
+																						   		searchValue=${searchValue}, memberType=${memberType}, status=${status})}
+	                        							  :  @{/admin/member/loginHistoryList(currentPage=${lastPage})}">
 	                        	<i class="material-icons md-last_page"></i>
 	                        </a>
 	                    </li>
@@ -157,12 +168,6 @@
 	        </div>
      	</th:block>          
     	<!-- card end// -->
-	     <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-	     <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-	     <script src="assets/js/vendors/select2.min.js"></script>
-	     <script src="assets/js/vendors/perfect-scrollbar.js"></script>
-	     <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-	     <!-- Main Script -->
-	     <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+	     
 	</body>
 </html>
