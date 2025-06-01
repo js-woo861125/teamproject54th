@@ -23,7 +23,8 @@ public interface AdminProductMapper {
 	// 플랫폼 상품 조회
 	List<AdminProduct>getProductList();
 	
-
+	// 상품 중복 체크
+	int isDuplicateProduct(String modelNo);
 	
 	// 상품 조회
 	AdminProduct getProduct(@Param("productNo") String productNo);

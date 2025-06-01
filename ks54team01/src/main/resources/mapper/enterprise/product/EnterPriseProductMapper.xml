@@ -72,35 +72,35 @@
   		   
 	</select>
 
-	  <insert id="EnterpriseProduct" parameterType="ks54team01.enterprise.product.domain.EnterpriseProduct">
-		INSERT INTO sell_product (
-	        sell_products_no,
-	        margin_ratio_no,          
-	        ent_ceo_no,               
-	        ent_emp_id,              
-	        products_no,              
-	        lump_sum_pay_price,       
-	        period,                   
-	        calculate_price,          
-	        final_price,              
-	        register_date,            
-	        revision_date,            
-	        use_status              
-	    ) VALUES (
-	        #{sellProductsNo},
-	        #{marginRatioNo},
-	        #{entCeoNo},
-	        #{entEmpId},
-	        #{productsNo},
-	        #{lumpSumPayPrice},
-	        #{period},
-	        #{calculatePrice},
-	        #{finalPrice},
-	        #{registerDate},
-	        #{revisionDate},
-	        #{useStatus}
-   		 )
-		</insert>
+	<insert id="addSellProduct" parameterType="EnterpriseProduct">
+    INSERT INTO sell_products (
+        sell_products_no,
+        margin_ratio_no,
+        ent_ceo_no,
+        ent_emp_id,
+        products_no,
+        lump_sum_pay_price,
+        period,
+        calculate_price,
+        final_price,
+        register_date,
+        revision_date,
+        use_status
+    ) VALUES (
+        #{sellProductsNo},
+        #{marginRatioNum},
+        #{entCeoNo},
+        #{entEmpId},
+        #{productsNo},
+        #{lumpSumPayPrice},
+        #{period},
+        #{calculatePrice},
+        #{finalPrice},
+        #{registerDate},
+        #{revisionDate},
+        #{useStatus}
+    )
+</insert>
 	  
 </mapper>
 
