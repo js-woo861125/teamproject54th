@@ -128,8 +128,16 @@ public class AdminProductController {
 	    @RequestParam("productName") String productName,
 	    @RequestParam("mainImage") MultipartFile[] mainImage,
 	    @RequestParam("thumbnails") MultipartFile[] thumbnails,
-	    @RequestParam("productsDetail") String productsDetail
+	    @RequestParam("productsDetail") String productsDetail,
+	    Model model
 	) {
+		
+		if (adminProductService.isDuplicateProduct(modelNo)) {
+	        model.addAttribute("error", "이미 등록된 모델입니다.");
+	     
+	        return "admin/product/addProductView";
+	    }
+		
 	    AdminAddProduct addProduct = new AdminAddProduct();
 	    addProduct.setCategoryNo(categoryNo);
 	    addProduct.setItemNo(itemNo);
@@ -215,5 +223,6 @@ public class AdminProductController {
 	    adminProductService.unsetSaleStoppage(productNo);
 	    return "ok";
 	}
+	
 	
 }

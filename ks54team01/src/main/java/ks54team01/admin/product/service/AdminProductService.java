@@ -40,7 +40,8 @@ public interface AdminProductService {
 	public void setSaleStoppage(String productNo);
 	void unsetSaleStoppage(String productNo);
 	
-	
+	// 상품 중복조회
+	boolean isDuplicateProduct(String modelNo);
 	
 }
 

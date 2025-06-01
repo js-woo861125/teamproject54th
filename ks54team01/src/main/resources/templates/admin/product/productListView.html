@@ -117,12 +117,12 @@ function unsetSaleStoppage(el) {
                         </select>
                     </div>
                     <div class="col-lg-2">
-                        <select class="form-select form-select-sm" name="productStatus">
-                            <option th:value="''" th:selected="${productStatus == null or productStatus == ''}">전체 상태</option>
-                            <option th:value="활성화" th:selected="${productStatus == '활성화'}">활성화</option>
-                            <option th:value="비활성화" th:selected="${productStatus == '비활성화'}">비활성화</option>
-                            <option th:value="판매중단" th:selected="${productStatus == '판매중단'}">판매중단</option>
-                        </select>
+                      <select class="form-select form-select-sm" name="status">
+						    <option th:value="''" th:selected="${status == null or status == ''}">전체 상태</option>
+						    <option th:value="활성화" th:selected="${status == '활성화'}">활성화</option>
+						    <option th:value="비활성화" th:selected="${status == '비활성화'}">비활성화</option>
+						    <option th:value="판매중단" th:selected="${status == '판매중단'}">판매중단</option>
+						</select>
                     </div>
                     <div class="col-lg-1">
                         <button type="submit" class="btn btn-primary btn-sm w-100">검색</button>
@@ -141,7 +141,7 @@ function unsetSaleStoppage(el) {
                             <th>판매상태</th>
                             <th>등록일자</th>
                             <th>수정일자</th>
-                            <th>수정/삭제</th>
+                            <th>수정</th>
                         </tr>
                     </thead>
                     <tbody class="text-center">
@@ -190,10 +190,7 @@ function unsetSaleStoppage(el) {
                             <td class="col-lg-2 col-sm-2 col-4 col-action">
                                 <a th:href="@{/admin/product/modifyProduct(productNo=${l.productNo})}" class="btn btn-sm font-sm rounded btn-brand">
                                     <i class="material-icons md-edit"></i> 수정
-                                </a>
-                                <a href="#" class="btn btn-sm font-sm btn-light rounded">
-                                    <i class="material-icons md-delete_forever"></i> 삭제
-                                </a>
+                                </a>                           
                             </td>
                         </tr>
                       </th:block>
