@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{customer/layout/default}">
+	
+	<head>
+		<style>
+	        .selected-lental{
+	            background-color: #f1d4e8db;
+	        }
+	    </style>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</th:block>
+	
+	
+	
+	
+	<th:block layout:fragment="jsScript">
+		<script type="text/javascript" th:inline="javascript">
+			$(function(){
+	            $('.lental-a').click(function(){
+	                $(this).addClass('selected-lental');
+	                $(this).closest('.detail-info')
+	                       .find('a')
+	                       .not(this)
+	                       .removeClass('selected-lental');
+	            });
+	        });
+		</script>
+	</th:block>
+	
+	
+	
+	<th:block layout:fragment="customContents">
+	
+		<div class="container mb-30">
+            <div class="row">
+                <div class="col-xl-11 col-lg-12 m-auto">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-10">
+                            <div class="product-detail accordion-detail">
+                                <div class="row mt-40 mb-50 justify-content-between align-items-center">
+                                    <div class="col-md-11 col-sm-11 col-xs-11 mb-md-0">
+                                        <h2 class="title-detail" th:text="${prodNm}">[LG] 디오스 매직스페이스 양문형 냉장고 832L (화이트)</h2>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-xs-1 mb-md-0 text-end">
+                                        <div class="detail-extralink">
+                                            <div class="product-extra-link2 mr-15">
+                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-50 mt-30">
+                                    <div class="col-md-6 col-sm-12 col-xs-12 mb-md-0 mb-sm-5 mb-20">
+                                        <div class="detail-gallery">
+                                            <span class="zoom-icon"><i class="fi-rs-search"></i></span>
+                                            <!-- MAIN SLIDES -->
+                                            <div class="product-image-slider">
+                                                <figure class="border-radius-10">
+                                                    <img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" />
+                                                </figure>
+                                                <figure class="border-radius-10">
+                                                    <img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" />
+                                                </figure>
+                                                <figure class="border-radius-10">
+                                                    <img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" />
+                                                </figure>
+                                                <figure class="border-radius-10">
+                                                    <img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" />
+                                                </figure>
+                                                <figure class="border-radius-10">
+                                                    <img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" />
+                                                </figure>
+                                                <figure class="border-radius-10">
+                                                    <img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" />
+                                                </figure>
+                                                <figure class="border-radius-10">
+                                                    <img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" />
+                                                </figure>
+                                            </div>
+                                            <!-- THUMBNAILS -->
+                                            <div class="slider-nav-thumbnails">
+                                                <div><img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" /></div>
+                                                <div><img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" /></div>
+                                                <div><img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" /></div>
+                                                <div><img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" /></div>
+                                                <div><img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" /></div>
+                                                <div><img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" /></div>
+                                                <div><img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" /></div>
+                                            </div>
+                                        </div>
+                                        <!-- End Gallery -->
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="detail-info ml-5 pr-60 pl-30">
+                                            <div class="row border border-3 p-4 mb-20">
+                                                <div class="col-6 border-end m-10">
+                                                    <h5 class="section-title style-3 mb-30">최저 월 렌탈료</h5>
+                                                    <ul>
+                                                        <li class="d-flex align-items-center justify-content-between">
+                                                            <div class="product-price primary-color">
+                                                                <span class="current-price text-brand ">38,000</span>
+                                                            </div>
+                                                            <span class="fs-3"> 원 </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-6 m-10">
+                                                    <h5 class="section-title style-3 ml-25 mb-30">최대 렌탈 개월</h5>
+                                                    <ul class="ml-25">
+                                                        <li class="d-flex align-items-center justify-content-evenly">
+                                                            <div class="product-price primary-color text-end">
+                                                                <span class="current-price text-brand">12</span>
+                                                            </div>
+                                                            <span class="fs-3"> 개월 </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="detail-info ml-5 pr-60 pl-30">
+                                            <div class="primary-sidebar h-75">
+                                                <div class="sidebar-widget widget-vendor mb-30 bg-grey-9 box-shadow-none">
+                                                    <ul class="contact-infor row align-items-center pl-20 pr-10">
+                                                        <li class="col-6 mt-10 mb-10 p-1">
+                                                            <h6>상품명</h6> 
+                                                            <span>디오스 냉장고</span>
+                                                        </li>
+                                                        <li class="col-6 mt-10 mb-10 p-1">
+                                                            <h6>상품명</h6> 
+                                                            <span>디오스 냉장고</span>
+                                                        </li>
+                                                        <li class="col-6 mt-10 mb-10 p-1">
+                                                            <h6>상품명</h6> 
+                                                            <span>디오스 냉장고</span>
+                                                        </li>
+                                                        <li class="col-6 mt-10 mb-10 p-1">
+                                                            <h6>상품명</h6> 
+                                                            <span>디오스 냉장고</span>
+                                                        </li>
+                                                        <li class="col-6 mt-10 mb-10 p-1">
+                                                            <h6>상품명</h6> 
+                                                            <span>디오스 냉장고</span>
+                                                        </li>
+                                                        <li class="col-6 mt-10 mb-10 p-1">
+                                                            <h6>상품명</h6> 
+                                                            <span>디오스 냉장고</span>
+                                                        </li>
+                                                        <li class="col-6 mt-10 mb-10 p-1">
+                                                            <h6>상품명</h6> 
+                                                            <span>디오스 냉장고</span>
+                                                        </li>
+                                                        <li class="col-6 mt-10 mb-10 p-1">
+                                                            <h6>상품명</h6> 
+                                                            <span>디오스 냉장고</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Detail Info -->
+                                    </div>
+                                </div>
+                                <div class="row mt-60">
+                                    <div class="col-12 d-flex section-title style-1 mb-30">
+                                        <h3>렌탈사 비교·선택</h3>
+                                        <p>각 렌탈사의 월 렌탈료, 제휴카드혜택, A/S기간, 약정기간, 혜택 등 비교하고 선택해 보세요.</p>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="row related-products">
+                                            <div class="loop-grid loop-list pr-30 mb-50">
+                                                <article class="wow fadeIn animated hover-up row m-0 mb-30 animated">
+                                                    <div class="entry-content-2 pl-50">
+                                                        <span class="stock-status out-stock col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-1 text-center"> 최대렌탈 </span>
+                                                        <h3 class="post-title">UBUS [현대유버스]</h3>
+                                                        <div class="detail-info row mt-25 ml-5">
+                                                            <a class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 border border-3 p-4 m-0 hover-up lental-a">
+                                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                    <span class="stock-status in-stock m-0 text-primary">최대렌탈</span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">48<p class="fs-7 ml-5">개월</p></span>
+                                                                </div>
+                                                                <div class="hr border"></div>
+                                                                <div class="d-flex justify-content-between align-items-center mt-10">
+                                                                    <span class="stock-status in-stock m-0 text-primary"> 렌탈가격 </span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">400,000<p class="fs-7 ml-5">원</p></span>
+                                                                </div>
+                                                            </a>
+                                                            <a class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 border border-3 p-4 m-0 hover-up lental-a">
+                                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                    <span class="stock-status in-stock m-0 text-primary">최대렌탈</span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">36<p class="fs-7 ml-5">개월</p></span>
+                                                                </div>
+                                                                <div class="hr border"></div>
+                                                                <div class="d-flex justify-content-between align-items-center mt-10">
+                                                                    <span class="stock-status in-stock m-0 text-primary"> 렌탈가격 </span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">600,000<p class="fs-7 ml-5">원</p></span>
+                                                                </div>
+                                                            </a>
+                                                            <a class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 border border-3 p-4 m-0 hover-up lental-a">
+                                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                    <span class="stock-status in-stock m-0 text-primary">최대렌탈</span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">12<p class="fs-7 ml-5">개월</p></span>
+                                                                </div>
+                                                                <div class="hr border"></div>
+                                                                <div class="d-flex justify-content-between align-items-center mt-10">
+                                                                    <span class="stock-status in-stock m-0 text-primary"> 렌탈가격 </span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">800,000<p class="fs-7 ml-5">원</p></span>
+                                                                </div>
+                                                            </a>
+                                                            <a class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 border border-3 p-4 m-0 hover-up lental-a">
+                                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                    <span class="stock-status in-stock m-0 text-primary">최대렌탈</span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">6<p class="fs-7 ml-5">개월</p></span>
+                                                                </div>
+                                                                <div class="hr border"></div>
+                                                                <div class="d-flex justify-content-between align-items-center mt-10">
+                                                                    <span class="stock-status in-stock m-0 text-primary"> 렌탈가격 </span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">800,000<p class="fs-7 ml-5">원</p></span>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                        <hr/>
+                                                        <div class="row short-desc">
+                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-xl-8 col-xxl-9 mb-20">
+                                                                <p class="font-lg">· A/S 기간:1년 무상 A/S (단, 고객과실 제외)</p>
+                                                                <p class="font-lg">· 가입가능연령:만 24세 ~ 만 70세</p>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-3">
+                                                                <div class="d-flex mb-10 justify-content-between">
+                                                                    <div class="detail-qty border radius">
+                                                                        <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+                                                                        <input type="text" name="quantity" class="qty-val" value="1" min="1">
+                                                                        <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                                                    </div>
+                                                                    <div class="product-extra-link2">
+                                                                        <button type="submit" class="button button-add-to-cart"><i class="fi-rs-shopping-cart"></i>주문 결제</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </article>
+                                                <article class="wow fadeIn animated hover-up row m-0 mb-30 animated">
+                                                    <div class="entry-content-2 pl-50">
+                                                        <span class="stock-status out-stock col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-1 text-center"> 최대렌탈 </span>
+                                                        <h3 class="post-title">UBUS [현대유버스]</h3>
+                                                        <div class="detail-info row mt-25 ml-5">
+                                                            <a class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 border border-3 p-4 m-0 hover-up lental-a">
+                                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                    <span class="stock-status in-stock m-0 text-primary">최대렌탈</span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">48<p class="fs-7 ml-5">개월</p></span>
+                                                                </div>
+                                                                <div class="hr border"></div>
+                                                                <div class="d-flex justify-content-between align-items-center mt-10">
+                                                                    <span class="stock-status in-stock m-0 text-primary"> 렌탈가격 </span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">400,000<p class="fs-7 ml-5">원</p></span>
+                                                                </div>
+                                                            </a>
+                                                            <a class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 border border-3 p-4 m-0 hover-up lental-a">
+                                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                    <span class="stock-status in-stock m-0 text-primary">최대렌탈</span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">36<p class="fs-7 ml-5">개월</p></span>
+                                                                </div>
+                                                                <div class="hr border"></div>
+                                                                <div class="d-flex justify-content-between align-items-center mt-10">
+                                                                    <span class="stock-status in-stock m-0 text-primary"> 렌탈가격 </span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">600,000<p class="fs-7 ml-5">원</p></span>
+                                                                </div>
+                                                            </a>
+                                                            <a class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 border border-3 p-4 m-0 hover-up lental-a">
+                                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                    <span class="stock-status in-stock m-0 text-primary">최대렌탈</span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">12<p class="fs-7 ml-5">개월</p></span>
+                                                                </div>
+                                                                <div class="hr border"></div>
+                                                                <div class="d-flex justify-content-between align-items-center mt-10">
+                                                                    <span class="stock-status in-stock m-0 text-primary"> 렌탈가격 </span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">800,000<p class="fs-7 ml-5">원</p></span>
+                                                                </div>
+                                                            </a>
+                                                            <a class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 border border-3 p-4 m-0 hover-up lental-a">
+                                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                    <span class="stock-status in-stock m-0 text-primary">최대렌탈</span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">6<p class="fs-7 ml-5">개월</p></span>
+                                                                </div>
+                                                                <div class="hr border"></div>
+                                                                <div class="d-flex justify-content-between align-items-center mt-10">
+                                                                    <span class="stock-status in-stock m-0 text-primary"> 렌탈가격 </span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">800,000<p class="fs-7 ml-5">원</p></span>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                        <hr/>
+                                                        <div class="row short-desc">
+                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-xl-8 col-xxl-9 mb-20">
+                                                                <p class="font-lg">· A/S 기간:1년 무상 A/S (단, 고객과실 제외)</p>
+                                                                <p class="font-lg">· 가입가능연령:만 24세 ~ 만 70세</p>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-3">
+                                                                <div class="d-flex mb-10 justify-content-between">
+                                                                    <div class="detail-qty border radius">
+                                                                        <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+                                                                        <input type="text" name="quantity" class="qty-val" value="1" min="1">
+                                                                        <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                                                    </div>
+                                                                    <div class="product-extra-link2">
+                                                                        <button type="submit" class="button button-add-to-cart"><i class="fi-rs-shopping-cart"></i>주문 결제</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </article>
+                                                <article class="wow fadeIn animated hover-up row m-0 mb-30 animated">
+                                                    <div class="entry-content-2 pl-50">
+                                                        <span class="stock-status out-stock col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-1 text-center"> 최대렌탈 </span>
+                                                        <h3 class="post-title">UBUS [현대유버스]</h3>
+                                                        <div class="detail-info row mt-25 ml-5">
+                                                            <a class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 border border-3 p-4 m-0 hover-up lental-a">
+                                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                    <span class="stock-status in-stock m-0 text-primary">최대렌탈</span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">48<p class="fs-7 ml-5">개월</p></span>
+                                                                </div>
+                                                                <div class="hr border"></div>
+                                                                <div class="d-flex justify-content-between align-items-center mt-10">
+                                                                    <span class="stock-status in-stock m-0 text-primary"> 렌탈가격 </span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">400,000<p class="fs-7 ml-5">원</p></span>
+                                                                </div>
+                                                            </a>
+                                                            <a class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 border border-3 p-4 m-0 hover-up lental-a">
+                                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                    <span class="stock-status in-stock m-0 text-primary">최대렌탈</span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">36<p class="fs-7 ml-5">개월</p></span>
+                                                                </div>
+                                                                <div class="hr border"></div>
+                                                                <div class="d-flex justify-content-between align-items-center mt-10">
+                                                                    <span class="stock-status in-stock m-0 text-primary"> 렌탈가격 </span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">600,000<p class="fs-7 ml-5">원</p></span>
+                                                                </div>
+                                                            </a>
+                                                            <a class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 border border-3 p-4 m-0 hover-up lental-a">
+                                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                    <span class="stock-status in-stock m-0 text-primary">최대렌탈</span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">12<p class="fs-7 ml-5">개월</p></span>
+                                                                </div>
+                                                                <div class="hr border"></div>
+                                                                <div class="d-flex justify-content-between align-items-center mt-10">
+                                                                    <span class="stock-status in-stock m-0 text-primary"> 렌탈가격 </span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">800,000<p class="fs-7 ml-5">원</p></span>
+                                                                </div>
+                                                            </a>
+                                                            <a class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 border border-3 p-4 m-0 hover-up lental-a">
+                                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                    <span class="stock-status in-stock m-0 text-primary">최대렌탈</span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">6<p class="fs-7 ml-5">개월</p></span>
+                                                                </div>
+                                                                <div class="hr border"></div>
+                                                                <div class="d-flex justify-content-between align-items-center mt-10">
+                                                                    <span class="stock-status in-stock m-0 text-primary"> 렌탈가격 </span>
+                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end">800,000<p class="fs-7 ml-5">원</p></span>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                        <hr/>
+                                                        <div class="row short-desc">
+                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-xl-8 col-xxl-9 mb-20">
+                                                                <p class="font-lg">· A/S 기간:1년 무상 A/S (단, 고객과실 제외)</p>
+                                                                <p class="font-lg">· 가입가능연령:만 24세 ~ 만 70세</p>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-3">
+                                                                <div class="d-flex mb-10 justify-content-between">
+                                                                    <div class="detail-qty border radius">
+                                                                        <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+                                                                        <input type="text" name="quantity" class="qty-val" value="1" min="1">
+                                                                        <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                                                    </div>
+                                                                    <div class="product-extra-link2">
+                                                                        <button type="submit" class="button button-add-to-cart"><i class="fi-rs-shopping-cart"></i>주문 결제</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </article>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	<th:block>
+</html>
