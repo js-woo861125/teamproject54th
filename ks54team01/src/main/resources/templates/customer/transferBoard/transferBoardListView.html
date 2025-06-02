@@ -17,7 +17,8 @@
 	
 	<th:block layout:fragment="jsScript">
 		<script th:inline="javascript">
-			$('.sort-by a').click(function(e){
+		/* 정렬 */	
+		$('.sort-by a').click(function(e){
 				e.preventDefault();
 				const sortValue = $(this).data('sortValue');
 				const href = location.href;
@@ -29,7 +30,7 @@
 				location.href = `${url.pathname}?${urlParams.toString()}`;
 			});
 			
-			
+			/* 페이지이동 */
 			$('a.page-num').click(function(e){
 				e.preventDefault();
 				const currentPage = $(this).data('currentPage');
@@ -40,7 +41,7 @@
 				location.href = `${url.pathname}?${urlParams.toString()}`;
 			});
 			
-			
+			/* 등록 버튼 눌렀을 때 렌탈 계약 체크 */
 			$('.addTransferBoardBtn').click(function (e) {
 				  e.preventDefault();
 
@@ -240,7 +241,7 @@
 										</div>
 										<div class="product-card-bottom">
 											<p>등록일</p>
-											<p th:text="${l.registerDate}">2025-04-09</p>
+											<span th:text="${l.registerDate}">2025-04-09</span>
 											<div></div>
 											<th:block th:switch="${l.transferRentalProcsssingStatus}">
 												<span th:case="${'2.양도계약진행'}" class="stock-status in-stock">

@@ -41,4 +41,6 @@ public class EntMember{
 	private String entEmpEmail;
 	private String entEmpPhone;
 	
+	private String entContractStatus;
+	
 }

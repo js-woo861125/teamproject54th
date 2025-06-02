@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,15 @@ public class CustomerAssigneeBoardServiceImpl implements CustomerAssigneeBoardSe
 
 	private final CustomerAssigneeBoardMapper customerAssigneeBoardMapper;
 	private final AdminProductInfoMapper adminProductInfoMapper;
+	
+	/**
+	 * 마감일 지난 게시글 삭제
+	 */
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")
+	public void removeAssigneeBoardByDeadLine() {
+        customerAssigneeBoardMapper.removeAssigneeBoardByDeadLine();
+	}
 	
 	@Override
 	public boolean removeMyAssigneeBoard(String assigneeBoardNum) {
