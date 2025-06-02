@@ -123,6 +123,15 @@
 		(#{transferRentalContractNum}, #{customerSellProduct.entCeoNo}, #{customerSellProduct.entEmpId}, #{sellProductsNum}, #{customerId}, #{rentalContractNum}, #{transferBoardNum}, NOW(), #{customerContract.rentalEndDate});
   	</insert>
 	
+	<update id="removeTransferBoardByDeadLine">
+  		/* 양도 게시글 삭제 */
+  		UPDATE transfer_board
+		SET
+			transfer_rental_processing_status = '양도공개전'
+		WHERE
+			board_valid_date &lt; NOW()
+  	</update>
+	
 	<update id="removeMyTransferBoard" parameterType="string">
   		/* 양도 게시글 삭제 */
   		UPDATE transfer_board
@@ -157,7 +166,7 @@
   		INSERT INTO transfer_board
 		(transfer_board_no, cust_id, rental_contract_no, sell_products_no, model_no, item_no, product_category_no, del_info_no, transfer_title, transfer_content, rental_fee, remaining_months, contract_end_date, individual_grants, board_valid_date, transfer_rental_processing_status, register_date, revision_date)
 		VALUES
-		(#{transferBoardNum}, #{customerId}, #{rentalContractNum}, #{sellProductsNum}, #{modelNum}, #{itemNum}, #{productCategoryNum}, #{customerDeliveryInfo.delInfoNo}, #{transferTitle}, #{transferContent}, #{rentalFee}, #{remainingMonths}, #{contractEndDate}, #{individualGrants}, DATE_ADD(NOW(), INTERVAL 1 MONTH), '대기중', NOW(), NOW());
+		(#{transferBoardNum}, #{customerId}, #{rentalContractNum}, #{sellProductsNum}, #{modelNum}, #{itemNum}, #{productCategoryNum}, #{customerDeliveryInfo.delInfoNo}, #{transferTitle}, #{transferContent}, #{rentalFee}, #{remainingMonths}, #{contractEndDate}, #{individualGrants}, DATE_ADD(NOW(), INTERVAL 1 MONTH), '양도공개', NOW(), NOW());
   	</insert>
 
 	<select id="getMyContractInfo" parameterType="string" resultMap="transferBoardResultMap">
@@ -235,18 +244,6 @@
 			ON p.product_category_no = pc.product_category_no
 			LEFT JOIN files f
 			ON tb.transfer_board_no = f.ref_id AND f.file_type = 'mainImage'
-			INNER JOIN 
-			(
-				SELECT 
-					f.ref_id,
-					MAX(f.register_date) AS register_date
-				FROM 
-					files f
-				WHERE 
-					f.file_type = 'mainImage'
-				GROUP BY f.ref_id
-			) f2
-			ON  tb.transfer_board_no = f.ref_id AND f.register_date = f2.register_date
 		 WHERE
 		 	tb.transfer_rental_processing_status != '양도공개전'
 		 	AND tb.cust_id = #{customerId}

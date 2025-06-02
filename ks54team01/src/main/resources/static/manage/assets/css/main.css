@@ -731,6 +731,25 @@ b {
 .btn.btn-primary:hover {
   background-color: #29A56C;
 }
+.btn.remove-benefit-btn {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 40px;
+  color: #fff;
+  border: none;
+  background-color: #fc5e47;
+  border-radius: 4px;
+}
+
+.btn.remove-benefit-btn i {
+  color: #fc5e47 !important;
+  margin-right: 5px;
+  margin-top: -4px;
+}
+
+.btn.remove-benefit-btn:hover {
+  background-color: #cf0000;
+}
 
 .btn.btn-secondary {
   font-size: 14px;

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +42,15 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	}
 	
 	/**
+	 * 마감일 지난 게시글 삭제
+	 */
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")
+	public void removeTransferBoardByDeadLine() {
+        customerTransferBoardMapper.removeTransferBoardByDeadLine();
+	}
+	
+	/**
 	 * 양도 게시글 삭제
 	 */
 	@Override
@@ -60,15 +70,13 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	public void modifyTransferBoard(CustomerTransferBoard customerTransferBoard
 								   , MultipartFile[] mainImage
 								   , MultipartFile[] extraImage
-								   , List<String> deleteFile) {
+								   , List<String> deleteFile
+								   , List<String> deleteMainImage) {
 		
 		customerTransferBoardMapper.modifyTransferBoard(customerTransferBoard);
 		
 		// 기존 이미지 delete -> 새 이미지 insert
-	
-	    //기존 이미지 delete
-	    
-	    fileService.deleteFileByIdx(null);
+
 	    // 새 이미지 업로드 (mainImage)
 	    if (mainImage != null) {
 	    	fileService.addFiles(mainImage, "mainImage", customerTransferBoard.getTransferBoardNum());
@@ -79,23 +87,21 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 	    	fileService.addFiles(extraImage, "extraImage", customerTransferBoard.getTransferBoardNum());
 	    }
 	    
-	    //다중 파일 삭제
-	    if (deleteFile != null) {
-	    	for (String fileIdx : deleteFile) {
+	    if (deleteMainImage != null && !deleteMainImage.isEmpty()) {
+	    	for (String fileIdx : deleteMainImage) {
 	            if (!fileIdx.isEmpty()) {
 	                fileService.deleteFiles(fileIdx);
 	            }
 	        }
 	    }
 	    
-		
-//		fileService.deleteFiles(fileIdx);
-		/*
-		 * fileService.addFiles(mainImage, "mainImage",
-		 * customerTransferBoard.getTransferBoardNum());
-		 * fileService.addFiles(extraImage, "extraImage",
-		 * customerTransferBoard.getTransferBoardNum());
-		 */
+	    if (deleteFile != null && !deleteFile.isEmpty()) {
+	    	for (String fileIdx : deleteFile) {
+	            if (!fileIdx.isEmpty()) {
+	                fileService.deleteFiles(fileIdx);
+	            }
+	        }
+	    }
 	}
 	
 	/**

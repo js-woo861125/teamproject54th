@@ -72,18 +72,18 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 	    enterpriseProductMapper.addSellProduct(enterpriseProduct);
 
 	    for (int i = 0; i < benefitNoList.size(); i++) {
-	    	EnterpriseProductBenefit benefit = new EnterpriseProductBenefit();
-	        benefit.setBenefitNo(benefitNoList.get(i)); // 기존 benefit 테이블의 PK 사용!
+	        EnterpriseProductBenefit benefit = new EnterpriseProductBenefit();
+
 	        benefit.setSellProductsNo(sellProductNo);
 	        benefit.setEntCeoNo(enterpriseProduct.getEntCeoNo());
 	        benefit.setEntEmpId(enterpriseProduct.getEntEmpId());
+	        benefit.setBenefit(benefitNoList.get(i));
 	        benefit.setBenefitDetail(benefitDetailList.get(i));
 	        benefit.setUseStatus("활성화");
 	        benefit.setRegisterDate(now.toString());
 	        benefit.setRevisionDate(now.toString());
 	        enterpriseProductBenefitMapper.insertEnterpriseProductBenefit(benefit);
 	    }
-
 	  
 
 	    // 4. 재고 세팅

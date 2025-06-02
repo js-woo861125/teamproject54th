@@ -183,9 +183,9 @@
                         <tr>
                             <th colspan="5">
                                 <div class="d-flex align-items-center gap-3">
-                                    <div class="form-check mb-0">
+                                    <div class="ml-5 form-check mb-0">
                                         <input class="form-check-input allCheck" type="checkbox" id="exampleCheckbox0" />
-                                        <label class="form-check-label" for="exampleCheckbox0">전체 선택</label>
+                                        <label class="ml-5 form-check-label" for="exampleCheckbox0">전체 선택</label>
                                     </div>
                                     <button type="button" class="removeBtn btn btn-sm btn-outline-danger" style="display: none;">
                                         선택삭제
@@ -206,9 +206,9 @@
                               		<!-- <a th:href="@{/customer/product/productDetailByProd(productsNum=${l.productsNum})}"> -->
 		                                <div class="me-3 ml-20">
 		                                    <img th:src="@{'/user/assets/imgs/shop/' + ${l.productInfo.productsImage}}"
-		                                         alt="#" class="img-fluid" />
+		                                         alt="#" class="image-fluid" />
 		                                </div>
-		                                <div class="ml-30 mt-40">
+		                                <div class="ml-30 mt-50">
 											<h4>
 		                                    	<a th:text="${l.productInfo.productsName}" class="product-name" th:href="@{/customer/product/productDetailByProd(productsNum=${l.productsNum})}">
 		                                   			삼성크리스탈 UHDTV 85인치
@@ -217,7 +217,7 @@
 		                                    <span th:text="${l.productInfoCategory.mdCategory}" class="font-small ml-5 text-muted">
 		                                    	TV / 디지털
 		                                    </span>
-		                                    <div class="text-brand price fs-6 mt-10 mb-10" data-title="Price">
+		                                    <div class="text-brand price fs-6 mt-30 mb-10" data-title="Price">
 		                                    	<span>렌탈최저가: </span>
 		                                    	<span th:text="|₩${l.minimumRentalFee >= 1000 ? #numbers.formatInteger(l.minimumRentalFee, 3, 'COMMA') : l.minimumRentalFee}|">₩ 56,000 </span>
 		                                    </div>

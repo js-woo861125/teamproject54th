@@ -3,11 +3,7 @@ package ks54team01.admin.productInfo.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import javax.xml.transform.Result;
-
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -554,13 +550,13 @@ public class AdminProductInfoController {
 		
 		ProductInfoModel modelInfo = adminProductInfoService.getModelInfoByNo(modelNo);
 		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
-//		List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
+		List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
 		List<ProductInfoItem> itemList = adminProductInfoService.getItemList();
 		
 		model.addAttribute("title", "모델 수정");
 		model.addAttribute("modelInfo", modelInfo);
 		model.addAttribute("categoryList", categoryList);
-//		model.addAttribute("brandList", brandList);
+		model.addAttribute("brandList", brandList);
 		model.addAttribute("itemList", itemList);
 		model.addAttribute("activeMenu", "productInfo");
 		
@@ -706,36 +702,17 @@ public class AdminProductInfoController {
 	}
 	
 	@GetMapping("/brandList")
-	public String getBrandList(Model model,
-					           @RequestParam(defaultValue = "1") int page,
-					           @RequestParam(required = false) String searchKey,
-					           @RequestParam(required = false) String searchValue,
-					           @RequestParam(required = false) String useStatus) {
+	public String getBrandList(Model model) {
 		
-	    // searchKey가 "brandName"이면 실제 DB 컬럼명으로 변환
-	    if ("brandName".equals(searchKey)) {
-	        searchKey = "brand_nm";
-	    }		
-		
-		int limit = 5;
-		int offset = (page -1) * limit;
-		
-		List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList(offset, limit, searchKey, searchValue, useStatus);
-		int totalCount = adminProductInfoService.getBrandCount(searchKey, searchValue, useStatus);
-		int totalPages = (int)Math.ceil((double)totalCount / limit);
+		List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
 		
 		model.addAttribute("title", "브랜드 목록");
 		model.addAttribute("brandList", brandList);
 		model.addAttribute("activeMenu", "productInfo");
-		model.addAttribute("activeSubMenu", "productInfoList");
-	    model.addAttribute("currentPage", page);
-	    model.addAttribute("totalPages", totalPages);
-	    model.addAttribute("searchKey", searchKey);
-	    model.addAttribute("searchValue", searchValue);
-	    model.addAttribute("useStatus", useStatus);		
+		model.addAttribute("activeSubMenu", "productInfoList");		
 		
 		return "admin/productInfo/brandListView";
-	}	
+	}
 	
 	@GetMapping("/categoryList")
 	public String getCategoryList(Model model) {
@@ -871,12 +848,12 @@ public class AdminProductInfoController {
 	@GetMapping("/addModel")
 	public String addModel(Model model) {
 		
-//		List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
+		List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
 		List<ProductInfoItem> itemList = adminProductInfoService.getItemList();
 		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
 		
 		model.addAttribute("title", "모델 등록");
-//		model.addAttribute("brandList", brandList);
+		model.addAttribute("brandList", brandList);
 		model.addAttribute("itemList", itemList);
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("activeMenu", "productInfo");

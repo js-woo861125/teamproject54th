@@ -5,9 +5,13 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import ks54team01.customer.member.domain.EntMember;
+import ks54team01.enterprise.management.domain.EnterpriseContractInfo;
 
 @Mapper
 public interface EnterpriseManagementMapper {
+	// 플랫폼 계약정보 조회
+	EnterpriseContractInfo getEntContractInfo(String entCeoNo);
+	
 	// 직원 등록
 	int addEntEmpMember(EntMember entMember);
 	
