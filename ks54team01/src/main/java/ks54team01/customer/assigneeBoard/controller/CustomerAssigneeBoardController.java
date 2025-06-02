@@ -57,6 +57,22 @@ public class CustomerAssigneeBoardController {
 	public String modifyAssigneeBoard(@RequestParam(name="assigneeBoardNum") String assigneeBoardNum,
 									  Model model) {
 		
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
+		
+		// 모달에 넘길 중분류 카테고리 목록 (categoryList에서는 중복 없이 중분류 목록을 가져오지 못함)
+		List<ProductInfoCategory> mdCategoryList = categoryList.stream()
+														       .collect(Collectors.collectingAndThen(
+														    		 Collectors.toMap(
+														    				 ProductInfoCategory::getMdCategory,
+														    				 Function.identity(),
+														    				 (existing, duplicate) -> existing
+														    				 ),
+														    		 map -> new ArrayList<>(map.values())
+														    		 ));
+		
+		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("mdCategoryList", mdCategoryList);
+		
 		log.info("게시글 수정 코드: {}", assigneeBoardNum);
 		
 		CustomerAssigneeBoard customerAssigneeBoardInfo = customerAssigneeBoardService.getAssigneeBoardInfoByCode(assigneeBoardNum);
@@ -115,7 +131,6 @@ public class CustomerAssigneeBoardController {
 														    				 ),
 														    		 map -> new ArrayList<>(map.values())
 														    		 ));
-		
 		
 		log.info("카테고리 목록: {}", categoryList);
 		log.info("실제 랜더링될 중분류 목록: {}", mdCategoryList);
