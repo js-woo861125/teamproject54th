@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import ks54team01.customer.transferBoard.domain.CustomerTransferBoard;
 
@@ -13,6 +12,9 @@ public interface CustomerTransferBoardMapper {
 	
 	// 양도 신청
 	int applyTransfer(CustomerTransferBoard customerTransferBoard);
+	
+	// 마감일 지난 게시글 삭제
+	void removeTransferBoardByDeadLine();
 	
 	// 양도 게시글 삭제
 	int removeMyTransferBoard(String transferBoardNum);

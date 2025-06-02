@@ -9,6 +9,9 @@ import ks54team01.system.util.PageInfo;
 
 public interface CustomerAssigneeBoardService {
 
+	// 마감일 지난 게시글 삭제
+	void removeAssigneeBoardByDeadLine();
+	
 	// 양수 게시글 삭제
 	boolean removeMyAssigneeBoard(String assigneeBoardNum);
 	

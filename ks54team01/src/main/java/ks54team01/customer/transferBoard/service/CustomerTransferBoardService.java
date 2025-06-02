@@ -14,11 +14,14 @@ public interface CustomerTransferBoardService {
 	// 양도 신청
 	void applyTranfer(CustomerTransferBoard customerTransferBoard);
 	
+	// 마감일 지난 게시글 삭제
+	void removeTransferBoardByDeadLine();
+	
 	// 양도 게시글 삭제
 	boolean removeMyTransferBoard(String transferBoardNum);
 	
 	// 양도 게시글 수정
-	void modifyTransferBoard(CustomerTransferBoard customerTransferBoard, MultipartFile[] mainImage, MultipartFile[] extraImage, List<String> deleteFile);
+	void modifyTransferBoard(CustomerTransferBoard customerTransferBoard, MultipartFile[] mainImage, MultipartFile[] extraImage, List<String> deleteFile, List<String> deleteMainImage);
 	
 	// 양도 게시글 등록
 	void addTransferBoard(CustomerTransferBoard customerTransferBoard, MultipartFile[] mainImage, MultipartFile[] extraImage);

@@ -12453,3 +12453,10 @@ footer .hotline img {
   display: block !important;
   text-align: center;
   text-align-last: center;
+}
+
+.input-error {
+  border: 1px solid red;
+  border-radius: 6px;
+  padding: 8px;
+}

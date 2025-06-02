@@ -13,6 +13,8 @@
 	
 	<th:block layout:fragment="jsFile">
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		
 	</th:block>
 	
 	
@@ -140,11 +142,14 @@
 	        	  const productCategoryNum = $('input[name="product"]:checked').val();
 	        	  const itemName = $('input[name="product"]:checked').next().text();
 	        	  $('#selectedItem').val(itemName);
-	        	  if($('#selectedItem').val() != '') {
+	        	  /* if($('#selectedItem').val() != '') {
 	        	  	$('.searchProduct').removeClass('disabled');
-	        	  }
+	        	  } */
 	        	  $('#productCategoryNum').val(productCategoryNum);
 	        	  $('#staticBackdrop').modal('hide');
+	        	  
+	        	    $('#productNum').val('');
+	        	    $('#selectedProduct').val('');
 	        	});
 	        
 	        
@@ -174,6 +179,107 @@
 				if(isSubmit) $('#modifyAssigneeBoardForm').submit();
 			}); */
 	        
+			$('#modifyAssigneeBoardForm').find('input, select, textarea').on('blur', function() {
+	            const $el = $(this);
+	            const id = $el.attr('id');
+
+	            // 제외할 필드 id 목록
+	            const excludedIds = ['selectedProduct', 'assigneeContent'];
+
+	            if (excludedIds.includes(id)) {
+	                // 검사 안 하고 바로 리턴
+	                return;
+	            }
+
+	            const value = $el.val()?.trim();
+	            let $target = $el;
+
+	            if (id === 'productCategoryNum') {
+	                $target = $('#selectedItem');
+	            }
+
+	            if (value) {
+	                $target.css('border', '1px solid green');
+	            } else {
+	                $target.css('border', '1px solid red');
+	            }
+	            $target.css('border-radius', '6px');
+	        });
+			
+			/* 등록 버튼 클릭 */
+			$('#modifyAssigneeBoardBtn').click(e => {
+			    e.preventDefault();
+			
+			    const $formTags = $('#modifyAssigneeBoardForm').find('input, select, textarea');
+			    let isSubmit = true;
+			
+			    const fieldMessages = {
+			        periodInput: {
+			            message: '희망 계약기간(개월)을 입력해주세요.',
+			            targetId: 'periodInput'
+			        },
+			        rentalFeeInput: {
+			            message: '희망 렌탈료를 입력해주세요.',
+			            targetId: 'rentalFeeInput'
+			        }
+			    };
+			
+			    // 공란 체크
+			    $formTags.each((idx, element) => {
+			        const $el = $(element);
+			        const value = $el.val()?.trim();
+			        const id = $el.attr('id');
+			
+			        if (fieldMessages[id] && !value) {
+			            const { message, targetId } = fieldMessages[id];
+			            const $target = $('#' + (targetId || id));
+			
+			            const prevStyle = $target.attr('style') || '';
+			            if (!prevStyle.includes('border')) {
+			                $target.attr('style', prevStyle + ' border: 1px solid red; border-radius: 6px;');
+			            }
+			
+			            Swal.fire({
+			                title: message,
+			                confirmButtonText: "확인"
+			            });
+			
+			            $target.focus();
+			            isSubmit = false;
+			            return false; // break
+			        }
+			    });
+			
+			    // 숫자 유효성 검사
+			    if (isSubmit) {
+			        const $periodInput = $('#periodInput');
+			        const $rentalFeeInput = $('#rentalFeeInput');
+			        const numberRegex = /^[0-9]+$/;
+			
+			        if (!numberRegex.test($periodInput.val()?.trim())) {
+			            Swal.fire({
+			                title: '계약 기간은 숫자만 입력해주세요.',
+			                confirmButtonText: "확인"
+			            });
+			            $periodInput.focus();
+			            isSubmit = false;
+			        } else if (!numberRegex.test($rentalFeeInput.val()?.trim())) {
+			            Swal.fire({
+			                title: '렌탈료는 숫자만 입력해주세요.',
+			                confirmButtonText: "확인"
+			            });
+			            $rentalFeeInput.focus();
+			            isSubmit = false;
+			        }
+			    }
+			
+			    if (isSubmit) {
+			        $('#modifyAssigneeBoardForm').submit();
+			    }
+			});
+
+
+	        
 	        /* 유효성 검증 */
 	        $('#periodInput').on("blur",function() {
 	        	let isNumber;
@@ -190,8 +296,8 @@
 	        	if (checkNumber.test($(this).val())) {
 	        		testBoolean = true;
 	        	} else {
-	        		alert("숫자 입력");
 	        		testBoolean = false;
+	        		$(this).val('');
 	        	}
 	        });
 	        
@@ -203,7 +309,6 @@
 	        	if (checkNumber.test($(this).val())) {
 	        		testBoolean = true;
 	        	} else {
-	        		alert("숫자 입력");
 	        		testBoolean = false;
 	        		$(this).val('');
 	        	}
@@ -301,7 +406,7 @@
 	                            	<input id="selectedProduct" type="text" th:value="*{productName}" name="productName" placeholder="상품명 입력 (선택사항)" readonly />
 	                        	</div>
 	                        	<div class="col-2">
-									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardProduct}" class="searchProduct btn btn-primary disabled" data-bs-toggle="modal" data-bs-target="#selectProductModal">
+									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardProduct}" class="searchProduct btn btn-primary" data-bs-toggle="modal" data-bs-target="#selectProductModal">
 										상품변경
 									</a>									
 	                            </div>
