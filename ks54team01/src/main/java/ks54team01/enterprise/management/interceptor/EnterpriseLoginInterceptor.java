@@ -19,6 +19,7 @@ public class EnterpriseLoginInterceptor implements HandlerInterceptor{
 		
 		String loginId = (String) session.getAttribute("loginId");
 		String loginMemberType = (String) session.getAttribute("loginMemberType");
+		String contractStatus= (String) session.getAttribute("entContractStatus");
 		
 		boolean isProcess = true;
 		
@@ -30,6 +31,10 @@ public class EnterpriseLoginInterceptor implements HandlerInterceptor{
 				isProcess = false;
 				response.sendRedirect("/customer/login/memberLogin");
 			}
+		}
+		if (!"계약중".equals(contractStatus)) {
+		    isProcess = false;
+		    response.sendRedirect("/customer/login/memberLogin?message=contractError");
 		}
 		
 		return isProcess;
