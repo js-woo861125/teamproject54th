@@ -4,6 +4,37 @@
 <mapper namespace="ks54team01.enterprise.management.mapper.EnterpriseManagementMapper">
 
 
+	<select id="getEntContractInfo" parameterType="string">
+		/* 플랫폼 계약정보 조회 */
+		SELECT
+			ect.ent_contract_no as entContractNo,  
+			ect.ent_ceo_no as entCeoNo, 
+			ect.ent_emp_id as entEmpId, 
+			ect.fee_rate_sales as feeRateSales, 
+			ect.fee_rate_rental as feeRateRental, 
+			ect.fee_rate_penalty as feeRatePenalty, 
+			ect.entry_fee as entryFee, 
+			ect.contract_date as contractDate, 
+			ect.contract_expiry_date as contractEndDate, 
+			ect.ent_cal_date as entCalDate, 
+			ect.contract_status as contractStatus,
+			ec.ent_ceo_nm as entCeoName,
+			ec.ent_brno as entBrno,
+			ec.ent_nm as entName,
+			ec.ent_ceo_addr as entCeoAddr,
+			ec.ent_ceo_daddr as entCeoDaddr,
+			ec.ent_ceo_email as entCeoEmail,
+			ec.ent_bank as entCeoBank, 
+			ec.ent_bank_num as entBankNum , 
+			ec.ent_ceo_phone as entCeoPhone, 
+			ec.register_date as entRegDate
+		FROM
+			ent_ceo ec right join ent_contract ect
+			on ec.ent_ceo_no = ect.ent_ceo_no
+		WHERE
+			ect.ent_ceo_no = #{entCeoNo};
+	</select>
+
 	<update id="modifyEntCeo" parameterType="EntMember">
   		/* 입점업체대표정보 수정 */
 		UPDATE ent_ceo

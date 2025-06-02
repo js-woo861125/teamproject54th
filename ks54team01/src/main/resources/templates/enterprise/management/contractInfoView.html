@@ -28,29 +28,29 @@
              </header>
 			<div class="card-body">
 			    <div class="row mb-50 mt-20 enterprise-info-wrap">
-			        <div class="col-md-4">
+			        <div class="col-md-5">
 			            <article class="icontext align-items-start">
 			                <span class="icon icon-sm rounded-circle bg-primary-light">
 			                    <i class="text-primary material-icons md-store"></i>
 			                </span>
 			                <div class="text">
-			                    <h6 class="mb-1">사업자</h6>
+			                    <h6 class="mb-1">사업자 정보</h6>
 			                    <p class="mb-1">
-			                        (주)스마트렌탈 <br />
-			                        402-00-00004<br />
+			                        업체명 : <span th:text="${contractInfo.entName}">(주)스마트렌탈</span> <br />
+			                        사업자번호 : <span>402-00-00004</span> <br />
 			                        전북 전주시 덕진구 기린대로 499 3층<br />
 			                        301호
 			                     </p>   
 			                </div>
 			            </article>
 			        </div>
-			        <div class="col-md-4">
+			        <div class="col-md-5">
 			            <article class="icontext align-items-start">
 			                <span class="icon icon-sm rounded-circle bg-primary-light">
 			                    <i class="text-primary material-icons md-person"></i>
 			                </span>
 			                <div class="text">
-			                    <h6 class="mb-1">대표자</h6>
+			                    <h6 class="mb-1">대표</h6>
 			                    <p class="mb-1">
 			                        이형열 <br />
 			                        ceo1@naver.com <br />
@@ -59,7 +59,7 @@
 			                </div>
 			            </article>
 			        </div>
-			</div>
+				</div>
 			<div class="row">
 			    <div class="col-lg-12">
 			        <div class="table-responsive">

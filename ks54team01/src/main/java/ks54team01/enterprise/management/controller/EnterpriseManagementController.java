@@ -23,9 +23,11 @@ public class EnterpriseManagementController {
 	private final EnterpriseManagementService enterpriseManagementService;
 	
 	@GetMapping("/contractInfo")
-	public String contractInfo(Model model) {
+	public String contractInfo(HttpSession session, Model model) {
 		
-		model.addAttribute("title", "계약정보");
+		String entCeoNo = (String) session.getAttribute("entCeoNo");
+		
+		model.addAttribute("title", "플랫폼 계약정보");
 		
 		return "enterprise/management/contractInfoView";
 	}

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ks54team01.customer.member.domain.EntMember;
+import ks54team01.enterprise.management.domain.EnterpriseContractInfo;
 import ks54team01.enterprise.management.mapper.EnterpriseManagementMapper;
 import ks54team01.enterprise.management.service.EnterpriseManagementService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,15 @@ public class EnterpriseManagementServiceImpl implements EnterpriseManagementServ
 
 	
 	private final EnterpriseManagementMapper enterpriseManagerMapper;
+	
+	/**
+	 * 플랫폼 계약정보 조회
+	 */
+	@Override
+	public EnterpriseContractInfo getEntContractInfo(String entCeoNo) {
+		
+		return enterpriseManagerMapper.getEntContractInfo(entCeoNo);
+	}
 	
 	/**
 	 * 직원 등록
