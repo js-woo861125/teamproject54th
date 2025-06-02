@@ -30,7 +30,8 @@
     		entCeoDaddr,
     		entBank,
     		entBankNum,
-    		entPosition
+    		entPosition,
+    		entContractStatus
     	FROM 
     		ent_info_view 
     	WHERE 
