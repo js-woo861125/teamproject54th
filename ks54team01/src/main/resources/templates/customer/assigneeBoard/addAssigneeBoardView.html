@@ -92,7 +92,7 @@
 	                 $('#productList').append(...appendElements);
 	             });
 	             request.fail((jqXHR, textStatus, error) => {
-	                 console.log(jqXHR, textStatus, error); // 요청 실패 시 수행
+	                 console.log(jqXHR, textStatus, error); 
 	             }); 
 	        });
 			
@@ -148,6 +148,9 @@
 	        	  $('.searchProduct').removeClass('disabled');
 	        	    
 	        	  $('#staticBackdrop').modal('hide');
+	        	  
+	        	  $('#productNum').val('');
+	        	  $('#selectedProduct').val('');
 	        	});
 	        
 	        
@@ -192,6 +195,7 @@
 	        /* 등록 버튼 클릭 */
 			$('#addAssigneeBoardBtn').click(e => {
 			    e.preventDefault();
+			    e.stopPropagation();
 			
 			    const $formTags = $('#addAssigneeBoardForm').find('input, select, textarea');
 			    let isSubmit = true;
@@ -224,7 +228,7 @@
 			        if (fieldMessages[id] && !value) {
 			            const { message, targetId } = fieldMessages[id];
 			            const $target = $('#' + (targetId || id));
-			
+						
 			            const prevStyle = $target.attr('style') || '';
 			            if (!prevStyle.includes('border')) {
 			                $target.attr('style', prevStyle + ' border: 1px solid red; border-radius: 6px;');
@@ -232,10 +236,13 @@
 			
 			            Swal.fire({
 			                title: message,
-			                confirmButtonText: "확인"
-			            });
-			
-			            $target.focus();
+			                confirmButtonText: "확인",
+			                didOpen: () => {
+			                    const confirmBtn = Swal.getConfirmButton();
+			                    confirmBtn.focus();   
+			                }
+			            })
+			            $target.focus();      
 			            isSubmit = false;
 			            return false; // break
 			        }
@@ -251,15 +258,15 @@
 			            Swal.fire({
 			                title: '계약 기간은 숫자만 입력해주세요.',
 			                confirmButtonText: "확인"
-			            });
+			            })
 			            $periodInput.focus();
 			            isSubmit = false;
 			        } else if (!numberRegex.test($rentalFeeInput.val()?.trim())) {
 			            Swal.fire({
 			                title: '렌탈료는 숫자만 입력해주세요.',
 			                confirmButtonText: "확인"
-			            });
-			            $rentalFeeInput.focus();
+			            })
+						$rentalFeeInput.focus();			            
 			            isSubmit = false;
 			        }
 			    }
@@ -268,18 +275,17 @@
 			        $('#addAssigneeBoardForm').submit();
 			    }
 			});
-
-
 	        
 	        /* 유효성 검증 */
-	        $('#periodInput').on("blur",function() {
+	        $('#periodInput').on("blur",function(e) {
+	        	e.stopPropagation();
 	        	let isNumber;
 	        	
 	        	const checkNumber = /^[0-9]*$/;
 	
 	        	if ($(this).val() == '') {
 	        		/* alert("입력하세요."); */
-	        		this.focus();
+	        		//this.focus();
 	        		testBoolean = false;
 	        		return;
 	        	}
@@ -293,6 +299,7 @@
 	        });
 	        
 	        $('#rentalFeeInput').on("blur",function() {
+	        	e.stopPropagation();
 	        	let isNumber;
 	        	
 	        	const checkNumber = /^[0-9]*$/;
