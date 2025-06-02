@@ -69,6 +69,8 @@ public class LoginController {
 	    	 session.setAttribute("entCeoNo", entCeo.getEntCeoNo());
 	    	 session.setAttribute("entBrno", entCeo.getEntBrno());
 	    	 session.setAttribute("entName", entCeo.getEntName());
+	    	 session.setAttribute("entContractStatus", entCeo.getEntContractStatus());
+	    	 
 	    	 
 	         return "redirect:/enterprise";
 	     }

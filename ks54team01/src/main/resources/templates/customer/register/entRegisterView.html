@@ -42,8 +42,8 @@
 												<input type="hidden" id="entCeoPhone" name="entCeoPhone"/>
 		                                            <div class="form-group d-flex">
 													   	<input type="text" class="w-10 form-control fs-6" id="entCeoPhone1" name="entCeoPhone1" placeholder="010" value="010" readonly />
-													    <input type="text" class="mr-10 ml-10" id="entCeoPhone2" name="entCeoPhone2" placeholder="중간연락처" required />
-													    <input type="text"  id="entCeoPhone3" name="entCeoPhone3" placeholder="마지막연락처"required />
+													    <input type="text" class="mr-10 ml-10" id="entCeoPhone2" name="entCeoPhone2" placeholder="중간연락처" maxlength="4" required />
+													    <input type="text"  id="entCeoPhone3" name="entCeoPhone3" placeholder="마지막연락처" maxlength="4" required />
 													</div>
 											</div>
 				                        	<!-- 이메일 본인인증 --> 
@@ -342,6 +342,32 @@
 		    }
 		    
 		    /**
+			 * 업체명 유효성검증
+			 */
+		    function validateEntName() {
+		        const entName = $('#entName').val().trim();
+		        if (!entName) {
+		            alert("업체명을 입력해주세요.");
+		            $('#entName').focus();
+		            return false;
+		        }
+		        
+		        if (entName.length < 2 || entName.length > 50) {
+		            alert("업체명은 2자 이상 50자 이하로 입력해주세요.");
+		            $('#entName').focus();
+		            return false;
+		        }
+		        
+		        const entNameRegex = /^[가-힣a-zA-Z0-9\s\-()]+$/;
+		        if (!entNameRegex.test(entName)) {
+		            alert("업체명에 특수문자는 사용할 수 없습니다.");
+		            $('#entName').focus();
+		            return false;
+		        }
+		        return true;
+		    }
+		    
+		    /**
 			* input 유효성검증
 			*/
 		    function validateRequiredFields() {
@@ -368,6 +394,7 @@
 
 		        if (!pattern.test(brno)) {
 		            alert("사업자등록번호 형식이 올바르지 않습니다. (예: 123-45-67890)");
+		            $('#entBrno').focus();
 		            return false;
 		        }
 		        $('#entBrno').val(brno);
@@ -384,6 +411,7 @@
 
 		        if (!formatted) {
 		            alert(`${bankName} 계좌번호 형식이 올바르지 않습니다. 숫자만 입력하며 정확한 자리수를 확인해주세요.`);
+		            $('#entBankNum').focus();
 		            return false;
 		        }
 		        $('#entBankNum').val(formatted);
@@ -414,6 +442,7 @@
 		        if (!validateEmailVerification()) return false;
 		        if (!validateDetailAddress()) return false;
 		        if (!validatePhoneNumber()) return false;
+		        if (!validateEntName()) return false;
 		        if (!validateName()) return false;
 		        if (!validateBrno()) return false;
 		        if (!validateBank()) return false;

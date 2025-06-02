@@ -170,8 +170,16 @@ public class EnterpriseProductController {
 	    @ModelAttribute EnterpriseProduct enterpriseProduct,
 	    @RequestParam List<String> benefitNoList,
 	    @RequestParam List<String> benefitDetailList,
+	    @RequestParam List<String> platformPriceList,
+	    @RequestParam List<String> finalPriceList,
+	    @RequestParam List<String> optionLumpSumPriceList,
 	    @ModelAttribute EnterpriseProductQuantity quantity
 	) {  
+	
+	    if (quantity.getQuantity() == null) {
+	        throw new IllegalArgumentException("수량은 필수 입력값입니다.");
+	    }
+		
 	    enterpriseProductService.addSellProduct(enterpriseProduct,  benefitNoList, benefitDetailList, quantity);
 	  
 	    return "redirect:/enterprise/product/sellProductList";

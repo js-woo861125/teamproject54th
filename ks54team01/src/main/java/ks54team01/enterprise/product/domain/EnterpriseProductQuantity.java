@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class EnterpriseProductQuantity {
-	    private String entName;
+	    private String quantityNo;
+		private String entName;
 	    private String productName;
 	    private String cateName;
 	    private String productStatus;

@@ -69,7 +69,6 @@
 			
 			/* 상품 찾기 */
 			$('.searchProduct').click(function() {
-	        	/* const data = $(this).data('productCategoryNum'); */
 	        	const value = $('#productCategoryNum').val();
 	        	console.log(value);
 	        	
@@ -80,7 +79,7 @@
 	                 dataType : 'json'
 	             });
 	             request.done(response => {
-	                 console.log(response); // 요청 성공 시 수행
+	                 console.log(response); 
 	                 const appendElements = response.map((productInfo, idx) => {
 	                	const $div = $('<div />', { class : 'col-6 col-md-4'});
 	                	const $subDiv = $('<div />', { class : 'form-check'});
@@ -95,7 +94,7 @@
 	                 $('#productList').append(...appendElements);
 	             });
 	             request.fail((jqXHR, textStatus, error) => {
-	                 console.log(jqXHR, textStatus, error); // 요청 실패 시 수행
+	                 console.log(jqXHR, textStatus, error);
 	             }); 
 	        });
 			
@@ -142,14 +141,12 @@
 	        	  const productCategoryNum = $('input[name="product"]:checked').val();
 	        	  const itemName = $('input[name="product"]:checked').next().text();
 	        	  $('#selectedItem').val(itemName);
-	        	  /* if($('#selectedItem').val() != '') {
-	        	  	$('.searchProduct').removeClass('disabled');
-	        	  } */
+
 	        	  $('#productCategoryNum').val(productCategoryNum);
 	        	  $('#staticBackdrop').modal('hide');
 	        	  
-	        	    $('#productNum').val('');
-	        	    $('#selectedProduct').val('');
+	        	  $('#productNum').val('');
+	        	  $('#selectedProduct').val('');
 	        	});
 	        
 	        
@@ -206,10 +203,11 @@
 	            $target.css('border-radius', '6px');
 	        });
 			
-			/* 등록 버튼 클릭 */
+			/* 수정 버튼 클릭 */
 			$('#modifyAssigneeBoardBtn').click(e => {
 			    e.preventDefault();
-			
+			    e.stopPropagation();
+			    
 			    const $formTags = $('#modifyAssigneeBoardForm').find('input, select, textarea');
 			    let isSubmit = true;
 			
@@ -241,8 +239,12 @@
 			
 			            Swal.fire({
 			                title: message,
-			                confirmButtonText: "확인"
-			            });
+			                confirmButtonText: "확인",
+			                didOpen: () => {
+			                    const confirmBtn = Swal.getConfirmButton();
+			                    confirmBtn.focus();   
+			                }
+			            })
 			
 			            $target.focus();
 			            isSubmit = false;
@@ -282,13 +284,14 @@
 	        
 	        /* 유효성 검증 */
 	        $('#periodInput').on("blur",function() {
+	        	e.stopPropagation();
 	        	let isNumber;
 	        	
 	        	const checkNumber = /^[0-9]*$/;
 	
 	        	if ($(this).val() == '') {
 	        		/* alert("입력하세요."); */
-	        		this.focus();
+	        		/* this.focus(); */
 	        		testBoolean = false;
 	        		return;
 	        	}

@@ -90,20 +90,38 @@
 				});
 		   	}); */
 		   	
-		 // 공통 테두리 스타일 함수
-		   	function applyBorderStyle($el, isValid) {
-		   	    $el.css({
-		   	        'border': `1px solid ${isValid ? 'green' : 'red'}`,
-		   	        'border-radius': '6px'
-		   	    });
-		   	}
+		
+		   	$('#addTransferBoardForm').find('input, select, textarea').on('blur', function() {
+	            const $el = $(this);
+	            const id = $el.attr('id');
+
+	            // 제외할 필드 id 목록
+	            const excludedIds = ['transferContentInput'];
+
+	            if (excludedIds.includes(id)) {
+	                // 검사 안 하고 바로 리턴
+	                return;
+	            }
+
+	            const value = $el.val()?.trim();
+	            let $target = $el;
+
+	            if (value) {
+	                $target.css('border', '1px solid green');
+	            } else {
+	                $target.css('border', '1px solid red');
+	            }
+	            $target.css('border-radius', '6px');
+	        });
+		   	
 
 		 // 등록 버튼 클릭 시 유효성 검사
-		   	$('#addTransferBoardBtn').click(e => {
-		   	    e.preventDefault();
+	   	 $('#addTransferBoardBtn').click(e => {
+  	     	e.preventDefault();
+   			e.stopPropagation();
 
-		   	 console.log($('#mainImage'));
-		        console.log($('#mainImage')[0]);
+		   	console.log($('#mainImage'));
+		    console.log($('#mainImage')[0]);
 		   	    
 		   	    const grantsVal = $('#individualGrantsInput').val()?.trim();
 		   	    const titleVal = $('#transferTitleInput').val()?.trim();
@@ -130,25 +148,33 @@
 		   	            confirmButtonText: "확인"
 		   	        });
 		   	        return;
-		   	    }
+		   	    } else $('#individualGrantsInput').attr('style', 'border: 1px solid green; border-radius: 6px;');
 
 		   	    // 게시글 제목 검증
 		   	    if (!titleVal) {
 		   	        $('#transferTitleInput').focus().attr('style', 'border: 1px solid red; border-radius: 6px;');
 		   	        Swal.fire({
 		   	            title: '게시글 제목을 입력해주세요.',
-		   	            confirmButtonText: "확인"
-		   	        });
+		   	         	confirmButtonText: "확인",
+		                didOpen: () => {
+		                    const confirmBtn = Swal.getConfirmButton();
+		                    confirmBtn.focus();   
+		                }
+		            })
 		   	        return;
 		   	    }
+		   	    else $('#transferTitleInput').attr('style', 'border: 1px solid green; border-radius: 6px;');
 
 		   	    // 메인 이미지 검증
 	   	        if (!fileList || fileList.length === 0) {
         Swal.fire({
             title: '메인 이미지를 등록해주세요.',
-            confirmButtonText: "확인"
-        });
-        fileInput.focus();
+            confirmButtonText: "확인",
+            didOpen: () => {
+                const confirmBtn = Swal.getConfirmButton();
+                confirmBtn.focus();   
+            }
+        })
         return;
     }
 
@@ -158,6 +184,7 @@
 
 		   	// 렌탈 지원금 blur 시
 		   	$('#individualGrantsInput').on("blur", function () {
+		   		e.stopPropagation();
 		   	    const val = $(this).val()?.trim();
 		   	    const checkNumber = /^[0-9]+$/;
 
@@ -170,6 +197,7 @@
 
 		   	// 게시글 제목 blur 시
 		   	$('#transferTitleInput').on("blur", function () {
+		   		e.stopPropagation();
 		   	    const val = $(this).val()?.trim();
 		   	    if (!val) {
 		   	        $(this).focus();
