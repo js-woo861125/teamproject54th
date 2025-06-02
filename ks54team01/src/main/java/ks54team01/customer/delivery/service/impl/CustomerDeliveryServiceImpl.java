@@ -78,7 +78,7 @@ public class CustomerDeliveryServiceImpl implements CustomerDeliveryService {
 	private String formatPhoneNumber(String phone) {
 		
 		if(phone == null) return "";
-		
+				
 		phone = phone.replaceAll("[^0-9]", "");
 	    
 		if(phone.length() == 11) {

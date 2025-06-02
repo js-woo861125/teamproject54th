@@ -244,18 +244,6 @@
 			ON p.product_category_no = pc.product_category_no
 			LEFT JOIN files f
 			ON tb.transfer_board_no = f.ref_id AND f.file_type = 'mainImage'
-			INNER JOIN 
-			(
-				SELECT 
-					f.ref_id,
-					MAX(f.register_date) AS register_date
-				FROM 
-					files f
-				WHERE 
-					f.file_type = 'mainImage'
-				GROUP BY f.ref_id
-			) f2
-			ON  tb.transfer_board_no = f.ref_id AND f.register_date = f2.register_date
 		 WHERE
 		 	tb.transfer_rental_processing_status != '양도공개전'
 		 	AND tb.cust_id = #{customerId}

@@ -131,8 +131,8 @@
       <th:block layout:fragment="jsScript">
 		<script>
 			/**
-			* 주소입력
-			*/
+			 * 주소입력
+			 */
 			$('#daumPostBtn').click(function(e){
 				new daum.Postcode({
 		            oncomplete: function(data) {
@@ -227,8 +227,8 @@
 			}
 			
 			/**
-			* 전화번호 조합
-			*/
+			 * 전화번호 조합
+			 */
 			function setPhoneValue() {
 			    const phone = `${$('#custPhone1').val()}-${$('#custPhone2').val()}-${$('#custPhone3').val()}`;
 			    $('#custPhone').val(phone);
@@ -250,8 +250,8 @@
 			}
 			
 			/**
-			* email 조합
-			*/
+			 * email 조합
+			 */
 			function getFullEmail() {
 				const emailFirst = $('#emailFirst').val().trim();
 			    const emailLast = $('#emailLast').val().trim();
@@ -260,8 +260,8 @@
 			}
 		   
 			/**
-		    * email 유효성검증 및 인증코드 전송
-		    */
+		     * email 유효성검증 및 인증코드 전송
+		     */
 		    function sendVerificationCode() {
 		    	const custEmail  = getFullEmail();
 
@@ -303,8 +303,8 @@
 	
 		        
 		   	/**
-		   	* email 인증코드 확인
-		   	*/
+		   	 * email 인증코드 확인
+		   	 */
 		   	let isEmailVerified = false;
 		   	
 		   	function verifyCodeSubmit() {
@@ -339,8 +339,8 @@
 	    	}
 		    
 		    /**
-			* email 인증여부 검증
-			*/	
+			 * email 인증여부 검증
+			 */	
 		    function validateEmailVerification() {
 		    	 if (!isEmailVerified) {
 				        if(!isEmailVerified) {
@@ -352,8 +352,8 @@
 		    }
      		
 		    /**
-			* 기업회원 추가정보 입력란 생성
-			*/
+			 * 기업회원 추가정보 입력란 생성
+			 */
 			document.querySelectorAll('input[name="memberType"]').forEach(function (radio) {
 				    radio.addEventListener('change', function () {
 				        const businessBlock = document.getElementById('businessInfo');
@@ -366,8 +366,8 @@
 				});
 		
 			/**
-			* 사업자등록번호 조합 및 형식 검증
-			*/
+			 * 사업자등록번호 조합 및 형식 검증
+			 */
 		    function validateBrno() {
 		    	const isCorpMember = $('input[name="memberType"]:checked').val() === '기업고객';
 		        const brno = `${$('#corpBrno1').val()}-${$('#corpBrno2').val()}-${$('#corpBrno3').val()}`;
@@ -383,12 +383,25 @@
 		    }
 			 
 		    /**
-			* 기업회원 상호명 유효성검증
-			*/
+			 * 기업회원 상호명 유효성검증
+			 */
 		    function validateCorpName() {
 		        const corpName = $('#corpName').val().trim();
 		        if (!corpName) {
 		            alert("상호명을 입력해주세요.");
+		            $('#corpName').focus();
+		            return false;
+		        }
+		        
+		        if (corpName.length < 2 || corpName.length > 50) {
+		            alert("상호명은 2자 이상 50자 이하로 입력해주세요.");
+		            $('#corpName').focus();
+		            return false;
+		        }
+		        
+		        const corpNameRegex = /^[가-힣a-zA-Z0-9\s\-()]+$/;
+		        if (!corpNameRegex.test(corpName)) {
+		            alert("상호명에 특수문자는 사용할 수 없습니다.");
 		            $('#corpName').focus();
 		            return false;
 		        }
@@ -397,8 +410,8 @@
 		    
 		    
 		    /**
-			* input 유효성검증
-			*/
+			 * input 유효성검증
+			 */
 			function validateRequiredFields() {
 			    const requiredFields = ['custName', 'custBrdt','custPhone2', 'custPhone3', 'emailFirst', 'emailLast', 'custAddr', 'custDaddr'];
 			    for (let field of requiredFields) {
@@ -413,8 +426,8 @@
 			}
 			
 		    /**
-		    * 검증유형별 함수 실행
-		    */
+		     * 검증유형별 함수 실행
+		     */
 		    function validateForm() {
 		        if (!validateRequiredFields()) return false;
 		        if (!validateEmailVerification()) return false;
@@ -436,8 +449,8 @@
 				
 		       
 		    /**
-		    * 폼 제출 및 추가 데이터 조합
-		    */
+		     * 폼 제출 및 추가 데이터 조합
+		     */
 		    $('#customerRegisterBtn').click(function(e) {
 		        e.preventDefault();
 
