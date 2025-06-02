@@ -14,11 +14,19 @@ import lombok.Data;
 		private String productCategoryNum;
 		private String productsName;
 		private String productsStatus;
-		private String productsImage;
+//		private String productsImage;
 		private String registerDate;
 		private String revisionDate;
 		private String lumpPrice;
 		private String minRentalPrice;
+		
+		private String imageFilePath;
+	
+		
+		
+		// files 테이블에서 가져올 이미지 관련 필드 추가
+	    private String imageFileName; // f.file_new_name 또는 f.file_path 에 매핑
+	    private String imageType; // f.file_type 에 매핑 (예: "image/jpeg", "image/png")
 		
 		
 		private List<CustomerSellProduct> customerSellProduct;
