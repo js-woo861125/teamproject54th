@@ -19,6 +19,7 @@ import ks54team01.admin.productInfo.domain.ProductInfoBenefit;
 import ks54team01.admin.productInfo.service.AdminProductInfoService;
 import ks54team01.enterprise.product.domain.EnterpriseMarginRatio;
 import ks54team01.enterprise.product.domain.EnterpriseProduct;
+import ks54team01.enterprise.product.domain.EnterpriseProductBenefit;
 import ks54team01.enterprise.product.domain.EnterpriseProductQuantity;
 import ks54team01.enterprise.product.mapper.EnterpriseMarginRatioMapper;
 import ks54team01.enterprise.product.service.EnterpriseMarginRatioService;
@@ -27,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/enterprise")
+@RequestMapping("/enterprise/product")
 public class EnterpriseProductController {
 	
 	
@@ -45,7 +46,7 @@ public class EnterpriseProductController {
 	/*
 	 * 입점업체 등록 상품 리스트
 	 */
-	@GetMapping("/product/sellProductList")
+	@GetMapping("/sellProductList")
 	public String getsellProductList(Model model) {
 		List<EnterpriseProduct> sellProductList = enterpriseProductService.getSellProductList();
 		
@@ -57,7 +58,7 @@ public class EnterpriseProductController {
 	/*
 	 * 플랫폼 등록 상품 리스트
 	 */
-	@GetMapping("/product/productList")
+	@GetMapping("/productList")
 	public String getproductList(Model model) {
 		List<AdminProduct> getProductList = enterpriseProductService.getProductList();
 		
@@ -67,7 +68,7 @@ public class EnterpriseProductController {
 		return "enterprise/product/platformProductListView";
 	}
 	
-	@PostMapping("/product/addMarginRatio")
+	@PostMapping("/addMarginRatio")
 	public String addEnterpriseMarginRatio(EnterpriseMarginRatio enterpriseMarginRatio
 										 , RedirectAttributes redirectAttributes) {
 		
@@ -89,7 +90,7 @@ public class EnterpriseProductController {
 		return "redirect:/enterprise/product/marginRatio";
 	}
 	
-	@PostMapping("/product/modifyMarginRatioUseStatus")
+	@PostMapping("/modifyMarginRatioUseStatus")
 	public String modifyMarginRatioUseStatus(@RequestParam("marginRatioNum") String marginRatioNum
 											,@RequestParam("useStatus") String useStatus) {
 				
@@ -98,7 +99,7 @@ public class EnterpriseProductController {
 		return "redirect:/enterprise/product/marginRatio";
 	}
 	
-	@PostMapping("/product/modifyMarginRatio")
+	@PostMapping("/modifyMarginRatio")
 	public String modifymodifyMarginRatio(@RequestParam("periodList") List<Integer> periodList,
 										  @RequestParam("marginRatioList") List<Double>  marginRatioList) {
 		
@@ -121,7 +122,7 @@ public class EnterpriseProductController {
 		return "redirect:/enterprise/product/marginRatio";
 	}
 	
-	@GetMapping("/product/marginRatio")
+	@GetMapping("/marginRatio")
 	public String enterpriseMarginRatio(@ModelAttribute("addResult") String addResult, Model model) {
 		
 		List<EnterpriseMarginRatio> enterpriseMarginRatio = enterpriseMarginRatioService.getEnterpriseMarginRatio();
@@ -135,7 +136,7 @@ public class EnterpriseProductController {
 	/*
 	 * 입점업체 재고 조회
 	 */
-	@GetMapping("/product/quantityList")
+	@GetMapping("/quantityList")
 	public String quantityList(Model model) {
 		
 		List<EnterpriseProductQuantity> quantityList = enterpriseProductService.getQuantityList();
@@ -149,7 +150,7 @@ public class EnterpriseProductController {
 	 * 
 	 * 입점업체 상품등록
 	 */
-	@GetMapping("/product/addProduct")
+	@GetMapping("/addProduct")
 	public String enterpriseAddProduct(@RequestParam("productNo") String productNo, Model model) {
 		
 		AdminProduct product = adminProductService.getProduct(productNo);
@@ -164,12 +165,16 @@ public class EnterpriseProductController {
 		return "enterprise/product/addSellProductView";
 	}
 	
-	@PostMapping("/product/addproduct")
-	public String enterpriseAddProduct(EnterpriseProduct enterpriseProduct) {
-		
-		enterpriseProductService.addSellProduct(enterpriseProduct);
-		
-		return "redirect:/enterprise/product/productList";
+	@PostMapping("/addSellProduct")
+	public String addSellProduct(
+	    @ModelAttribute EnterpriseProduct enterpriseProduct,
+	    @RequestParam List<String> benefitNoList,
+	    @RequestParam List<String> benefitDetailList,
+	    @ModelAttribute EnterpriseProductQuantity quantity
+	) {  
+	    enterpriseProductService.addSellProduct(enterpriseProduct,  benefitNoList, benefitDetailList, quantity);
+	  
+	    return "redirect:/enterprise/product/sellProductList";
 	}
 	
 }

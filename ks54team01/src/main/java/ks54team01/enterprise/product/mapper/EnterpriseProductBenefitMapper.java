@@ -1,0 +1,10 @@
+package ks54team01.enterprise.product.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import ks54team01.enterprise.product.domain.EnterpriseProductBenefit;
+
+@Mapper
+public interface EnterpriseProductBenefitMapper {	
+	  void insertEnterpriseProductBenefit(EnterpriseProductBenefit benefit);
+}
