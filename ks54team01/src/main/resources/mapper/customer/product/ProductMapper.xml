@@ -18,6 +18,9 @@
 		<result column="revision_date" 			property="revisionDate"/>
 		<result column="lump_price" 			property="lumpPrice"/>
 		<result column="min_rental_price" 		property="minRentalPrice"/>
+		<result column="file_type" 				property="imageType"/>
+		<result column="file_path" 				property="imageFilePath"/>
+		
 		
 
 		
@@ -80,7 +83,9 @@
 			pc.middle_category ,
 			pc.small_category ,
 			ec.ent_nm,
-			p.products_no
+			p.products_no,
+			f.file_type,
+			f.file_path
 		FROM
 			sell_products sp INNER JOIN products p 
 			ON sp.products_no = p.products_no
@@ -88,10 +93,10 @@
 			ON sp.ent_ceo_no = ec.ent_ceo_no
 			INNER JOIN products_category pc 
 			ON p.product_category_no = pc.product_category_no
+			LEFT JOIN files f 
+			ON p.model_no = f.ref_id
 		WHERE
-			pc.small_category = #{smallCategory} AND p.products_status ='활'
-		GROUP BY
-			p.products_nm;
+			pc.small_category = #{smallCategory} AND p.products_status ='활' AND f.file_type  ='mainImage';
 	</select>
 
 	
