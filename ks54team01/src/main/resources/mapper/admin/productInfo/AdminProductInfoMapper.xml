@@ -113,22 +113,6 @@
 		</association>			
 	</resultMap>
 
-	<select id="getBrandCount" resultType="int">
-		/* 브랜드 행의 갯수 */
-		SELECT
-			count(*)
-		FROM
-			brand
-	    <where>
-	        <if test="searchKey != null and searchValue != null and searchValue != ''">
-	            AND ${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
-	        </if>
-	        <if test="useStatus != null and useStatus != ''">
-	            AND use_status = #{useStatus}
-	        </if>
-	    </where>	
-	</select>
-
 	<select id="countModelSpecsBySpecNo" resultType="int">
 		/* 카테고리별/상세스펙코드로 등록된 모델별/상세스펙 조회 */
 		SELECT
@@ -1079,16 +1063,7 @@
 			use_status
 		FROM 
 			brand
-		<where>
-	        <if test="searchKey != null and searchValue != null and searchValue != ''">
-	            AND ${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
-	        </if>
-	        <if test="useStatus != null and useStatus != ''">
-	            AND use_status = #{useStatus}
-	        </if>		
-		</where>	
-		ORDER BY CAST(SUBSTRING_INDEX(brand_no, '_', -1) AS UNSIGNED)
-		LIMIT #{limit} OFFSET #{offset};
+		ORDER BY CAST(SUBSTRING_INDEX(brand_no, '_', -1) AS UNSIGNED);
 	</select>
 	
 	<select id="getCategoryList" resultMap="categoryResultMap">

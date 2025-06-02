@@ -21,10 +21,6 @@
 				$('#useStatus').on('change', function() {
 					$(this).closest('form').submit();
 				});
-				// 행 갯수
-			    $('#rowPerPage').on('change', function() {
-			    	$(this).closest('form').submit();
-			      });
 			});
 		
 			/**
@@ -164,14 +160,7 @@
 	                           <option value="사용중"  th:selected="${useStatus eq '사용중'}">사용중</option>
 	                           <option value="사용불가" th:selected="${useStatus eq '사용불가'}">사용불가</option>
 	                       </select>
-	                   </div>
-	                   <div class="col-lg-1 col-md-3 col-12">
-					      <select class="form-select" name="rowPerPage" id="rowPerPage">
-					        <option value="5" th:selected="${rowPerPage == 5}">5</option>
-					        <option value="10" th:selected="${rowPerPage == 10}">10</option>
-					        <option value="15" th:selected="${rowPerPage == 15}">15</option>
-					      </select>
-					    </div>                   
+	                   </div>                 
 	               </div>
 				</form>
 			</header>
@@ -246,28 +235,5 @@
 	            </div>
 	        </div>
 	    </div>
-	    <nav aria-label="Page navigation">
-		  <ul class="pagination justify-content-center">
-		    <li class="page-item" th:classappend="${currentPage != null && currentPage == 1} ? 'disabled'">
-			  <a class="page-link" th:href="@{/admin/productInfo/brandList(page=${currentPage != null && currentPage > 1 ? currentPage - 1 : 1}, searchKey=${searchKey}, searchValue=${searchValue}, useStatus=${useStatus})}">
-			    이전
-			  </a>
-			</li>
-		    <th:block th:if="${totalPages != null and totalPages > 0}">
-		      <li class="page-item" 
-		          th:each="i : ${#numbers.sequence(1, totalPages)}" 
-		          th:classappend="${currentPage != null && currentPage == i} ? 'active'">
-		        <a class="page-link" 
-		           th:href="@{/admin/productInfo/brandList(page=${i}, searchKey=${searchKey}, searchValue=${searchValue}, useStatus=${useStatus})}" 
-		           th:text="${i}">1</a>
-		      </li>
-		    </th:block>
-			<li class="page-item" th:classappend="${currentPage != null && currentPage == totalPages} ? 'disabled'">
-			  <a class="page-link" th:href="@{/admin/productInfo/brandList(page=${currentPage != null && currentPage < totalPages ? currentPage + 1 : totalPages}, searchKey=${searchKey}, searchValue=${searchValue}, useStatus=${useStatus})}">
-			    다음
-			  </a>
-			</li>
-		  </ul>
-		</nav>
 	</th:block>
 </html>

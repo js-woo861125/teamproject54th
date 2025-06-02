@@ -29,16 +29,6 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	private final AdminProductInfoMapper adminProductInfoMapper;
 	
 	/**
-	 * 상품정보 행의 갯수
-	 */
-	// 브랜드 행의 갯수
-	@Override
-	public int getBrandCount(String searchKey, String searchValue, String useStatus) {
-		
-		return adminProductInfoMapper.getBrandCount(searchKey, searchValue, useStatus);
-	}
-	
-	/**
 	 *  상품정보 등록 조회
 	 */
 	// 카테고리별/상세스펙코드로 등록된 모델별/상세스펙 조회
@@ -655,9 +645,9 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	}
 
 	@Override
-	public List<ProductInfoBrand> getBrandList(int offset, int limit, String searchKey, String searchValue, String useStatus) {
+	public List<ProductInfoBrand> getBrandList() {
 		
-		List<ProductInfoBrand> brandList = adminProductInfoMapper.getBrandList(offset, limit, searchKey, searchValue, useStatus);
+		List<ProductInfoBrand> brandList = adminProductInfoMapper.getBrandList();
 		
 		return brandList;
 	}
