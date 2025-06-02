@@ -153,7 +153,7 @@
 	                     <li class="page-item">
 	                        <a class="page-link" th:href="${searchKey != null} 
 	                        							  ?  @{/admin/member/searchMember(currentPage=${lastPage}, searchKey=${searchKey},
-																						   		searchValue=${searchValue}, memberType=${memberType}, status=${status})}
+																						  searchValue=${searchValue}, memberType=${memberType}, status=${status})}
 	                        							  :  @{/admin/member/memberList(currentPage=${lastPage})}">
 	                        	<i class="material-icons md-last_page"></i>
 	                        </a>
@@ -206,6 +206,7 @@
 		    </div>
 		  </div>
 		</div>
+		</th:block>
     	<th:block layout:fragment="jsScript">
 	    	<script>
 			    function openMemberDetailModal(data) {
