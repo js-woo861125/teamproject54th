@@ -5,7 +5,7 @@
 
 <mapper namespace="ks54team01.customer.product.mapper.ProductMapper">
 
-	<resultMap type="customerProduct" 			id="customerProductResultMap">
+	<resultMap type="customerProduct" 			id="CustomerProductResultMap">
 		<id column="products_no" 				property="productsNum"/>
 		<result column="item_no"				property="itemNum"/>
 		<result column="manager_id" 			property="managerId"/>
@@ -20,9 +20,32 @@
 		<result column="min_rental_price" 		property="minRentalPrice"/>
 		<result column="file_type" 				property="imageType"/>
 		<result column="file_path" 				property="imageFilePath"/>
+		<result column="max_period" 			property="maxPeriod"/>
 		
 		
-
+		<association property="customerModel" 	javaType="CustomerModel">
+			<id 	column="model_no" 				property="modelNo"/>
+			<result column="manager_id" 			property="managerId"/> 
+			<result column="brand_no"				property="brandNo"/>
+			<result column="item_no" 				property="itemNo"/>
+			<result column="product_category_no" 	property="prodCateNo"/>
+			<result column="model_nm" 				property="modelNm"/>
+			<result column="register_date" 			property="regDate"/>
+			<result column="revision_date" 			property="revDate"/> 
+			<result column="use_status" 			property="useStatus"/> 
+		</association>
+		
+		
+		<association property="customerProductSpec" 	javaType="CustomerProductSpec">
+			<id 	column="spec_no" 					property="specNo"/>
+			<result column="manager_id" 				property="managerId"/> 
+			<result column="product_category_no"		property="prodCateNo"/>
+			<result column="spec_nm" 					property="specNm"/>
+			<result column="register_date" 				property="regDate"/>
+			<result column="revision_date" 				property="revDate"/>
+			<result column="use_status" 				property="useStatus"/>
+		</association>
+		
 		
 
 		<association property="productCate" 	javaType="ProductCate">
@@ -68,9 +91,29 @@
 			<result column="ec_register_date" 	property="registerDate"/> 
 			<result column="ec_revision_date" 	property="ruvisionDate"/> 
 		</collection>
+		
+		
+		
+		
+		
+		<collection property="customerModelSpecContent" ofType="CustomerModelSpecContent">
+			<id 	column="spec_content_no" 			property="specContentNo"/>
+			<result column="manager_id" 				property="managerId"/> 
+			<result column="model_no"					property="modelNo"/>
+			<result column="spec_no" 					property="specNo"/>
+			<result column="spec_content" 				property="specContent"/>
+			<result column="register_date" 				property="regDate"/>
+			<result column="revision_date" 				property="revDate"/>
+			<result column="use_status" 				property="useStatus"/>
+		</collection>
+		
+		
+		
 	</resultMap>
 
-	<select id="getCustomerProductList" parameterType= "String" resultMap="customerProductResultMap">
+	
+	
+	<select id="getCustomerProductList" parameterType= "String" resultMap="CustomerProductResultMap">
 		SELECT 
 			pc.product_category_no,
 			sp.sell_products_no ,
@@ -102,7 +145,7 @@
 	
 
 	
-	<select id="getProductDetailByProd" parameterType="string" resultMap="customerProductResultMap">
+	<select id="getProductDetailByProd" parameterType="string" resultMap="CustomerProductResultMap">
 		SELECT
 			sp.sell_products_no,
 			p.products_nm,
@@ -129,6 +172,53 @@
 		order by
 			ec.ent_ceo_no , sp.period desc;
 	</select>
+	
+	
+	
+	
+	
+	
+	
+	<select id="getProductSpecList" parameterType="string" resultMap="CustomerProductResultMap">
+		select
+			ps.spec_nm,
+			msc.spec_content
+		from
+			products p inner join model m
+			on p.model_no = m.model_no
+			inner join model_spec_content msc
+			on msc.model_no = m.model_no
+			inner join products_spec ps
+			on ps.spec_no = msc.spec_no
+		where
+			p.products_no = #{productsNum}
+	</select>
+	
+	
+	<select id="getLowerPriceAndMaxPeriod" resultMap="CustomerProductResultMap">
+		SELECT
+			min(sp.final_price) AS min_rental_price,
+			max(sp.period) AS max_period
+		FROM
+			sell_products sp inner JOIN products p 
+			ON sp.products_no = p.products_no
+			inner JOIN ent_ceo ec 
+			ON sp.ent_ceo_no = ec.ent_ceo_no
+			inner join quantity q 
+			ON p.products_no = q.products_no and sp.ent_ceo_no = q.ent_ceo_no
+		WHERE
+			p.products_no = #{productsNum}
+		order by
+			ec.ent_ceo_no , sp.period desc
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 
