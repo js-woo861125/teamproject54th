@@ -23,6 +23,21 @@ public class CustomerProductServiceImpl implements CustomerProductService {
 
     
 	
+	@Override
+	public CustomerProduct getLowerPriceAndMaxPeriod(String productsNum) {
+		
+		return productMapper.getLowerPriceAndMaxPeriod(productsNum);
+	}
+	
+	
+	@Override
+	public List<CustomerProduct> getProductSpecList(String productsNum) {
+		
+		List<CustomerProduct> productSpecList = productMapper.getProductSpecList(productsNum);
+		
+		return productSpecList;
+	}
+	
 	
 	// 상품 상세 화면
 	@Override
