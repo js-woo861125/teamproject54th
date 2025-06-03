@@ -39,10 +39,9 @@
                                                  th:src="@{/customer/product/image/{productsNum}(productsNum=${l.productsNum})}"
                                                  th:alt="${l.productsName}"
                                                  class="default-img object-cover w-full h-full rounded-md"/>
-                                            <div th:unless="${l.imageFilePath != null and not #strings.isEmpty(l.imageFilePath)}" class="text-gray-500 text-sm">
-                                                이미지 없음
-                                            </div>
+                                            
                                         </a>
+                                        <p th:unless="${l.imageFilePath != null and not #strings.isEmpty(l.imageFilePath)}">이미지 없음</p>
                                     </div>
                                     <div class="product-badges product-badges-position product-badges-mrg">
                                         <span class="hot">Hot</span>
