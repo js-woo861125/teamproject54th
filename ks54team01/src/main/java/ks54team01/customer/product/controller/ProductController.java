@@ -41,6 +41,7 @@ public class ProductController {
     private String uploadDir;
 	
 	
+	
 	@GetMapping("/productDetailByProd")
 	public String getProductDetailByProd(@RequestParam(value="productsNum") String productsNum,
 										@ModelAttribute("addResult") String addResult, 
@@ -49,18 +50,27 @@ public class ProductController {
 		// 서비스 계층을 통해 상품 상세 정보를 productsNum으로 조회 (List<CustomerProduct> 반환)
 		List<CustomerProduct> productDetailByProd = customerProductService.getProductDetailByProd(productsNum);
 		
+		String prodNm = productDetailByProd.get(0).getProductsName();
+		
+		CustomerProduct checkPrice = customerProductService.getLowerPriceAndMaxPeriod(productsNum);
+		String lowerPrice = checkPrice.getMinRentalPrice();
+		String maxPeriod = checkPrice.getMaxPeriod();
 		
 		// 로그에 조회된 상품 상세 정보 출력
 		log.info("productDetailByProd:{}", productDetailByProd);
 		
+		List<CustomerProduct> productSpec = customerProductService.getProductSpecList(productsNum);
+		
 		// 모델에 상품 상세 정보 리스트 추가
 		model.addAttribute("productDetailByProd", productDetailByProd);
-		
-		
+		model.addAttribute("prodNm", prodNm);
+		model.addAttribute("lowerPrice", lowerPrice);
+		model.addAttribute("maxPeriod", maxPeriod);
+		model.addAttribute("productSpec" ,productSpec);
 		model.addAttribute("addResult", addResult);
 		
 		
-		return "customer/product/productDetailView";
+		return "customer/product/prodDetailView";
 	}
 	
 	

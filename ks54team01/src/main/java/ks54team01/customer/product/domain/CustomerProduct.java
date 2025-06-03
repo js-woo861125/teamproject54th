@@ -19,6 +19,7 @@ import lombok.Data;
 		private String revisionDate;
 		private String lumpPrice;
 		private String minRentalPrice;
+		private String maxPeriod;
 		
 		private String imageFilePath;
 	
@@ -33,5 +34,8 @@ import lombok.Data;
 		private ProductCate productCate;
 		private List<EntCeo> entCeo;
 		
+		private CustomerModel customerModel;
+		private CustomerModelSpecContent customerModelSpecContent;
+		private CustomerProductSpec customerProductSpec;
 
 	}
