@@ -80,6 +80,15 @@
 		<result column="products_status" property="productsStatus" />		
   	</resultMap>
   	
+  	<delete id="removeAssigneeBoardByDeadLine">
+		/* 마감일 지난 게시글 삭제 */
+		DELETE
+		FROM
+			assignee_board
+		WHERE
+			board_valid_date &lt; NOW()
+	</delete>
+  	
   	<delete id="removeMyAssigneeBoard" parameterType="string">
 		/* 양수 게시글 삭제하기 */
 		DELETE
@@ -167,7 +176,7 @@
 			ab.quantity, 
 			ab.assignee_content, 
 			ab.board_valid_date,
-			ab.register_date,
+			DATE(ab.register_date) AS register_date,
 			ab.revision_date
 		FROM
 			customer c RIGHT JOIN assignee_board ab 
@@ -242,7 +251,7 @@
 			ab.quantity, 
 			ab.assignee_content, 
 			ab.board_valid_date,
-			ab.register_date,
+			DATE(ab.register_date) AS register_date,
 			ab.revision_date
 		FROM
 			customer c RIGHT JOIN assignee_board ab 

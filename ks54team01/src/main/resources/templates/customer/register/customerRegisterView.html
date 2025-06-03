@@ -35,7 +35,7 @@
                                         <form id="customerRegisterForm" th:action="@{/customer/register/customerRegister}" method="post">
                                         	<!-- 이름 -->                                         
                                             <div class="form-group">
-                                                <input type="text" id="custName" name="custName" placeholder="이름" value="홍01" required />                                              
+                                                <input type="text" id="custName" name="custName" placeholder="이름" value="김길동" required />                                              
                                             </div>
                                             <!-- 생년월일 -->
                                             <div class="form-group">
@@ -47,9 +47,9 @@
 											<div class="form-group">
 												<input type="hidden" id="custPhone" name="custPhone"/>
 		                                            <div class="form-group d-flex">
-													   	<input type="text" class="w-10 form-control fs-6" id="phoneFixed" name="phoneFixed" placeholder="010" value="010" readonly />
-													    <input type="text" class="mr-10 ml-10" id="phone1" name="phone1" placeholder="1234" value="0001" required />
-													    <input type="text" placeholder="5678" id="phone2" name="phone2" value="0001" required />
+													   	<input type="text" class="w-10 form-control fs-6" id="custPhone1" name="custPhone1" placeholder="010" value="010" readonly />
+													    <input type="text" class="mr-10 ml-10" id="custPhone2" name="custPhone2" placeholder="중간연락처" value="0001" required />
+													    <input type="text" id="custPhone3" name="custPhone3" placeholder="마지막연락처" value="0001" required />
 													</div>
 											</div>
 											<!-- 이메일 본인인증 --> 
@@ -84,7 +84,7 @@
 				                        		</div>
 				                        		<div class="col-6">
 						                            <div class="mb-4">
-						                                <input type="text" id="custDaddr" name="custDaddr" placeholder="상세주소를 입력하세요" class="form-control fs-6" disabled/>
+						                                <input type="text" id="custDaddr" name="custDaddr" placeholder="상세주소" class="form-control fs-6" disabled/>
 						                            </div>
 				                        		</div>
 				                        	</div>
@@ -105,9 +105,9 @@
 												<div class="form-group">
 												<input type="hidden" id="corpBrno" name="corpBrno"/>
 		                                            <div class="form-group d-flex">
-													   	<input type="text" id="corpBrno1"  name="corpBrno1" placeholder="사업자번호" />
-													    <input type="text" class="ml-10 mr-10" id="corpBrno2" name="corpBrno2" />
-													    <input type="text" id="corpBrno3" name="corpBrno3" />
+													   	<input type="text" id="corpBrno1"  name="corpBrno1" placeholder="사업자번호" maxlength="3" />
+													    <input type="text" class="ml-10 mr-10" id="corpBrno2" name="corpBrno2" maxlength="2" />
+													    <input type="text" id="corpBrno3" name="corpBrno3" maxlength="5" />
 													</div>
 												</div>
 											    <div class="form-group">
@@ -131,8 +131,8 @@
       <th:block layout:fragment="jsScript">
 		<script>
 			/**
-			* 주소입력
-			*/
+			 * 주소입력
+			 */
 			$('#daumPostBtn').click(function(e){
 				new daum.Postcode({
 		            oncomplete: function(data) {
@@ -181,16 +181,77 @@
 			});
 			
 			/**
-			* 전화번호 조합
-			*/
+			 * 상세주소 유효성 검증
+			 */
+			function validateDetailAddress() {
+				const detailAddress = $('#custDaddr').val().trim();
+
+				if (detailAddress.length < 2 || detailAddress.length > 50) {
+					    alert("상세주소는 2자 이상 50자 이하로 입력해주세요.");
+					    $('#custDaddr').focus();
+					    return false;
+					}
+
+				const regex = /^[가-힣a-zA-Z0-9\s\-\,\(\)\.]+$/;
+				if (!regex.test(detailAddress)) {
+				    alert("상세주소는 한글, 영문, 숫자, 일부 특수문자(,-().)만 입력 가능합니다.");
+				    $('#custDaddr').focus();
+				    return false;
+				}
+					
+			     return true;
+			 }
+			
+			/**
+			 * 전화번호 유효성 검증
+			 */
+			function validatePhoneNumber() {
+			    const phone2 = $('#custPhone2').val().trim();
+			    const phone3 = $('#custPhone3').val().trim();
+
+			    const digitOnly = /^[0-9]+$/;
+
+			    if (!digitOnly.test(phone2) || phone2.length < 3 || phone2.length > 4) {
+			        alert("중간연락처는 3~4자리 숫자여야 합니다.");
+			        $('#custPhone2').focus();
+			        return false;
+			    }
+
+			    if (!digitOnly.test(phone3) || phone3.length !== 4) {
+			        alert("마지막연락처는 4자리 숫자여야합니다.");
+			        $('#custPhone3').focus();
+			        return false;
+			    }
+
+			    return true;
+			}
+			
+			/**
+			 * 전화번호 조합
+			 */
 			function setPhoneValue() {
-			    const phone = `${$('#phoneFixed').val()}-${$('#phone1').val()}-${$('#phone2').val()}`;
+			    const phone = `${$('#custPhone1').val()}-${$('#custPhone2').val()}-${$('#custPhone3').val()}`;
 			    $('#custPhone').val(phone);
 			}
 			
 			/**
-			* email 조합
-			*/
+		     * 이름 유효성 검증
+		     */
+			function validateName() {
+			    const name = $('#custName').val().trim();
+			    const nameRegex = /^[가-힣]{2,10}$/;
+
+			    if (!nameRegex.test(name)) {
+			        alert("이름은 한글 2~10자로 입력해주세요. (영문, 숫자, 특수문자 불가)");
+			        $('#custName').focus();
+			        return false;
+			    }
+			    return true;
+			}
+			
+			/**
+			 * email 조합
+			 */
 			function getFullEmail() {
 				const emailFirst = $('#emailFirst').val().trim();
 			    const emailLast = $('#emailLast').val().trim();
@@ -199,8 +260,8 @@
 			}
 		   
 			/**
-		    * email 유효성검증 및 인증코드 전송
-		    */
+		     * email 유효성검증 및 인증코드 전송
+		     */
 		    function sendVerificationCode() {
 		    	const custEmail  = getFullEmail();
 
@@ -242,8 +303,8 @@
 	
 		        
 		   	/**
-		   	* email 인증코드 확인
-		   	*/
+		   	 * email 인증코드 확인
+		   	 */
 		   	let isEmailVerified = false;
 		   	
 		   	function verifyCodeSubmit() {
@@ -278,8 +339,8 @@
 	    	}
 		    
 		    /**
-			* email 인증여부 검증
-			*/	
+			 * email 인증여부 검증
+			 */	
 		    function validateEmailVerification() {
 		    	 if (!isEmailVerified) {
 				        if(!isEmailVerified) {
@@ -291,8 +352,8 @@
 		    }
      		
 		    /**
-			* 기업회원 추가정보 입력란 생성
-			*/
+			 * 기업회원 추가정보 입력란 생성
+			 */
 			document.querySelectorAll('input[name="memberType"]').forEach(function (radio) {
 				    radio.addEventListener('change', function () {
 				        const businessBlock = document.getElementById('businessInfo');
@@ -305,8 +366,8 @@
 				});
 		
 			/**
-			* 사업자등록번호 조합 및 형식 검증
-			*/
+			 * 사업자등록번호 조합 및 형식 검증
+			 */
 		    function validateBrno() {
 		    	const isCorpMember = $('input[name="memberType"]:checked').val() === '기업고객';
 		        const brno = `${$('#corpBrno1').val()}-${$('#corpBrno2').val()}-${$('#corpBrno3').val()}`;
@@ -322,12 +383,25 @@
 		    }
 			 
 		    /**
-			* 기업회원 상호명 유효성검증
-			*/
+			 * 기업회원 상호명 유효성검증
+			 */
 		    function validateCorpName() {
 		        const corpName = $('#corpName').val().trim();
 		        if (!corpName) {
 		            alert("상호명을 입력해주세요.");
+		            $('#corpName').focus();
+		            return false;
+		        }
+		        
+		        if (corpName.length < 2 || corpName.length > 50) {
+		            alert("상호명은 2자 이상 50자 이하로 입력해주세요.");
+		            $('#corpName').focus();
+		            return false;
+		        }
+		        
+		        const corpNameRegex = /^[가-힣a-zA-Z0-9\s\-()]+$/;
+		        if (!corpNameRegex.test(corpName)) {
+		            alert("상호명에 특수문자는 사용할 수 없습니다.");
 		            $('#corpName').focus();
 		            return false;
 		        }
@@ -336,10 +410,10 @@
 		    
 		    
 		    /**
-			* input 유효성검증
-			*/
+			 * input 유효성검증
+			 */
 			function validateRequiredFields() {
-			    const requiredFields = ['custName', 'custBrdt','phone1', 'phone2', 'emailFirst', 'emailLast', 'custAddr', 'custDaddr'];
+			    const requiredFields = ['custName', 'custBrdt','custPhone2', 'custPhone3', 'emailFirst', 'emailLast', 'custAddr', 'custDaddr'];
 			    for (let field of requiredFields) {
 			        const input = document.getElementById(field);
 			        if (!input.value.trim()) {
@@ -352,11 +426,14 @@
 			}
 			
 		    /**
-		    * 검증유형별 함수 실행
-		    */
+		     * 검증유형별 함수 실행
+		     */
 		    function validateForm() {
 		        if (!validateRequiredFields()) return false;
 		        if (!validateEmailVerification()) return false;
+		        if (!validateDetailAddress()) return false;
+		        if (!validatePhoneNumber()) return false;
+		        if (!validateName()) return false;
 
 		        // 기업회원
 		        const isCorpMember = $('input[name="memberType"]:checked').val() === '기업고객';
@@ -372,8 +449,8 @@
 				
 		       
 		    /**
-		    * 폼 제출 및 추가 데이터 조합
-		    */
+		     * 폼 제출 및 추가 데이터 조합
+		     */
 		    $('#customerRegisterBtn').click(function(e) {
 		        e.preventDefault();
 
@@ -383,7 +460,7 @@
 			            method: 'POST',
 			            data: $('#customerRegisterForm').serialize(),
 			            success: function(response) {
-			            	if (registerResult.status === 'success') {
+			            	if (response.status === 'success') {
 			            	    alert("회원가입이 완료되었습니다.");
 			            	    location.href = "/customer/login/memberLogin";
 			            	} else {

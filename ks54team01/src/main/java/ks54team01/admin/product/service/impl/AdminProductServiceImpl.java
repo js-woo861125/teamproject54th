@@ -43,7 +43,11 @@ public class AdminProductServiceImpl implements AdminProductService{
 	        return adminProductMapper.searchProductList(paramMap);
 	    }
 		
+		@Override
+		public boolean isDuplicateProduct(String modelNo) {
 		
+			 return adminProductMapper.isDuplicateProduct(modelNo) > 0;
+		}
 		
 		@Override
 		public void modifyProduct(AdminProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails, String deleteFileIdxs) {

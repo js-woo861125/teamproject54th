@@ -21,20 +21,20 @@
 		</association>
 		
 		<association property="adminDelivery"		 javaType="AdminDelivery">
-			<id 	column="delivery_location_no" 	property="delNo" />
-			<result column="cust_id" 				property="custId" />
-			<result column="delivery_nm" 			property="delNm" />
-			<result column="primary_location" 		property="primaryLocation" />
-			<result column="delivery_addr" 			property="delAddr" />
-			<result column="delivery_daddr" 		property="delDaddr" />
-			<result column="delivery_zip_no" 		property="delZipNo" />
-			<result column="recipient_phone" 		property="recipientPhone" />
-			<result column="delivery_request" 		property="delRequest" />
-			<result column="register_date" 			property="regDate" />
-			<result column="revision_date" 			property="revDate" />
-			    <result column="product_name" property="productName"/>
-    <result column="product_image" property="productImage"/>
-    <result column="model_name" property="modelName"/>
+			<id 	column="delivery_location_no" 	 property="delNo" />
+			<result column="cust_id" 				 property="custId" />
+			<result column="delivery_nm" 			 property="delNm" />
+			<result column="primary_location" 		 property="primaryLocation" />
+			<result column="delivery_addr" 			 property="delAddr" />
+			<result column="delivery_daddr" 		 property="delDaddr" />
+			<result column="delivery_zip_no" 		 property="delZipNo" />
+			<result column="recipient_phone" 		 property="recipientPhone" />
+			<result column="delivery_request" 		 property="delRequest" />
+			<result column="register_date" 			 property="regDate" />
+			<result column="revision_date" 			 property="revDate" />
+			<result column="product_name" 			 property="productName"/>
+   			<result column="product_image" 			 property="productImage"/>
+    		<result column="model_name" 			 property="modelName"/>
 		</association>
 		
 	</resultMap>

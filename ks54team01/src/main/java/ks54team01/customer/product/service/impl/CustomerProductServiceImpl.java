@@ -2,6 +2,7 @@ package ks54team01.customer.product.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,9 @@ public class CustomerProductServiceImpl implements CustomerProductService {
 
 	private final ProductMapper productMapper;
 	
+
+    
+	
 	
 	// 상품 상세 화면
 	@Override
@@ -29,8 +33,6 @@ public class CustomerProductServiceImpl implements CustomerProductService {
 		return productDetailByProd;
 	}
 	
-	
-
 	
 	//	상품 목록조회
 		@Override

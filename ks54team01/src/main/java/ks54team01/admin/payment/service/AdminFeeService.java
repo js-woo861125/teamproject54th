@@ -13,7 +13,7 @@ public interface AdminFeeService {
 	 void saveSettlement(SettlementConfirmRequest request);
 	 
 	 /**
-	     * 지급 처리 로직을 수행합니다.
+	     * 지급 처리 로직
 	     * fee 테이블의 provision_date를 현재 날짜로, payment_status를 '지급'으로 업데이트
 	     * monthly_fee 테이블의 pay_status를 '지급'으로, provision_date를 현재 날짜로 업데이트
 	     */

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.enterprise.product.mapper.EnterpriseProductQuantityMapper">
+    <insert id="insertEnterpriseProductQuantity" parameterType="ks54team01.enterprise.product.domain.EnterpriseProductQuantity">
+        <selectKey resultType="string" keyProperty="quantityNo" order="BEFORE">
+        SELECT CONCAT('No', IFNULL(MAX(CAST(SUBSTRING(quantity_no, 3) AS UNSIGNED)), 0) + 1) 
+        FROM quantity
+    </selectKey>
+        INSERT INTO quantity
+        (quantity_no, products_no, ent_ceo_no, ent_emp_id, quantity, register_date, revision_date)
+        VALUES
+        (#{quantityNo}, #{productsNo}, #{entCeoNo}, #{entEmpId}, #{quantity}, NOW(), NOW())
+    </insert>
+  
+
+</mapper>
+	
+
+
+
+
+
+
+
+
+

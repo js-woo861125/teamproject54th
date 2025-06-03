@@ -5525,7 +5525,7 @@ table .product-thumbnail img {
 }
 
 .shopping-summery table tbody tr img {
-  max-width: 120px;
+  max-width: 200px;
   border: 1px solid #ececec;
   border-radius: 15px;
 }
@@ -12453,3 +12453,10 @@ footer .hotline img {
   display: block !important;
   text-align: center;
   text-align-last: center;
+}
+
+.input-error {
+  border: 1px solid red;
+  border-radius: 6px;
+  padding: 8px;
+}

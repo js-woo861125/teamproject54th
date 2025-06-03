@@ -9,208 +9,80 @@
 
 <body>
 <th:block layout:fragment="customContents">
-   <main class="main">
-    <div class="page-header mt-30 mb-10">
-        <div class="container">
-            <div>
-                <div class="row align-items-center">
-                    <div class="col-xl-3">
-                        <h1 class="mb-15 mt-40"><span class="text-body" th:text="${title}"> </span></h1>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-30 mt-30">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <a class="shop-filter-toogle" href="#">
-                            <span class="fi-rs-filter mr-5"></span>
-                            스마트필터
-                            <i class="fi-rs-angle-small-down angle-down"></i>
-                            <i class="fi-rs-angle-small-up angle-up"></i>
-                        </a>
-                        <div class="shop-product-fillter-header">
-                            <div class="card d-flex align-items-start">
-                                <div class="d-flex align-items-lg-end justify-content-end mb-20">
-                                    
-                                  	<h4 class="mr-30" style="gap:20px">렌탈사</h4>
-                                  
-                                    
-                                    <ul class="d-flex justify-content-around ml-5" style="gap:20px">
-                                        <li class="hover-up font-lg mr-20 rounded-2">LG헬로렌탈</li>
-                                        <li class="hover-up font-lg mr-20 rounded-2">현대유버스</li>
-                                        <li class="hover-up font-lg mr-20 rounded-2">스마트렌탈</li>
-                                        <li class="hover-up font-lg mr-20 rounded-2">이니렌탈</li>
-                                        <li class="hover-up font-lg mr-20 rounded-2">렌고쿠</li>
-                                    </ul>
-                                    
-                                </div>
-
-                                <div class="d-flex align-items-lg-end justify-content-center mb-20">
-                                 
-                                        <h4 class="mr-30" style="gap:20px">브랜드</h4>
-                                    
-                                    
-                                    <ul class="d-flex justify-content-around ml-5" style="gap:20px">
-                                        <li class="hover-up font-lg mr-20 rounded-2">LG헬로렌탈</li>
-                                        <li class="hover-up font-lg mr-20 rounded-2">현대유버스</li>
-                                        <li class="hover-up font-lg mr-20 rounded-2">스마트렌탈</li>
-                                        <li class="hover-up font-lg mr-20 rounded-2">이니렌탈</li>
-                                        <li class="hover-up font-lg mr-20 rounded-2">렌고쿠</li>
-                                    </ul>         
-                                                       
-                                </div>
-
-                                <div class="d-flex align-items-lg-end justify-content-center mb-20">
-                                  
-                                        <h4 class="mr-30" style="gap:20px">렌탈료</h4>
-                                  
-                                    
-                                    <ul class="d-flex justify-content-around ml-5" style="gap:20px">
-                                        <li class="hover-up font-lg mr-20 rounded-2">LG헬로렌탈</li>
-                                        <li class="hover-up font-lg mr-20 rounded-2">현대유버스</li>
-                                        <li class="hover-up font-lg mr-20 rounded-2">스마트렌탈</li>
-                                        <li class="hover-up font-lg mr-20 rounded-2">이니렌탈</li>
-                                        <li class="hover-up font-lg mr-20 rounded-2">렌고쿠</li>
-                                    </ul>
-                                    
-                                </div>
-                                
-                                
-                                <div class="d-flex align-items-lg-end justify-content-center mb-20" style="gap:20px;">
-                                	<div>
-                                        <h4 class="mr-30" style="gap:20px">혜택</h4>     	
-                                	</div> 
-                                    <ul class="d-flex justify-content-around ml-5" style="gap:20px">
-                                        <li class="hover-up font-lg mr-20 rounded-2">LG헬로렌탈</li>
-                                        <li class="hover-up font-lg mr-20 rounded-2">현대유버스</li>
-                                        <li class="hover-up font-lg mr-20 rounded-2">스마트렌탈</li>
-                                        <li class="hover-up font-lg mr-20 rounded-2">이니렌탈</li>
-                                        <li class="hover-up font-lg mr-20 rounded-2">렌고쿠</li>
-                                    </ul>
-                                    
-                                </div>
-
-                                
+  <main class="main">
+        <div class="page-header mt-30 mb-10">
+            <div class="container">
+                <div>
+                    <div class="row align-items-center">
+                        <div class="col-xl-3">
+                            <h1 class="mb-15 mt-40"><span class="text-body" th:text="${title}"> </span></h1>
                         </div>
                     </div>
                 </div>
+                <div class="mb-30 mt-30">
+                    </div>
             </div>
         </div>
-    </div>
-    <div class="container mb-10">
-        <div class="row">
-            <div class="col-12">
-                <div class="shop-product-fillter">
-                    <div class="totall-product"></div>
-                    <div class="sort-by-product-area">
-                        <div class="sort-by-cover mr-10">
-                            <div class="sort-by-product-wrap">
-                                <div class="sort-by">
-                                    <span><i class="fi-rs-apps"></i>Show:</span>
-                                </div>
-                                <div class="sort-by-dropdown-wrap">
-                                    <span> 50 <i class="fi-rs-angle-small-down"></i></span>
-                                </div>
-                            </div>
-                            <div class="sort-by-dropdown">
-                                <ul>
-                                    <li><a class="active" href="#">50</a></li>
-                                    <li><a href="#">100</a></li>
-                                    <li><a href="#">150</a></li>
-                                    <li><a href="#">200</a></li>
-                                    <li><a href="#">All</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="sort-by-cover">
-                            <div class="sort-by-product-wrap">
-                                <div class="sort-by">
-                                    <span><i class="fi-rs-apps-sort"></i>Sort by:</span>
-                                </div>
-                                <div class="sort-by-dropdown-wrap">
-                                    <span> Featured <i class="fi-rs-angle-small-down"></i></span>
-                                </div>
-                            </div>
-                            <div class="sort-by-dropdown">
-                                <ul>
-                                    <li><a class="active" href="#">Featured</a></li>
-                                    <li><a href="#">Price: Low to High</a></li>
-                                    <li><a href="#">Price: High to Low</a></li>
-                                    <li><a href="#">Release Date</a></li>
-                                    <li><a href="#">Avg. Rating</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row product-grid">
-                    <div
-                        th:if="${!#lists.isEmpty(productList)}"
-                        th:each="l : ${productList}"
-                        class="col-lg-1-5 col-md-4 col-12 col-sm-6">
-                        <!-- 	th:if="${!#lists.isEmpty(CustomerProduct)}"
-                               th:each="l : ${CustomerProduct}"> -->
+        <div class="container mb-10">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row product-grid">
+                        <div th:if="${!#lists.isEmpty(productList)}"
+                             th:each="l : ${productList}"
+                             class="col-lg-1-5 col-md-4 col-12 col-sm-6">
 
-                        <div class="product-cart-wrap mb-30">
-                            <div class="product-img-action-wrap">
-                                <div class="product-img product-img-zoom">
-                                    <a th:href="@{/customer/product/productDetailByProd(productsNum=${l.productsNum})}">
-                                       
-                                        <img class="default-img"
-                                            th:src="@{/user/assets/imgs/shop/noteBook1.avif}" alt="" />
-                                        <img class="hover-img"
-                                            th:src="@{/user/assets/imgs/shop/noteBook2.avif}"  alt="" />    
-                                    </a>
-                                    
+                            <div th:if="${l != null}" class="product-cart-wrap mb-30">
+                                <div class="product-img-action-wrap">
+                                    <div class="product-img product-img-zoom">
+                                        <a th:href="@{/customer/product/productDetailByProd(productsNum=${l.productsNum})}">
+                                            <img th:if="${l.imageFilePath != null and not #strings.isEmpty(l.imageFilePath)}"
+                                                 th:src="@{/customer/product/image/{productsNum}(productsNum=${l.productsNum})}"
+                                                 th:alt="${l.productsName}"
+                                                 class="default-img object-cover w-full h-full rounded-md"/>
+                                            <div th:unless="${l.imageFilePath != null and not #strings.isEmpty(l.imageFilePath)}" class="text-gray-500 text-sm">
+                                                이미지 없음
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="product-badges product-badges-position product-badges-mrg">
+                                        <span class="hot">Hot</span>
+                                    </div>
                                 </div>
-                                <div class="product-action-1">
-                                    <a aria-label="Add To Wishlist" class="action-btn" href="shop-wishlist.html">
-                                    	<i class="fi-rs-heart"></i>
-                                    </a>
-                                    <a aria-label="Compare" class="action-btn" href="shop-compare.html">
-                                    	<i class="fi-rs-shuffle"></i>
-                                    </a>
-                                    <a aria-label="Quick view" class="action-btn" data-bs-toggle="modal" data-bs-target="#quickViewModal">
-                                    <i class="fi-rs-eye"></i>
-                                    </a>
-                                </div>
-                                <div class="product-badges product-badges-position product-badges-mrg">
-                                    <span class="hot">Hot</span>
-                                </div>
-                            </div>
 
-                            <div class="product-content-wrap">
-                                <div class="product-category">
-                                    <div th:text="${title}">노트북(소분류)</div>
-                                </div>
-                                <h2>
-                                    <a th:href="@{/customer/product/productDetailByProd(productsNum=${l.productsNum})}"
-                                        th:text="${l.productsName}">
-                                    </a>
-                                </h2>
+                                <div class="product-content-wrap">
+                                    <div class="product-category">
+                                        <div th:text="${l.productCate?.smallCategory}">카테고리</div>
+                                    </div>
+                                    <h2>
+                                        <a th:href="@{/customer/product/productDetailByProd(productsNum=${l.productsNum})}"
+                                           th:text="${l.productsName}">
+                                        </a>
+                                    </h2>
 
-                                <!--  <div>
-                                        <a th:href="@{#}" th:text="${l.entCeo.entNm}">입점업체명</a>
-                                    </div> -->
-                                <div class="product-card-bottom">
-                                    <div class="product-price">
-                                        <span class="fs-6">구매최저가 : </span>
-                                        <span class="fs-6" th:text="|₩ ${#numbers.formatInteger(l.lumpPrice,3,'COMMA')}|">가격
-                                        </span>
-                                        <br />
-                                        <span class="fs-6 text-danger">렌탈최저가 : </span>
-                                        <span class="fs-6 text-danger"
-                                            th:text="|₩ ${#numbers.formatInteger(l.minRentalPrice,3,'COMMA')}|">렌탈가</span>
+                                    <div class="product-card-bottom">
+                                        <div class="product-price">
+                                            <span class="fs-6">구매최저가 : </span>
+                                            <span class="fs-6" th:text="|₩ ${#numbers.formatInteger(l.lumpPrice,3,'COMMA')}|">가격</span>
+                                            <br />
+                                            <span class="fs-6 text-danger">렌탈최저가 : </span>
+                                            <span class="fs-6 text-danger"
+                                                  th:text="|₩ ${#numbers.formatInteger(l.minRentalPrice,3,'COMMA')}|">렌탈가</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div th:unless="${l != null}" class="text-center text-red-500 py-4">
+                                <p>오류: 유효하지 않은 상품 데이터가 감지되었습니다.</p>
+                            </div>
+                        </div>
+                        <div th:if="${#lists.isEmpty(productList)}" class="col-12 text-center text-gray-600 py-10">
+                            <p>해당 카테고리의 상품이 없습니다.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
    
    
    

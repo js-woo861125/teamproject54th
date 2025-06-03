@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.enterprise.product.mapper.EnterpriseProductBenefitMapper">
+   
+    <insert id="insertEnterpriseProductBenefit" parameterType="ks54team01.enterprise.product.domain.EnterpriseProductBenefit">
+    	<selectKey resultType="string" keyProperty="benefitNo" order="BEFORE">
+        SELECT CONCAT('No', IFNULL(MAX(CAST(SUBSTRING(products_benefit_no, 3) AS UNSIGNED)), 0) + 1) 
+        FROM products_benefit
+    </selectKey>
+    INSERT INTO products_benefit (
+        products_benefit_no, sell_products_no, ent_ceo_no, ent_emp_id, benefit_no, benefit_detail, register_date, revision_date, use_status
+    ) VALUES (
+        #{benefitNo}, #{sellProductsNo}, #{entCeoNo}, #{entEmpId}, #{benefit}, #{benefitDetail}, NOW(), NOW(), #{useStatus}
+    )
+	</insert>
+
+</mapper>
+
+
+
+
+
+
+
+
+

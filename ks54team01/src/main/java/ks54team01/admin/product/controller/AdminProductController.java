@@ -128,8 +128,16 @@ public class AdminProductController {
 	    @RequestParam("productName") String productName,
 	    @RequestParam("mainImage") MultipartFile[] mainImage,
 	    @RequestParam("thumbnails") MultipartFile[] thumbnails,
-	    @RequestParam("productsDetail") String productsDetail
+	    @RequestParam("productsDetail") String productsDetail,
+	    Model model
 	) {
+		
+		if (adminProductService.isDuplicateProduct(modelNo)) {
+	        model.addAttribute("error", "이미 등록된 모델입니다.");
+	     
+	        return "admin/product/addProductView";
+	    }
+		
 	    AdminAddProduct addProduct = new AdminAddProduct();
 	    addProduct.setCategoryNo(categoryNo);
 	    addProduct.setItemNo(itemNo);
@@ -165,25 +173,25 @@ public class AdminProductController {
 		return response;
 	}
 
-	
+	// 카테고리를 불러오는 메소드
 	@GetMapping("/categoryList")
 	@ResponseBody
 	public List<ProductInfoCategory> loadCategoryList() {
 	    return adminProductService.loadCategoryList();
 	}
-
+	// 카테고리 > 해당 품목 가져오는 메소드
 	@GetMapping("/itemList")
 	@ResponseBody
 	public List<ProductInfoItem> loadItemList(@RequestParam String categoryNo) {
 	    return adminProductService.loadItemList(categoryNo);
 	}
-
+	
 	@GetMapping("/brandList")
 	@ResponseBody
 	public List<ProductInfoBrand> loadBrandList(@RequestParam String categoryNo, @RequestParam String itemNo) {
 	    return adminProductService.loadBrandList(categoryNo, itemNo);
 	}
-
+	
 	@GetMapping("/modelList")
 	@ResponseBody
 	public List<ProductInfoModel> loadModelList(@RequestParam String categoryNo,
@@ -193,6 +201,7 @@ public class AdminProductController {
 	    return adminProductService.loadModelList(categoryNo, itemNo, brandNo);
 	}
 	
+	// 상품 세부스펙 불러오기
 	@GetMapping("/specContent")
 	@ResponseBody
 	public List<AdminProductSpecContent> loadSpecContent(@RequestParam String modelNo) {
@@ -214,5 +223,6 @@ public class AdminProductController {
 	    adminProductService.unsetSaleStoppage(productNo);
 	    return "ok";
 	}
+	
 	
 }

@@ -8,7 +8,7 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
-	
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</th:block>
 	
 	<th:block layout:fragment="jsScript">
@@ -90,30 +90,123 @@
 				});
 		   	}); */
 		   	
-		   	$(document).ready(function () {
-		   	    const $checkbox = $('#differentaddress');
-		   	    const $collapse = $('#collapseAddress');
+		
+		   	$('#addTransferBoardForm').find('input, select, textarea').on('blur', function() {
+	            const $el = $(this);
+	            const id = $el.attr('id');
 
-		   	    // 체크박스 클릭 이벤트
-		   	    $checkbox.on('change', function () {
-		   	        if ($checkbox.is(':checked')) {
-		   	            // 1. 영역 펼치기
-		   	            $collapse.collapse('show');
+	            // 제외할 필드 id 목록
+	            const excludedIds = ['transferContentInput'];
 
-		   	            // 2. 다시 접히지 않도록 막기
-		   	            $collapse.on('hide.bs.collapse', function (e) {
-		   	                e.preventDefault();
-		   	            });
+	            if (excludedIds.includes(id)) {
+	                // 검사 안 하고 바로 리턴
+	                return;
+	            }
 
-		   	            // 3. 다시 체크 해제 못하게 (값은 유지하되 클릭 방지)
-		   	            $checkbox.prop('checked', true); // 혹시 모르니 강제 체크 상태 유지
-		   	            $checkbox.on('click.prevent', function (e) {
-		   	                e.preventDefault(); // 클릭 무효화
-		   	                return false;
-		   	            });
-		   	        }
-		   	    });
+	            const value = $el.val()?.trim();
+	            let $target = $el;
+
+	            if (value) {
+	                $target.css('border', '1px solid green');
+	            } else {
+	                $target.css('border', '1px solid red');
+	            }
+	            $target.css('border-radius', '6px');
+	        });
+		   	
+
+		 // 등록 버튼 클릭 시 유효성 검사
+	   	 $('#addTransferBoardBtn').click(e => {
+  	     	e.preventDefault();
+   			e.stopPropagation();
+
+		   	console.log($('#mainImage'));
+		    console.log($('#mainImage')[0]);
+		   	    
+		   	    const grantsVal = $('#individualGrantsInput').val()?.trim();
+		   	    const titleVal = $('#transferTitleInput').val()?.trim();
+		   	    const fileInput = document.getElementById('mainImage');
+		   	    const fileList = fileInput?.files;
+
+		   	    console.log('fileList:', fileList); // FileList 확인
+		   	    console.log('length:', fileList?.length);
+		   	 	
+		   	    const numberRegex = /^[0-9]+$/;
+
+		   	    // 렌탈 지원금 검증
+		   	    if (!grantsVal) {
+		   	        $('#individualGrantsInput').focus().attr('style', 'border: 1px solid red; border-radius: 6px;');
+		   	        Swal.fire({
+		   	            title: '렌탈 지원금을 입력해주세요.',
+		   	            confirmButtonText: "확인"
+		   	        });
+		   	        return;
+		   	    } else if (!numberRegex.test(grantsVal)) {
+		   	        $('#individualGrantsInput').val('').focus().attr('style', 'border: 1px solid red; border-radius: 6px;');
+		   	        Swal.fire({
+		   	            title: '렌탈 지원금은 숫자만 입력해주세요.',
+		   	            confirmButtonText: "확인"
+		   	        });
+		   	        return;
+		   	    } else $('#individualGrantsInput').attr('style', 'border: 1px solid green; border-radius: 6px;');
+
+		   	    // 게시글 제목 검증
+		   	    if (!titleVal) {
+		   	        $('#transferTitleInput').focus().attr('style', 'border: 1px solid red; border-radius: 6px;');
+		   	        Swal.fire({
+		   	            title: '게시글 제목을 입력해주세요.',
+		   	         	confirmButtonText: "확인",
+		                didOpen: () => {
+		                    const confirmBtn = Swal.getConfirmButton();
+		                    confirmBtn.focus();   
+		                }
+		            })
+		   	        return;
+		   	    }
+		   	    else $('#transferTitleInput').attr('style', 'border: 1px solid green; border-radius: 6px;');
+
+		   	    // 메인 이미지 검증
+	   	        if (!fileList || fileList.length === 0) {
+        Swal.fire({
+            title: '메인 이미지를 등록해주세요.',
+            confirmButtonText: "확인",
+            didOpen: () => {
+                const confirmBtn = Swal.getConfirmButton();
+                confirmBtn.focus();   
+            }
+        })
+        return;
+    }
+
+		   	    // 모든 유효성 통과 시 제출
+		   	    $('#addTransferBoardForm').submit();
 		   	});
+
+		   	// 렌탈 지원금 blur 시
+		   	$('#individualGrantsInput').on("blur", function () {
+		   		e.stopPropagation();
+		   	    const val = $(this).val()?.trim();
+		   	    const checkNumber = /^[0-9]+$/;
+
+		   	    if (!val) {
+		   	        $(this).focus();
+		   	    } else if (!checkNumber.test(val)) {
+		   	        $(this).val('').focus();
+		   	    }
+		   	});
+
+		   	// 게시글 제목 blur 시
+		   	$('#transferTitleInput').on("blur", function () {
+		   		e.stopPropagation();
+		   	    const val = $(this).val()?.trim();
+		   	    if (!val) {
+		   	        $(this).focus();
+		   	    }
+		   	});
+
+
+
+
 		</script>
 	</th:block>
 	
@@ -139,7 +232,7 @@
                             	<div class="card-body">
 									<div>
 										<input type="file" id="mainImage" name="mainImage"
-											   class="form-control">
+											   class="form-control" required>
 									</div>
 									<div class="mt-3" id="mainImagePreview"></div>
 								</div>
@@ -213,12 +306,12 @@
 	                                <div id="collapseAddress" class="different_address collapse in">
 	                                    <div class="row">
 	                                        <div class="form-group col-lg-5 d-flex">
-	                                            <input id="individualGrantsInput" type="text" name="individualGrants" placeholder="지원금을 입력해주세요.">
+	                                            <input id="individualGrantsInput" type="text" name="individualGrants" placeholder="지원금을 입력해주세요." required>
 	                                        </div>
 	                                    </div>
 	                                    <div class="row shipping_calculator">
 	                                        <div class="form-group col-lg-6">
-	                                            <input id="transferTitleInput" type="text" name="transferTitle" placeholder="게시글 제목을 입력해주세요.">
+	                                            <input id="transferTitleInput" type="text" name="transferTitle" placeholder="게시글 제목을 입력해주세요." required>
 	                                        </div>
 	                                    </div>
 	                                     <div class="form-group mb-30">

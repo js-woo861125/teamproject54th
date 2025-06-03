@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 import ks54team01.customer.delivery.domain.CustomerDeliveryList;
 import ks54team01.customer.delivery.service.CustomerDeliveryService;
-import ks54team01.customer.member.domain.CustomerMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,7 +38,13 @@ public class CustomerDeliveryController {
 	
 	
 	@PostMapping("/modifyDeliveryList")
-	public String modifyDeliveryList(CustomerDeliveryList modifyDeliveryList) {
+	public String modifyDeliveryList(CustomerDeliveryList modifyDeliveryList, HttpSession session) {
+		
+		String custId = (String) session.getAttribute("loginId");
+		
+		modifyDeliveryList.setCustId(custId);
+		
+		
 		
 		customerDeliveryService.modifyDeliveryList(modifyDeliveryList);
 		
@@ -56,7 +62,6 @@ public class CustomerDeliveryController {
 		customerDeliveryList.setCustId(custId);
 		
 		customerDeliveryService.addDeliveryList(customerDeliveryList);
-		
 		
 		return "redirect:/customer/delivery/deliveryList";
 	}

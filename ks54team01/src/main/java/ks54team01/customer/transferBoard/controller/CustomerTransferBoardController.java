@@ -89,18 +89,19 @@ public class CustomerTransferBoardController {
 	}
 	
 	@PostMapping("/modifyTransferBoard")
-	public String modifyTransferBoard(CustomerTransferBoard customerTrnasferBoard
+	public String modifyTransferBoard(CustomerTransferBoard customerTransferBoard
 									, @RequestPart(name="mainImage") MultipartFile[] mainImage
 									, @RequestPart(name="extraImage") MultipartFile[] extraImage
-									, @RequestParam(name="deleteFile", required = false) List<String> deleteFile) {
+									, @RequestParam(name="deleteFile", required = false) List<String> deleteFile
+									, @RequestParam(name="deleteMainImage", required = false) List<String> deleteMainImage) {
 		
-		log.info("customerTrnasferBoard:{}", customerTrnasferBoard);
+		log.info("customerTrnasferBoard:{}", customerTransferBoard);
 		
 		log.info("mainImage:{}", mainImage[0].isEmpty());
 		log.info("extraImage:{}", extraImage[0].isEmpty());
 		log.info("deleteFile:{}", deleteFile != null);
-		//customerTransferBoardService.modifyTransferBoard(customerTrnasferBoard, mainImage, extraImage);
-		
+		log.info("deleteMainImage:{}", deleteMainImage != null);
+		customerTransferBoardService.modifyTransferBoard(customerTransferBoard, mainImage, extraImage, deleteFile, deleteMainImage);
 		return "redirect:/customer/transferBoard/myTransferBoardList";
 	}
 	
@@ -111,11 +112,14 @@ public class CustomerTransferBoardController {
 		log.info("게시글 수정 코드: {}", transferBoardNum);
 		
 		CustomerTransferBoard customerTransferBoardInfo = customerTransferBoardService.getTransferBoardInfoByCode(transferBoardNum);
+		List<FileMetaData> mainImage = fileService.getFileList(transferBoardNum, "mainImage");
 		List<FileMetaData> fileList = fileService.getFileList(transferBoardNum, "extraImage");
 		
 		model.addAttribute("title", "양도 게시글 수정");
 		model.addAttribute("customerTransferBoardInfo", customerTransferBoardInfo);
+		model.addAttribute("mainImage", mainImage);
 		model.addAttribute("fileList", fileList);
+		
 		
 		return "customer/transferBoard/modifyTransferBoardView";
 	}

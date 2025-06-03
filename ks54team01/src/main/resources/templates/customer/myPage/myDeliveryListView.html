@@ -17,7 +17,7 @@
 	
 	
 	<th:block layout:fragment="jsScript">
-		<script type="text/javascript">
+		<script type="text/javascript" th:inline="javascript">
 
 				
 			document.getElementById('addDeliveryBtn').addEventListener('click', function (e) {
@@ -41,6 +41,24 @@
 				      return;
 				    }
 				  }
+				  
+				  
+				  const recipientPhone = document.getElementById('recipientPhone').value.replace(/[^0-9]/g, '');
+				  
+				  if(recipientPhone.length != 11){
+					  e.preventDefault();
+					  Swal.fire('연락처 오류', '연락처를 다시 입력해주세요.', 'warning');
+					  document.getElementById('recipientPhone').focus();
+					  return ;
+				  }
+				  
+				  if (!recipientPhone.startsWith("010")) {
+					    e.preventDefault();
+					    Swal.fire('연락처 오류', '연락처는 010으로 시작해야 합니다.', 'warning');
+					    document.getElementById('recipientPhone').focus();
+					    return;
+					}
+				  
 				  
 				  const deliveryCount = parseInt(document.getElementById('deliveryCount').value || '0');
 	
@@ -253,6 +271,8 @@
 		        }).open();
 			});
 			
+						
+			
 		</script>
 	</th:block>
 	
@@ -310,7 +330,7 @@
 		  		</div>
 			</div>
 		</div>
-		<div class="tab-content account dashboard-content pl-50">
+		<div class="tab-content account dashboard-content">
 			<div class="tab-pane fade active show" id="orders" role="tabpanel" aria-labelledby="orders-tab">
 			    <div class="card">
 			        <div class="card-header d-flex">
@@ -344,7 +364,7 @@
 			                            </td>
 			                            <td th:text="${l.delZipNo}">51515</td>
 			                            <td th:text="${l.recipientPhone}">010-1234-4567</td>
-			                            <td  style="width:150px"><div th:text="${l.delRequest}"></div></td>
+			                            <td  style="width:150px"><div th:text="${l.delRequest}" style="word-break: break-word; white-space: normal;"></div></td>
 			                            <td>
 			                            	<button type="button" class="btn btn-xs modifyDeliveryBtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" 
 			                            			th:attr="data-del-no=${l.delNo}, data-del-nm=${l.delNm},

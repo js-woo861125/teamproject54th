@@ -25,8 +25,36 @@
 		<result column="logout_date" 	property="logoutDate"/>
 	</resultMap>
 
+	<select id="getSearchLoginHistoryCount" resultType="int" parameterType="map">
+		/* 회원 로그인이력 검색 총 row 갯수 조회 */
+		SELECT
+			COUNT(*)
+		FROM
+			member_login_log_view
+		 WHERE 
+	    	1=1
+	    <if test="searchValue != null and searchValue != ''">
+	      <choose>
+	        <when test="searchKey == 'memberId'">
+	          AND memberId LIKE CONCAT('%', #{searchValue}, '%')
+	        </when>
+	        <when test="searchKey == 'memberName'">
+	          AND memberName LIKE CONCAT('%', #{searchValue}, '%')
+	        </when>
+	      </choose>
+	    </if>
+	    <if test="memberType != null and memberType != ''">
+	      AND memberType = #{memberType}
+	    </if>
+	    <if test="withdrawStatus != null and withdrawStatus != ''">
+	      AND withdrawStatus = #{withdrawStatus}
+	    </if>
+	    <if test="dormantStatus != null and dormantStatus != ''">
+	      AND dormantStatus = #{dormantStatus}
+	    </if>
+	</select>
 
-	 <select id="getSearchLoginHistoryList" resultType="AdminLoginHistory">
+	 <select id="getSearchLoginHistoryList" resultType="AdminLoginHistory" parameterType="map">
 	 	/* 회원 로그인 이력 검색 */
     	SELECT
     		loginNo,
@@ -58,7 +86,8 @@
 	      AND dormantStatus = #{dormantStatus}
 	    </if>
 	    ORDER BY 
-	    	memberRegDate;
+	    	loginNo is null, loginNo
+	   LIMIT #{rowPerPage} offset #{offset};
 	</select>
 	
 	<select id="getLoginHistoryCount" resultType="int">
@@ -80,9 +109,37 @@
 		FROM
 			member_login_log_view
 		ORDER BY loginNo is null, loginNo
-		limit #{rowPerPage} offset #{offset};
+		LIMIT #{rowPerPage} offset #{offset};
 	</select>
 	
+	<select id="getSearchMemberListCount" resultType="int" parameterType="map">
+		/* 회원 검색 총 row 갯수 조회 */
+		SELECT
+			COUNT(*)
+		FROM
+			all_member_info_view
+		 WHERE 
+	    	1=1
+	    <if test="searchValue != null and searchValue != ''">
+	      <choose>
+	        <when test="searchKey == 'memberId'">
+	          AND memberId LIKE CONCAT('%', #{searchValue}, '%')
+	        </when>
+	        <when test="searchKey == 'memberName'">
+	          AND memberName LIKE CONCAT('%', #{searchValue}, '%')
+	        </when>
+	      </choose>
+	    </if>
+	    <if test="memberType != null and memberType != ''">
+	      AND memberType = #{memberType}
+	    </if>
+	    <if test="withdrawStatus != null and withdrawStatus != ''">
+	      AND withdrawStatus = #{withdrawStatus}
+	    </if>
+	    <if test="dormantStatus != null and dormantStatus != ''">
+	      AND dormantStatus = #{dormantStatus}
+	    </if>
+	</select>
 	
 	<select id="getSearchMember" resultType="AdminMember">
 	 	/* 회원 검색 */
@@ -120,7 +177,7 @@
 	      AND dormantStatus = #{dormantStatus}
 	    </if>
 	    ORDER BY 
-	    	memberRegDate;
+	    	memberRegDate
 	</select>
 	
 	
@@ -214,7 +271,8 @@
 		FROM
 			all_member_info_view
 		ORDER BY
-			memberRegDate;
+			memberRegDate
+		LIMIT #{rowPerPage} offset #{offset};
 	</select>
 	
 </mapper>

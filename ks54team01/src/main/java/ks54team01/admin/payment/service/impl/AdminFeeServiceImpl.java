@@ -76,12 +76,12 @@ public class AdminFeeServiceImpl implements AdminFeeService{
 	        AdminMonthlyFee rentalFee = new AdminMonthlyFee();
 	        currentMaxNumber++;
 	        rentalFee.setMonthlyFeeNo("monthly_fee_" + currentMaxNumber);
-	        rentalFee.setEntCeoNo(request.getEntCeoNo()); // ⭐️ entCeoNo 반드시 받아와야 함
+	        rentalFee.setEntCeoNo(request.getEntCeoNo()); // entCeoNo
 	        rentalFee.setEntEmpId(request.getEntEmpId());
 	        rentalFee.setManagerId(request.getPlatformEmpId());
 	        rentalFee.setPaymentDetails("1.월렌탈요금");
-	        rentalFee.setPlatformFee(request.getTotalPlatFormFeeRental()); // ⭐️ long 타입 그대로 사용
-	        rentalFee.setEntFee(request.getTotalEntFeeRental());         // ⭐️ long 타입 그대로 사용
+	        rentalFee.setPlatformFee(request.getTotalPlatFormFeeRental()); 
+	        rentalFee.setEntFee(request.getTotalEntFeeRental());         
 	        rentalFee.setPayStatus("지급예정");
 	        rentalFee.setProvisionDate(LocalDate.now());
 	        rentalFee.setSettlementMonth(request.getSettlementMonth());
@@ -93,12 +93,12 @@ public class AdminFeeServiceImpl implements AdminFeeService{
 	        AdminMonthlyFee salesFee = new AdminMonthlyFee();
 	        currentMaxNumber++;
 	        salesFee.setMonthlyFeeNo("monthly_fee_" + currentMaxNumber);
-	        salesFee.setEntCeoNo(request.getEntCeoNo()); // ⭐️ entCeoNo 반드시 받아와야 함
+	        salesFee.setEntCeoNo(request.getEntCeoNo()); // ⭐️ entCeoNo 
 	        salesFee.setEntEmpId(request.getEntEmpId());
 	        salesFee.setManagerId(request.getPlatformEmpId());
 	        salesFee.setPaymentDetails("2.일시불판매");
-	        salesFee.setPlatformFee(request.getTotalPlatFormFee()); // ⭐️ long 타입 그대로 사용
-	        salesFee.setEntFee(request.getTotalEntFee());         // ⭐️ long 타입 그대로 사용
+	        salesFee.setPlatformFee(request.getTotalPlatFormFee()); 
+	        salesFee.setEntFee(request.getTotalEntFee());         
 	        salesFee.setPayStatus("지급예정");
 	        salesFee.setProvisionDate(LocalDate.now());
 	        salesFee.setSettlementMonth(request.getSettlementMonth());
@@ -110,12 +110,12 @@ public class AdminFeeServiceImpl implements AdminFeeService{
 	        AdminMonthlyFee penaltyFee = new AdminMonthlyFee();
 	        currentMaxNumber++;
 	        penaltyFee.setMonthlyFeeNo("monthly_fee_" + currentMaxNumber);
-	        penaltyFee.setEntCeoNo(request.getEntCeoNo()); // ⭐️ entCeoNo 반드시 받아와야 함
+	        penaltyFee.setEntCeoNo(request.getEntCeoNo()); // ⭐️ entCeoNo 
 	        penaltyFee.setEntEmpId(request.getEntEmpId());
 	        penaltyFee.setManagerId(request.getPlatformEmpId());
 	        penaltyFee.setPaymentDetails("3.위약금");
-	        penaltyFee.setPlatformFee(request.getTotalPlatFormPenalty()); // ⭐️ long 타입 그대로 사용
-	        penaltyFee.setEntFee(request.getTotalEntPenalty());         // ⭐️ long 타입 그대로 사용
+	        penaltyFee.setPlatformFee(request.getTotalPlatFormPenalty()); 
+	        penaltyFee.setEntFee(request.getTotalEntPenalty());        
 	        penaltyFee.setPayStatus("지급예정");
 	        penaltyFee.setProvisionDate(LocalDate.now());
 	        penaltyFee.setSettlementMonth(request.getSettlementMonth());
@@ -127,16 +127,15 @@ public class AdminFeeServiceImpl implements AdminFeeService{
 	        AdminMonthlyFee totalSummary = new AdminMonthlyFee();
 	        currentMaxNumber++;
 	        totalSummary.setMonthlyFeeNo("monthly_fee_" + currentMaxNumber);
-	        totalSummary.setEntCeoNo(request.getEntCeoNo()); // ⭐️ entCeoNo 반드시 받아와야 함
+	        totalSummary.setEntCeoNo(request.getEntCeoNo()); // ⭐️ entCeoNo 
 	        totalSummary.setEntEmpId(request.getEntEmpId());
 	        totalSummary.setManagerId(request.getPlatformEmpId());
 	        totalSummary.setPaymentDetails("4.총합계");
-	        totalSummary.setPlatformFee(request.getTotalNetPlatformFee()); // ⭐️ long 타입 그대로 사용
+	        totalSummary.setPlatformFee(request.getTotalNetPlatformFee()); 
 
 	        // 입점업체 최종 지급액 계산 (매출총합 - 플랫폼 수수료 총합)
 	        long calculatedEntFeeTotal = request.getTotalApprovedAmount() - request.getTotalNetPlatformFee();
-	        totalSummary.setEntFee(calculatedEntFeeTotal); // ⭐️ long 타입 그대로 사용
-
+	        totalSummary.setEntFee(calculatedEntFeeTotal); 
 	        totalSummary.setPayStatus("지급예정");
 	        totalSummary.setProvisionDate(LocalDate.now());
 	        totalSummary.setSettlementMonth(request.getSettlementMonth());

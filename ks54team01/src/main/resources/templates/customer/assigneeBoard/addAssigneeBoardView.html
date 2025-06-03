@@ -13,6 +13,7 @@
 	
 	<th:block layout:fragment="jsFile">
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</th:block>
 	
 	
@@ -61,15 +62,15 @@
 		                // 우편번호와 주소 정보를 해당 필드에 넣는다.
 		                /* document.getElementById('memberZip').value = data.zonecode; */
 		                document.getElementById("hopeArea").value = addr;
+		                
+		                $('#hopeArea').css({ 'border': '1px solid green', 'border-radius': '6px' });
 		            }
 		        }).open();
 			});
 			
 			/* 상품 찾기 */
 			$('.searchProduct').click(function() {
-	        	/* const data = $(this).data('productCategoryNum'); */
 	        	const value = $('#productCategoryNum').val();
-	        	console.log(value);
 	        	
 	        	const request = $.ajax({
 	                 url : '/customer/assigneeBoard/getProduct',
@@ -78,7 +79,6 @@
 	                 dataType : 'json'
 	             });
 	             request.done(response => {
-	                 console.log(response); // 요청 성공 시 수행
 	                 const appendElements = response.map((productInfo, idx) => {
 	                	const $div = $('<div />', { class : 'col-6 col-md-4'});
 	                	const $subDiv = $('<div />', { class : 'form-check'});
@@ -88,19 +88,17 @@
 	                	$div.append($subDiv);
 	                	return $div; 
 	                 });
-	                 console.log(appendElements);
 	                 $('#productList').empty();
 	                 $('#productList').append(...appendElements);
 	             });
 	             request.fail((jqXHR, textStatus, error) => {
-	                 console.log(jqXHR, textStatus, error); // 요청 실패 시 수행
+	                 console.log(jqXHR, textStatus, error); 
 	             }); 
 	        });
 			
 			/* 품목 찾기 */
 	        $('.mdCategory').click(function() {
 	        	const data = $(this).data('mdCategoryNo');
-	        	console.log(data);
 	        	
 	        	const request = $.ajax({
 	                 url : '/customer/assigneeBoard/getMiddleCategory',
@@ -109,7 +107,6 @@
 	                 dataType : 'json'
 	             });
 	             request.done(response => {
-	                 console.log(response); // 요청 성공 시 수행
 	                 const appendElements = response.map((cateInfo, idx) => {
 	                	const $div = $('<div />', { class : 'col-6 col-md-4'});
 	                	const $subDiv = $('<div />', { class : 'form-check'});
@@ -128,6 +125,7 @@
 	             }); 
 	        });
 	        
+			
 	        $('.openModal').click(function(e){
 	        	e.preventDefault();
 	        	$('.mdCategory').eq(0).click();
@@ -144,7 +142,15 @@
 	        	  	$('.searchProduct').removeClass('disabled');
 	        	  }
 	        	  $('#productCategoryNum').val(productCategoryNum);
+	        	  
+	 	      	  $('#selectedItem').css({ 'border': '1px solid green', 'border-radius': '6px' });
+
+	        	  $('.searchProduct').removeClass('disabled');
+	        	    
 	        	  $('#staticBackdrop').modal('hide');
+	        	  
+	        	  $('#productNum').val('');
+	        	  $('#selectedProduct').val('');
 	        	});
 	        
 	        
@@ -159,33 +165,127 @@
 	      	  $('#selectProductModal').modal('hide');
 	      	});
 	        
-	        $('#addAssigneeBoardBtn').click(e => {
-				e.preventDefault();
-				const $formTags = $('#addAssigneeBoardForm').find('input, select');
-				let isSubmit = true;
-				$formTags.each((idx, element) => {
-					const value = $(element).val();
-					if(!value){
-						/* const id = $(element).attr('id');
-						const cate = $(`label[for="${id}"]`).text();
-						alert(`${cate} 필수 입력항목입니다.`); */
-						$(element).focus();
-						isSubmit = false;
-						return false;
-					}
-				});	
-				if(isSubmit) $('#addAssigneeBoardForm').submit();
+	        $('#addAssigneeBoardForm').find('input, select, textarea').on('blur', function() {
+	            const $el = $(this);
+	            const id = $el.attr('id');
+
+	            // 제외할 필드 id 목록
+	            const excludedIds = ['selectedProduct', 'assigneeContent'];
+
+	            if (excludedIds.includes(id)) {
+	                // 검사 안 하고 바로 리턴
+	                return;
+	            }
+
+	            const value = $el.val()?.trim();
+	            let $target = $el;
+
+	            if (id === 'productCategoryNum') {
+	                $target = $('#selectedItem');
+	            }
+
+	            if (value) {
+	                $target.css('border', '1px solid green');
+	            } else {
+	                $target.css('border', '1px solid red');
+	            }
+	            $target.css('border-radius', '6px');
+	        });
+	        
+	        /* 등록 버튼 클릭 */
+			$('#addAssigneeBoardBtn').click(e => {
+			    e.preventDefault();
+			    e.stopPropagation();
+			
+			    const $formTags = $('#addAssigneeBoardForm').find('input, select, textarea');
+			    let isSubmit = true;
+			
+			    const fieldMessages = {
+			        productCategoryNum: {
+			            message: '원하시는 카테고리를 선택해주세요.',
+			            targetId: 'selectedItem'
+			        },
+			        hopeArea: {
+			            message: '희망 설치지역을 선택해주세요.',
+			            targetId: 'hopeArea'
+			        },
+			        periodInput: {
+			            message: '희망 계약기간(개월)을 입력해주세요.',
+			            targetId: 'periodInput'
+			        },
+			        rentalFeeInput: {
+			            message: '희망 렌탈료를 입력해주세요.',
+			            targetId: 'rentalFeeInput'
+			        }
+			    };
+			
+			    // 공란 체크
+			    $formTags.each((idx, element) => {
+			        const $el = $(element);
+			        const value = $el.val()?.trim();
+			        const id = $el.attr('id');
+			
+			        if (fieldMessages[id] && !value) {
+			            const { message, targetId } = fieldMessages[id];
+			            const $target = $('#' + (targetId || id));
+						
+			            const prevStyle = $target.attr('style') || '';
+			            if (!prevStyle.includes('border')) {
+			                $target.attr('style', prevStyle + ' border: 1px solid red; border-radius: 6px;');
+			            }
+			
+			            Swal.fire({
+			                title: message,
+			                confirmButtonText: "확인",
+			                didOpen: () => {
+			                    const confirmBtn = Swal.getConfirmButton();
+			                    confirmBtn.focus();   
+			                }
+			            })
+			            $target.focus();      
+			            isSubmit = false;
+			            return false; // break
+			        }
+			    });
+			
+			    // 숫자 유효성 검사
+			    if (isSubmit) {
+			        const $periodInput = $('#periodInput');
+			        const $rentalFeeInput = $('#rentalFeeInput');
+			        const numberRegex = /^[0-9]+$/;
+			
+			        if (!numberRegex.test($periodInput.val()?.trim())) {
+			            Swal.fire({
+			                title: '계약 기간은 숫자만 입력해주세요.',
+			                confirmButtonText: "확인"
+			            })
+			            $periodInput.focus();
+			            isSubmit = false;
+			        } else if (!numberRegex.test($rentalFeeInput.val()?.trim())) {
+			            Swal.fire({
+			                title: '렌탈료는 숫자만 입력해주세요.',
+			                confirmButtonText: "확인"
+			            })
+						$rentalFeeInput.focus();			            
+			            isSubmit = false;
+			        }
+			    }
+			
+			    if (isSubmit) {
+			        $('#addAssigneeBoardForm').submit();
+			    }
 			});
 	        
 	        /* 유효성 검증 */
-	        $('#periodInput').on("blur",function() {
+	        $('#periodInput').on("blur",function(e) {
+	        	e.stopPropagation();
 	        	let isNumber;
 	        	
 	        	const checkNumber = /^[0-9]*$/;
 	
 	        	if ($(this).val() == '') {
 	        		/* alert("입력하세요."); */
-	        		this.focus();
+	        		//this.focus();
 	        		testBoolean = false;
 	        		return;
 	        	}
@@ -193,12 +293,13 @@
 	        	if (checkNumber.test($(this).val())) {
 	        		testBoolean = true;
 	        	} else {
-	        		alert("숫자 입력");
 	        		testBoolean = false;
+	        		$(this).val('');
 	        	}
 	        });
 	        
 	        $('#rentalFeeInput').on("blur",function() {
+	        	e.stopPropagation();
 	        	let isNumber;
 	        	
 	        	const checkNumber = /^[0-9]*$/;
@@ -206,7 +307,6 @@
 	        	if (checkNumber.test($(this).val())) {
 	        		testBoolean = true;
 	        	} else {
-	        		alert("숫자 입력");
 	        		testBoolean = false;
 	        		$(this).val('');
 	        	}
@@ -329,7 +429,7 @@
                                 </div>
                             </div>
                             <div class="form-group mb-30">
-                                <textarea name="assigneeContent" rows="5" placeholder="기타 상세 설명을 입력해주세요."></textarea>
+                                <textarea id="assigneeContent" name="assigneeContent" rows="5" placeholder="기타 상세 설명을 입력해주세요."></textarea>
                             </div>
 							<div class="row justify-content-end">
 							    <div class="col-auto">

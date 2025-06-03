@@ -15,13 +15,7 @@ import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
 
 @Mapper
 public interface AdminProductInfoMapper {
-	
-	/**
-	 * 상품정보 행의 갯수
-	 */
-	// 브랜드 행의 갯수
-	int getBrandCount(String searchKey, String searchValue, String useStatus);
-	
+
 	/**
 	 * 상품정보 등록 조회
 	 */
@@ -168,6 +162,7 @@ public interface AdminProductInfoMapper {
 	// 카테고리 등록
 	int addCategory(ProductInfoCategory productInfoCategory);
 	
+
 	/**
 	 * 상품정보 목록 조회
 	 */
@@ -190,7 +185,7 @@ public interface AdminProductInfoMapper {
 	// 품목 목록 조회
 	List<ProductInfoItem> getItemList();
 	// 브랜드 목록 조회
-	List<ProductInfoBrand> getBrandList(int offset, int limit, String searchKey, String searchValue, String useStatus);
+	List<ProductInfoBrand> getBrandList();
 	// 카테고리 목록 조회
 	List<ProductInfoCategory> getCategoryList();
 }
