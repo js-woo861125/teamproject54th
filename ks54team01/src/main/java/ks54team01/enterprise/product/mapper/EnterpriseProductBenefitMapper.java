@@ -6,5 +6,11 @@ import ks54team01.enterprise.product.domain.EnterpriseProductBenefit;
 
 @Mapper
 public interface EnterpriseProductBenefitMapper {	
-	  void insertEnterpriseProductBenefit(EnterpriseProductBenefit benefit);
+	  
+	void insertEnterpriseProductBenefit(EnterpriseProductBenefit benefit);
+	  
+	int deleteBenefitsBySellProductNo(String sellProductsNo);
+	
+	int modifyEnterpriseProductBenefit(EnterpriseProductBenefit benefit);
+
 }

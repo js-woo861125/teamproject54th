@@ -9,6 +9,8 @@ public class EnterpriseSellProductRequest {
     private EnterpriseProduct enterpriseProduct;
     private List<String> benefitNoList;
     private List<String> benefitDetailList;
-	   
+    private Double penaltyFeeRatio;
+    private Integer periodStart;
+    private Integer periodEnd;   
 
 }

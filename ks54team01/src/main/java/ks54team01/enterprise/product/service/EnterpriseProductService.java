@@ -21,5 +21,10 @@ public interface EnterpriseProductService {
 	
 	void addSellProductBatch(List<EnterpriseSellProductRequest> sellProductRequests, EnterpriseProductQuantity quantity);
 	
-	
+	// 입점업체 등록 상품 수정
+	  void modifySellProductBenefits(
+		EnterpriseProduct product,
+		List<String> benefitNoList,
+		List<String> benefitDetailList
+		    );
 }
