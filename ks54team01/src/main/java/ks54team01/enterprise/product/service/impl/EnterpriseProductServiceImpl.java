@@ -9,9 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ks54team01.admin.product.domain.AdminProduct;
 import ks54team01.admin.product.mapper.AdminProductMapper;
+import ks54team01.enterprise.product.domain.EnterprisePenaltyCalculate;
 import ks54team01.enterprise.product.domain.EnterpriseProduct;
 import ks54team01.enterprise.product.domain.EnterpriseProductBenefit;
 import ks54team01.enterprise.product.domain.EnterpriseProductQuantity;
+import ks54team01.enterprise.product.domain.EnterpriseSellProductRequest;
+import ks54team01.enterprise.product.mapper.EnterprisePenaltyCalculateMapper;
 import ks54team01.enterprise.product.mapper.EnterpriseProductBenefitMapper;
 import ks54team01.enterprise.product.mapper.EnterpriseProductMapper;
 import ks54team01.enterprise.product.mapper.EnterpriseProductQuantityMapper;
@@ -27,6 +30,7 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 	private final AdminProductMapper adminProductMapper ;
 	private final EnterpriseProductBenefitMapper enterpriseProductBenefitMapper;
 	private final EnterpriseProductQuantityMapper enterpriseProductQuantityMapper;
+	private final EnterprisePenaltyCalculateMapper enterprisePenaltyCalculateMapper;
 	
 	@Override
 	public List<EnterpriseProductQuantity> getQuantityList() {
@@ -53,44 +57,106 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 	/*
 	 * 입점업체 상품 등록
 	 */
-	@Override
-	public void addSellProduct(EnterpriseProduct enterpriseProduct,
-								  List<String> benefitNoList,
-					              List<String> benefitDetailList,
-	                           EnterpriseProductQuantity quantity) {
+	 @Override
+	 @Transactional
+	 public void addSellProductBatch(List<EnterpriseSellProductRequest> sellProductRequests, EnterpriseProductQuantity quantity) {
 
-	    String sellProductNo = UUID.randomUUID().toString().replace("-", "");
-	    LocalDateTime now = LocalDateTime.now();
+	        // 상품(개월수별) 등록
+	        for (EnterpriseSellProductRequest req : sellProductRequests) {
+	            EnterpriseProduct enterpriseProduct = req.getEnterpriseProduct();
+	            String sellProductNo = UUID.randomUUID().toString().replace("-", "");
+	            LocalDateTime now = LocalDateTime.now();
+	            
+	            // 상품 중복체크
+	            int exists = enterpriseProductMapper.countByProduct(
+	                    enterpriseProduct.getEntCeoNo(),
+	                    enterpriseProduct.getProductsNo(),
+	                    enterpriseProduct.getPeriod()
+	                );
+	                if (exists > 0) {
+	                    throw new IllegalStateException(
+	                        "이미 같은 옵션(입점업체/상품/개월수)으로 등록된 상품이 있습니다: " 
+	                        + enterpriseProduct.getProductsNo() + " / " 
+	                        + enterpriseProduct.getPeriod() + "개월"
+	                    );
+	                }
 
-	    // 1. 메인 상품 세팅
-	    enterpriseProduct.setSellProductsNo(sellProductNo);
-	    enterpriseProduct.setUseStatus("활성화");
-	    enterpriseProduct.setRegisterDate(now);
-	    enterpriseProduct.setRevisionDate(now);
+	            // 1. 메인 상품 세팅
+	            enterpriseProduct.setSellProductsNo(sellProductNo);
+	            enterpriseProduct.setUseStatus("활성화");
+	            enterpriseProduct.setRegisterDate(now);
+	            enterpriseProduct.setRevisionDate(now);
 
-	    // 2. INSERT
-	    enterpriseProductMapper.addSellProduct(enterpriseProduct);
+	            // 2. 상품 인서트
+	            enterpriseProductMapper.addSellProduct(enterpriseProduct);
 
-	    for (int i = 0; i < benefitNoList.size(); i++) {
-	        EnterpriseProductBenefit benefit = new EnterpriseProductBenefit();
+	            // 3. 혜택 리스트 인서트
+	            List<String> benefitNoList = req.getBenefitNoList();
+	            List<String> benefitDetailList = req.getBenefitDetailList();
+	            if (benefitNoList != null) {
+	                for (int i = 0; i < benefitNoList.size(); i++) {
+	                    EnterpriseProductBenefit benefit = new EnterpriseProductBenefit();
+	                    benefit.setSellProductsNo(sellProductNo);
+	                    benefit.setEntCeoNo(enterpriseProduct.getEntCeoNo());
+	                    benefit.setEntEmpId(enterpriseProduct.getEntEmpId());
+	                    benefit.setBenefit(benefitNoList.get(i));
+	                    benefit.setBenefitDetail(
+	                        (benefitDetailList != null && benefitDetailList.size() > i) ? benefitDetailList.get(i) : null
+	                    );
+	                    benefit.setUseStatus("활성화");
+	                    benefit.setRegisterDate(now.toString());
+	                    benefit.setRevisionDate(now.toString());
+	                    enterpriseProductBenefitMapper.insertEnterpriseProductBenefit(benefit);
+	                }                
+	            }
+	            EnterprisePenaltyCalculate penalty = new EnterprisePenaltyCalculate();
 
-	        benefit.setSellProductsNo(sellProductNo);
-	        benefit.setEntCeoNo(enterpriseProduct.getEntCeoNo());
-	        benefit.setEntEmpId(enterpriseProduct.getEntEmpId());
-	        benefit.setBenefit(benefitNoList.get(i));
-	        benefit.setBenefitDetail(benefitDetailList.get(i));
-	        benefit.setUseStatus("활성화");
-	        benefit.setRegisterDate(now.toString());
-	        benefit.setRevisionDate(now.toString());
-	        enterpriseProductBenefitMapper.insertEnterpriseProductBenefit(benefit);
+	            penalty.setEntCeoNo(enterpriseProduct.getEntCeoNo());
+	            penalty.setEntEmpId(enterpriseProduct.getEntEmpId());
+	            penalty.setSellProductsNo(sellProductNo); 
+	            penalty.setRegisterDate(now.toString());
+	            penalty.setRevisionDate(now.toString());
+	            penalty.setPenaltyFeeRatio(req.getPenaltyFeeRatio());
+	            penalty.setPeriodStart(req.getPeriodStart());
+	            penalty.setPeriodEnd(req.getPeriodEnd());
+	            penalty.setUseStatus("활성화");
+	            enterprisePenaltyCalculateMapper.insertPenaltyCalculate(penalty);
+
+	        }
+
+	        // 4. 재고 인서트 (한 번만)
+	        quantity.setRegisterDate(LocalDateTime.now().toString());
+	        quantity.setRevisionDate(LocalDateTime.now().toString());
+	        enterpriseProductQuantityMapper.insertEnterpriseProductQuantity(quantity);
+	        
+	        
 	    }
-	  
 
-	    // 4. 재고 세팅
-	    quantity.setProductsNo(enterpriseProduct.getProductsNo());
-	    quantity.setRegisterDate(now.toString());
-	    quantity.setRevisionDate(now.toString());
+	    @Override
+	    @Transactional
+	    public void modifySellProductBenefits(
+	        EnterpriseProduct product,
+	        List<String> benefitNoList,
+	        List<String> benefitDetailList
+	    ) {
+	        // 1. 상품 정보 수정 (실판매가/계산가/최종가 등)
+	        enterpriseProductMapper.updateSellProductPrice(product);
 
-	    enterpriseProductQuantityMapper.insertEnterpriseProductQuantity(quantity);
-	}
+	        // 2. 기존 혜택 삭제
+	        enterpriseProductBenefitMapper.deleteBenefitsBySellProductNo(product.getSellProductsNo());
+
+	        // 3. 새로운 혜택 인서트
+	        for (int i = 0; i < benefitNoList.size(); i++) {
+	            EnterpriseProductBenefit benefit = new EnterpriseProductBenefit();
+	            benefit.setSellProductsNo(product.getSellProductsNo());
+	            benefit.setBenefit(benefitNoList.get(i));
+	            benefit.setBenefitDetail(benefitDetailList.get(i));
+	            benefit.setEntCeoNo(product.getEntCeoNo());
+	            benefit.setEntEmpId(product.getEntEmpId());
+	            benefit.setUseStatus("Y"); 
+	            
+	            enterpriseProductBenefitMapper.insertEnterpriseProductBenefit(benefit);
+	        }
+	    }
 }
+

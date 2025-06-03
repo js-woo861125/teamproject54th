@@ -24,4 +24,6 @@ public class EnterpriseProduct {
 	   private String modelName;
 	    
 	   private FileMetaData mainImageData;
+	   
+
 }
