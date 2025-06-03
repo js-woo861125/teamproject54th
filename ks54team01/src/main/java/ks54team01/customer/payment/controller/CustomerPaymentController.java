@@ -137,7 +137,7 @@ public class CustomerPaymentController {
         
         int quantity = customerPaymentService.getQuantity(productsNum, entCeoNo);
         
-        model.addAttribute("deliveryLists", deliveryList);
+        model.addAttribute("deliveryList", deliveryList);
         model.addAttribute("quantity", quantity);
         
         log.info("quantity: {}", quantity);
