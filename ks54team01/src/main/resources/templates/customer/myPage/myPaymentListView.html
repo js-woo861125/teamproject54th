@@ -224,7 +224,7 @@
 				
 
 				
-				
+					
 
 
 		</script>
@@ -242,7 +242,7 @@
 						<!-- 상품1 -->
 						<div class="product-cart-wrap border col-12" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
 							<div class="product-content-wrap mt-50 mb-30 col-7">
-								<span th:text="${l.requestStatus == '환불거부' ? '환불거부' : l.paymentStatus}">상태</span>
+								<span class="payStatus" th:text="${l.requestStatus == '환불거부' ? '환불거부' : l.paymentStatus}">상태</span>
 								<h4><a href="#" class="detailBtn" th:text="${l.prodNm}">상품명</a></h4>
 								<div>
 									<span th:text="|₩${#numbers.formatInteger(l.totalPrice, 3, 'COMMA')}|" style="color: black; font-size: 20px;">금액</span>
@@ -265,7 +265,7 @@
 									<button type="button" class="btn modifyCardBtn" th:if="${l.rentalContractNo != '일시불판매'}" th:disabled="${l.paymentStatus == '주문취소'}">카드 변경</button>
 									<button type="button" class="btn refundBtn" th:if="${l.rentalContractNo == '일시불판매'}" 
 											th:disabled="${l.requestStatus == '입점업체검토중' or l.requestStatus == '환불승인' or l.requestStatus == '환불거부'}" th:data-payment-key="${l.paymentKey}"
-											th:data-order-id="${l.orderId}" th:data-payment-completed-no="${l.paymentCompletedNo}" 
+											th:data-order-id="${l.orderId}" th:data-payment-completed-no="${l.paymentCompletedNo}" 	
 											th:data-ent-ceo-no="${l.entCeoNo}" th:data-ent-emp-id="${l.entEmpId}">상품 환불</button>
 								</div>
 							</div>
