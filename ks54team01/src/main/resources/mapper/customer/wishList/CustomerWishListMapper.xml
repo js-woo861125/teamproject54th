@@ -32,7 +32,7 @@
 			<result column="product_category_no" property="productCategoryNum" />
 			<result column="products_nm" property="productsName" />
 			<result column="products_status" property="productsStatus" />		
-			<result column="products_image" property="productsImage" />
+			<result column="file_path" property="imageFilePath" />
 			<result column="register_date" property="registerDate" />
 			<result column="revision_date" property="revisionDate" />
 		</association>
@@ -107,8 +107,8 @@
 			w.wishlist_no ,
 			c.cust_id ,
 			w.products_no ,
-			p.products_image ,
 			p.products_nm ,
+			f.file_path ,
 			pc.middle_category ,
 			w.register_date,
 			MIN(sp.final_price) OVER (PARTITION BY sp.products_no) AS minimumRentalFee,
@@ -122,6 +122,8 @@
 			ON p.product_category_no = pc.product_category_no
 			INNER JOIN sell_products sp
 			ON sp.products_no = w.products_no
+			LEFT JOIN files f
+			ON p.model_no = f.ref_id AND f.file_type = 'mainImage'
 		WHERE
 			w.cust_id = #{customerId}
 			<if test="viewValue != null and viewValue != '' and viewValue != '전체'">
