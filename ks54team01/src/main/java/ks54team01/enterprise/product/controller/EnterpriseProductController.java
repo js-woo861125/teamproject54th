@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -19,8 +20,8 @@ import ks54team01.admin.productInfo.domain.ProductInfoBenefit;
 import ks54team01.admin.productInfo.service.AdminProductInfoService;
 import ks54team01.enterprise.product.domain.EnterpriseMarginRatio;
 import ks54team01.enterprise.product.domain.EnterpriseProduct;
-import ks54team01.enterprise.product.domain.EnterpriseProductBenefit;
 import ks54team01.enterprise.product.domain.EnterpriseProductQuantity;
+import ks54team01.enterprise.product.domain.EnterpriseSellProductRequest;
 import ks54team01.enterprise.product.mapper.EnterpriseMarginRatioMapper;
 import ks54team01.enterprise.product.service.EnterpriseMarginRatioService;
 import ks54team01.enterprise.product.service.EnterpriseProductService;
@@ -167,21 +168,15 @@ public class EnterpriseProductController {
 	
 	@PostMapping("/addSellProduct")
 	public String addSellProduct(
-	    @ModelAttribute EnterpriseProduct enterpriseProduct,
-	    @RequestParam List<String> benefitNoList,
-	    @RequestParam List<String> benefitDetailList,
-	    @RequestParam List<String> platformPriceList,
-	    @RequestParam List<String> finalPriceList,
-	    @RequestParam List<String> optionLumpSumPriceList,
+	    @RequestBody List<EnterpriseSellProductRequest> sellProductRequests,
 	    @ModelAttribute EnterpriseProductQuantity quantity
-	) {  
-	
-	    if (quantity.getQuantity() == null) {
+	) {
+	    if (quantity.getQuantity() == null || quantity.getQuantity() == 0) {
 	        throw new IllegalArgumentException("수량은 필수 입력값입니다.");
 	    }
-		
-	    enterpriseProductService.addSellProduct(enterpriseProduct,  benefitNoList, benefitDetailList, quantity);
-	  
+
+	    enterpriseProductService.addSellProductBatch(sellProductRequests, quantity);
+
 	    return "redirect:/enterprise/product/sellProductList";
 	}
 	

@@ -13,8 +13,8 @@ public class EnterpriseProductQuantity {
 	    private String productsNo; 
 	    private String entCeoNo;    
 	    private String entEmpId;  
-	    private String RegisterDate;  
-	    private String RevisionDate;  
+	    private String registerDate;  
+	    private String revisionDate;  
 	    
 	 
 	}
