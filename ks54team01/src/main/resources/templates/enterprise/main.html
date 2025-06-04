@@ -3,35 +3,155 @@
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:decorate="~{enterprise/layout/default}">
 
-	<!-- head 삽입공간 -->
-	<head>
-	</head>
-	
-	<th:block layout:fragment="jsFile">
-		<script th:src="@{/manage/assets/js/vendors/chart.js}"></script>
-	</th:block>
-	
-	<th:block layout:fragment="jsScript">
-		<script>
-		</script>
-	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
 	<th:block layout:fragment="content">
-		<div class="content-header">
+        <div class="content-header">
             <div>
-                <h2 class="content-title card-title">Dashboard</h2>
-                <p>Whole data about your business here</p>
+                <h2 class="content-title card-title">입점업체 전용페이지</h2>    
+            </div>    
+        </div>
+        
+        <!-- 메인 컨텐츠 영역: 상하좌우 중앙 정렬을 위해 d-flex, justify-content-center, align-items-center 적용 -->
+        <div class="col-lg-12 d-flex justify-content-center align-items-center">
+            <!-- 왼쪽 컬럼 (카드 목록) -->
+            <div class="col-lg-3">
+
+                <!-- 정산관리 카드 -->
+                <div class="col-sm-12">
+                    <div class="card card-body mb-4">
+                        <!-- icontext 내부 요소 수직 정렬을 위해 d-flex, align-items-center 적용 -->
+                        <article class="icontext d-flex align-items-center">
+                            <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons">💲</i></span>
+                            <!-- 'text' div가 전체 너비를 차지하도록 w-100 추가 -->
+                            <div class="text w-100">
+                                <!-- 제목과 월 선택 input을 양 끝으로 정렬하기 위해 justify-content-between 추가 -->
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h4 class="mb-1 card-title">정산관리</h4>
+                                    <!-- mainSearchForm을 input을 감싸도록 올바르게 수정 -->
+                                    <form id="mainSearchForm" th:action="@{/enterprise}" method="get">
+                                        <div>
+                                            <input type="month" name="settlementMonth" th:value="${settlementMonth}" id="monthSelector" class="form-control"/>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </article>
+                        <!-- entMonthlyCalcList가 비어있지 않은 경우에만 마지막 값을 표시하도록 수정 -->
+                        <div class="d-flex justify-content-start ml-70" th:if="${!#lists.isEmpty(entMonthlyCalcList)}">
+                             <a th:href="@{/enterprise/paymentClac/paymentCalcList}">
+                                    <!-- #lists.size()를 이용하여 마지막 요소에 접근하도록 수정 -->
+                                    <span class="fs-6 text-body"> • 합 계 : </span>
+									<span class="fs-6 text-warning" th:text="|₩ ${#numbers.formatDecimal(entMonthlyCalcList[#lists.size(entMonthlyCalcList) - 1].entFee, 0, 'COMMA', 0, 'POINT')}|"> </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 직원관리 카드 -->
+                <div class="col-sm-12">
+                    <div class="card card-body mb-4">
+                        <a th:href="@{#}">
+                            <!-- icontext 내부 요소 수직 정렬을 위해 d-flex, align-items-center 적용 -->
+                            <article class="icontext d-flex align-items-center">
+                                <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons">✔️</i></span>
+                                <div class="text ">
+                                    <h4 class="mb-1 card-title">직원관리</h4>
+                                    <span class="fs-6 text-body"> • 총원 : 2000</span>
+                                    <span class="fs-6 text-body"> •  재직 : 150</span>
+                                    <span class="fs-6 text-danger"> • 퇴사 : 2  </span>
+                                </div>
+                            </article>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 배송 카드 -->
+                <div class="col-sm-12">
+                    <div class="card card-body mb-4">
+                        <a th:href="@{/admin/delivery/deliveryInfoList}">
+                            <!-- icontext 내부 요소 수직 정렬을 위해 d-flex, align-items-center 적용 -->
+                            <article class="icontext d-flex align-items-center">
+                                <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons">🚚</i></span>
+                                <div class="text ">
+                                    <h4 class="mb-1 card-title">배송</h4>
+                                    <span class="fs-6 text-body"> • 상품준비중 : 1</span>
+                                    <span class="fs-6 text-body"> • 배송중 : 0</span>
+                                    <span class="fs-6 text-danger"> • 배송완료 : 8</span>
+                                </div>
+                            </article>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 상품 카드 -->
+                <div class="col-sm-12">
+                    <div class="card card-body mb-4">
+                        <a th:href="@{/admin/product/productList}">
+                            <!-- icontext 내부 요소 수직 정렬을 위해 d-flex, align-items-center 적용 -->
+                            <article class="icontext d-flex align-items-center">
+                                <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons">🎁</i></span>
+                                <div class="text ">
+                                    <h4 class="mb-1 card-title">상품</h4>
+                                    <span class="fs-6 text-body"> • 총등록상품 : 2000</span>
+                                    <span class="fs-6 text-body"> • 신규상품 : 150</span>
+                                    <span class="fs-6 text-danger"> • 판매불가 상품 : 20 </span>
+                                </div>
+                            </article>
+                        </a>
+                    </div>
+                </div>
+            </div>    
+            
+            <!-- 오른쪽 컬럼 (차트) -->
+            <div class="card col-lg-9">
+                <div class="row col-xl-12">
+                    <div class="card mb-4">
+                        <article class="card-body">
+                            <h5 class="card-title">월별 판매 현황</h5>
+                            <canvas id="myChart" height="150px"></canvas>
+                        </article>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="card mb-4">
-            <header class="card-header">
-                <h4 class="card-title">콘텐츠 타이틀</h4>
-            </header>
-            <div class="card-body">
-                
-            </div>
-        </div>
+    </th:block>
+
+	<th:block layout:fragment="jsFile">
+		<script src="/manage/assets/js/vendors/chart.js"></script>
+		<script src="/manage/assets/js/custom-chart-ent.js" type="text/javascript"></script>
+
+		
+     <script th:inline="javascript">
+
+          document.addEventListener('DOMContentLoaded', function() {
+            // 'monthSelector' ID를 가진 <input type="month"> 요소를 찾습니다.
+            const monthSelector = document.getElementById('monthSelector');
+            // 'mainSearchForm' ID를 가진 <form> 요소를 찾습니다.
+            const mainSearchForm = document.getElementById('mainSearchForm');
+
+            // monthSelector가 존재하고 값이 비어있다면, 현재 월로 초기 설정합니다.
+            if (monthSelector && (!monthSelector.value || monthSelector.value === '')) {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = (today.getMonth() + 1).toString().padStart(2, '0'); // 'MM' 형식
+                monthSelector.value = `${year}-${month}`;
+            }
+
+            // monthSelector에 'change' 이벤트 리스너를 추가합니다.
+            // 달력에서 월을 선택하여 값이 변경될 때마다 이 함수가 실행됩니다.
+            if (monthSelector) {
+                monthSelector.addEventListener('change', function() {
+                    // mainSearchForm이 존재하면 해당 폼을 제출합니다.
+                    if (mainSearchForm) {
+                        mainSearchForm.submit();
+                    }
+                });
+            }
+        });
+       
+    </script>
+
 	</th:block>
 	
 </html>

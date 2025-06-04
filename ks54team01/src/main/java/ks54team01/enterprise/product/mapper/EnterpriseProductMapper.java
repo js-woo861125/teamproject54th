@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.data.repository.query.Param;
 
 import ks54team01.enterprise.product.domain.EnterpriseProduct;
+import ks54team01.enterprise.product.domain.EnterpriseProductBenefit;
 import ks54team01.enterprise.product.domain.EnterpriseProductQuantity;
 
 @Mapper
@@ -23,4 +24,8 @@ public interface EnterpriseProductMapper {
 			    @Param("productsNo") String productsNo,
 			    @Param("period") Integer period
 			);
+	 
+
+	 EnterpriseProduct selectProductByNo(String sellProductsNo);
+	 
 }

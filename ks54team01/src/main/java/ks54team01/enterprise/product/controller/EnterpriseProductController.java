@@ -21,7 +21,9 @@ import ks54team01.admin.product.service.AdminProductService;
 import ks54team01.admin.productInfo.domain.ProductInfoBenefit;
 import ks54team01.admin.productInfo.service.AdminProductInfoService;
 import ks54team01.enterprise.product.domain.EnterpriseMarginRatio;
+import ks54team01.enterprise.product.domain.EnterprisePenaltyCalculate;
 import ks54team01.enterprise.product.domain.EnterpriseProduct;
+import ks54team01.enterprise.product.domain.EnterpriseProductBenefit;
 import ks54team01.enterprise.product.domain.EnterpriseProductQuantity;
 import ks54team01.enterprise.product.domain.EnterpriseSellProductAllRequest;
 import ks54team01.enterprise.product.domain.EnterpriseSellProductRequest;
@@ -202,6 +204,23 @@ public class EnterpriseProductController {
 	/*
 	 * 입점업체 등록 상품 수정
 	 */
+	@GetMapping("/modifySellProduct")
+	public String showModifySellProductForm(
+	        @RequestParam("sellProductsNo") String sellProductsNo, // 상품 PK
+	        Model model
+	) {
+
+	    EnterpriseProduct product = enterpriseProductService.getProductByNo(sellProductsNo);
+
+	    List<EnterpriseProductBenefit> productBenefitList = enterpriseProductService.getBenefitListBySellProductNo(sellProductsNo);
+	    
+	    EnterprisePenaltyCalculate Penalty = enterpriseProductService.getPenaltyCalculateByNo(sellProductsNo);
+
+	    model.addAttribute("product", product);
+	    model.addAttribute("productBenefitList", productBenefitList);
+
+	    return "enterprise/product/modifySellProductView";
+	}
 	@PostMapping("/modifySellProduct")
 	public String modifySellProduct(
 	    @ModelAttribute EnterpriseProduct product, // 상품 PK 포함

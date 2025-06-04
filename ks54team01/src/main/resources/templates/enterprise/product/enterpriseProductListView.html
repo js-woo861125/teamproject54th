@@ -95,8 +95,7 @@
                                 <td th:text="${sl.period}">12개월</td>
                                 <td th:text="${sl.finalPrice}">60,000</td> 
                                 <td class="col-lg-2 col-sm-2 col-4 col-action">
-                                    <a href="#" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
-                                    <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> 삭제 </a>
+                                  <a th:href="@{/enterprise/product/modifySellProduct(sellProductsNo=${sl.sellProductsNo})}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
                                 </td>
                            </tr>
 	                           <tr th:if="${#lists.isEmpty(sellProductList)}">
