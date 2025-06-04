@@ -16,6 +16,8 @@ import ks54team01.admin.productInfo.domain.ProductInfoModel;
 
 @Mapper
 public interface AdminProductMapper {
+	// 상품 상태 변경 시 해당 상품정보 상태 변경
+	void updateProductStatus(@Param("productNo") Long productNo, @Param("productStatus") String productStatus);
 	
 	// 상품 수정
 	int modifyProduct(AdminProduct product);
