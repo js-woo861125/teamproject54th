@@ -28,10 +28,6 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	// DI 의존성 주입
 	private final AdminProductInfoMapper adminProductInfoMapper;
 	
-	/**
-	 * 상품 상태 변경 시 상품정보 상태 변경
-	 */
-
 	
 	/**
 	 *  상품정보 등록 조회
