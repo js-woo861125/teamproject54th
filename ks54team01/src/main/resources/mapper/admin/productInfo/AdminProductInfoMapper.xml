@@ -113,6 +113,72 @@
 		</association>			
 	</resultMap>
 
+	<select id="getUsableCateogrySpecList" resultType="ProductInfoCategorySpec">
+		/* 카테고리별/상세스펙 사용유무 필터링 */ 
+		SELECT 
+			spec_no AS specNo,
+			spec_nm AS specName
+		FROM
+			products_spec
+		WHERE
+			use_status = '사용중'
+		ORDER BY CAST(SUBSTRING_INDEX(spec_no, '_', -1) AS UNSIGNED);
+	</select>
+
+	<select id="getUsableModelList" resultType="ProductInfoModel">
+		/* 모델 사용유무 필터링 */
+		SELECT
+			model_no AS modelNo,
+			model_nm AS modemName
+		FROM
+			model
+		WHERE
+			use_status = '사용중'	
+		ORDER BY CAST(SUBSTRING_INDEX(model_no, '_', -1) AS UNSIGNED);
+	</select>
+
+	<select id="getUsableItemList" resultType="ProductInfoItem">
+		/* 품목 사용유무 필터링 */
+		SELECT
+			item_no AS itemNo,
+			item_nm AS itemName
+		FROM
+			item
+		WHERE
+			use_status = '사용중'		
+		ORDER BY CAST(SUBSTRING_INDEX(item_no, '_', -1) AS UNSIGNED);
+	</select>
+
+	<select id="getUsableBrandList" resultType="ProductInfoBrand">
+		/* 브랜드 사용유무 필터링 */
+		SELECT
+			brand_no AS brandNo,
+			brand_nm AS brandName
+		FROM
+			brand
+		WHERE
+			use_status = '사용중'
+		ORDER BY CAST(SUBSTRING_INDEX(brand_no, '_', -1) AS UNSIGNED);
+	</select>
+
+	<select id="getUsableCategoryList" resultType="ProductInfoCategory">
+		/* 카테고리 사용유무 필터링 */
+		SELECT
+			product_category_no AS categoryNo,
+	        large_category AS lgCategory,
+	        middle_category AS mdCategory,
+	        small_category AS smCategory,
+	        use_status AS useStatus
+		FROM
+			products_category
+		WHERE
+			use_status = '사용중'
+		ORDER BY
+			CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(product_category_no, '_', 1), 'L', -1) AS UNSIGNED), 
+			CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(product_category_no, '_', 2), 'M', -1) AS UNSIGNED), 
+			CAST(SUBSTRING_INDEX(product_category_no, '_', -1) AS UNSIGNED);
+	</select>
+
 	<select id="countModelSpecsBySpecNo" resultType="int">
 		/* 카테고리별/상세스펙코드로 등록된 모델별/상세스펙 조회 */
 		SELECT
@@ -1080,6 +1146,10 @@
 			revision_date,
 			use_status
 		FROM 
-			products_category;
+			products_category
+		ORDER BY
+			CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(product_category_no, '_', 1), 'L', -1) AS UNSIGNED), 
+			CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(product_category_no, '_', 2), 'M', -1) AS UNSIGNED), 
+			CAST(SUBSTRING_INDEX(product_category_no, '_', -1) AS UNSIGNED);
 	</select>
 </mapper>
