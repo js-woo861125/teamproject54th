@@ -40,7 +40,8 @@ public class EnterpriseCommonController {
 		 
 		 List<AdminMonthlyFee> entMonthlyCalcList = commonService.getEntMonthlyCalc(entCeoNo, settlementMonth);
 		
-		
+		 model.addAttribute("entMonthlyCalcList", entMonthlyCalcList);
+		 model.addAttribute("settlementMonth", settlementMonth);
 		
 		return "enterprise/main";
 	}
