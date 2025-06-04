@@ -119,19 +119,18 @@
 				});
 				
 			/**
-			* 대표코드 선택 시 해당 대표자정보 조회
+			* 입점업체 선택 시 해당 업체정보 조회
 			*/
-			$('#entCeoNo').change(function() {
+			$('#entName').change(function() {
 			    const selectedOption = $(this).find('option:selected');
-			    console.log(selectedOption.data('empid'), selectedOption.data('ceoname'));
 			    const entEmpId = selectedOption.data('empid');
 			    const entCeoName = selectedOption.data('ceoname');
-			    const entName = selectedOption.data('entname');
+			    const ceoCode = selectedOption.data('ceocode');
 			    const entBrno = selectedOption.data('entbrno');
 			    
 			    $('#entEmpId').val(entEmpId || '');
 			    $('#entCeoName').val(entCeoName || '');
-			    $('#entName').val(entName || '');
+			    $('#ceoCode').val(ceoCode || '');
 			    $('#entBrno').val(entBrno || '');
 			});
 		</script>
@@ -164,10 +163,6 @@
 							                    <input class="form-check-input" type="radio" name="contractType" id="newContract" value="new" checked>
 							                    <label class="form-check-label" for="newContract">신규계약</label>
 							                </div>
-							                <div class="form-check mb-3">
-							                    <input class="form-check-input" type="radio" name="contractType" id="renewalContract" value="renewal">
-							                    <label class="form-check-label" for="renewalContract">재계약</label>
-							                </div>
 							            </div>
 							            <!-- 등록 버튼 -->
 							            <div class="d-flex gap-2 mb-3">
@@ -184,35 +179,35 @@
 								</div>
 								<div class="col-md-9">
 									<div class="mb-4">
-										<label class="form-label" for="entCeoNo">대표코드</label> 
-										<select class="form-select" id="entCeoNo" name="entCeoNo">
-											<option value="">대표코드를 선택하세요</option>
+										<label class="form-label" for="entName">입점업체명</label> 
+										<select class="form-select" id="entName" name="entName">
+											<option value="">계약할 입점업체를 선택하세요.</option>
 											<option th:each="e : ${entList}" 
 													th:if="${#strings.isEmpty(e.entContractStatus)}" 
-													th:value="${e.ceoCode}" 
-													th:text="${e.ceoCode}"
+													th:value="${e.entName}" 
+													th:text="${e.entName}"
+													th:data-ceocode="${e.ceoCode}"
 													th:data-empid="${e.entEmpId}"
 													th:data-ceoname="${e.entCeoName}"
-													th:data-entname="${e.entName}"
 													th:data-entbrno="${e.entBrno}">
 											</option>
 										</select>
-									</div>	
+									</div>
+									<div class="mb-4">
+										<label class="form-label" for="ceoCode">대표코드</label> 
+										<input type="text" id="ceoCode" name="entCeoNo" class="form-control" placeholder="입점업체를 선택하세요." readonly />
+									</div>										
 									<div class="mb-4">
 										<label class="form-label" for="entEmpId">대표아이디</label> 
-										<input type="text" id="entEmpId" name="entEmpId" class="form-control" placeholder="대표코드를 선택하세요." readonly />
+										<input type="text" id="entEmpId" name="entEmpId" class="form-control" placeholder="입점업체를 선택하세요." readonly />
 									</div>
 									<div class="mb-4">
 										<label class="form-label" for="entCeoName">대표자명</label> 
-										<input type="text" id="entCeoName" name="entCeoName" class="form-control" placeholder="대표코드를 선택하세요." readonly />
-									</div>
-									<div class="mb-4">
-										<label class="form-label" for="entName">입점업체명</label> 
-										<input type="text" id="entName" name="entName" class="form-control" placeholder="대표코드를 선택하세요." readonly />
+										<input type="text" id="entCeoName" name="entCeoName" class="form-control" placeholder="입점업체를 선택하세요." readonly />
 									</div>
 									<div class="mb-4">
 										<label class="form-label" for="entBrno">사업자번호</label> 
-										<input type="text" id="entBrno" name="entBrno" class="form-control" placeholder="대표코드를 선택하세요." readonly />
+										<input type="text" id="entBrno" name="entBrno" class="form-control" placeholder="입점업체를 선택하세요." readonly />
 									</div>																		
 								</div>
 							</div>
