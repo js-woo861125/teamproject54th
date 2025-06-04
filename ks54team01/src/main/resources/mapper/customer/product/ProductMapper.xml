@@ -110,7 +110,43 @@
 		
 		
 	</resultMap>
-
+	
+	
+	<resultMap type="BenefitDetail" 		id="BenefitResultMap">
+		<id 	column="sell_products_no"	property="sellProdNo"/>
+		<result column="period" 			property="period"/>
+		<result column="ent_ceo_no" 		property="entCeoNo"/>
+		<result column="products_no" 		property="prodNo"/>
+		<result column="benefit_nm" 		property="benefitNm"/>
+		<result column="benefit_detail" 	property="benefitDetail"/>
+	</resultMap>
+	
+	
+	<select id="getBenefitByProduct" resultMap="BenefitResultMap">
+		SELECT
+			sp.sell_products_no,
+			sp.period,
+			pb.ent_ceo_no,
+			p.products_no,
+			b.benefit_nm,
+			pb.benefit_detail
+		FROM
+			sell_products sp inner JOIN products p 
+			ON sp.products_no = p.products_no
+			inner JOIN ent_ceo ec 
+			ON sp.ent_ceo_no = ec.ent_ceo_no
+			inner join quantity q 
+			ON p.products_no = q.products_no and sp.ent_ceo_no = q.ent_ceo_no
+			inner join products_benefit pb
+			on pb.sell_products_no = sp.sell_products_no
+			inner join benefit b
+			on b.benefit_no = pb.benefit_no
+		WHERE
+			p.products_no = #{productsNum} and b.use_status = '사용중' and pb.use_status = '사용중'
+		order by
+			ec.ent_ceo_no , sp.period desc
+	</select>
+	
 	
 	
 	<select id="getCustomerProductList" parameterType= "String" resultMap="CustomerProductResultMap">
