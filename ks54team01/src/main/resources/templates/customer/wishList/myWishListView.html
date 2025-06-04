@@ -179,7 +179,7 @@
 
             <div class="table-responsive">
                 <table class="table table-bordered align-middle">
-                    <thead class="table-light">
+                    <thead th:if="${!#lists.isEmpty(myWishList)}" class="table-light">
                         <tr>
                             <th colspan="5">
                                 <div class="d-flex align-items-center gap-3">
@@ -205,7 +205,7 @@
 	                        	<div class="d-flex g-5">
                               		<!-- <a th:href="@{/customer/product/productDetailByProd(productsNum=${l.productsNum})}"> -->
 		                                <div class="me-3 ml-20">
-		                                    <img th:src="@{'/user/assets/imgs/shop/' + ${l.productInfo.productsImage}}"
+		                                    <img th:src="@{${l.productInfo.imageFilePath}}"
 		                                         alt="#" class="image-fluid" />
 		                                </div>
 		                                <div class="ml-30 mt-50">

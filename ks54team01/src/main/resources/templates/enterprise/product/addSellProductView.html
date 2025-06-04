@@ -14,7 +14,6 @@
 		method="post" enctype="multipart/form-data">
 		<input type="hidden" name="period" id="period" />
 		<input type="hidden" name="calculatePrice" id="calculatePrice" />
-		<input type="hidden" name="finalPrice" id="finalPrice" />
 		<div class="row">
 			<div class="col-lg-8">
 				<!-- 제품정보 카드 -->
@@ -74,7 +73,7 @@
 								<div class="mb-4">
 									<label class="form-label">플랫폼판매가</label> <input type="text"
 										name="platformPrice" id="platformPrice" placeholder="플랫폼 판매가"
-										class="form-control" />
+										class="form-control" readonly />
 								</div>
 							</div>
 							<div class="col-lg-4">
@@ -91,7 +90,7 @@
 								<div class="mb-4">
 									<label class="form-label">위약금등록</label> <input type="text"
 										name="penaltyPeriod" id="penaltyPeriod" placeholder="위약금"
-										class="form-control" />
+										class="form-control" readonly />
 								</div>
 							</div>
 							<div class="col-lg-4">
@@ -224,7 +223,7 @@
 
 	// 최종 등록리스트 추가
 	document.querySelector('.add-sellProduct-btn')?.addEventListener('click', function() {
-	    const marginSelect = document.getElementById('marginSelect');
+		const marginSelect = document.getElementById('marginSelect');
 	    const period = marginSelect.options[marginSelect.selectedIndex].textContent;
 	    const marginNum = marginSelect.value;
 	    const lumpSum = document.getElementById('lumpSumPayPrice').value;
@@ -232,6 +231,8 @@
 	    const penaltyPeriod = document.getElementById('penaltyPeriod').value;
 	    const optionLumpSumPrice = document.querySelector('input[name="optionLumpSumPrice"]').value;
 	    const penaltyRatio = document.getElementById('penaltyRatio').value;
+	    const calculatePrice = document.getElementById('calculatePrice').value;
+	    const finalPrice = optionLumpSumPrice;
 
 	    // 혜택 여러개 추출
 	    const benefitNos = Array.from(document.querySelectorAll('select[name="benefitNoList"]')).map(sel => sel.value);
@@ -250,8 +251,9 @@
 	    }
 
 	    const item = {
-	    	    period, marginNum, lumpSum, platformPrice, penaltyPeriod,
-	    	    optionLumpSumPrice, penaltyRatio, benefitNos, benefitDetails
+	    		  period, marginNum, lumpSum, platformPrice, penaltyPeriod,
+	    		  optionLumpSumPrice, penaltyRatio, benefitNos, benefitDetails,
+	    		  calculatePrice, finalPrice      
 	    	};
 	    finalItems.push(item);
 	    redrawFinalList();
@@ -347,6 +349,55 @@
 	        });
 	    });
 	}
+	document.querySelector('form.user').addEventListener('submit', function(e) {
+	    e.preventDefault();
+
+	    const sellProductRequests = finalItems.map(item => {
+	        const period = parseInt(item.period);
+	        return {
+	            enterpriseProduct: {
+	                period: period,
+	                marginRatioNum: item.marginNum,
+	                lumpSumPayPrice: parseInt(item.lumpSum),
+	                calculatePrice: parseInt(item.calculatePrice),
+	                finalPrice: parseInt(item.finalPrice),
+	                platformPrice: parseInt(item.platformPrice.replace(/,/g, "")),
+	                productsNo: document.querySelector('input[name="productsNo"]').value,
+	                entCeoNo: document.querySelector('input[name="entCeoNo"]').value,
+	                entEmpId: document.querySelector('input[name="entEmpId"]').value
+	            },
+	            benefitNoList: item.benefitNos,
+	            benefitDetailList: item.benefitDetails,
+	            periodStart: 1,              
+	            periodEnd: period,            
+	            penaltyFeeRatio: Number(item.penaltyRatio) 
+	        };
+	    });
+
+	    const quantity = {
+	        quantity: document.querySelector('input[name="quantity"]').value,
+	        productsNo: document.querySelector('input[name="productsNo"]').value,
+	        entCeoNo: document.querySelector('input[name="entCeoNo"]').value,
+	        entEmpId: document.querySelector('input[name="entEmpId"]').value
+	    };
+
+	    $.ajax({
+	        url: '/enterprise/product/addSellProduct',
+	        type: 'POST',
+	        contentType: 'application/json',
+	        data: JSON.stringify({
+	            sellProductRequests,
+	            quantity
+	        }),
+	        success: function(res) {
+	            alert("등록 성공!");
+	            window.location.href = "/enterprise/product/sellProductList";
+	        },
+	        error: function(err) {
+	            alert("등록 중 오류 발생: " + (err.responseText || err.statusText));
+	        }
+	    });
+	});
 
 
     </script>

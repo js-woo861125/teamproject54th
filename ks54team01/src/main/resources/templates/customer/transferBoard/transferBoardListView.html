@@ -211,13 +211,13 @@
 											<a th:href="@{/customer/transferBoard/transferBoardDetail(transferBoardNum=${l.transferBoardNum})}">
 												<img class="img-main"
 													 th:src="@{${l.uploadImage}}"
-													 alt="이미지" />
+													 alt="이미지"/>
 											</a>
 										</div>
 									</div>
 									<div class="product-content-wrap">
 										<div class="product-category d-flex justify-content-between">
-											<a th:text="${l.productInfoCategory.smCategory}" href="shop-grid-right.html">TV</a>
+											<span th:text="${l.productInfoCategory.smCategory}"></span>
 										</div>
 										<h2 th:text="${l.transferTitle}">
 											<a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.enterprise.product.mapper.EnterprisePenaltyCalculateMapper">
+
+	<insert id="insertPenaltyCalculate" parameterType="ks54team01.enterprise.product.domain.EnterprisePenaltyCalculate">
+    <selectKey resultType="string" keyProperty="penaltyCalculateNo" order="BEFORE">
+        SELECT CONCAT('No', IFNULL(MAX(CAST(SUBSTRING(penalty_calculate_no, 3) AS UNSIGNED)), 0) + 1) 
+        FROM ent_penalty_calculate
+    </selectKey>
+    INSERT INTO ent_penalty_calculate (
+        penalty_calculate_no, ent_ceo_no, ent_emp_id, sell_products_no, period_start, period_end, penalty_fee_ratio, register_date, revision_date, use_status
+    ) VALUES (
+        #{penaltyCalculateNo}, #{entCeoNo}, #{entEmpId}, #{sellProductsNo}, #{periodStart}, #{periodEnd}, #{penaltyFeeRatio}, #{registerDate}, #{revisionDate}, #{useStatus}
+    )
+	</insert>
+
+</mapper>
+
+
+
+
+
+

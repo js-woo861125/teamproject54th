@@ -4,6 +4,27 @@
 	  layout:decorate="~{enterprise/layout/default}">
 	<!-- head 삽입공간 -->
 	<head>
+		<style>
+		  .badge {
+		    font-size: 1.2rem;      
+		    padding: 0.6em 0.6em; 
+		    min-width: 70px;       
+		  }
+		  .info-text {
+			white-space: nowrap;
+			display: flex;  /* 한 줄에 label + value 정렬 */
+		  }
+		  .info-text .label {
+			font-weight: bold;
+			font-size: 1.1rem;
+			min-width: 130px;  
+		  }
+		  .info-text .value {
+			font-weight: normal;
+			font-size: 0.9rem;
+		  }
+  		  
+		</style>	
 	</head>
 	
 	<th:block layout:fragment="jsFile">
@@ -20,41 +41,68 @@
 				 <div class="row align-items-center">
 				    <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
 				        <div class="d-flex align-items-center gap-2">
-				            <h3 class="mb-0">계약상태</h3>
-				            <div class="badge rounded-pill alert-success">계약중</div>
+				            <h3 class="mb-1">계약상태 : </h3>
+				            <div class="badge rounded-pill" 
+				            	 th:classappend="${contractInfo.contractStatus == '계약중'} ? ' alert-success' : ' alert-danger'"
+				            	 th:text="${contractInfo.contractStatus}">계약중</div>
 				        </div>
 				    </div>
 				</div>
              </header>
 			<div class="card-body">
 			    <div class="row mb-50 mt-20 enterprise-info-wrap">
-			        <div class="col-md-5">
-			            <article class="icontext align-items-start">
-			                <span class="icon icon-sm rounded-circle bg-primary-light">
-			                    <i class="text-primary material-icons md-store"></i>
-			                </span>
-			                <div class="text">
-			                    <h6 class="mb-1">사업자 정보</h6>
-			                    <p class="mb-1">
-			                        업체명 : <span th:text="${contractInfo.entName}">(주)스마트렌탈</span> <br />
-			                        사업자번호 : <span>402-00-00004</span> <br />
-			                        전북 전주시 덕진구 기린대로 499 3층<br />
-			                        301호
-			                     </p>   
-			                </div>
-			            </article>
-			        </div>
+					<div class="col-md-5">
+					    <article class="icontext align-items-start">
+					        <span class="icon icon-sm rounded-circle bg-primary-light">
+					            <i class="text-primary material-icons md-store"></i>
+					        </span> 
+							<div class="text">
+							  <h6 class="mb-2">사업자 정보</h6>
+							  <p class="mb-1 info-text">
+							    <span class="label">상호명 :</span>
+							    <span class="value" th:text="${contractInfo.entName}">(주)이지렌탈</span>
+							  </p>
+							  <p class="mb-1 info-text">
+							    <span class="label">사업자등록번호 :</span>
+							    <span class="value" th:text="${contractInfo.entBrno}">402-00-00005</span>
+							  </p>
+							  <p class="mb-1 info-text">
+							    <span class="label">주소 :</span>
+							    <span class="value" th:text="${contractInfo.entCeoAddr + contractInfo.entCeoDaddr}">전북 전주시 덕진구 기린대로 499 3층 302호</span>
+							  </p>
+							</div>
+					    </article>
+					</div>
 			        <div class="col-md-5">
 			            <article class="icontext align-items-start">
 			                <span class="icon icon-sm rounded-circle bg-primary-light">
 			                    <i class="text-primary material-icons md-person"></i>
 			                </span>
 			                <div class="text">
-			                    <h6 class="mb-1">대표</h6>
-			                    <p class="mb-1">
-			                        이형열 <br />
-			                        ceo1@naver.com <br />
-			                        010-0011-0011
+			                    <h6 class="mb-2">대표자 정보</h6>
+			                    <p class="mb-1 info-text">
+			                    	<span class="label">대표 계정 ID :</span>
+			                        <span class="value" th:text="${contractInfo.entEmpId}">entceoid1</span>
+			                    </p>
+			                    <p class="mb-1 info-text">
+			                    	<span class="label">대표자명 :</span>    
+			                        <span class="value" th:text="${contractInfo.entCeoName}">이형열</span>
+			                    </p>
+			                    <p class="mb-1 info-text">
+			                    	<span class="label">연락처 :</span>   
+			                        <span class="value" th:text="${contractInfo.entCeoPhone}">010-0011-0011</span>
+			                    </p>
+			                    <p class="mb-1 info-text">
+			                    	<span class="label">이메일 :</span>   
+			                        <span class="value" th:text="${contractInfo.entCeoEmail}">ceo1@naver.com</span>
+			                    </p>
+			                    <p class="mb-1 info-text">    
+			                        <span class="label">대표 계좌정보 :</span>   
+			                        <span class="value" th:text="${contractInfo.entCeoBank + ' ' + contractInfo.entBankNum}">농협 352-1549-6496-13</span>
+			                    </p>
+			                    <p class="mb-1 info-text">    
+			                        <span class="label">등록일자 :</span>   
+			                        <span class="value" th:text="${#temporals.format(contractInfo.entRegDate, 'yyyy년 M월 d일')}">2023년 3월 1일</span>
 			                    </p>
 			                </div>
 			            </article>
@@ -77,13 +125,13 @@
 			                </thead>
 			                <tbody>
 			                    <tr class=text-center>
-			                        <td>0.1</td>
-			                        <td>0.05</td>
-			                        <td>0.05</td>
-			                        <td>3,000,000</td>
-			                        <td>2023-03-01</td>
-			                        <td>2026-02-28</td>
-			                        <td>20</td>
+			                        <td th:text="${contractInfo.feeRateSales} + '%'">0.1</td>
+			                        <td th:text="${contractInfo.feeRateRental} + '%'">0.05</td>
+			                        <td th:text="${contractInfo.feeRatePenalty} + '%'">0.05</td>
+			                        <td th:text="${formattedEntryFee} + '원'">3,000,000원</td>
+			                        <td th:text="${#temporals.format(contractInfo.contractDate, 'yyyy년 M월 d일')}">2023-03-01</td>
+			                        <td th:text="${#temporals.format(contractInfo.contractEndDate, 'yyyy년 M월 d일')}">2026-02-28</td>
+			                        <td th:text="${contractInfo.entCalDate} + '일'">20</td>
 			                    </tr>
 			                </tbody>
 			            </table>

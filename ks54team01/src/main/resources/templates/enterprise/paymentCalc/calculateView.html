@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{enterprise/layout/default}">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">매출/정산 조회</h2>
+            </div>
+        </div>
+        <header class="card card-header">
+            <form id="mainSearchForm" th:action="@{/enterprise/paymentClac/paymentCalcList}" method="get">
+                <!-- <div class="row gx-3"> -->
+                    <div class="col-6 d-flex justify-content-start text-center">
+                        <div class="col-4">
+                            <input type="month" name="settlementMonth" th:value="${settlementMonth}" id="monthSelector" class="form-control"/>
+                        </div>
+                    </div>
+                <!-- </div> -->
+            </form>
+        </header>
+
+        <div class="col-12 d-flex justify-content-center">
+            <div class="col-4">
+                <div class="card card-body text-center" style="background-color: rgb(126, 160, 224);">
+                    <p style="color:rgb(255, 255, 255); font-size:x-large">◪매출 종류◩</p>
+                </div>
+                <div th:if="${!#lists.isEmpty(adminMonthlyFeeList)}" th:each="ll : ${adminMonthlyFeeList}">
+                    <div class="card card-body mb-1 d-flex">
+                        <ul class="text-center text-success h5">
+                            <li th:text="${ll.paymentDetails}"> </li>
+                        </ul> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-4">
+                <div class="card card-body text-center" style="background-color: rgb(126, 160, 224);">
+                    <p style="color:rgb(255, 255, 255); font-size:x-large">◪총 매출액◩</p>
+                </div>
+                <div th:if="${!#lists.isEmpty(adminMonthlyFeeList)}" th:each="ll : ${adminMonthlyFeeList}">
+                    <div class="card card-body mb-1 d-flex">
+                        <ul class="text-center h5">
+                            <li th:text="|₩ ${#numbers.formatDecimal(ll.entFee, 0, 'COMMA', 0, 'POINT')}|"> </li>
+                        </ul> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-4">
+                <div class="card card-body text-center" style="background-color: rgb(126, 160, 224);">
+                    <p style="color:rgb(255, 255, 255); font-size:x-large">◪플랫폼 수수료◩</p>
+                </div>
+                <div th:if="${!#lists.isEmpty(adminMonthlyFeeList)}" th:each="ll : ${adminMonthlyFeeList}">
+                    <div class="card card-body mb-1 d-flex">
+                        <ul class="text-center h5">
+                            <li th:text="|₩ ${#numbers.formatDecimal(ll.platformFee, 0, 'COMMA', 0, 'POINT')}|"> </li>
+                        </ul> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12" th:unless="${!#lists.isEmpty(adminMonthlyFeeList)}">
+            <div class="card card-body">
+                <div class="text text-center h5">
+                    <h4> △ 아직 마감된 데이터가 없습니다. ▽</h4>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+       
+        <div class="card mb-4">
+            <header class="card-header d-flex justify-content-lg-between">
+            <h4 class="card-title">매출 상세 내역</h4>
+                <div class="d-flex justify-content-between">
+                </div>
+            </header>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div class="table-responsive">
+                        <table class="table align-middle table-nowrap mb-0">
+                            <thead class="table-light">
+                                <tr class="text-center">
+                                    <th class="align-middle" scope="col">수수료 관리 코드</th>
+                                    <th class="align-middle" scope="col">업체 코드</th>
+                                    <th class="align-middle" scope="col">매출 종류</th>
+                                    <th class="align-middle" scope="col">매출 금액</th>
+                                    <th class="align-middle" scope="col">플랫폼 수수료</th>
+                                    <th class="align-middle" scope="col">지급 예정일</th>
+                                    <th class="align-middle" scope="col">지급일</th>
+                                    <th class="align-middle" scope="col">정산 연월</th>
+                                    <th class="align-middle" scope="col">마감 구분</th>
+                                    <th class="align-middle" scope="col">상태</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <th:block th:if="${!#lists.isEmpty(entPayCalcList)}">
+                                <tr class="text-center" th:each="l : ${entPayCalcList}">
+                                    <th:block th:if="${l != null}">
+                                        <td class="align-middle" scope="row" th:text="${l.feeNo}"></td>
+                                        <td class="align-middle" th:text="${l.entCeoNo}"></td>
+                                        <td class="align-middle" th:text="${l.paymentDetils}"></td>
+                                        <td class="align-middle" th:text="${#numbers.formatDecimal(l.entSales, 0, 'COMMA', 0, 'POINT')}"></td>
+                                        <td class="align-middle" th:text="${#numbers.formatDecimal(l.platFormFee, 0, 'COMMA', 0, 'POINT')}"></td>
+                                        <td class="align-middle" th:text="${l.provisionScheduleDate}"></td>
+                                        <td class="align-middle" th:text="${l.provisionDate}"></td>
+                                        <td class="align-middle" th:text="${l.settlementMonth}"></td>
+                                        <td class="align-middle" th:text="${l.closingSttelement}"></td>
+                                        <td class="align-middle" th:text="${l.paymentStatus}"></td>
+                                    </th:block>
+                                  
+                                </tr>
+                            </th:block>
+                                <tr th:unless="${!#lists.isEmpty(entPayCalcList)}">
+                                    <td class="text-center" colspan="14">매출 내역이 없어요.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
+
+<th:block layout:fragment="jsScript">
+     <script th:inline="javascript">
+
+          document.addEventListener('DOMContentLoaded', function() {
+            // 'monthSelector' ID를 가진 <input type="month"> 요소를 찾습니다.
+            const monthSelector = document.getElementById('monthSelector');
+            // 'mainSearchForm' ID를 가진 <form> 요소를 찾습니다.
+            const mainSearchForm = document.getElementById('mainSearchForm');
+
+            // monthSelector가 존재하고 값이 비어있다면, 현재 월로 초기 설정합니다.
+            if (monthSelector && (!monthSelector.value || monthSelector.value === '')) {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = (today.getMonth() + 1).toString().padStart(2, '0'); // 'MM' 형식
+                monthSelector.value = `${year}-${month}`;
+            }
+
+            // monthSelector에 'change' 이벤트 리스너를 추가합니다.
+            // 달력에서 월을 선택하여 값이 변경될 때마다 이 함수가 실행됩니다.
+            if (monthSelector) {
+                monthSelector.addEventListener('change', function() {
+                    // mainSearchForm이 존재하면 해당 폼을 제출합니다.
+                    if (mainSearchForm) {
+                        mainSearchForm.submit();
+                    }
+                });
+            }
+        });
+       
+    </script>
+</th:block>
+
+</body>
+</html>

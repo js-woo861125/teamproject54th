@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ks54team01.admin.product.domain.AdminProduct;
@@ -19,8 +22,9 @@ import ks54team01.admin.productInfo.domain.ProductInfoBenefit;
 import ks54team01.admin.productInfo.service.AdminProductInfoService;
 import ks54team01.enterprise.product.domain.EnterpriseMarginRatio;
 import ks54team01.enterprise.product.domain.EnterpriseProduct;
-import ks54team01.enterprise.product.domain.EnterpriseProductBenefit;
 import ks54team01.enterprise.product.domain.EnterpriseProductQuantity;
+import ks54team01.enterprise.product.domain.EnterpriseSellProductAllRequest;
+import ks54team01.enterprise.product.domain.EnterpriseSellProductRequest;
 import ks54team01.enterprise.product.mapper.EnterpriseMarginRatioMapper;
 import ks54team01.enterprise.product.service.EnterpriseMarginRatioService;
 import ks54team01.enterprise.product.service.EnterpriseProductService;
@@ -49,7 +53,10 @@ public class EnterpriseProductController {
 	@GetMapping("/sellProductList")
 	public String getsellProductList(Model model) {
 		List<EnterpriseProduct> sellProductList = enterpriseProductService.getSellProductList();
-		
+	    System.out.println("==== sellProductList.size() : " + sellProductList.size());
+	    for(EnterpriseProduct p : sellProductList) {
+	        System.out.println("상품명: " + p.getProductName() + ", 기간: " + p.getPeriod() + ", 금액: " + p.getFinalPrice());
+	    }
 		model.addAttribute("title", "판매 상품목록");
 		model.addAttribute("sellProductList", sellProductList);
 		
@@ -166,22 +173,48 @@ public class EnterpriseProductController {
 	}
 	
 	@PostMapping("/addSellProduct")
-	public String addSellProduct(
-	    @ModelAttribute EnterpriseProduct enterpriseProduct,
-	    @RequestParam List<String> benefitNoList,
-	    @RequestParam List<String> benefitDetailList,
-	    @RequestParam List<String> platformPriceList,
-	    @RequestParam List<String> finalPriceList,
-	    @RequestParam List<String> optionLumpSumPriceList,
-	    @ModelAttribute EnterpriseProductQuantity quantity
-	) {  
-	
-	    if (quantity.getQuantity() == null) {
-	        throw new IllegalArgumentException("수량은 필수 입력값입니다.");
+	@ResponseBody
+	public ResponseEntity<?> addSellProduct(
+	    @RequestBody EnterpriseSellProductAllRequest allRequest
+	) {
+		// JSON 가져오기
+	    List<EnterpriseSellProductRequest> sellProductRequests = allRequest.getSellProductRequests();
+	    EnterpriseProductQuantity quantity = allRequest.getQuantity();
+
+	    // 수량 검증
+	    if (quantity == null || quantity.getQuantity() == null || quantity.getQuantity() == 0) {
+	        return ResponseEntity.badRequest().body("수량은 필수 입력값입니다.");
 	    }
-		
-	    enterpriseProductService.addSellProduct(enterpriseProduct,  benefitNoList, benefitDetailList, quantity);
-	  
+
+	    try {
+	        // 중복체크 및 등록 (중복이면 IllegalStateException 발생)
+	        enterpriseProductService.addSellProductBatch(sellProductRequests, quantity);
+	        return ResponseEntity.ok("등록 되었습니다");
+	    } catch (IllegalStateException e) {
+	        // 중복 등록시 메시지 반환
+	        return ResponseEntity.badRequest().body(e.getMessage());
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 콘솔에 에러 전체 로그
+	        return ResponseEntity.status(500).body(e.getMessage());
+	    }
+	}
+	
+	/*
+	 * 입점업체 등록 상품 수정
+	 */
+	@PostMapping("/modifySellProduct")
+	public String modifySellProduct(
+	    @ModelAttribute EnterpriseProduct product, // 상품 PK 포함
+	    @RequestParam("optionLumpSumPrice") int optionLumpSumPrice,
+	    @RequestParam("penaltyRatio") double penaltyRatio,
+	    @RequestParam("benefitNoList") List<String> benefitNoList,
+	    @RequestParam("benefitDetailList") List<String> benefitDetailList,
+	    RedirectAttributes redirectAttributes
+	) {
+	    enterpriseProductService.modifySellProductBenefits(
+	    		   product, benefitNoList, benefitDetailList
+	    );
+	    redirectAttributes.addFlashAttribute("msg", "수정 완료!");
 	    return "redirect:/enterprise/product/sellProductList";
 	}
 	

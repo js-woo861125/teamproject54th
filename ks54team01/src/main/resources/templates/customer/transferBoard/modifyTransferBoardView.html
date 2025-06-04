@@ -26,6 +26,48 @@
 			        reader.readAsDataURL(files[0]);
 			    }
 			});  */
+			function resizeImage(domElement, callbackFn) {
+				const filesToUpload = domElement.files;
+				const file = filesToUpload[0];
+				 
+				const img = new Image();
+				  img.src = URL.createObjectURL(file);
+				  img.onload = () => {
+				    const MAX_WIDTH = 225;
+				    const MAX_HEIGHT = 225;
+				    let width = img.width;
+				    let height = img.height;
+
+
+				    // Canvas로 그리기
+				    const canvas = document.createElement('canvas');
+				    canvas.width = MAX_WIDTH;
+				    canvas.height = MAX_HEIGHT;
+				    const ctx = canvas.getContext('2d');
+				    ctx.drawImage(img, 0, 0, width, height, 0, 0, MAX_WIDTH, MAX_HEIGHT);
+
+				    // Blob → File 변환
+				    canvas.toBlob((blob) => {
+				      if (!blob) return;
+
+				      // 새 파일 객체 생성
+				      const resizedFile = new File([blob], file.name, { type: file.type });
+
+				      // DataTransfer로 새 FileList 생성
+				      const dataTransfer = new DataTransfer();
+				      dataTransfer.items.add(resizedFile);
+
+				      // 이미지input.files 교체
+				      domElement.files = dataTransfer.files;
+
+				      //console.log('input.files 교체 완료:', domElement.files);
+				      
+					  if(callbackFn) callbackFn(domElement);
+					  
+				    }, file.type);
+				  };
+			}
+			
 			
 			$('#mainImage').change(function() {
 			    const files = this.files;
@@ -48,24 +90,19 @@
 			        previewDiv.append(hiddenInput);
 			    }
 
-			    if (files.length > 0) {
-			        const reader = new FileReader();
-			        reader.onload = function(e) {
-			            const img = $('<img>', {
-			                src: e.target.result,
-			                alt: '대표사진',
-			                style: 'max-width: 100%; max-height: 200px;'
-			            });
-			            previewDiv.append(img);
-			        };
-			        reader.readAsDataURL(files[0]);
-			    }
+			    resizeImage(this, function(element){
+				    const files = element.files;
+				    if (files.length > 0) {
+				        const reader = new FileReader();
+				        reader.onload = function (e) {
+				            const img = $('<img />', {src: e.target.result, alt: '대표사진'});
+				            $('#mainImagePreview').append(img);
+				        }
+				        reader.readAsDataURL(files[0]);
+				    }
+			    });
 			});
-
-
-
-
-			
+	
 			
 		 	// 추가 이미지 미리보기 & 삭제
 		   	$('#extraImage').change(function(){
@@ -73,6 +110,12 @@
 		   	    console.log('tset');
 		   	    const files = this.files;
 		   	    const fileList = [...files];
+		   	    const imgPreviewLength = $('#extraImagePreview').find('img').length;
+		   	    if(fileList.length + imgPreviewLength > 4){
+		   	    	alert("4개 초과할 수 없습니다.")
+		   	    	$(this).val('');
+		   	    	return ;
+		   	    }
 		   	    fileList.forEach(function(file, idx){
 		   	        const imgDiv = $('<div class="col-md-6 img-box1" style="position:relative"></div>');
 		   	        const lastModified = files[idx].lastModified;
@@ -84,14 +127,14 @@
 		   	        if(file.type.match('image.*')){
 		   	            const reader = new FileReader(); 
 		   	            reader.onload = function (e) { 
-		   	                const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
+		   	                const span = $('<span />', {'class': 'delete-img1 position-absolute top-0 end-0 me-2 px-2 py-1 bg-danger text-white rounded', 'data-remove-key' : lastModified}).text('X');
 		   	                const img = $('<img />', {src: e.target.result, id : lastModified, alt: fileName });
 		   	                imgDiv.append(span, img);
 		   	                imgDiv.appendTo('#extraModifyImagePreview');
 		   	            } 
 		   	            reader.readAsDataURL(file);
 		   	        }else{
-		   	            const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
+		   	            const span = $('<span />', {'class': 'delete-img1 position-absolute top-0 end-0 me-2 px-2 py-1 bg-danger text-white rounded', 'data-remove-key' : lastModified}).text('X');
 		   	            const noImage = $('<img />', { src : '/manage/assets/imgs/theme/upload.svg', id : lastModified, alt : fileName});
 		   	            imgDiv.append(span, noImage);
 		   	            imgDiv.appendTo('#extraModifyImagePreview');
@@ -222,7 +265,7 @@
 									    <div id="extraImagePreview" class="row g-3">
 									    	<div th:each="fl : ${fileList}" class="col-md-6 img-box1 position-relative">
 										        <!-- 삭제 버튼 -->
-										        <span class="delete-img1 position-absolute top-0 end-0 m-1 px-2 py-1 bg-danger text-white rounded" 
+										        <span class="delete-img1 position-absolute top-0 end-0 me-2 px-2 py-1 bg-danger text-white rounded" 
 										              style="cursor:pointer; z-index:10;"
 										              th:attr="data-remove-key=${fl.fileIdx}">X</span>
 										        <!-- 이미지 -->

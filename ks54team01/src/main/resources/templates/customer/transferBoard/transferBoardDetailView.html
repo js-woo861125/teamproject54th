@@ -13,65 +13,68 @@
 	
 	<th:block layout:fragment="jsScript">
 		<script th:inline="javascript">
-		$('#daumPostBtn').click(function(e){
-			new daum.Postcode({
-	            oncomplete: function(data) {
-	                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-
-	                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-	                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-	                var addr = ''; // 주소 변수
-	                var extraAddr = ''; // 참고항목 변수
-
-	                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-	                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-	                    addr = data.roadAddress;
-	                } else { // 사용자가 지번 주소를 선택했을 경우(J)
-	                    addr = data.jibunAddress;
-	                }
-
-	                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-	                if(data.userSelectedType === 'R'){
-	                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-	                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-	                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
-	                        extraAddr += data.bname;
-	                    }
-	                    // 건물명이 있고, 공동주택일 경우 추가한다.
-	                    if(data.buildingName !== '' && data.apartment === 'Y'){
-	                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-	                    }
-	                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-	                    if(extraAddr !== ''){
-	                        extraAddr = ' (' + extraAddr + ')';
-	                    }
-	                    // 조합된 참고항목을 해당 필드에 넣는다.
-	                    document.getElementById("delAddr").value = extraAddr;
-	                
-	                } else {
-	                    document.getElementById("delAddr").value = '';
-	                }
-
-	                // 우편번호와 주소 정보를 해당 필드에 넣는다.
-	                document.getElementById('delZipNo').value = data.zonecode;
-	                document.getElementById("delAddr").value = addr;
-	                // 커서를 상세주소 필드로 이동한다.
-	                document.getElementById("delDaddr").focus();
-	            }
-	        }).open();
-		});
-		
-		$('.applyBtn').click(function(e) {
-			e.preventDefault();
-
-			const loginId = /*[[${session.loginId}]]*/"";
-			if (!loginId) {
-				location.href = '/customer/login/memberLogin';
-			    return false;
-			}
+			$('#daumPostBtn').click(function(e){
+				new daum.Postcode({
+		            oncomplete: function(data) {
+		                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+	
+		                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+		                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+		                var addr = ''; // 주소 변수
+		                var extraAddr = ''; // 참고항목 변수
+	
+		                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+		                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+		                    addr = data.roadAddress;
+		                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+		                    addr = data.jibunAddress;
+		                }
+	
+		                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+		                if(data.userSelectedType === 'R'){
+		                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+		                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+		                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+		                        extraAddr += data.bname;
+		                    }
+		                    // 건물명이 있고, 공동주택일 경우 추가한다.
+		                    if(data.buildingName !== '' && data.apartment === 'Y'){
+		                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+		                    }
+		                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+		                    if(extraAddr !== ''){
+		                        extraAddr = ' (' + extraAddr + ')';
+		                    }
+		                    // 조합된 참고항목을 해당 필드에 넣는다.
+		                    document.getElementById("delAddr").value = extraAddr;
+		                
+		                } else {
+		                    document.getElementById("delAddr").value = '';
+		                }
+	
+		                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+		                document.getElementById('delZipNo').value = data.zonecode;
+		                document.getElementById("delAddr").value = addr;
+		                // 커서를 상세주소 필드로 이동한다.
+		                document.getElementById("delDaddr").focus();
+		            }
+		        }).open();
+			});
 			
+			$('.applyBtn').click(function(e) {
+				e.preventDefault();
+	
+				const loginId = /*[[${session.loginId}]]*/"";
+				if (!loginId) {
+					location.href = '/customer/login/memberLogin';
+				    return false;
+				}	
+			});
 			
-		});
+			$('#applyTransferBtn').click(function(e) {
+				e.preventDefault();
+				
+			});
 		</script>
 	</th:block>
 	
@@ -82,7 +85,7 @@
             <div class="row">
                 <div class="col-xl-11 col-lg-12 m-auto">
                     <div class="row">
-                        <div class="col-xl-9 product-info mt-30">
+                        <div class="col-xl-9 product-info mt-30" style="background-color:#f8f8f8; box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
                             <div class="product-detail accordion-detail" th:object="${transferBoardInfo}">
                                 <!-- 모트스트랩 start -->
 								<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -94,20 +97,38 @@
 													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 												</div>
 												<div class="modal-body">
-													<div class="row">
-														<div class="form-group col-md-6">
-															<select>
-																<option></option>
-															</select>
-														</div>
-														<div class="form-group col-md-6">
+													<div class="row justify-content-center">
+														<div class="form-group col-md-10">
 															<input type="hidden" name="customerSellProduct.entCeoNo" th:value="*{customerSellProduct.entCeoNo}" id="entCeoNoInput" class="form-control">
 															<input type="hidden" name="customerSellProduct.entEmpId" th:value="*{customerSellProduct.entEmpId}" id="entEmpIdInput" class="form-control">
 															<input type="hidden" name="sellProductsNum" th:value="*{sellProductsNum}" id="sellProductsNumInput" class="form-control">
 															<input type="hidden" name="rentalContractNum" th:value="*{rentalContractNum}" id="rentalContractNumInput" class="form-control">
 															<input type="hidden" name="customerContract.rentalEndDate" th:value="*{customerContract.rentalEndDate}" id="rentalContractNumInput" class="form-control">
 															<input type="hidden" name="transferBoardNum" th:value="*{transferBoardNum}" id="transferBoardNumInput" class="form-control">
-															<input placeholder="배송지명" class="form-control" id="delNm" name="delNm" type="text">
+															<!-- <input placeholder="배송지명" class="form-control" id="delNm" name="delNm" type="text"> -->
+															<input type="text" id="custName" name="custName" placeholder="양수자 이름을 입력해주세요." required /> 
+														</div>
+														<div class="form-group col-md-10">
+															<div class="col-12">
+																<input placeholder="배송지 주소" class="form-control" id="delAddr" name="delAddr" type="text" readonly>
+															</div>
+														</div>
+														<div class="form-group col-md-10">
+															<div class="col-12">
+																<input placeholder="배송지 상세주소를 입력해주세요." class="form-control" id="delDaddr" name="delDaddr" type="text">
+															</div>
+														</div>
+														<div class="form-group col-md-10 position-relative d-flex justify-content-end">
+			                                                <input type="text" id="delZipNo" name="delZipNo" placeholder="우편번호를 입력해주세요" readonly disabled />
+			                                                <button type="button" id="daumPostBtn" class="btn btn-heading btn-block p-10 mt-10 mr-10 position-absolute">우편번호찾기</button>
+			                                            </div>
+			                                            <div class="form-group d-flex align-items-center justify-content-center gap-2">
+															<input type="hidden" id="custPhone" name="custPhone"/>
+														    <input type="text" class="form-control w-25" id="custPhone1" name="custPhone1" placeholder="010" value="010" readonly />
+														    <span>-</span>
+														    <input type="text" class="form-control w-25" id="custPhone2" name="custPhone2" placeholder="중간연락처" value="0001" maxlength="4" required />
+														    <span>-</span>
+														    <input type="text" class="form-control w-25" id="custPhone3" name="custPhone3" placeholder="마지막연락처" value="0001" maxlength="4" required />
 														</div>
 													</div>
 												</div>
@@ -119,7 +140,7 @@
 									</div>
 								</div>
 								<!-- 모트스트랩 end -->
-                                <div class="product-info row mb-50">
+                                <div class="product-info row mb-50" style="background-color: white; box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
                                     <div class="tab-style3">
                                         <div class="entry-main-content px-3">
                                             <h2 th:text="*{transferTitle}" class="title-detail">
@@ -159,7 +180,7 @@
                                 </div>
                                 <div style="width: 100%; height: 2px; min-height: 1px; margin: 0px; background-color: rgba(112, 115, 124, 0.16);"></div>
                                 <h3 class="mt-20 mb-20 ml-50">양도하는 상품</h3>
-                                <div class="product-info">
+                                <div class="product-info" style="background-color: white; box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
                                     <div class="tab-style3">
                                         <div class="entry-main-content">
                                             <h4 th:text="*{productInfo.productsName}">삼성크리스탈 UHDTV 85인치</h4>
@@ -183,9 +204,11 @@
                                                 <h4>기타 전달사항</h4>
                                                 <p th:text="*{transferContent}">매월 첫째주에 방문케어 해주십니다!</p>
                                             	<div class="row g-3" th:if="${!#lists.isEmpty(fileList)}">
-                                            		<div class="col-6 col-md-3" th:each="fl : ${fileList}" >
-                                            			<img class="img-main" th:src="@{${fl.filePath}}" alt="이미지" />
-                                            		</div>
+                                            		<div class="col-6 col-md-3" th:each="fl : ${fileList}">
+													    <div class="ratio ratio-4x3"> <!-- 1:1 비율 고정 -->
+													        <img th:src="@{${fl.filePath}}" alt="이미지" class="img-fluid object-fit-cover rounded" />
+													    </div>
+													</div>
                                             	</div>
                                             </div>
                                         </div>
