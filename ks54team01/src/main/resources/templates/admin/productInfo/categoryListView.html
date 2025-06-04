@@ -134,11 +134,10 @@
 	
 	<!-- 본문 content 영역 -->
 	<th:block layout:fragment="content">
-		<div class="content-header">
-			<div>
-				<h2 class="content-title card-title" th:text="${title}"></h2>
-			</div>
-		</div>
+	<div class="content-header">
+		<h2 class="content-title card-title" th:text="${title}"></h2>
+		<button type="submit" class="btn btn-md rounded font-lg hover-up" onclick="location.href='/admin/productInfo/addCategory'">등록</button>
+	</div>
 		<div class="card mb-4 col-12">
 			<header class="card-header">
 				<form th:action="@{/admin/productInfo/searchCategory}" method="get">
