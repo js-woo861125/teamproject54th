@@ -1,5 +1,6 @@
 package ks54team01.enterprise.management.controller;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
 import ks54team01.customer.member.domain.EntMember;
+import ks54team01.enterprise.management.domain.EnterpriseContractInfo;
 import ks54team01.enterprise.management.service.EnterpriseManagementService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +26,16 @@ public class EnterpriseManagementController {
 	
 	@GetMapping("/contractInfo")
 	public String contractInfo(HttpSession session, Model model) {
-		
 		String entCeoNo = (String) session.getAttribute("entCeoNo");
+		EnterpriseContractInfo contractInfo = enterpriseManagementService.getEntContractInfo(entCeoNo);
+		
+		// 금액 포맷
+		NumberFormat numberFormat = NumberFormat.getInstance(); 
+		String formattedEntryFee = numberFormat.format(contractInfo.getEntryFee()); // 입점비
 		
 		model.addAttribute("title", "플랫폼 계약정보");
+		model.addAttribute("contractInfo", contractInfo);
+		model.addAttribute("formattedEntryFee", formattedEntryFee);
 		
 		return "enterprise/management/contractInfoView";
 	}
