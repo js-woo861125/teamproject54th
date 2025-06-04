@@ -9,6 +9,9 @@ import ks54team01.customer.product.domain.CustomerProduct;
 @Mapper
 public interface ProductMapper {
 	
+	CustomerProduct getLowerPriceAndMaxPeriod(String productsNum);
+	
+	List<CustomerProduct> getProductSpecList(String productsNum);
 	
 	List<CustomerProduct> getProductDetailByProd(String productsNum);
 	

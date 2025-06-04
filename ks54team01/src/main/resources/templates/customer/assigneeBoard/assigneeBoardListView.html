@@ -115,7 +115,7 @@
 								  th:each="l : ${assigneeBoardList}">
 	                        <!-- 상품1 -->
 	                        <div class="product-cart-wrap border" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
-	                            <div class="product-content-wrap mt-40 mb-2 ml-50" >
+	                            <div class="col-lg-11 product-content-wrap mt-40 mb-2 ml-50" >
 	                                <div class="d-flex justify-content-between align-items-start">
 		                                <h4 class="mb-0 flex-grow-1">
 		                                	<a th:text="${#strings.isEmpty(l.productName) ? '상관없음' : l.productName}" 
@@ -124,13 +124,6 @@
 	                                			그램 프로 노트북 16인치 (옵시디안 블랙)
 		                                	</a>
 		                                </h4>
-	                                	<!-- <div class="dropdown">
-	                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-	                                        <div class="dropdown-menu">
-	                                            <a class="dropdown-item" href="#">게시글 삭제</a>
-	                                            <button class="dropdown-item" type="submit">게시글 삭제</button>
-	                                        </div>
-	                                    </div> -->
                                    	</div>
 	                                <div class="product-rate-cover">
 	                                    <span th:text="${l.productInfoCategory.smCategory}" class="font-small ml-5 text-muted">TV/디지털</span>
