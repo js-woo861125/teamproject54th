@@ -32,7 +32,8 @@ public class AdminProductServiceImpl implements AdminProductService{
 		private final AdminProductMapper adminProductMapper;
 		private final FileService fileService;
 		
-		
+
+			
 		@Override
 	    public List<AdminProduct> searchProductList(String searchKey, String searchValue, String categoryNo, String status) {
 	        Map<String, Object> paramMap = new HashMap<>();
@@ -148,4 +149,5 @@ public class AdminProductServiceImpl implements AdminProductService{
 		 adminProductMapper.unsetSaleStoppage(productNo);
 		
 		}
+
 }

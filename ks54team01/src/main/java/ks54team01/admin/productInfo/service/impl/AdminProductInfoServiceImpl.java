@@ -29,6 +29,11 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	private final AdminProductInfoMapper adminProductInfoMapper;
 	
 	/**
+	 * 상품 상태 변경 시 상품정보 상태 변경
+	 */
+
+	
+	/**
 	 *  상품정보 등록 조회
 	 */
 	// 카테고리별/상세스펙코드로 등록된 모델별/상세스펙 조회

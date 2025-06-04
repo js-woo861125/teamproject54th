@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/admin/product")
 @Slf4j
 public class AdminProductController {
-	
+		
 	@Value("${file.path}")
 	private String fileRealPath;
 	
