@@ -144,7 +144,7 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 
 	        // 2. 기존 혜택 삭제
 	        enterpriseProductBenefitMapper.deleteBenefitsBySellProductNo(product.getSellProductsNo());
-
+	 
 	        // 3. 새로운 혜택 인서트
 	        for (int i = 0; i < benefitNoList.size(); i++) {
 	            EnterpriseProductBenefit benefit = new EnterpriseProductBenefit();
@@ -158,5 +158,21 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 	            enterpriseProductBenefitMapper.insertEnterpriseProductBenefit(benefit);
 	        }
 	    }
+	    
+	    @Override
+	    public EnterpriseProduct getProductByNo(String sellProductsNo) {
+	        return enterpriseProductMapper.selectProductByNo(sellProductsNo);
+	    }
+
+	    @Override
+	    public List<EnterpriseProductBenefit> getBenefitListBySellProductNo(String sellProductsNo) {
+	        return enterpriseProductBenefitMapper.selectBenefitsBySellProductNo(sellProductsNo);
+	    }
+	    
+	    @Override
+	    public EnterprisePenaltyCalculate getPenaltyCalculateByNo(String penaltyCalculateNo) {
+	        return enterprisePenaltyCalculateMapper.selectPenaltyCalculateByNo(penaltyCalculateNo);
+	    }
+	    
 }
 

@@ -142,6 +142,24 @@
           AND products_no = #{productsNo}
           AND period = #{period}
     </select>
+    
+    <select id="selectProductByNo" resultType="ks54team01.enterprise.product.domain.EnterpriseProduct" parameterType="string">
+	    SELECT 
+	        sell_products_no,
+	        ent_ceo_no,
+	        ent_emp_id,
+	        products_no,
+	        lump_sum_pay_price,
+	        calculate_price,
+	        final_price,
+	        -- 필요한 다른 필드 추가
+	        register_date,
+	        revision_date
+	    FROM 
+	    	sell_products
+	    WHERE 
+	    	sell_products_no = #{sellProductsNo}
+	</select>
 	
 </mapper>
 
