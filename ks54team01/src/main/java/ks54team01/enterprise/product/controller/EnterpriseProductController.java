@@ -206,32 +206,40 @@ public class EnterpriseProductController {
 	 */
 	@GetMapping("/modifySellProduct")
 	public String showModifySellProductForm(
-	        @RequestParam("sellProductsNo") String sellProductsNo, // 상품 PK
+	        @RequestParam("sellProductsNo") String sellProductsNo, 
 	        Model model
 	) {
 
 	    EnterpriseProduct product = enterpriseProductService.getProductByNo(sellProductsNo);
-
+	
 	    List<EnterpriseProductBenefit> productBenefitList = enterpriseProductService.getBenefitListBySellProductNo(sellProductsNo);
+	   
+	    EnterprisePenaltyCalculate penalty = enterpriseProductService.getPenaltyCalculateByNo(sellProductsNo);
 	    
-	    EnterprisePenaltyCalculate Penalty = enterpriseProductService.getPenaltyCalculateByNo(sellProductsNo);
+	    List<ProductInfoBenefit> benefitList = adminProductInfoService.getBenefitList();
+	    
+	    List<EnterpriseMarginRatio> marginList = enterpriseMarginRatioService.getEnterpriseMarginRatio();
 
 	    model.addAttribute("product", product);
 	    model.addAttribute("productBenefitList", productBenefitList);
+	    model.addAttribute("penalty", penalty);
+	    model.addAttribute("benefitList", benefitList);
+	    model.addAttribute("marginList", marginList);
 
 	    return "enterprise/product/modifySellProductView";
 	}
+	    
 	@PostMapping("/modifySellProduct")
 	public String modifySellProduct(
-	    @ModelAttribute EnterpriseProduct product, // 상품 PK 포함
-	    @RequestParam("optionLumpSumPrice") int optionLumpSumPrice,
+	    @ModelAttribute EnterpriseProduct product,
+	    @RequestParam("optionLumpSumPrice") int lumpSumPayPrice,
 	    @RequestParam("penaltyRatio") double penaltyRatio,
 	    @RequestParam("benefitNoList") List<String> benefitNoList,
 	    @RequestParam("benefitDetailList") List<String> benefitDetailList,
 	    RedirectAttributes redirectAttributes
 	) {
 	    enterpriseProductService.modifySellProductBenefits(
-	    		   product, benefitNoList, benefitDetailList
+	    		   product, benefitNoList, benefitDetailList, penaltyRatio
 	    );
 	    redirectAttributes.addFlashAttribute("msg", "수정 완료!");
 	    return "redirect:/enterprise/product/sellProductList";

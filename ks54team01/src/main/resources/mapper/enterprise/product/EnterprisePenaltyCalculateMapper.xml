@@ -32,8 +32,17 @@
     FROM 
     	ent_penalty_calculate
     WHERE 
-    	penalty_calculate_no = #{penaltyCalculateNo}
-</select>
+    	sell_products_no = #{sellProductsNo}
+	</select>
+
+	<update id="updatePenaltyCalculate">
+	  UPDATE 
+	  	penalty_calculate
+	  SET 
+	  	penalty_ratio = #{penaltyRatio}
+	  WHERE 
+	  	sell_products_no = #{sellProductsNo}
+	</update>
 </mapper>
 
 
