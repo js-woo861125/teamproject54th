@@ -37,11 +37,13 @@
                                         <a th:href="@{/customer/product/productDetailByProd(productsNum=${l.productsNum})}">
                                             <!-- 이미지 경로를 ProductController의 /customer/product/image/{productsNum} 엔드포인트로 변경 -->
                                             
-                                            <img th:src="@{/customer/product/image/{productsNum}(productsNum=${l.productsNum})}"
-                                                 th:alt="${l.productsName}"
-                                                 class="default-img object-cover w-full h-full rounded-md"/>
-                                        </a>
-                                        <p th:unless="${l.imageFilePath != null and not #strings.isEmpty(l.imageFilePath)}">이미지 없음</p>
+                                          <img th:src="@{${l.imageFilePath}}"
+                                     th:alt="${l.productsName}"
+                                     class="default-img object-cover w-full h-full rounded-md"/>
+                                     <!-- 이미지 파일이 없을 경우 대체 텍스트 표시 (선택 사항) -->
+                                     <p th:unless="${l.imageFilePath != null and not #strings.isEmpty(l.imageFileName)}"
+                                        class="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-500">이미지 없음</p>
+                                      </a>
                                     </div>
                                     <div class="product-badges product-badges-position product-badges-mrg">
                                         <span class="hot">Hot</span>

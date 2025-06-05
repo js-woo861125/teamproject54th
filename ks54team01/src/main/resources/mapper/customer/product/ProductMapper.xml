@@ -195,25 +195,23 @@
 			p.manager_id,
 			sp.ent_emp_id,
 			p.products_no,
-			q.quantity
+			q.quantity,
+			f.file_type,   
+			f.file_path    
 		FROM
-			sell_products sp inner JOIN products p 
+			sell_products sp 
+			INNER JOIN products p 
 			ON sp.products_no = p.products_no
-			inner JOIN ent_ceo ec 
+			INNER JOIN ent_ceo ec 
 			ON sp.ent_ceo_no = ec.ent_ceo_no
-			inner join quantity q 
-			ON p.products_no = q.products_no and sp.ent_ceo_no = q.ent_ceo_no
+			INNER JOIN quantity q 
+			ON p.products_no = q.products_no AND sp.ent_ceo_no = q.ent_ceo_no
+			LEFT JOIN files f ON p.model_no = f.ref_id AND f.file_type = 'mainImage'
 		WHERE
 			p.products_no = #{productsNum}
 		order by
 			ec.ent_ceo_no , sp.period desc;
 	</select>
-	
-	
-	
-	
-	
-	
 	
 	<select id="getProductSpecList" parameterType="string" resultMap="CustomerProductResultMap">
 		select
@@ -247,15 +245,6 @@
 		order by
 			ec.ent_ceo_no , sp.period desc
 	</select>
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 
 </mapper>
