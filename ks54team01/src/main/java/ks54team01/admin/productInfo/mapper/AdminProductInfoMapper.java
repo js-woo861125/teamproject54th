@@ -17,6 +17,20 @@ import ks54team01.admin.productInfo.domain.ProductInfoModelSpec;
 public interface AdminProductInfoMapper {
 
 	/**
+	 * 상품정보 사용유무 필터링
+	 */
+	// 카테고리별/상세스펙 사용유무 필터링
+	List<ProductInfoCategorySpec> getUsableCateogrySpecList();
+	// 모델 사용유무 필터링
+	List<ProductInfoModel> getUsableModelList();
+	// 품목 사용유무 필터링
+	List<ProductInfoItem> getUsableItemList();
+	// 브랜드 사용유무 필터링
+	List<ProductInfoBrand> getUsableBrandList();
+	// 카테고리 사용유무 필터링
+	List<ProductInfoCategory> getUsableCategoryList();
+	
+	/**
 	 * 상품정보 등록 조회
 	 */
 	// 카테고리별/상세스펙코드로 등록된 모델별/상세스펙 조회 (카테고리별/상세스펙 삭제)

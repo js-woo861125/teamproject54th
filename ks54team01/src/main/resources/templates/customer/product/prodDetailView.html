@@ -20,18 +20,8 @@
 	
 	<th:block layout:fragment="jsScript">
 		<script type="text/javascript" th:inline="javascript">
-			$(function(){
-	            $('.lental-a').click(function(){
-	                $(this).addClass('selected-lental');
-	                $(this).closest('.detail-info')
-	                       .find('a')
-	                       .not(this)
-	                       .removeClass('selected-lental');
-	            });
-	            
-	            
-	        });
-			
+		
+			var benefitList = /*[[${benefit}]]*/ [];
 			
 			
 			function updateTotalPrice(card) {
@@ -46,7 +36,6 @@
 			    if (display) display.textContent = total.toLocaleString() + "원";
 			}
 
-			
 		
 			document.addEventListener("DOMContentLoaded", function () {
 	
@@ -108,10 +97,7 @@
 			        }
 			    });
 	
-			});
 			
-			
-			document.addEventListener("DOMContentLoaded", function () {
 			    document.querySelectorAll("#orderBtn").forEach(function (btn) {
 			        btn.addEventListener("click", function (e) {
 			            e.preventDefault();
@@ -137,7 +123,43 @@
 			            form.submit();
 			        });
 			    });
+			    
+			    document.querySelectorAll('.period-select-btn').forEach(function (btn) {
+			        btn.addEventListener('click', function (e) {
+			            e.preventDefault();
+			            var li = this.closest('li');
+			            var period = li.getAttribute('data-period');
+			            var entCeoNo = li.getAttribute('data-entceono');
+			            console.log('period', period, 'entCeoNo', entCeoNo);
+			            // 가장 가까운 .card를 찾음
+			            var card = this.closest('.card');
+			            var benefitArea = card.querySelector('.benefit-area');
+
+			            // benefitList에서 기간과 업체번호가 모두 일치하는 혜택 필터링
+			            var filteredBenefits = benefitList.filter(function (b) {
+			                return b.period == period && b.entCeoNo == entCeoNo;
+			            });
+
+			            if (benefitArea) {
+			                benefitArea.innerHTML = '';
+			                if (filteredBenefits.length === 0) {
+			                    benefitArea.innerHTML = '<p>해당 혜택이 없습니다.</p>';
+			                } else {
+			                    filteredBenefits.forEach(function (b) {
+			                        benefitArea.innerHTML +=
+			                            '<div>' +
+			                            '<p class="mb-10">' + b.benefitDetail + '</p>' +
+			                            '</div>';
+			                    });
+			                }
+			            }
+			        });
+			    });
+			   
+			    
 			});
+			
+			
 			
 			
 		</script>
@@ -174,34 +196,6 @@
                                                 <figure class="border-radius-10">
                                                     <img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" />
                                                 </figure>
-                                                <figure class="border-radius-10">
-                                                    <img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" />
-                                                </figure>
-                                                <figure class="border-radius-10">
-                                                    <img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" />
-                                                </figure>
-                                                <figure class="border-radius-10">
-                                                    <img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" />
-                                                </figure>
-                                                <figure class="border-radius-10">
-                                                    <img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" />
-                                                </figure>
-                                                <figure class="border-radius-10">
-                                                    <img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" />
-                                                </figure>
-                                                <figure class="border-radius-10">
-                                                    <img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" />
-                                                </figure>
-                                            </div>
-                                            <!-- THUMBNAILS -->
-                                            <div class="slider-nav-thumbnails">
-                                                <div><img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" /></div>
-                                                <div><img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" /></div>
-                                                <div><img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" /></div>
-                                                <div><img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" /></div>
-                                                <div><img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" /></div>
-                                                <div><img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" /></div>
-                                                <div><img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" /></div>
                                             </div>
                                         </div>
                                         <!-- End Gallery -->
@@ -253,120 +247,79 @@
                                         <h3>렌탈사 비교·선택</h3>
                                         <p>각 렌탈사의 월 렌탈료, 제휴카드혜택, A/S기간, 약정기간, 혜택 등 비교하고 선택해 보세요.</p>
                                     </div>
-                                    <div class="col-12">
-                                        <div class="row related-products">
-                                            <div class="loop-grid loop-list pr-30 mb-50">
-                                            	<th:block th:each="l : ${productDetailByProd}">
-                                            		<th:block th:each="el : ${l.entCeo}">
-		                                                <article class="wow fadeIn animated hover-up row m-0 mb-30 animated">
-		                                                    <div class="entry-content-2 pl-50">
-		                                                        <h3 class="post-title" th:text="${el.entNm}">렌탈업체</h3>
-			                                                        <div class="detail-info row mt-25 ml-5">
-				                                                        <th:block th:each="sl : ${l.customerSellProduct}" th:if="${el.entCeoNo eq sl.entCeoNo}">
-				                                                            <a class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 border border-3 p-4 m-0 hover-up lental-a">
-				                                                                <div class="d-flex justify-content-end align-items-center mb-2">
-				                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end mr-20" th:if="${sl.period != '0'}" th:text="${sl.period}">48</span>
-				                                                                    <p class="fs-7 ml-5" th:if="${sl.period != '0'}">개월</p>
-				                                                                    <p class="m-0 d-flex align-items-end" th:if="${sl.period == '0'}">일시불판매</p>
-				                                                                </div>
-				                                                                <div class="hr border"></div>
-				                                                                <div class="d-flex justify-content-end align-items-center mt-10">
-				                                                                    <span class="m-0 fs-2 text-danger d-flex align-items-end mr-20" th:text="${#numbers.formatInteger(sl.finalPrice, 3, 'COMMA')}">400,000</span>
-				                                                                    <p class="fs-7 ml-5">원</p>
-				                                                                </div>
-				                                                            </a>
-				                                                        </th:block>
-			                                                        </div>
-		                                                        <hr/>
-		                                                        <div class="row short-desc">
-		                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-xl-8 col-xxl-9 mb-20">
-		                                                                <p class="font-lg">· A/S 기간:1년 무상 A/S (단, 고객과실 제외)</p>
-		                                                                <p class="font-lg">· 가입가능연령:만 24세 ~ 만 70세</p>
-		                                                            </div>
-		                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-3">
-		                                                                <div class="d-flex mb-10 justify-content-between">
-		                                                                    <div class="detail-qty border radius">
-		                                                                        <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-		                                                                        <input type="text" name="quantity" class="qty-val" value="1" min="1">
-		                                                                        <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-		                                                                    </div>
-		                                                                    <div class="product-extra-link2">
-		                                                                        <button type="submit" class="button button-add-to-cart"><i class="fi-rs-shopping-cart"></i>주문 결제</button>
-		                                                                    </div>
-		                                                                </div>
-		                                                            </div>
-		                                                        </div>
-		                                                    </div>
-		                                                </article>
-                                            		</th:block>
-                                            	</th:block>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                     
                                      <div class="col-12">
-                                        <div class="row related-products">
+                                        <div class="related-products">
                                             <div class="loop-grid loop-list pr-30 mb-50">
 												<th:block th:each="l : ${productDetailByProd}">
 													<th:block th:each="el : ${l.entCeo}">
 														
-														<div class="card col-sm-12 mb-30">
-															<div class="mt-15 ml-10">
-																<div id="vendorInfo">
-																	<div class="vendor-logo d-flex mb-15">
-																		<div class="vendor-name">
-																			<h6>
-																				<span class="text-brand" style="font-weight: bold;"
-																					th:text="${el.entNm}">레탈업체</span>
-																			</h6>
-																		</div>
-																	</div>
-																	<ul class="list-filter size-filter font-small mb-15 ">
-																		<th:block th:each="sl : ${l.customerSellProduct}">
-																			<li th:if="${el.entCeoNo eq sl.entCeoNo}" th:attr="data-period=${sl.period}, data-price=${sl.finalPrice}">
-																				<a href="#" th:text="${#strings.equals(sl.period, '0') ? '일시불' : (sl.period) + '개월'}">일시불</a>
-																				<input type="hidden" name="entCeoNo" th:value="${sl.entCeoNo}">
-																				<input type="hidden" name="entEmpId" th:value="${sl.entEmpId}">
-																				<input type="hidden" name="sellProductsNo" th:value="${sl.sellProductsNo}">
-																			</li>
-																		</th:block>
-																	</ul>
-																</div>
-															</div>
-															<form method="get">
-																<!-- 가격 표시 영역 -->
-																<span class="current-price mb-70 priceDisplay" style="font-size: 25px">선택안함</span>
-																<input type="hidden" class="unitPrice" name="prodUnitPrice" value="0" />
-																<input type="hidden" class="totalPriceInput" name="totalPrice" value="0" />
-																<input type="hidden" class="totalPriceInput" name="managerId" th:value="${l.managerId}" />
-																<input type="hidden" name="productsName" th:value="${l.productsName}" />
-																<input type="hidden" name="productsNum" th:value="${l.productsNum}" />
-																<input type="hidden" name="period" class="hiddenPeriod">
-															    <input type="hidden" name="entCeoNo" class="hiddenCeo">
-															    <input type="hidden" name="entEmpId" class="hiddenEmp">
-															    <input type="hidden" name="sellProductsNo" class="hiddenSellProduct">
-																
-																
-																<input type="hidden" th:value="${l.managerId}" />
-			
-																
-			
+														<div class="card mb-30" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04); display: flex; flex-direction: row;">
+															<div class="col-md-5" style=" border-right: 1px solid #ececec;">
 																<div class="mt-15 ml-10">
-																	<div class="detail-extralink">
-																		<div class="detail-qty border radius">
-																			<a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-																			<input type="text" name="orderQuantity" id="quantity" class="qty-val" value="1" readonly>
-																			<a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+																	<div id="vendorInfo">
+																		<div class="vendor-logo d-flex mb-15">
+																			<div class="vendor-name">
+																				<h3>
+																					<span class="text-brand" style="font-weight: bold;"
+																						th:text="${el.entNm}">레탈업체</span>
+																				</h3>
+																			</div>
 																		</div>
-																		<div class="product-extra-link2">
-																			<button type="submit" id="orderBtn" class="button button-add-to-cart">
-																				<i class="fi-rs-shopping-cart"></i>주문하기
-																			</button>
-				
-																		</div>
+																		<ul class="list-filter size-filter font-small mb-15 ">
+																			<th:block th:each="sl : ${l.customerSellProduct}">
+																				<li th:if="${el.entCeoNo eq sl.entCeoNo}"
+																					th:attr="data-period=${sl.period}, data-price=${sl.finalPrice}, data-entceono=${sl.entCeoNo}">
+																					<a href="#" class="period-select-btn" th:text="${#strings.equals(sl.period, '0') ? '일시불' : (sl.period) + '개월'}">일시불</a>
+																					<input type="hidden" name="entCeoNo" th:value="${sl.entCeoNo}">
+																					<input type="hidden" name="entEmpId" th:value="${sl.entEmpId}">
+																					<input type="hidden" name="sellProductsNo" th:value="${sl.sellProductsNo}">
+																				</li>
+																			</th:block>
+																		</ul>
 																	</div>
 																</div>
-															</form>
+																<form method="get">
+																	<!-- 가격 표시 영역 -->
+																	<span class="current-price mb-70 priceDisplay ml-10" style="font-size: 25px">선택안함</span>
+																	<input type="hidden" class="unitPrice" name="prodUnitPrice" value="0" />
+																	<input type="hidden" class="totalPriceInput" name="totalPrice" value="0" />
+																	<input type="hidden" class="totalPriceInput" name="managerId" th:value="${l.managerId}" />
+																	<input type="hidden" name="productsName" th:value="${l.productsName}" />
+																	<input type="hidden" name="productsNum" th:value="${l.productsNum}" />
+																	<input type="hidden" name="period" class="hiddenPeriod">
+																    <input type="hidden" name="entCeoNo" class="hiddenCeo">
+																    <input type="hidden" name="entEmpId" class="hiddenEmp">
+																    <input type="hidden" name="sellProductsNo" class="hiddenSellProduct">
+																	
+																	
+																	<input type="hidden" th:value="${l.managerId}" />
+				
+																	
+				
+																	<div class="mt-15 ml-10">
+																		<div class="detail-extralink">
+																			<div class="detail-qty border radius">
+																				<a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+																				<input type="text" name="orderQuantity" id="quantity" class="qty-val" value="1" readonly>
+																				<a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+																			</div>
+																			<div class="product-extra-link2">
+																				<button type="submit" id="orderBtn" class="button button-add-to-cart">
+																					<i class="fi-rs-shopping-cart"></i>주문하기
+																				</button>
+					
+																			</div>
+																		</div>
+																	</div>
+																</form>
+															
+															</div>
+															<div class="col-md-7">
+																<div class="benefit-area">
+													            </div>
+															</div>
 														</div>
 													</th:block>
 												</th:block>
