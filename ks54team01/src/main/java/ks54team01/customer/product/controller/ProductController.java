@@ -59,6 +59,7 @@ public class ProductController {
 		List<BenefitDetail> benefit = customerProductService.getBenefitByProduct(productsNum);
 		
 		String prodNm = productDetailByProd.get(0).getProductsName();
+		String image = productDetailByProd.get(0).getImageFilePath();
 		
 		CustomerProduct checkPrice = customerProductService.getLowerPriceAndMaxPeriod(productsNum);
 		String lowerPrice = checkPrice.getMinRentalPrice();
@@ -81,6 +82,7 @@ public class ProductController {
 		model.addAttribute("productSpec" ,productSpec);
 		model.addAttribute("addResult", addResult);
 		model.addAttribute("benefit", benefit);
+		model.addAttribute("image", image);
 		
 		return "customer/product/prodDetailView";
 	}
