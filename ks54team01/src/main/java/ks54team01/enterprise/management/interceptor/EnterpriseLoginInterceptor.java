@@ -23,19 +23,17 @@ public class EnterpriseLoginInterceptor implements HandlerInterceptor{
 		
 		boolean isProcess = true;
 		
-		if(loginId == null) {
-			isProcess = false;
-			response.sendRedirect("/customer/login/memberLogin");
-		}else {
-			if(!"입점업체 대표".equals(loginMemberType) && !"입점업체 직원".equals(loginMemberType)) {
-				isProcess = false;
-				response.sendRedirect("/customer/login/memberLogin");
-			}
-		}
-		if (!"계약중".equals(contractStatus)) {
-		    isProcess = false;
-		    response.sendRedirect("/customer/login/memberLogin?message=contractError");
-		}
+		if (loginId == null 
+		        || (!"입점업체 대표".equals(loginMemberType) && !"입점업체 직원".equals(loginMemberType))) {
+		        response.sendRedirect("/customer/login/memberLogin");
+		        isProcess = false;
+		        return isProcess;
+		    }
+
+	    if (!"계약중".equals(contractStatus)) {
+	        response.sendRedirect("/customer/login/memberLogin?message=contractError");
+	        isProcess = false;
+	    }
 		
 		return isProcess;
 	}
