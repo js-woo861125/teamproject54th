@@ -35,11 +35,11 @@
                                 <div class="product-img-action-wrap">
                                     <div class="product-img product-img-zoom">
                                         <a th:href="@{/customer/product/productDetailByProd(productsNum=${l.productsNum})}">
-                                            <img th:if="${l.imageFilePath != null and not #strings.isEmpty(l.imageFilePath)}"
-                                                 th:src="@{/customer/product/image/{productsNum}(productsNum=${l.productsNum})}"
+                                            <!-- 이미지 경로를 ProductController의 /customer/product/image/{productsNum} 엔드포인트로 변경 -->
+                                            
+                                            <img th:src="@{/customer/product/image/{productsNum}(productsNum=${l.productsNum})}"
                                                  th:alt="${l.productsName}"
                                                  class="default-img object-cover w-full h-full rounded-md"/>
-                                            
                                         </a>
                                         <p th:unless="${l.imageFilePath != null and not #strings.isEmpty(l.imageFilePath)}">이미지 없음</p>
                                     </div>

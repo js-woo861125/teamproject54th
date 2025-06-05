@@ -118,6 +118,7 @@ public class ProductController {
 	 */
 	@GetMapping("/image/{productsNum}")
 	public ResponseEntity<Resource> getProductImage(@PathVariable("productsNum") String productsNum) {
+		
 		List<CustomerProduct> productList = customerProductService.getProductDetailByProd(productsNum);
 
 		CustomerProduct product = null;
@@ -133,8 +134,8 @@ public class ProductController {
                 // DB의 file_path가 '/attachment/...'와 같이 이미 uploadDir의 상대 경로라면 resolve() 사용
                 // 만약 DB의 file_path가 이미 '/home/teamproject/attachment/...'와 같은 완전한 절대 경로라면,
                 // Paths.get(product.getImageFilePath()).normalize()만 사용하고 uploadDir은 필요 없습니다.
-				Path filePath = Paths.get(uploadDir).resolve(product.getImageFilePath()).normalize();
-
+//				Path filePath = Paths.get(uploadDir).resolve(product.getImageFilePath()).normalize();
+				Path filePath = Paths.get(product.getImageFilePath()).normalize();
                 log.info("이미지 로드를 시도하는 최종 파일 경로: {}", filePath.toString());
 
                 Resource resource = new UrlResource(filePath.toUri());
