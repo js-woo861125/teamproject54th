@@ -24,7 +24,6 @@ public interface AdminMemberMapper {
 	// 회원 로그인 이력 조회
 	List<AdminLoginHistory> getLoginHistoryList(Pageable pageable);
 	
-	
 	// 입점업체 상세정보 조회
 	AdminMemberDetail getEntMemberDetail(String memberId);
 	

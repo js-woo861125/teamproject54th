@@ -150,39 +150,40 @@
 	
 	
 	<select id="getCustomerProductList" parameterType= "String" resultMap="CustomerProductResultMap">
-			 SELECT
-        pc.product_category_no,
-        p.products_no,
-        p.products_nm,
-        MIN(sp.lump_sum_pay_price) AS min_lump_sum_price,  MIN(sp.final_price) AS min_rental_price,
-        pc.middle_category,
-        pc.small_category,
-        ec.ent_nm,
-        f.file_type,
-        f.file_path
-    FROM
-        sell_products sp
-    INNER JOIN products p
-        ON sp.products_no = p.products_no
-    INNER JOIN ent_ceo ec
-        ON sp.ent_ceo_no = ec.ent_ceo_no
-    INNER JOIN products_category pc
-        ON p.product_category_no = pc.product_category_no
-    LEFT JOIN files f
-        ON p.model_no = f.ref_id
-    WHERE
-        pc.small_category = #{smallCategory}
-        AND p.products_status = '활'
-        AND f.file_type = 'mainImage'
-    GROUP BY
-        pc.product_category_no,
-        p.products_no,
-        p.products_nm,
-        pc.middle_category,
-        pc.small_category,
-        ec.ent_nm,
-        f.file_type,
-        f.file_path
+	SELECT
+	    pc.product_category_no,
+	    p.products_no, 
+	    p.products_nm,
+	    MIN(sp.lump_sum_pay_price) AS lump_price,
+	    MIN(sp.final_price) AS min_rental_price,
+	    pc.middle_category,
+	    pc.small_category,
+	    ec.ent_nm,
+	    f.file_type,
+	    f.file_path
+	FROM
+	    sell_products sp
+	INNER JOIN products p
+	ON sp.products_no = p.products_no
+	INNER JOIN ent_ceo ec
+	ON sp.ent_ceo_no = ec.ent_ceo_no
+	INNER JOIN products_category pc
+	ON p.product_category_no = pc.product_category_no
+	LEFT JOIN files f
+	ON p.model_no = f.ref_id
+	WHERE
+	    pc.small_category = 'TV'
+	    AND p.products_status = '활'
+	    AND f.file_type = 'mainImage'
+	GROUP BY
+	    pc.product_category_no,
+	    p.products_no,
+	    p.products_nm,
+	    pc.middle_category,
+	    pc.small_category,
+	    ec.ent_nm,
+	    f.file_type,
+	    f.file_path
 	</select>
 
 	
