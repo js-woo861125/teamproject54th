@@ -38,6 +38,7 @@ public interface EnterpriseProductService {
 	  void modifySellProductBenefits(
 		EnterpriseProduct product,
 		List<String> benefitNoList,
-		List<String> benefitDetailList
+		List<String> benefitDetailList,
+		double penaltyRatio
 		    );
 }

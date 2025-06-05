@@ -103,7 +103,7 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 	                    benefit.setBenefitDetail(
 	                        (benefitDetailList != null && benefitDetailList.size() > i) ? benefitDetailList.get(i) : null
 	                    );
-	                    benefit.setUseStatus("활성화");
+	                    benefit.setUseStatus("사용중");
 	                    benefit.setRegisterDate(now.toString());
 	                    benefit.setRevisionDate(now.toString());
 	                    enterpriseProductBenefitMapper.insertEnterpriseProductBenefit(benefit);
@@ -119,7 +119,7 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 	            penalty.setPenaltyFeeRatio(req.getPenaltyFeeRatio());
 	            penalty.setPeriodStart(req.getPeriodStart());
 	            penalty.setPeriodEnd(req.getPeriodEnd());
-	            penalty.setUseStatus("활성화");
+	            penalty.setUseStatus("사용중");
 	            enterprisePenaltyCalculateMapper.insertPenaltyCalculate(penalty);
 
 	        }
@@ -137,11 +137,16 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 	    public void modifySellProductBenefits(
 	        EnterpriseProduct product,
 	        List<String> benefitNoList,
-	        List<String> benefitDetailList
+	        List<String> benefitDetailList,
+	        double penaltyRatio
 	    ) {
 	        // 1. 상품 정보 수정 (실판매가/계산가/최종가 등)
-	        enterpriseProductMapper.updateSellProductPrice(product);
-
+	        enterpriseProductMapper.updateSellProduct(product);
+	        
+	        EnterprisePenaltyCalculate penalty = new EnterprisePenaltyCalculate();
+	        penalty.setSellProductsNo(product.getSellProductsNo());
+	        penalty.setPenaltyFeeRatio(penaltyRatio);
+	        
 	        // 2. 기존 혜택 삭제
 	        enterpriseProductBenefitMapper.deleteBenefitsBySellProductNo(product.getSellProductsNo());
 	 
@@ -153,7 +158,7 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 	            benefit.setBenefitDetail(benefitDetailList.get(i));
 	            benefit.setEntCeoNo(product.getEntCeoNo());
 	            benefit.setEntEmpId(product.getEntEmpId());
-	            benefit.setUseStatus("Y"); 
+	            benefit.setUseStatus("사용중"); 
 	            
 	            enterpriseProductBenefitMapper.insertEnterpriseProductBenefit(benefit);
 	        }
@@ -170,8 +175,8 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 	    }
 	    
 	    @Override
-	    public EnterprisePenaltyCalculate getPenaltyCalculateByNo(String penaltyCalculateNo) {
-	        return enterprisePenaltyCalculateMapper.selectPenaltyCalculateByNo(penaltyCalculateNo);
+	    public EnterprisePenaltyCalculate getPenaltyCalculateByNo(String sellProductsNo) {
+	        return enterprisePenaltyCalculateMapper.selectPenaltyCalculateByNo(sellProductsNo);
 	    }
 	    
 }

@@ -17,7 +17,7 @@ public interface EnterpriseProductMapper {
 	
 	void addSellProduct(EnterpriseProduct enterpriseProduct);
 	
-	 int updateSellProductPrice(EnterpriseProduct product);
+	 int updateSellProduct(EnterpriseProduct product);
 	
 	 int countByProduct(
 			    @Param("entCeoNo") String entCeoNo,

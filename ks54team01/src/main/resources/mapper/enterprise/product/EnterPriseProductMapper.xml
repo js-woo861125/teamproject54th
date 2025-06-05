@@ -19,7 +19,7 @@
 	<result column="use_status" 		property="useStatus"/>
 	<result column="product_name" 		property="productName"/>
     <result column="product_image"		property="productImage"/>
-    <result column="model_name" 		property="modelName"/>
+    <result column="model_nm" 		property="modelName"/>
 	
 	</resultMap>
  
@@ -143,22 +143,27 @@
           AND period = #{period}
     </select>
     
-    <select id="selectProductByNo" resultType="ks54team01.enterprise.product.domain.EnterpriseProduct" parameterType="string">
+    <select id="selectProductByNo" resultMap="EnterpriseProductMap" parameterType="string">
 	    SELECT 
-	        sell_products_no,
-	        ent_ceo_no,
-	        ent_emp_id,
-	        products_no,
-	        lump_sum_pay_price,
-	        calculate_price,
-	        final_price,
-	        -- 필요한 다른 필드 추가
-	        register_date,
-	        revision_date
+	        sp.sell_products_no,
+	        sp.ent_ceo_no,
+	        sp.ent_emp_id,
+	        sp.products_no,
+	        sp.lump_sum_pay_price,
+	        sp.period,
+	        sp.calculate_price,
+	        sp.final_price,
+	        sp.register_date,
+	        sp.revision_date,
+	        m.model_nm
 	    FROM 
-	    	sell_products
+	    	sell_products sp
+	    LEFT JOIN 
+	    	products p ON p.products_no = sp.products_no
+    	LEFT JOIN 
+    		model m ON p.model_no = m.model_no
 	    WHERE 
-	    	sell_products_no = #{sellProductsNo}
+	    	sp.sell_products_no = #{sellProductsNo}
 	</select>
 	
 </mapper>

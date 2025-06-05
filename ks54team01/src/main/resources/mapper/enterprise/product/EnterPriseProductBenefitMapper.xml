@@ -38,16 +38,16 @@
     <select id="selectBenefitsBySellProductNo" resultType="ks54team01.enterprise.product.domain.EnterpriseProductBenefit" parameterType="string">
 	    SELECT
 	        products_benefit_no AS benefitNo,
-	        sell_products_no,
-	        ent_ceo_no,
-	        ent_emp_id,
-	        benefit_no,
-	        benefit_detail,
-	        use_status,
-	        register_date,
-	        revision_date
+		    sell_products_no AS sellProductsNo,
+		    ent_ceo_no AS entCeoNo,
+		    ent_emp_id AS entEmpId,
+		    benefit_no AS benefit,
+		    benefit_detail AS benefitDetail,
+		    use_status AS useStatus,
+		    register_date AS registerDate,
+		    revision_date AS revisionDate
 	    FROM 
-	    	products_benefit
+	    	products_benefit    
 	    WHERE 
 	    	sell_products_no = #{sellProductsNo}
 	</select>
