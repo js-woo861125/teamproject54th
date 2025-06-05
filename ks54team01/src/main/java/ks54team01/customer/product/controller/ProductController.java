@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ks54team01.customer.product.domain.BenefitDetail;
 import ks54team01.customer.product.domain.CustomerProduct;
 import ks54team01.customer.product.service.CustomerProductService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,6 @@ public class ProductController {
 
 	private final CustomerProductService customerProductService;
 	
-	
 	// 이미지 파일이 저장된 기본 경로 (application.properties 등에서 설정)
     
 	@Value("${file.path:/}") // 
@@ -47,8 +47,16 @@ public class ProductController {
 										@ModelAttribute("addResult") String addResult, 
 										Model model) {
 		
+		
+		
 		// 서비스 계층을 통해 상품 상세 정보를 productsNum으로 조회 (List<CustomerProduct> 반환)
 		List<CustomerProduct> productDetailByProd = customerProductService.getProductDetailByProd(productsNum);
+//		productDetailByProd.get(0).ent
+//		for(EntCeo newEntCeoArr : productDetailByProd.get(0).getEntCeo()) {
+//			
+//		}
+//		
+		List<BenefitDetail> benefit = customerProductService.getBenefitByProduct(productsNum);
 		
 		String prodNm = productDetailByProd.get(0).getProductsName();
 		
@@ -58,8 +66,12 @@ public class ProductController {
 		
 		// 로그에 조회된 상품 상세 정보 출력
 		log.info("productDetailByProd:{}", productDetailByProd);
+		log.info("benefit: {}", benefit);
+		
 		
 		List<CustomerProduct> productSpec = customerProductService.getProductSpecList(productsNum);
+		
+		
 		
 		// 모델에 상품 상세 정보 리스트 추가
 		model.addAttribute("productDetailByProd", productDetailByProd);
@@ -68,7 +80,7 @@ public class ProductController {
 		model.addAttribute("maxPeriod", maxPeriod);
 		model.addAttribute("productSpec" ,productSpec);
 		model.addAttribute("addResult", addResult);
-		
+		model.addAttribute("benefit", benefit);
 		
 		return "customer/product/prodDetailView";
 	}

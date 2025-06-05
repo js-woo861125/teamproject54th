@@ -34,6 +34,23 @@
             #{sellProductsNo}, #{entCeoNo}, #{entEmpId}, #{benefit}, #{benefitDetail}, NOW(), NOW(), #{useStatus}
         )
     </insert>
+    
+    <select id="selectBenefitsBySellProductNo" resultType="ks54team01.enterprise.product.domain.EnterpriseProductBenefit" parameterType="string">
+	    SELECT
+	        products_benefit_no AS benefitNo,
+	        sell_products_no,
+	        ent_ceo_no,
+	        ent_emp_id,
+	        benefit_no,
+	        benefit_detail,
+	        use_status,
+	        register_date,
+	        revision_date
+	    FROM 
+	    	products_benefit
+	    WHERE 
+	    	sell_products_no = #{sellProductsNo}
+	</select>
 </mapper>
 
 

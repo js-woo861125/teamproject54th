@@ -36,6 +36,11 @@ public class AdminProductInfoController {
 	// DI 의존성 주입
 	private final AdminProductInfoService adminProductInfoService;
 	
+	
+	/**
+	 * 
+	 */
+	
 	/**
 	 * 사용유무 상태 변경
 	 */
@@ -478,7 +483,7 @@ public class AdminProductInfoController {
 		
 		ProductInfoModelSpec modelSpecInfo = adminProductInfoService.getModelSpecInfoByNo(modelSpecNo);
 		List<ProductInfoModel> modelList = adminProductInfoService.getModelList();
-		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoService.getCategorySpecList();
+		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoService.getUsableCateogrySpecList();
 		
 		model.addAttribute("title", "모델별/상세스펙 수정");
 		model.addAttribute("modelSpecInfo", modelSpecInfo);
@@ -503,7 +508,7 @@ public class AdminProductInfoController {
 	public String modifyCategorySpec(String specNo, Model model) {		
 		
 		ProductInfoCategorySpec specInfo = adminProductInfoService.getCategorySpecInfoByNo(specNo);
-		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getUsableCategoryList();
 		
 		model.addAttribute("title", "카테고리별/상세스펙 수정");
 		model.addAttribute("specInfo", specInfo);
@@ -549,9 +554,9 @@ public class AdminProductInfoController {
 	public String modifyModel(String modelNo, Model model) {		
 		
 		ProductInfoModel modelInfo = adminProductInfoService.getModelInfoByNo(modelNo);
-		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
-		List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
-		List<ProductInfoItem> itemList = adminProductInfoService.getItemList();
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getUsableCategoryList();
+		List<ProductInfoBrand> brandList = adminProductInfoService.getUsableBrandList();
+		List<ProductInfoItem> itemList = adminProductInfoService.getUsableItemList();
 		
 		model.addAttribute("title", "모델 수정");
 		model.addAttribute("modelInfo", modelInfo);
@@ -577,7 +582,7 @@ public class AdminProductInfoController {
 	public String modifyItem(String itemNo, Model model) {		
 		
 		ProductInfoItem itemInfo = adminProductInfoService.getItemInfoByNo(itemNo);
-		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getUsableCategoryList();
 		
 		model.addAttribute("title", "품목 수정");
 		model.addAttribute("itemInfo", itemInfo);
@@ -769,7 +774,7 @@ public class AdminProductInfoController {
 	public String addModelSpec(Model model) {
 		
 		List<ProductInfoModel> modelList = adminProductInfoService.getModelList();
-		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoService.getCategorySpecList();
+		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoService.getUsableCateogrySpecList();
 		
 		model.addAttribute("title", "모델별/상세스펙 등록");
 		model.addAttribute("modelList", modelList);
@@ -797,7 +802,7 @@ public class AdminProductInfoController {
 	@GetMapping("/addCategorySpec")
 	public String addCategorySpec(Model model) {
 		
-		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getUsableCategoryList();
 		
 		model.addAttribute("title", "카테고리별/상세스펙 등록");
 		model.addAttribute("categoryList", categoryList);
@@ -848,9 +853,9 @@ public class AdminProductInfoController {
 	@GetMapping("/addModel")
 	public String addModel(Model model) {
 		
-		List<ProductInfoBrand> brandList = adminProductInfoService.getBrandList();
-		List<ProductInfoItem> itemList = adminProductInfoService.getItemList();
-		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
+		List<ProductInfoBrand> brandList = adminProductInfoService.getUsableBrandList();
+		List<ProductInfoItem> itemList = adminProductInfoService.getUsableItemList();
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getUsableCategoryList();
 		
 		model.addAttribute("title", "모델 등록");
 		model.addAttribute("brandList", brandList);
@@ -879,7 +884,7 @@ public class AdminProductInfoController {
 	@GetMapping("/addItem")
 	public String addItem(Model model) {
 		
-		List<ProductInfoCategory> categoryList = adminProductInfoService.getCategoryList();
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getUsableCategoryList();
 		
 		model.addAttribute("title", "품목 등록");
 		model.addAttribute("categoryList", categoryList);

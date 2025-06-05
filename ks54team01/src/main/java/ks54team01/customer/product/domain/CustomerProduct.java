@@ -37,5 +37,7 @@ import lombok.Data;
 		private CustomerModel customerModel;
 		private CustomerModelSpecContent customerModelSpecContent;
 		private CustomerProductSpec customerProductSpec;
+		private CustomerBenefit customerBenefit;
+		private CustomerProductBenefit customerProductBenefit;
 
 	}
