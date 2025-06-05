@@ -184,6 +184,8 @@ public interface AdminProductInfoMapper {
 	List<ProductInfoCategorySpec> getSpecListByCategoryNo(String categoryNo);
 	// 카테고리코드로 품목 목록 조회 (모델 등록)
 	List<ProductInfoItem> getItemListByCategoryNo(String categoryNo);
+	// 카테고리 대분류로 중분류 목록 조회 (품목 등록)
+//	List<ProductInfoCategory> getMdCategoryByLgCategory(String lgCategoryNo);
 	// 등록되어있는 카테고리 중분류 목록 조회 (카테고리 등록)
 	List<ProductInfoCategory> getMdCategory();
 	// 등록되어있는 카테고리 대분류 목록 조회 (카테고리 등록)

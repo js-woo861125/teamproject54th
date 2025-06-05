@@ -38,10 +38,6 @@ public class AdminProductInfoController {
 	
 	
 	/**
-	 * 
-	 */
-	
-	/**
 	 * 사용유무 상태 변경
 	 */
 	@PostMapping("/updateModelSpec")
