@@ -202,7 +202,6 @@ public class CustomerPaymentController {
 		model.addAttribute("paymentList", paymentList);
 		model.addAttribute("custId", custId);
 		
-		
 		return "customer/myPage/myPaymentListView";
 	}
 	
@@ -252,10 +251,11 @@ public class CustomerPaymentController {
 	
 
 	@GetMapping("/addBillingPayment")
-	public String addBillingPaymnet(CustomerPayment customerPayment, @RequestParam("delNo") String delNo
+	public String addBillingPayment(CustomerPayment customerPayment, @RequestParam("delNo") String delNo
 								  , @RequestParam("quantity") Integer quantity, @RequestParam("prodNo") String prodNo
 								  , @RequestParam("delRecipientNm") String delRecipientNm, @RequestParam("delRecipientPhone") String delRecipientPhone
-								  , @RequestParam("delRequest") String delRequest, @RequestParam("rentalContractNo") String rentalContractNo, Model model) {
+								  , @RequestParam("delRequest") String delRequest, @RequestParam("rentalContractNo") String rentalContractNo
+								  , Model model, RedirectAttributes reAttr) {
 		
 		int orderQuantity = customerPayment.getPaymentCount();
 		String entCeoNo = customerPayment.getEntCeoNo();
@@ -287,6 +287,7 @@ public class CustomerPaymentController {
 		customerDeliveryInfo.setDelRequest(delRequest);
 		
 		customerPaymentService.addDeliveryInfo(customerDeliveryInfo);
+		
 		
 		return "redirect:/customer/payment/paymentList";
 	}
@@ -384,6 +385,7 @@ public class CustomerPaymentController {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	@GetMapping("/billing/success")
 	public String billingPaymentSuccess( @RequestParam("sellProductsNo") String sellProductsNo, @RequestParam("prodUnitPrice") Integer prodUnitPrice
 						               , @RequestParam("orderQuantity") Integer orderQuantity, @RequestParam("entCeoNo") String entCeoNo
@@ -398,6 +400,8 @@ public class CustomerPaymentController {
 		String custId = (String) session.getAttribute("loginId");
         
         Map<String, Object> responseMap = customerPaymentService.getBillingKey(authKey, customerKey);
+        Map<String, Object> card = (Map<String, Object>) responseMap.get("card");
+        
         
         String billingKey = (String) responseMap.get("billingKey");
         

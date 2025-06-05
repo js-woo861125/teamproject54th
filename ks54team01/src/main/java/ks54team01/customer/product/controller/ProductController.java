@@ -37,8 +37,8 @@ public class ProductController {
 	
 	// 이미지 파일이 저장된 기본 경로 (application.properties 등에서 설정)
     
-	@Value("${file.path:/}") // 
-    private String uploadDir;
+//	@Value("${file.path:/}") // 
+//    private String uploadDir;
 	
 	
 	
@@ -59,6 +59,7 @@ public class ProductController {
 		List<BenefitDetail> benefit = customerProductService.getBenefitByProduct(productsNum);
 		
 		String prodNm = productDetailByProd.get(0).getProductsName();
+		String image = productDetailByProd.get(0).getImageFilePath();
 		
 		CustomerProduct checkPrice = customerProductService.getLowerPriceAndMaxPeriod(productsNum);
 		String lowerPrice = checkPrice.getMinRentalPrice();
@@ -81,6 +82,7 @@ public class ProductController {
 		model.addAttribute("productSpec" ,productSpec);
 		model.addAttribute("addResult", addResult);
 		model.addAttribute("benefit", benefit);
+		model.addAttribute("image", image);
 		
 		return "customer/product/prodDetailView";
 	}
@@ -128,57 +130,60 @@ public class ProductController {
 	 * @param productsNum 조회할 상품의 productsNum (URL 경로 변수로 받음)
 	 * @return 이미지 데이터와 MIME 타입이 포함된 ResponseEntity (HTTP 응답)
 	 */
-	@GetMapping("/image/{productsNum}")
-	public ResponseEntity<Resource> getProductImage(@PathVariable("productsNum") String productsNum) {
-		List<CustomerProduct> productList = customerProductService.getProductDetailByProd(productsNum);
+//	@GetMapping("/image/{productsNum}")
+//	public ResponseEntity<Resource> getProductImage(@PathVariable("productsNum") String productsNum) {
+//		
+//		List<CustomerProduct> productList = customerProductService.getProductDetailByProd(productsNum);
+//
+//		CustomerProduct product = null;
+//		if (productList != null && !productList.isEmpty()) {
+//			product = productList.get(0); // 첫 번째 상품 정보 가져오기
+//		}
+//
+//		// imageFilePath 필드를 사용하도록 수정
+//		if (product != null && product.getImageFilePath() != null && !product.getImageFilePath().isEmpty()) {
+//			try {
+//                // 파일 경로 생성: 기본 업로드 디렉토리 + DB에서 가져온 파일 경로
+//                // 예: /home/teamproject/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg
+//                // DB의 file_path가 '/attachment/...'와 같이 이미 uploadDir의 상대 경로라면 resolve() 사용
+//                // 만약 DB의 file_path가 이미 '/home/teamproject/attachment/...'와 같은 완전한 절대 경로라면,
+//                // Paths.get(product.getImageFilePath()).normalize()만 사용하고 uploadDir은 필요 없습니다.
+////				Path filePath = Paths.get(uploadDir).resolve(product.getImageFilePath()).normalize();
+//				Path filePath = Paths.get(product.getImageFilePath()).normalize();
+//                log.info("이미지 로드를 시도하는 최종 파일 경로: {}", filePath.toString());
+//
+//                Resource resource = new UrlResource(filePath.toUri());
+//
+//                // 파일이 존재하고 읽을 수 있는지 확인
+//                if (resource.exists() && resource.isReadable()) {
+//                    // 이미지 MIME 타입 가져오기 (CustomerProduct에서 가져온 imageMimeType 사용)
+//                    String contentType = product.getImageType();
+//                    if (contentType == null || contentType.isEmpty()) {
+//                        // MIME 타입이 없으면 기본값 또는 파일 확장자로 유추
+//                        contentType = Files.probeContentType(filePath); // 파일 확장자로 MIME 타입 유추
+//                        if (contentType == null) {
+//                            contentType = "application/octet-stream"; // 알 수 없는 타입
+//                        }
+//                    }
+//
+//                    return ResponseEntity.ok()
+//                            .contentType(MediaType.parseMediaType(contentType))
+//                            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+//                            .body(resource);
+//                } else {
+//                    log.warn("이미지 파일을 찾을 수 없거나 읽을 수 없습니다: {}", filePath);
+//                    return ResponseEntity.notFound().build();
+//                }
+//			} catch (IOException e) {
+//				log.error("이미지 파일을 읽는 중 오류 발생: productsNum = {}", productsNum, e);
+//				return ResponseEntity.internalServerError().build(); // 500 Internal Server Error
+//			}
+//		}
+//		// 상품을 찾을 수 없거나 이미지 파일 경로가 없는 경우 404 Not Found 반환
+//		return ResponseEntity.notFound().build();
+//	}
 
-		CustomerProduct product = null;
-		if (productList != null && !productList.isEmpty()) {
-			product = productList.get(0); // 첫 번째 상품 정보 가져오기
-		}
-
-		// imageFilePath 필드를 사용하도록 수정
-		if (product != null && product.getImageFilePath() != null && !product.getImageFilePath().isEmpty()) {
-			try {
-                // 파일 경로 생성: 기본 업로드 디렉토리 + DB에서 가져온 파일 경로
-                // 예: /home/teamproject/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg
-                // DB의 file_path가 '/attachment/...'와 같이 이미 uploadDir의 상대 경로라면 resolve() 사용
-                // 만약 DB의 file_path가 이미 '/home/teamproject/attachment/...'와 같은 완전한 절대 경로라면,
-                // Paths.get(product.getImageFilePath()).normalize()만 사용하고 uploadDir은 필요 없습니다.
-				Path filePath = Paths.get(uploadDir).resolve(product.getImageFilePath()).normalize();
-
-                log.info("이미지 로드를 시도하는 최종 파일 경로: {}", filePath.toString());
-
-                Resource resource = new UrlResource(filePath.toUri());
-
-                // 파일이 존재하고 읽을 수 있는지 확인
-                if (resource.exists() && resource.isReadable()) {
-                    // 이미지 MIME 타입 가져오기 (CustomerProduct에서 가져온 imageMimeType 사용)
-                    String contentType = product.getImageType();
-                    if (contentType == null || contentType.isEmpty()) {
-                        // MIME 타입이 없으면 기본값 또는 파일 확장자로 유추
-                        contentType = Files.probeContentType(filePath); // 파일 확장자로 MIME 타입 유추
-                        if (contentType == null) {
-                            contentType = "application/octet-stream"; // 알 수 없는 타입
-                        }
-                    }
-
-                    return ResponseEntity.ok()
-                            .contentType(MediaType.parseMediaType(contentType))
-                            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
-                            .body(resource);
-                } else {
-                    log.warn("이미지 파일을 찾을 수 없거나 읽을 수 없습니다: {}", filePath);
-                    return ResponseEntity.notFound().build();
-                }
-			} catch (IOException e) {
-				log.error("이미지 파일을 읽는 중 오류 발생: productsNum = {}", productsNum, e);
-				return ResponseEntity.internalServerError().build(); // 500 Internal Server Error
-			}
-		}
-		// 상품을 찾을 수 없거나 이미지 파일 경로가 없는 경우 404 Not Found 반환
-		return ResponseEntity.notFound().build();
-	}
+	
 	
 	
 }

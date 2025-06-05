@@ -7,22 +7,31 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</th:block>
 	
 	<th:block layout:fragment="jsScript">
 		<script>
-			/**
-			* 혜택명 중복체크
-			*/
 			$('#addBenefitBtn').click(function(){
 				const benefitName = $('#benefitName').val();
-				
-				if(!benefitName){
-					alert('혜택명을 입력해주세요');
+				// 유효성 체크
+				if (benefitName.trim().length === 0) {
+					Swal.fire('', '혜택명을 입력해주세요', 'warning');
 					$('#benefitName').focus();
-					return ;
+					return;
 				}
-				
+				if (benefitName.length > 20) {
+					Swal.fire('', '혜택명은 20자 이내로 입력해주세요.', 'warning');
+					$('#benefitName').focus();
+					return;
+				}
+				const validRegex = /^[가-힣a-zA-Z0-9.,~()+\/\s]+$/;
+				if (!validRegex.test(benefitName)) {
+					Swal.fire('', '특수문자는 . , ~ ( ) + / 만 사용 가능합니다.', 'warning');
+					$('#benefitName').focus();
+					return; 
+				}
+				// 중복 체크
 				$.ajax({
 					url : '/admin/productInfo/benefitNameCheck',
 					method : 'post',
@@ -30,15 +39,14 @@
 					dataType : 'json'
 				}).done(function(isDuplicate) {
 					if(isDuplicate){
-						alert('이미 등록된 혜택명 입니다.');
+						Swal.fire('', '이미 등록된 혜택명 입니다.', 'warning');
 						$('#benefitName').focus();
 						return ;
 					}
-				
 					$('#addProductInfoForm').submit();
 			    }).fail(function(jqXHR, textStatus, error) {
 			        console.log("에러 발생:", textStatus, error);
-			        alert('혜택명 확인 중 오류가 발생했습니다.');
+			        Swal.fire('', '혜택명 등록 중 오류가 발생했습니다.', 'error');
 			    });
 			});
 		</script>

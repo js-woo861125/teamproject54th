@@ -7,6 +7,10 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
 		<script>
 			/**
 			* 대분류 선택 시 대분류코드 자동 입력
@@ -40,28 +44,25 @@
 				}
 			});
 			
-			/**
-			* 대분류 + 중분류 + 소분류 중복체크
-			*/
 			$('#addCategoryBtn').click(function(){
 				const lgCategory = $('#lgCategory').val();
 				const mdCategory = $('#mdCategory').val();
 				const smCategory = $('#smCategory').val();
-				
+				// 유효성 체크
 				if(!lgCategory){
-					alert('대분류를 선택하거나 입력해주세요');
+					Swal.fire('', '대분류를 선택하거나 입력해주세요', 'warning');
 					$('#lgCategory').focus();
 					return ;
 				}
 				
 				if (!mdCategory) {
-					alert('중분류를 선택하거나 입력해주세요');
+					Swal.fire('', '중분류를 선택하거나 입력해주세요', 'warning');
 					$('#mdCategory').focus();
 					return;
 				}
 				
 				if (!smCategory) {
-					alert('소분류를 입력해주세요');
+					Swal.fire('', '소분류를 입력해주세요', 'warning');
 					$('#smCategory').focus();
 					return;
 				}
@@ -76,7 +77,7 @@
 					dataType : 'json'
 				}).done(function(isDuplicate) {
 					if(isDuplicate){
-						alert('이미 등록된 카테고리 입니다.');
+						Swal.fire('', '이미 등록된 카테고리 입니다.', 'warning');
 						$('#itemName').focus();
 						return ;
 					}
@@ -84,7 +85,7 @@
 					$('#addProductInfoForm').submit();
 			    }).fail(function(jqXHR, textStatus, error) {
 			        console.log("에러 발생:", textStatus, error);
-			        alert('품목명 확인 중 오류가 발생했습니다.');
+			        Swal.fire('', '카테고리 등록 중 오류가 발생했습니다.', 'error');
 			    });
 			});
 		</script>	
