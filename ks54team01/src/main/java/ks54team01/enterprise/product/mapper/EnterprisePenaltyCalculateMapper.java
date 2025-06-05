@@ -8,5 +8,5 @@ import ks54team01.enterprise.product.domain.EnterprisePenaltyCalculate;
 public interface EnterprisePenaltyCalculateMapper {
 	  int insertPenaltyCalculate(EnterprisePenaltyCalculate penalty);
 	  
-	  EnterprisePenaltyCalculate selectPenaltyCalculateByNo(String penaltyCalculateNo);
+	  EnterprisePenaltyCalculate selectPenaltyCalculateByNo(String sellProductsNo);
 }
