@@ -134,9 +134,8 @@
 	
 	<update id="removeMyTransferBoard" parameterType="string">
   		/* 양도 게시글 삭제 */
-  		UPDATE transfer_board
-		SET
-			transfer_rental_processing_status = '양도공개전'
+  		DELETE FROM 
+  			transfer_board
 		WHERE
 			transfer_board_no = #{transferBoardNum};
   	</update>
@@ -205,17 +204,22 @@
 	<select id="getMyContractListByCustomerId" parameterType="string" resultMap="transferBoardResultMap">
   		/* 양도 게시글 등록 클릭 시 유효한 렌탈 목록 조회 ㅠ*/
   		SELECT 
-			rc.rental_contract_no ,
-			p.products_nm ,
-			rc.contract_period
+			rc.rental_contract_no,
+			p.products_nm,
+		  	rc.contract_period
 		FROM 
-			rental_contract rc LEFT JOIN sell_products sp
-			ON rc.sell_products_no = sp.sell_products_no 
-			INNER JOIN products p
-			ON sp.products_no = p.products_no 
+		  	rental_contract rc
+		  	LEFT JOIN sell_products sp ON rc.sell_products_no = sp.sell_products_no
+		  	INNER JOIN products p ON sp.products_no = p.products_no
 		WHERE 
-			rc.cust_id = #{customerId}
-			AND rc.rental_contract_status = '계약최종완료';
+		  	rc.cust_id = #{customerId}
+		 	AND rc.rental_contract_status = '계약최종완료'
+		  	AND NOT EXISTS 
+		  	(
+ 			SELECT 1
+		    FROM transfer_board tb
+		    WHERE tb.rental_contract_no = rc.rental_contract_no
+			)
   	</select>
 
 

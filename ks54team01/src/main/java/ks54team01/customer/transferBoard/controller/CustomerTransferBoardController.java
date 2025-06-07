@@ -142,40 +142,36 @@ public class CustomerTransferBoardController {
 	}
 	
 
-	@PostMapping("/deleteImage")
-	@ResponseBody
-	public ResponseEntity<?> deleteImage(@RequestParam("imageUrl") String imagePath){
-		
-		if(imagePath == null || imagePath.isBlank()) {
-			return ResponseEntity.badRequest().body("잘못된 이미지 경로");
-		}
-		boolean isDelete = filesUtils.deleteFileByPath(imagePath);
-		
-		if(isDelete) return ResponseEntity.ok("성공");
-		
-		return ResponseEntity.ok("실패");
-	}
-	
-	@PostMapping("/uploadImage")
-	@ResponseBody
-	public Map<String, Object> uploadImage(@RequestParam("upload") MultipartFile multipartFile){
-		
-		Map<String, Object> response = new HashMap<String, Object>(); 
-		FileMetaData fileInfo = filesUtils.uploadFile(multipartFile);
-		
-		if(fileInfo != null) {	
-			response.put("url", fileInfo.getFilePath());
-			response.put("uploaded", "1");
-			response.put("fileName", fileInfo.getFileOriginalName());
-		}else {
-			Map<String, Object> error = new HashMap<String, Object>();
-			error.put("message", "파일이미지 업로드 실패");
-			response.put("uploaded", "0");
-			response.put("error", error);
-		}
-		
-		return response;
-	}
+	/*
+	 * @PostMapping("/deleteImage")
+	 * 
+	 * @ResponseBody public ResponseEntity<?> deleteImage(@RequestParam("imageUrl")
+	 * String imagePath){
+	 * 
+	 * if(imagePath == null || imagePath.isBlank()) { return
+	 * ResponseEntity.badRequest().body("잘못된 이미지 경로"); } boolean isDelete =
+	 * filesUtils.deleteFileByPath(imagePath);
+	 * 
+	 * if(isDelete) return ResponseEntity.ok("성공");
+	 * 
+	 * return ResponseEntity.ok("실패"); }
+	 * 
+	 * @PostMapping("/uploadImage")
+	 * 
+	 * @ResponseBody public Map<String, Object> uploadImage(@RequestParam("upload")
+	 * MultipartFile multipartFile){
+	 * 
+	 * Map<String, Object> response = new HashMap<String, Object>(); FileMetaData
+	 * fileInfo = filesUtils.uploadFile(multipartFile);
+	 * 
+	 * if(fileInfo != null) { response.put("url", fileInfo.getFilePath());
+	 * response.put("uploaded", "1"); response.put("fileName",
+	 * fileInfo.getFileOriginalName()); }else { Map<String, Object> error = new
+	 * HashMap<String, Object>(); error.put("message", "파일이미지 업로드 실패");
+	 * response.put("uploaded", "0"); response.put("error", error); }
+	 * 
+	 * return response; }
+	 */
 	
 	@PostMapping("/requestRentalInfo")
 	public String requestRentalInfo(@RequestParam(name="rentalContractNum")  String rentalContractNum,

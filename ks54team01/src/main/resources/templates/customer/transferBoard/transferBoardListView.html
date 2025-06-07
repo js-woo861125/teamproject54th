@@ -244,9 +244,9 @@
 											<span th:text="${l.registerDate}">2025-04-09</span>
 											<div></div>
 											<th:block th:switch="${l.transferRentalProcsssingStatus}">
-												<span th:case="${'2.양도계약진행'}" class="stock-status in-stock">
+												<span th:case="${'양도공개'}" class="stock-status in-stock">
 													진행중 </span>
-												<span th:case="${'3.양도계약완료'}" class="stock-status out-stock">
+												<span th:case="${'양도계약완료'}" class="stock-status out-stock">
 													마감 </span>
 											</th:block>
 										</div>
