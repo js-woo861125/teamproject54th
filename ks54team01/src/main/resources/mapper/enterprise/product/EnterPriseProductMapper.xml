@@ -19,7 +19,7 @@
 	<result column="use_status" 		property="useStatus"/>
 	<result column="product_name" 		property="productName"/>
     <result column="product_image"		property="productImage"/>
-    <result column="model_name" 		property="modelName"/>
+    <result column="model_nm" 		property="modelName"/>
 	
 	</resultMap>
  
@@ -45,31 +45,29 @@
 	
 	<select id="getSellProductList" resultType="ks54team01.enterprise.product.domain.EnterpriseProduct">
 		SELECT
-			s.sell_products_no AS sellProductsNo, 
-			p.products_nm AS productName,
-			s.margin_ratio_no AS marginRatioNo, 
-			m.model_nm AS modelName,
-			s.ent_ceo_no AS entCeoNo, 
-			s.ent_emp_id AS entEmpId, 
-			s.products_no AS productsNo, 
-			s.lump_sum_pay_price AS lumpSumPayPrice, 
-			s.period AS period, 
-			s.calculate_price AS calculatePrice, 
-			s.final_price AS finalPrice, 
-			DATE_FORMAT(s.register_date, '%Y-%m-%d %H:%i:%s') AS registerDate, 
-			DATE_FORMAT(s.revision_date, '%Y-%m-%d %H:%i:%s') AS revisionDate, 
-			s.use_status AS useStatus,
-			IFNULL(f.file_path, '/manage/assets/imgs/theme/upload.svg') AS productImage
-		FROM
-		   sell_products s LEFT JOIN products p
- 		   ON 
- 		   		s.products_no = p.products_no
-  		LEFT JOIN files f
- 		   ON 
- 		   		f.ref_id = p.model_no AND f.file_type = 'mainImage'
-		JOIN model m
-		ON p.model_no = m.model_no	
-  		   
+	        s.sell_products_no AS sellProductsNo,
+	        p.products_nm AS productName,
+	        s.margin_ratio_no AS marginRatioNo,
+	        m.model_nm AS modelName,
+	        s.ent_ceo_no AS entCeoNo,
+	        s.ent_emp_id AS entEmpId,
+	        s.products_no AS productsNo,
+	        s.lump_sum_pay_price AS lumpSumPayPrice,
+	        s.period AS period,
+	        s.calculate_price AS calculatePrice,
+	        s.final_price AS finalPrice,
+	        DATE_FORMAT(s.register_date, '%Y-%m-%d %H:%i:%s') AS registerDate,
+	        DATE_FORMAT(s.revision_date, '%Y-%m-%d %H:%i:%s') AS revisionDate,
+	        s.use_status AS useStatus,
+	        IFNULL(f.file_path, '/manage/assets/imgs/theme/upload.svg') AS productImage
+	    FROM
+	        sell_products s
+	    LEFT JOIN 
+	    	products p ON s.products_no = p.products_no
+	    LEFT JOIN 
+	    	model m ON p.model_no = m.model_no
+	    LEFT JOIN
+	    	files f ON f.ref_id = p.model_no AND f.file_type = 'mainImage'
 	</select>
 
 	<insert id="addSellProduct" parameterType="EnterpriseProduct">
@@ -101,7 +99,73 @@
         #{useStatus}
     )
 </insert>
-	  
+	
+	
+	<select id="getSellProductByNo" resultType="ks54team01.enterprise.product.domain.EnterpriseProduct">
+	    SELECT
+	        s.sell_products_no AS sellProductsNo,
+	        p.products_nm AS productName,
+	        m.model_nm AS modelName,
+	        s.lump_sum_pay_price AS lumpSumPayPrice,
+	        s.period AS period,
+	        s.calculate_price AS calculatePrice,
+	        s.final_price AS finalPrice,
+	        s.use_status AS useStatus
+	    FROM 
+	    	sell_products s
+	    LEFT JOIN 
+	    	products p ON s.products_no = p.products_no
+	    LEFT JOIN 
+	    	model m ON p.model_no = m.model_no
+	    WHERE 
+	    	s.sell_products_no = #{sellProductsNo}
+	</select>
+	
+	
+	<update id="updateSellProduct" parameterType="ks54team01.enterprise.product.domain.EnterpriseProduct">
+    UPDATE 
+    	sell_products
+    SET
+        lump_sum_pay_price = #{lumpSumPayPrice},
+        calculate_price = #{calculatePrice},
+        final_price = #{finalPrice},
+        revision_date = NOW()
+    WHERE
+        sell_products_no = #{sellProductsNo}
+	</update>
+	
+	
+    <select id="countByProduct" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM sell_products
+        WHERE ent_ceo_no = #{entCeoNo}
+          AND products_no = #{productsNo}
+          AND period = #{period}
+    </select>
+    
+    <select id="selectProductByNo" resultMap="EnterpriseProductMap" parameterType="string">
+	    SELECT 
+	        sp.sell_products_no,
+	        sp.ent_ceo_no,
+	        sp.ent_emp_id,
+	        sp.products_no,
+	        sp.lump_sum_pay_price,
+	        sp.period,
+	        sp.calculate_price,
+	        sp.final_price,
+	        sp.register_date,
+	        sp.revision_date,
+	        m.model_nm
+	    FROM 
+	    	sell_products sp
+	    LEFT JOIN 
+	    	products p ON p.products_no = sp.products_no
+    	LEFT JOIN 
+    		model m ON p.model_no = m.model_no
+	    WHERE 
+	    	sp.sell_products_no = #{sellProductsNo}
+	</select>
+	
 </mapper>
 
 

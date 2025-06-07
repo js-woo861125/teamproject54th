@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.enterprise.common.mapper.CommonMapper">
+
+	<resultMap type="AdminFee" id="paymentFeeResultMap">
+	<id 	column="fee_no" 					property="feeNo" />
+	<result column="payment_completed_no"		property="paymentCompletedNo" />
+	<result column="ent_ceo_no"					property="entCeoNo" />
+	<result column="ent_emp_id"					property="entEmpId" />
+	<result column="manager_id"					property="managerId" />
+	<result column="payment_details"			property="paymentDetils" />
+	<result column="platform_fee"				property="platFormFee" />
+	<result column="ent_sales"					property="entSales" />
+	<result column="provision_schedule_date"	property="provisionScheduleDate" />
+	<result column="provision_date"				property="provisionDate" />
+	<result column="settlement_month"			property="settlementMonth" />
+	<result column="closing_settlement"			property="closingSttelement" />
+	<result column="payment_status"				property="paymentStatus" />
+	<result column="revision_date"				property="revisionDate" />
+	</resultMap>
+	
+	
+	<select id="getEnterPricePayCalc" resultMap="paymentFeeResultMap">
+	/*수수료조회*/
+		SELECT
+			f.fee_no,
+			f.payment_completed_no,
+			f.ent_ceo_no,
+			f.ent_emp_id,
+			f.manager_id,
+			f.payment_details,
+			f.platform_fee,
+			f.ent_sales,
+			f.provision_schedule_date,
+			f.provision_date,
+			f.settlement_month,
+			f.closing_settlement,
+			f.payment_status,
+			f.revision_date
+		FROM
+			fee f INNER JOIN ent_ceo ec
+			ON f.ent_ceo_no = ec.ent_ceo_no
+		WHERE
+			f.ent_ceo_no = #{entCeoNo} 
+		<if test="settlementMonth != null and settlementMonth != ''">
+		AND f.settlement_month = #{settlementMonth}
+		</if>
+		
+	</select>
+	
+	
+	<resultMap type="AdminMonthlyFee" id="adminPaymentCalc">
+		<id 	column="monthly_fee_no" 		property="monthlyFeeNo" />
+		<result column="ent_ceo_no"				property="entCeoNo" />
+		<result column="mf.ent_emp_id"			property="entEmpId" />
+		<result column="manager_id"				property="managerId" />
+		<result column="payment_details"		property="paymentDetails" />
+		<result column="platform_fee"			property="platformFee" />
+		<result column="ent_fee"				property="entFee" />
+		<result column="pay_status"				property="payStatus" />
+		<result column="provision_date"			property="provisionDate" />
+		<result column="settlement_month"		property="settlementMonth" />
+	</resultMap>
+
+	<select id="getEntMonthlyCalc" parameterType="string" resultMap="adminPaymentCalc">
+		SELECT 
+			mf.monthly_fee_no, 
+			mf.ent_ceo_no, 
+			mf.ent_emp_id, 
+			mf.manager_id, 
+			mf.payment_details, 
+			mf.platform_fee,
+			mf.ent_fee, 
+			mf.pay_status, 
+			mf.provision_date, 
+			mf.settlement_month
+		FROM 
+			monthly_fee mf 
+		WHERE 
+			mf.ent_ceo_no = #{entCeoNo} 
+		<if test="settlementMonth != null and settlementMonth != ''">
+       	 AND mf.settlement_month = #{settlementMonth}
+    	</if>
+	</select>
+	
+	
+	
+	
+	
+	
+	
+</mapper>
+
+

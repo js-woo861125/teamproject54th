@@ -19,7 +19,8 @@
 		         <li class="menu-item has-submenu" th:if="${session.loginMemberType == '입점업체 대표'}">
 		            <a class="menu-link" href="#" >
 		                <i class="icon material-icons md-person"></i>
-		                <span class="text">업체관리(대표만)</span>
+		                <span class="text">업체관리</span>
+		                <span class="badge bg-secondary" style="margin-left: 4px; font-size: 10px;">대표전용</span>
 		            </a>
 		            <div class="submenu">
 		                <a th:href="@{/enterprise/management/employeeList}">직원목록</a>

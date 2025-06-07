@@ -2,10 +2,10 @@ package ks54team01.customer.product.service.impl;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ks54team01.customer.product.domain.BenefitDetail;
 import ks54team01.customer.product.domain.CustomerProduct;
 import ks54team01.customer.product.mapper.ProductMapper;
 import ks54team01.customer.product.service.CustomerProductService;
@@ -21,7 +21,13 @@ public class CustomerProductServiceImpl implements CustomerProductService {
 	private final ProductMapper productMapper;
 	
 
-    
+
+	@Override
+	public List<BenefitDetail> getBenefitByProduct(String productsNum) {
+		
+		return productMapper.getBenefitByProduct(productsNum);
+	}
+	
 	
 	@Override
 	public CustomerProduct getLowerPriceAndMaxPeriod(String productsNum) {

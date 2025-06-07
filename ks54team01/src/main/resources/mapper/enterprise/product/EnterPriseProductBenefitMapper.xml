@@ -9,13 +9,48 @@
         SELECT CONCAT('No', IFNULL(MAX(CAST(SUBSTRING(products_benefit_no, 3) AS UNSIGNED)), 0) + 1) 
         FROM products_benefit
     </selectKey>
-    INSERT INTO products_benefit (
+    INSERT INTO 
+    	products_benefit (
         products_benefit_no, sell_products_no, ent_ceo_no, ent_emp_id, benefit_no, benefit_detail, register_date, revision_date, use_status
     ) VALUES (
         #{benefitNo}, #{sellProductsNo}, #{entCeoNo}, #{entEmpId}, #{benefit}, #{benefitDetail}, NOW(), NOW(), #{useStatus}
     )
 	</insert>
-
+	
+	  <delete id="deleteBenefitsBySellProductNo" parameterType="string">
+        DELETE 
+        FROM 
+        	products_benefit
+        WHERE 
+        	sell_products_no = #{sellProductsNo}
+    </delete>
+    
+    <insert id="modifyEnterpriseProductBenefit" parameterType="ks54team01.enterprise.product.domain.EnterpriseProductBenefit">
+        INSERT INTO 
+        	products_benefit
+        	(products_benefit_no, sell_products_no, ent_ceo_no, ent_emp_id, benefit_no, benefit_detail, register_date, revision_date, use_status)
+        VALUES (
+            (SELECT CONCAT('No', IFNULL(MAX(CAST(SUBSTRING(products_benefit_no, 3) AS UNSIGNED)), 0) + 1) FROM products_benefit),
+            #{sellProductsNo}, #{entCeoNo}, #{entEmpId}, #{benefit}, #{benefitDetail}, NOW(), NOW(), #{useStatus}
+        )
+    </insert>
+    
+    <select id="selectBenefitsBySellProductNo" resultType="ks54team01.enterprise.product.domain.EnterpriseProductBenefit" parameterType="string">
+	    SELECT
+	        products_benefit_no AS benefitNo,
+		    sell_products_no AS sellProductsNo,
+		    ent_ceo_no AS entCeoNo,
+		    ent_emp_id AS entEmpId,
+		    benefit_no AS benefit,
+		    benefit_detail AS benefitDetail,
+		    use_status AS useStatus,
+		    register_date AS registerDate,
+		    revision_date AS revisionDate
+	    FROM 
+	    	products_benefit    
+	    WHERE 
+	    	sell_products_no = #{sellProductsNo}
+	</select>
 </mapper>
 
 

@@ -20,6 +20,7 @@ import lombok.Data;
 		private String lumpPrice;
 		private String minRentalPrice;
 		private String maxPeriod;
+		private String prodDetail;
 		
 		private String imageFilePath;
 	
@@ -37,5 +38,7 @@ import lombok.Data;
 		private CustomerModel customerModel;
 		private CustomerModelSpecContent customerModelSpecContent;
 		private CustomerProductSpec customerProductSpec;
+		private CustomerBenefit customerBenefit;
+		private CustomerProductBenefit customerProductBenefit;
 
 	}

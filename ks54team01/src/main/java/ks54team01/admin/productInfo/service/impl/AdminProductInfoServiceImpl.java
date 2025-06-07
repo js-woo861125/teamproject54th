@@ -27,6 +27,40 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 
 	// DI 의존성 주입
 	private final AdminProductInfoMapper adminProductInfoMapper;
+
+	/**
+	 * 상품정보 사용유무 필터링
+	 */
+	// 카테고리별/상세스펙 사용유무 필터링
+	@Override
+	public List<ProductInfoCategorySpec> getUsableCateogrySpecList() {
+		
+		return adminProductInfoMapper.getUsableCateogrySpecList();
+	}
+	// 모델 사용유무 필터링
+	@Override
+	public List<ProductInfoModel> getUsableModelList() {
+		
+		return adminProductInfoMapper.getUsableModelList();
+	}
+	// 품목 사용유무 필터링
+	@Override
+	public List<ProductInfoItem> getUsableItemList() {
+		
+		return adminProductInfoMapper.getUsableItemList();
+	}
+	// 브랜드 사용유무 필터링
+	@Override
+	public List<ProductInfoBrand> getUsableBrandList() {
+		
+		return adminProductInfoMapper.getUsableBrandList();
+	}
+	// 카테고리 사용유무 필터링
+	@Override
+	public List<ProductInfoCategory> getUsableCategoryList() {
+		
+		return adminProductInfoMapper.getUsableCategoryList();
+	}
 	
 	/**
 	 *  상품정보 등록 조회

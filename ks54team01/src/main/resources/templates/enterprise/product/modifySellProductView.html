@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{enterprise/layout/default}">
+<head>
+<title>제품 등록</title>
+</head>
+<th:block layout:fragment="jsFile">
+	<script
+		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</th:block>
+<th:block layout:fragment="content">
+	<form class="user" th:action="@{/enterprise/product/modifySellProduct}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="sellProductsNo" th:value="${product.sellProductsNo}" />
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- 제품정보 카드 -->
+            <div class="card mb-4">
+                <div class="card-header"><h4>제품정보</h4></div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <input type="hidden" name="entCeoNo" th:value="${product.entCeoNo}" />
+                        <input type="hidden" name="entEmpId" th:value="${product.entEmpId}" />
+                        <label class="form-label">제품 이름</label>
+                        <input type="text" class="form-control" th:value="${product.modelName}" readonly />
+                    </div>
+                    <div class="row align-items-end">
+                        <div class="col-lg-4">
+                            <div class="mb-4">
+                                <label class="form-label">개월수/마진율 선택</label>
+                                <select name="marginRatioNum" id="marginSelect" class="form-select" required>
+                                    <option th:each="margin : ${marginList}"
+                                            th:value="${margin.marginRatioNum}"
+                                            th:data-period="${margin.period}"
+                                            th:data-margin="${margin.marginRatio}"
+                                            th:text="${margin.period + '개월 / ' + margin.marginRatio + '%'}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-4">
+                                <label class="form-label">일시불판매가</label>
+                                <input type="text" name="lumpSumPayPrice" class="form-control"th:value="${product.lumpSumPayPrice}" />
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="mb-4">
+                                <button type="button" class="btn btn-md font-md rounded btn-brand" id="addProductBtn">상품추가</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 제품 상세옵션 카드 -->
+            <div class="card mb-4">
+                <div class="card-header"><h4>제품 상세옵션</h4></div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="mb-4">
+                                <label class="form-label">플랫폼판매가</label>
+                                <input type="text" name="calculatePrice" th:value="${product.calculatePrice}" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-4">
+                                <label class="form-label">실판매가</label>
+                                <input type="text" name=lumpSumPayPrice th:value="${product.lumpSumPayPrice}" class="form-control" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="mb-4">
+                                <label class="form-label">위약금등록</label>
+                                <input type="text" name="penaltyPeriod" th:value=${product.period} class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-4">
+                                <label class="form-label">위약금률</label>
+                                <input type="number"  name="penaltyRatio"
+                                    th:value="${penalty.penaltyFeeRatio}" class="form-control" required />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 혜택 -->
+                    <div id="benefit-list">
+                        <div th:each="benefit, stat : ${productBenefitList}" class="row align-items-end mb-2 benefit-row">
+                            <div class="col-lg-4">
+                                <label class="form-label">전체혜택</label>
+                                <select class="form-select" name="benefitNoList" required>
+                                    <option value="">혜택을 선택하세요</option>
+                                    <option th:each="b : ${benefitList}"
+                                            th:value="${b.benefitNo}"
+                                            th:text="${b.benefitName}"
+                                            th:selected="${b.benefitNo == benefit.benefit}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <label class="form-label">혜택상세</label>
+                                <input type="text" name="benefitDetailList" th:value="${benefit.benefitDetail}" class="form-control" required />
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="button" class="btn btn-sm btn-danger remove-benefit-btn"
+                                    th:if="${#lists.size(productBenefitList) > 1}">삭제</button>
+                            </div>
+                        </div>
+                        <button type="button" id="add-benefit-btn" class="btn btn-sm btn-primary">혜택 추가</button>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-4">수정 완료</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+			</th:block>
+			
+<!-- JS 라이브러리 -->
+<script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+<script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+<script src="assets/js/vendors/select2.min.js"></script>
+<script src="assets/js/vendors/perfect-scrollbar.js"></script>
+<script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+<script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+<th:block layout:fragment="jsScript">
+	<script>
+
+	function arrangeBenefitButtons() {
+	    const benefitRows = document.querySelectorAll('#benefit-list .benefit-row');
+	    benefitRows.forEach((row, idx) => {
+	        const btn = row.querySelector('button');
+	        if (idx === benefitRows.length - 1) {
+	            btn.textContent = '추가';
+	            btn.className = 'btn btn-sm btn-primary add-benefit-btn';
+	        } else {
+	            btn.textContent = '삭제';
+	            btn.className = 'btn btn-sm btn-danger remove-benefit-btn';
+	        }
+	    });
+	}
+	// 혜택 행 추가/삭제
+	$(document).on('click', '.add-benefit-btn', function(){
+		const $cloneNode = $(this).closest('.benefit-row').clone();
+		$cloneNode.find('select, input').each((idx, element) => element.value= '');
+		$cloneNode.find('button')
+				  .attr('class', 'btn btn-sm btn-danger remove-benefit-btn')
+				  .text('삭제');
+		$(this).closest('#benefit-list').prepend($cloneNode);
+	});
+	$(document).on('click', '.remove-benefit-btn', function(){
+		$(this).closest('.benefit-row').remove();
+	});
+	
+	document.addEventListener('change', function(e) {
+	    if (e.target.name === 'benefitNoList') {
+	        updateBenefitSelectOptions();
+	    }
+	});
+
+	// 마진 계산 버튼
+	document.getElementById('addProductBtn')?.addEventListener('click', function() {
+	    const priceInput = document.getElementById('lumpSumPayPrice').value.replace(/,/g, '');
+	    const marginSelect = document.getElementById('marginSelect');
+	    const selectedOption = marginSelect.options[marginSelect.selectedIndex];
+	    const period = parseInt(selectedOption.getAttribute('data-period'));
+	    const margin = parseFloat(selectedOption.getAttribute('data-margin'));
+	    const price = parseFloat(priceInput);
+
+	    if (isNaN(price) || isNaN(margin) || isNaN(period)) {
+	        alert('가격, 마진율, 개월수를 올바르게 입력/선택해주세요.');
+	        return;
+	    }
+
+	    const marginAmount = price * (margin / 100);
+	    const total = price + marginAmount;
+	    const monthly = Math.round(total / period);
+
+	    document.getElementById('platformPrice').value = monthly.toLocaleString();
+	    document.getElementById('penaltyPeriod').value = period + '개월';
+	    
+	    document.getElementById('period').value = period;
+	    document.getElementById('calculatePrice').value = total;
+
+	});
+
+	
+	function updateBenefitSelectOptions() {
+	    const selects = document.querySelectorAll('select[name="benefitNoList"]');
+	    const selectedValues = Array.from(selects).map(sel => sel.value);
+
+	    selects.forEach(sel => {
+	        const currentValue = sel.value;
+	        Array.from(sel.options).forEach(opt => {
+	            if (
+	                opt.value !== "" &&
+	                selectedValues.includes(opt.value) &&
+	                opt.value !== currentValue
+	            ) {
+	                opt.disabled = true;
+	            } else {
+	                opt.disabled = false;
+	            }
+	        });
+	    });
+	}
+	
+
+    </script>
+</th:block>
+</body>
+</html>
