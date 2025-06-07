@@ -19,13 +19,6 @@
 		<result column="products_image" 		property="productImage"/>
 		<result column="item_no" 				property="itemNo"/>
 		<result column="model_nm" 				property="modelName"/>
-		<!-- <association property="mainImageData" javaType="ks54team01.common.file.domain.FileMetaData" foreignColumn="model_no">
-			<id 	column="file_idx" 			property="fileIdx"/>
-			<result	column="ref_id" 			property="refId"/>
-			<result column="file_original_name" property="fileOriginalName"/>
-			<result column="file_path" 			property="filePath"/>
-			<result column="file_type" 			property="fileType"/>
-		</association> -->
 	</resultMap>
 	
 	<select id="searchProductList" resultMap="adminProductResultMap">
@@ -92,8 +85,8 @@
 			        SELECT 1 FROM sell_products sp
 			        WHERE sp.products_no = p.products_no
 			          AND sp.use_status = '사용중'
-			    ) THEN '활성화'
-			    ELSE '비활성화'
+			    ) THEN '활'
+			    ELSE '비활'
 			END AS products_status,
 	        IFNULL(f.file_path, '/manage/assets/imgs/theme/upload.svg') AS products_image,
 	        DATE_FORMAT(p.register_date, '%Y-%m-%d %H:%i:%s') AS register_date,
@@ -340,7 +333,7 @@
     UPDATE 
     	products
     SET 
-    	products_status = '비활성화', 
+    	products_status = '비활', 
         revision_date = NOW()
     WHERE 
     	products_no = #{productNo}
