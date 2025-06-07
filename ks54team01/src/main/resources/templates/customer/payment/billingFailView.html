@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{customer/layout/default}">
+
+
+	<!-- head 삽입공간 -->
+	
+	<head>
+		 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</head>
+	
+	<th:block layout:fragment="jsFile">
+	</th:block>
+	
+	
+	<th:block layout:fragment="jsScript">
+		
+	</th:block>
+	
+	
+	<!-- 페이지 삽입공간 -->
+	<th:block layout:fragment="customContents">
+	 	<script th:inline="javascript">
+			const failMessage = /*[[${failMessage}]]*/ '결제 실패';
+	
+	        Swal.fire({
+	            icon: 'error',
+	            title: '결제 실패',
+	            text: decodeURIComponent(failMessage),
+	            confirmButtonText: '이전 페이지로'
+	        }).then(() => {
+	            window.history.back();
+	        });
+		</script>
+	</th:block> 
+</html>

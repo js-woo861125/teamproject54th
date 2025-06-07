@@ -19,6 +19,12 @@ public class AdminDeliveryServiceImpl implements AdminDeliveryService{
 	private final AdminDeliveryMapper adminDeliveryMapper;
 	
 	
+	@Override
+	public List<AdminDelivery> getDeliveryListByCustId(String custId) {
+		return adminDeliveryMapper.getDeliveryListByCustId(custId);
+	}
+	
+	
 	
 	@Override
 	public List<AdminDeliveryInfo> getSearchDeliveryInfoList(String searchKey, String searchValue) {
@@ -48,7 +54,6 @@ public class AdminDeliveryServiceImpl implements AdminDeliveryService{
 		switch (searchKey) {
 			case "custId" 	-> searchKey = "dl.cust_id";
 			case "custNm" 	-> searchKey = "c.cust_nm";
-			case "primaryLocation" 	-> searchKey = "dl.primary_location";		
 		}
 		List<AdminDelivery> adminDeliveryList = adminDeliveryMapper.getSearchDeliveryList(searchKey, searchValue);
 		

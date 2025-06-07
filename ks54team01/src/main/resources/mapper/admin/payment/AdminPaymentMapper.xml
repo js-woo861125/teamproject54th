@@ -156,6 +156,63 @@
 	</select>
 	
 	
+	<select id="getPaymentCount" parameterType="map" resultType="int">
+		/* 검색 포함 전체 행 수 */
+		SELECT 
+			COUNT(p.payment_completed_no)
+		FROM
+		    payment p
+		    INNER JOIN customer c USING (cust_id)
+		    INNER JOIN ent_ceo ec USING (ent_ceo_no)
+		<where>
+		    <if test="searchKey != null and searchValue != null and searchValue != ''">
+		        <choose>
+		            <when test="searchKey == 'custNm'">
+		                c.cust_nm LIKE CONCAT('%', #{searchValue}, '%')
+		            </when>
+		            <when test="searchKey == 'payStatus'">
+		                p.payment_status LIKE CONCAT('%', #{searchValue}, '%')
+		            </when>
+		        </choose>
+		    </if>
+		</where>
+	</select>
+	
+	<select id="getPaymentPageList" parameterType="map" resultMap="paymentResultMap">
+		/* 결제내역 조회 */
+		SELECT
+			p.payment_completed_no,
+			c.cust_nm,
+			p.sell_products_no,
+			ec.ent_nm,
+			p.total_price,
+			p.payment_status,
+			p.payment_completed_date
+		FROM
+			payment p inner join customer c
+			using(cust_id)
+			inner join ent_ceo ec 
+			using(ent_ceo_no)
+		<where>
+			<if test="searchKey != null and searchValue != null and searchValue != ''">
+			    <choose>
+			        <when test="searchKey == 'custNm'">
+			            c.cust_nm LIKE CONCAT('%', #{searchValue}, '%')
+			        </when>
+			        <when test="searchKey == 'payStatus'">
+			            p.payment_status LIKE CONCAT('%', #{searchValue}, '%')
+			        </when>
+			    </choose>
+			</if>
+		</where>
+		ORDER BY 
+			p.payment_completed_date DESC
+		LIMIT 
+			#{pageable.rowPerPage} OFFSET #{pageable.offset};
+	</select>
+	
+	
+	
 	
 </mapper>
 

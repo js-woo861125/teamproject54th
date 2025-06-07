@@ -42,6 +42,29 @@
 	</resultMap>
 	
 	
+	
+	
+	
+	<select id="getDeliveryListByCustId" resultMap="deliveryResultMap">
+		SELECT 
+			delivery_nm, 
+			delivery_addr, 
+			delivery_daddr, 
+			delivery_zip_no, 
+			primary_location
+		FROM 
+			delivery_list
+		WHERE 
+			cust_id = #{custId}
+		ORDER BY 
+			primary_location DESC 
+	</select>
+	
+	
+	
+	
+	
+	
 	<select id="getSearchDeliveryInfoList" parameterType="string" resultMap="deliveryInfoResultMap">
 		/* 배송정보 조회 검색 */
 		SELECT
@@ -126,6 +149,10 @@
 		FROM
 			delivery_list dl inner join customer c
 			using(cust_id)
+		WHERE 
+			dl.primary_location ='기본배송지'
+		GROUP BY 
+			c.cust_id 
 		ORDER BY
 			c.cust_nm;
 	</select>
