@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import ks54team01.admin.delivery.domain.AdminDelivery;
 import ks54team01.admin.delivery.domain.AdminDeliveryInfo;
@@ -19,6 +21,12 @@ public class AdminDeliveryController {
 	
 	private final AdminDeliveryService adminDeliveryService;
 	
+	
+	@GetMapping("/customerDeliveryList")
+	@ResponseBody
+	public List<AdminDelivery> getCustomerDeliveryList(@RequestParam String custId) {
+	    return adminDeliveryService.getDeliveryListByCustId(custId);
+	}
 	
 	
 	@GetMapping("/searchDeliveryInfoList")

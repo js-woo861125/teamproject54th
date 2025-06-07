@@ -24,6 +24,14 @@
 		
 	</resultMap>
 	
+	
+	<delete id="deleteContractByRentalContractNo" parameterType="string">
+	    delete from rental_contract
+	    where 
+	    	rental_contract_no = #{rentalContractNo}
+	</delete>
+	
+	
 	<select id="myCustomerContractList" parameterType="string" resultMap="contractResultMap">
 		select
 			rc.rental_contract_no,

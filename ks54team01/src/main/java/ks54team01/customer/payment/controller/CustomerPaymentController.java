@@ -36,6 +36,23 @@ public class CustomerPaymentController {
 	
 	
 	
+	@GetMapping("/billingFail")
+	public String getBillingFail(@RequestParam(required = false) String code, @RequestParam(required = false) String message
+							   , @RequestParam("rentalContractNo") String rentalContractNo, Model model) {
+		
+
+	    if (rentalContractNo != null && !rentalContractNo.isBlank()) {
+	        // 계약 삭제 시 주의: 다른 테이블과 외래키 연동 여부 확인
+	    	customerContractService.deleteContractByRentalContractNo(rentalContractNo);
+	    }
+		
+		model.addAttribute("failCode", code);
+		model.addAttribute("failMessage", message);
+		
+		return "customer/payment/billingFailView";
+	}
+	
+	
 	@GetMapping("/detail")
 	public String getPaymentDetailList(@RequestParam("rentalContractNo") String rentalContractNo, Model model) {
 		

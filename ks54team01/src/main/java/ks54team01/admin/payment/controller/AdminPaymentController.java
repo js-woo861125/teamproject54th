@@ -26,6 +26,9 @@ import ks54team01.admin.payment.domain.PaymentProcessRequest;
 import ks54team01.admin.payment.domain.SettlementConfirmRequest;
 import ks54team01.admin.payment.service.AdminFeeService;
 import ks54team01.admin.payment.service.AdminPaymentService;
+import ks54team01.customer.transferBoard.domain.CustomerTransferBoard;
+import ks54team01.system.util.PageInfo;
+import ks54team01.system.util.Pageable;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -51,14 +54,35 @@ public class AdminPaymentController {
 	
 	
 	@GetMapping("/paymentList")
-	public String getPaymentList(Model model) {
-		
-		List <AdminPayment> paymentList = adminPaymentService.getPaymentList();
-		
-		model.addAttribute("title", "결제내역");
-		model.addAttribute("paymentList", paymentList);
-		
-		return "admin/payment/paymentListView";
+	public String getPaymentList(@RequestParam(required = false) String searchKey,
+	                             @RequestParam(required = false) String searchValue,
+	                             Pageable pageable,
+	                             Model model) {
+
+	    pageable.setRowPerPage(10);
+
+	    Map<String, Object> searchParamMap = new HashMap<>();
+	    searchParamMap.put("pageable", pageable);
+
+	    if (searchKey != null && !searchKey.isEmpty() && searchValue != null && !searchValue.isEmpty()) {
+	        searchParamMap.put("searchKey", searchKey);
+	        searchParamMap.put("searchValue", searchValue);
+	    }
+
+	    PageInfo<AdminPayment> paymentPageList = adminPaymentService.getPaymentPageList(searchParamMap);
+
+	    model.addAttribute("title", "실시간 결제내역");
+	    model.addAttribute("paymentList", paymentPageList.getContents());
+	    model.addAttribute("currentPage", paymentPageList.getCurrentPage());
+	    model.addAttribute("lastPage", paymentPageList.getLastPage());
+	    model.addAttribute("startPageNum", paymentPageList.getStartPageNum());
+	    model.addAttribute("endPageNum", paymentPageList.getEndPageNum());
+	    model.addAttribute("rowPerPage", pageable.getRowPerPage());
+	    model.addAttribute("contentRowCount", paymentPageList.getTotalRowCount());
+	    model.addAttribute("searchKey", searchKey);
+	    model.addAttribute("searchValue", searchValue);
+
+	    return "admin/payment/paymentListView";
 	}
 //	----------------------------------------------------- 구분선 -------------------------------------------------
 	
