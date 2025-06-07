@@ -9,4 +9,8 @@ public interface EnterprisePenaltyCalculateMapper {
 	  int insertPenaltyCalculate(EnterprisePenaltyCalculate penalty);
 	  
 	  EnterprisePenaltyCalculate selectPenaltyCalculateByNo(String sellProductsNo);
+	  
+	  
+	  int updatePenaltyCalculate(EnterprisePenaltyCalculate penalty);
+	
 }

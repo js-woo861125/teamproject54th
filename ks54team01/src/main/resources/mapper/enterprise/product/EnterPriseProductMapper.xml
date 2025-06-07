@@ -24,50 +24,84 @@
 	</resultMap>
  
 	
-	<select id="getQuantityList" resultType="EnterpriseProductQuantity">
-	    SELECT
-	        sp.ent_ceo_no AS entCeoNo,
-	        p.products_nm AS productName,
-	        pc.small_category AS cateName,
-	        p.products_status AS productStatus,
-	        q.quantity AS quantity
-	    FROM 
-	    	sell_products sp
-	    JOIN 
-	    	products p ON sp.products_no = p.products_no
-	    JOIN 
-	    	products_category pc ON p.product_category_no = pc.product_category_no
-	    JOIN 
-	    	quantity q ON sp.products_no = q.products_no AND sp.ent_ceo_no = q.ent_ceo_no
-	    GROUP BY 
-	    	sp.ent_ceo_no, p.products_no;
-	</select>
+		<select id="getQuantityList" resultType="EnterpriseProductQuantity">
+    SELECT
+        sp.ent_ceo_no AS entCeoNo,
+        p.products_no AS productsNo,
+        p.products_nm AS productName,
+        pc.small_category AS cateName,
+        p.products_status AS productStatus,
+        q.quantity AS quantity,
+        b.brand_nm AS brandName
+    FROM
+        sell_products sp
+        JOIN products p ON sp.products_no = p.products_no
+        JOIN products_category pc ON p.product_category_no = pc.product_category_no
+        JOIN quantity q ON sp.products_no = q.products_no AND sp.ent_ceo_no = q.ent_ceo_no
+        JOIN model m ON p.model_no = m.model_no
+        JOIN brand b ON m.brand_no = b.brand_no
+    <where>
+        <if test="searchKey != null and searchValue != null and searchValue != ''">
+            <choose>
+                <when test="searchKey == 'productName'">
+                    AND p.products_nm LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+                <when test="searchKey == 'brandName'">
+                    AND b.brand_nm LIKE CONCAT('%', #{searchValue}, '%')
+                </when>
+            </choose>
+        </if>
+        <if test="categoryNo != null and categoryNo != ''">
+            AND p.product_category_no = #{categoryNo}
+        </if>
+        <if test="status != null and status != ''">
+            AND p.products_status = #{status}
+        </if>
+    </where>
+    GROUP BY sp.ent_ceo_no, p.products_no
+</select>
 	
 	<select id="getSellProductList" resultType="ks54team01.enterprise.product.domain.EnterpriseProduct">
-		SELECT
-	        s.sell_products_no AS sellProductsNo,
-	        p.products_nm AS productName,
-	        s.margin_ratio_no AS marginRatioNo,
-	        m.model_nm AS modelName,
-	        s.ent_ceo_no AS entCeoNo,
-	        s.ent_emp_id AS entEmpId,
-	        s.products_no AS productsNo,
-	        s.lump_sum_pay_price AS lumpSumPayPrice,
-	        s.period AS period,
-	        s.calculate_price AS calculatePrice,
-	        s.final_price AS finalPrice,
-	        DATE_FORMAT(s.register_date, '%Y-%m-%d %H:%i:%s') AS registerDate,
-	        DATE_FORMAT(s.revision_date, '%Y-%m-%d %H:%i:%s') AS revisionDate,
-	        s.use_status AS useStatus,
-	        IFNULL(f.file_path, '/manage/assets/imgs/theme/upload.svg') AS productImage
-	    FROM
-	        sell_products s
-	    LEFT JOIN 
-	    	products p ON s.products_no = p.products_no
-	    LEFT JOIN 
-	    	model m ON p.model_no = m.model_no
-	    LEFT JOIN
-	    	files f ON f.ref_id = p.model_no AND f.file_type = 'mainImage'
+    SELECT
+        s.sell_products_no AS sellProductsNo,
+        p.products_nm AS productName,
+        s.margin_ratio_no AS marginRatioNo,
+        m.model_nm AS modelName,
+        s.ent_ceo_no AS entCeoNo,
+        s.ent_emp_id AS entEmpId,
+        s.products_no AS productsNo,
+        s.lump_sum_pay_price AS lumpSumPayPrice,
+        s.period AS period,
+        s.calculate_price AS calculatePrice,
+        s.final_price AS finalPrice,
+        DATE_FORMAT(s.register_date, '%Y-%m-%d %H:%i:%s') AS registerDate,
+        DATE_FORMAT(s.revision_date, '%Y-%m-%d %H:%i:%s') AS revisionDate,
+        s.use_status AS useStatus,
+        IFNULL(f.file_path, '/manage/assets/imgs/theme/upload.svg') AS productImage
+    FROM
+        sell_products s
+    LEFT JOIN 
+        products p ON s.products_no = p.products_no
+    LEFT JOIN 
+        model m ON p.model_no = m.model_no
+    LEFT JOIN
+        files f ON f.ref_id = p.model_no AND f.file_type = 'mainImage'
+    WHERE 1=1
+        <if test="searchKey != null and searchValue != null and searchValue != ''">
+            <if test="searchKey == 'productName'">
+                AND p.products_nm LIKE CONCAT('%', #{searchValue}, '%')
+            </if>
+            <if test="searchKey == 'brandName'">
+                AND m.model_nm LIKE CONCAT('%', #{searchValue}, '%')
+            </if>
+        </if>
+        <if test="categoryNo != null and categoryNo != ''">
+            AND p.category_no = #{categoryNo}
+        </if>
+        <if test="status != null and status != ''">
+            AND s.use_status = #{status}
+        </if>
+  		    ORDER BY s.register_date DESC
 	</select>
 
 	<insert id="addSellProduct" parameterType="EnterpriseProduct">
@@ -143,7 +177,7 @@
           AND period = #{period}
     </select>
     
-    <select id="selectProductByNo" resultMap="EnterpriseProductMap" parameterType="string">
+    <select id="getProductByNo" resultMap="EnterpriseProductMap" parameterType="string">
 	    SELECT 
 	        sp.sell_products_no,
 	        sp.ent_ceo_no,
@@ -166,6 +200,73 @@
 	    	sp.sell_products_no = #{sellProductsNo}
 	</select>
 	
+	
+	<select id="searchSellProductList" resultType="ks54team01.enterprise.product.domain.EnterpriseProduct">
+		 SELECT
+		    s.sell_products_no AS sellProductsNo,
+		    p.products_nm AS productName,
+		    s.margin_ratio_no AS marginRatioNo,
+		    m.model_nm AS modelName,
+		    s.ent_ceo_no AS entCeoNo,
+		    s.ent_emp_id AS entEmpId,
+		    s.products_no AS productsNo,
+		    s.lump_sum_pay_price AS lumpSumPayPrice,
+		    s.period AS period,
+		    s.calculate_price AS calculatePrice,
+		    s.final_price AS finalPrice,
+		    DATE_FORMAT(s.register_date, '%Y-%m-%d %H:%i:%s') AS registerDate,
+		    DATE_FORMAT(s.revision_date, '%Y-%m-%d %H:%i:%s') AS revisionDate,
+		    s.use_status AS useStatus,
+		    IFNULL(f.file_path, '/manage/assets/imgs/theme/upload.svg') AS mainImageData
+		FROM
+		    sell_products s
+		LEFT JOIN products p ON s.products_no = p.products_no
+		LEFT JOIN model m ON p.model_no = m.model_no
+		LEFT JOIN brand b ON m.brand_no = b.brand_no 
+		LEFT JOIN files f ON f.ref_id = p.model_no AND f.file_type = 'mainImage'
+		<where>
+		    <if test="searchKey != null and searchValue != null and searchValue != ''">
+		        <choose>
+		            <when test="searchKey.equals('productName')">
+		                AND p.products_nm LIKE CONCAT('%', #{searchValue}, '%')
+		            </when>
+		            <when test="searchKey.equals('brandName')">
+		                AND b.brand_nm LIKE CONCAT('%', #{searchValue}, '%')
+		            </when>
+		        </choose>
+		    </if>
+		    <if test="categoryNo != null and categoryNo != ''">
+		        AND p.product_category_no = #{categoryNo}
+		    </if>
+		    <if test="status != null and status != ''">
+		        AND s.use_status = #{status}
+		    </if>
+		</where>
+		ORDER BY s.register_date DESC
+
+	</select>
+	
+	<update id="setSaleStoppage">
+    UPDATE sell_products
+    SET use_status = '사용불가'
+    WHERE sell_products_no = #{sellProductsNo}
+	</update>
+	
+	<update id="unsetSaleStoppage">
+	    UPDATE sell_products
+	    SET use_status = '사용중'
+	    WHERE sell_products_no = #{sellProductsNo}
+	</update>
+	
+	
+	<update id="updateQuantity">
+	    UPDATE 
+	    	quantity
+	    SET 
+	    	quantity = #{quantity}, revision_date = NOW()
+	    WHERE 
+	    	products_no = #{productsNo}
+	</update>
 </mapper>
 
 

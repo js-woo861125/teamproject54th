@@ -11,50 +11,47 @@
 	</th:block>
 
     <th:block layout:fragment="content">
-        <div class="content-header">
-            <div>
-                <h2 class="content-title card-title" th:text="@{#}"></h2>
-            </div>
-            <div>
-                <a th:href="@{/enterprise/product/addProduct}" class="btn btn-primary btn-sm rounded">등록하기</a>
-            </div>
-         </div>
-         <div class="card mb-4">
-            <header class="card-header">
-                <div class="row align-items-center">
-					   <div class="col-lg-1 col-md-3 col-12">
-	                       <select class="form-select" name="searchKey">
-	                           <option>상품명</option>
-	                       </select>
-	                   </div>
-	                   <div class="col-lg-3 col-md-5">
-	                       <input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
-	                   </div>
-	                   <div class="col-lg-1 col-md-1 me-auto">
-						   <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
-	                   </div>
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title" th:text="${title}"></h2>
+        </div>
+        <div>
+            <a th:href="@{/enterprise/product/addProduct}"></a>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <header class="card-header">
+            <!-- 검색 폼 -->
+            <form th:action="@{/enterprise/product/productList}" method="get" class="w-100">
+                <div class="row align-items-center g-2">
                     <div class="col-lg-2">
-                        <select class="form-select">
-                            <option>모든 카테고리</option>
-                            <option>TV</option>
-                            <option>노트북</option>
-                            <option>전기레인지</option>
-                            <option>냉장고</option>
-                            <option>식탁</option>
-                            <option>소파</option>
-                            <option>침대</option>
+                        <select class="form-select form-select-sm" name="searchKey">
+                            <option th:value="productName" th:selected="${searchKey == 'productName'}">상품명</option>
+                            <option th:value="brandName" th:selected="${searchKey == 'brandName'}">브랜드</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-3">
+                        <input type="text" name="searchValue" th:value="${searchValue}" class="form-control form-control-sm" placeholder="검색어 입력" />
+                    </div>
+                    <div class="col-lg-2">
+                        <select class="form-select form-select-sm" name="categoryNo">
+                            <option th:value="''" th:selected="${categoryNo == null or categoryNo == ''}">전체 카테고리</option>
+                            <option th:each="cat : ${categoryList}" th:value="${cat.categoryNo}" th:text="${cat.smCategory}" th:selected="${categoryNo == cat.categoryNo}"></option>
                         </select>
                     </div>
                     <div class="col-lg-2">
-                        <select class="form-select">
-                            <option>판매상태</option>
-                            <option>활성화</option>
-                            <option>비활성화</option>
-                            <option>판매중단</option>
+                        <select class="form-select form-select-sm" name="status">
+                            <option th:value="''" th:selected="${status == null or status == ''}">전체 상태</option>
+                            <option th:value="활성화" th:selected="${status == '활성화'}">활성화</option>
+                            <option th:value="비활성화" th:selected="${status == '비활성화'}">비활성화</option>
                         </select>
+                    </div>
+                    <div class="col-lg-1">
+                        <button type="submit" class="btn btn-primary btn-sm w-100">검색</button>
                     </div>
                 </div>
-            </header>
+            </form>
+        </header>
             <!-- card-header end// -->
             <div class="card-body">
                 <div class="table-responsive">
