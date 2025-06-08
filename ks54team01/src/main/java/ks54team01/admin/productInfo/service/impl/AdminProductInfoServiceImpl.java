@@ -611,6 +611,25 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	/**
 	 *  상품정보 목록 조회
 	 */
+	
+	// 카테고리코드로 스펙 목록 조회 (모델별/상세스펙 등록)
+	@Override
+	public List<ProductInfoCategorySpec> getSpecListByCategoryNo(String categoryNo) {
+		
+		return adminProductInfoMapper.getSpecListByCategoryNo(categoryNo);
+	}
+	// 카테고리코드로 모델 목록 조회 (모델별/상세스펙 등록)
+	@Override
+	public List<ProductInfoModel> getModelListByCategoryNo(String categoryNo) {
+		
+		return adminProductInfoMapper.getModelListByCategoryNo(categoryNo);
+	}
+	// 카테고리코드로 품목 목록 조회 (모델 등록)
+	@Override 	
+	public List<ProductInfoItem> getItemListByCategoryNo(String categoryNo) {
+		
+		return adminProductInfoMapper.getItemListByCategoryNo(categoryNo);
+	}
 	// 등록되어있는 카테고리 중분류 목록 조회(카테고리 등록)	
 	@Override
 	public List<ProductInfoCategory> getMdCategory() {
@@ -622,20 +641,6 @@ public class AdminProductInfoServiceImpl implements AdminProductInfoService {
 	public List<ProductInfoCategory> getLgCategory() {
 		
 		return adminProductInfoMapper.getLgCategory();
-	}
-	
-	// 카테고리코드로 스펙 목록 조회 (모델별/상세스펙 등록)
-	@Override
-	public List<ProductInfoCategorySpec> getSpecListByCategoryNo(String categoryNo) {
-		
-		return adminProductInfoMapper.getSpecListByCategoryNo(categoryNo);
-	}
-	
-	// 카테고리코드로 품목 목록 조회 (모델 등록)
-	@Override 	
-	public List<ProductInfoItem> getItemListByCategoryNo(String categoryNo) {
-		
-		return adminProductInfoMapper.getItemListByCategoryNo(categoryNo);
 	}
 	
 	@Override

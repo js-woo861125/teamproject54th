@@ -7,13 +7,50 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
+		<script th:inline="javascript">
+		const categoryList = JSON.parse(/*[[${categoryListJson}]]*/ '[]');
+		</script>
+		
 		<script>
+			$(document).ready(function () {
+			    const $lg = $('#lgCategory');
+			    const $md = $('#mdCategory');
+			    const $sm = $('#smCategory');
+			    // 대분류 로딩
+			    const lgSet = [...new Set(categoryList.map(c => c.lgCategory))];
+			    lgSet.forEach(lg => $lg.append(new Option(lg, lg)));
+	
+			    $lg.change(function () {
+			        const selectedLg = $(this).val();
+			        $md.empty().append(new Option('중분류를 선택해주세요', '')).prop('disabled', !selectedLg);
+			        $sm.empty().append(new Option('소분류를 선택해주세요', '')).prop('disabled', true);
+	
+			        if (!selectedLg) return;
+	
+			        const mdSet = [...new Set(categoryList
+			            .filter(c => c.lgCategory === selectedLg)
+			            .map(c => c.mdCategory))];
+			        mdSet.forEach(md => $md.append(new Option(md, md)));
+			    });
+	
+			    $md.change(function () {
+			        const selectedLg = $lg.val();
+			        const selectedMd = $(this).val();
+			        $sm.empty().append(new Option('소분류를 선택해주세요', '')).prop('disabled', !(selectedLg && selectedMd));
+	
+			        if (!(selectedLg && selectedMd)) return;
+	
+			        const smList = categoryList
+			            .filter(c => c.lgCategory === selectedLg && c.mdCategory === selectedMd);
+			        smList.forEach(c => $sm.append(new Option(c.smCategory, c.categoryNo)));
+			    });	
+			});		
 			/**
 			* 카테고리 + 브랜드 + 품목 + 모델명 중복체크
 			*/
 			$('#addModelBtn').click(function(){
 				const modelName = $('#modelName').val();
-				const categoryNo = $('#categoryNo').val();
+				const categoryNo = $('#smCategory').val();
 				const brandNo = $('#brandNo').val();
 				const itemNo = $('#itemNo').val();
 				
@@ -68,7 +105,7 @@
 			/**
 			* 카테고리 선택 시 해당 품목 조회
 			*/
-			$('#categoryNo').change(function() {
+			$('#smCategory').change(function() {
 			    const categoryNo = $(this).val();
 			    const itemNo = $(this).val();
 			    $('#itemNo').empty().append('<option value="">품목을 선택해주세요</option>');
@@ -93,6 +130,7 @@
 			        });
 			    }
 			});
+			
 		</script>	
 	</th:block>
 	
@@ -127,19 +165,24 @@
 		                    		<!-- 모델 정보 등록 --> 
 		                            <div class="col-lg-12">
 					                 	<div class="mb-4">
-					                        <label class="form-label fs-6" for="categoryNo">카테고리</label>
-					                        <select class="form-select text-center fs-7" id="categoryNo" name="categoryNo">
-					                        	<option value=""> 카테고리를 선택해주세요 </option>
-					                        	<th:block th:if="${not #lists.isEmpty(categoryList)}" th:each="l : ${categoryList}">
-					                         		<option th:value="${l.categoryNo}" th:text="${l.lgCategory + ' > ' + l.mdCategory + ' > ' + l.smCategory}"></option>
-					                        	</th:block>
-					                        </select>
-					                  	</div>
+			                                <label class="form-label fs-6" for="categoryNo">카테고리</label>
+			                                <select class="form-select text-center fs-7" id="lgCategory"> 
+			                                    <option value=""> 대분류를 선택해주세요 </option>
+			                                </select>
+		                                	<br />
+			                                <select class="form-select text-center fs-7" id="mdCategory" disabled> 
+			                                    <option value=""> 중분류를 선택해주세요 </option>
+			                                </select>
+		                                	<br />
+			                                <select class="form-select text-center fs-7" id="smCategory" name="categoryNo" disabled>
+			                                    <option value=""> 소분류를 선택해주세요 </option>
+			                                </select>
+			                            </div>
 						                <div class="mb-4">
 						                    <label class="form-label fs-6" for="itemNo">품목</label>
 						                    <select class="form-select text-center fs-7" id="itemNo" name="itemNo">
 							                    <option value=""> 품목을 선택해주세요 </option>
-							                    <th:block th:if="${not #lists.isEmpty(categoryList)}" th:each="l : ${itemList}">
+							                    <th:block th:if="${not #lists.isEmpty(categoryListJson)}" th:each="l : ${itemList}">
 							                    	<option th:value="${l.itemNo}" th:text="${l.itemName}"></option>
 							                    </th:block>
 						                    </select>
@@ -158,7 +201,7 @@
 			                                <input type="text" id="modelName" name="modelName" class="form-control" placeholder="모델명을 입력해주세요" />
 			                            </div>
 		                            </div>
-		                            <br/>
+		                            <br />
 		                            <!-- 버튼 -->
 		                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
 							            <div class="col-md-2 col-2 ms-auto">

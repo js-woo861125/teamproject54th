@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.servlet.http.HttpSession;
 import ks54team01.admin.productInfo.domain.ProductInfoBenefit;
 import ks54team01.admin.productInfo.domain.ProductInfoBrand;
@@ -475,16 +478,41 @@ public class AdminProductInfoController {
 	}
 	
 	@GetMapping("/modifyModelSpec")
-	public String modifyModelSpec(String modelSpecNo, Model model) {		
-		
+	public String modifyModelSpec(String modelSpecNo, Model model) throws JsonProcessingException {		
 		ProductInfoModelSpec modelSpecInfo = adminProductInfoService.getModelSpecInfoByNo(modelSpecNo);
-		List<ProductInfoModel> modelList = adminProductInfoService.getModelList();
+		List<ProductInfoModel> modelList = adminProductInfoService.getUsableModelList();
 		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoService.getUsableCateogrySpecList();
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getUsableCategoryList();
+		
+		// 모델에 해당하는 카테고리 정보 추출
+		ProductInfoModel selectedModel = modelList.stream()
+			.filter(m -> m.getModelNo().equals(modelSpecInfo.getModelNo()))
+			.findFirst()
+			.orElse(null);
+
+		if (selectedModel != null) {
+			String categoryNo = selectedModel.getCategoryNo();
+			ProductInfoCategory selectedCategory = categoryList.stream()
+				.filter(c -> c.getCategoryNo().equals(categoryNo))
+				.findFirst()
+				.orElse(null);
+
+			if (selectedCategory != null) {
+				model.addAttribute("selectedCategoryNo", selectedCategory.getCategoryNo());
+				model.addAttribute("selectedLgCategory", selectedCategory.getLgCategory());
+				model.addAttribute("selectedMdCategory", selectedCategory.getMdCategory());
+				model.addAttribute("selectedSmCategory", selectedCategory.getSmCategory());
+			}
+		}
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+	    String categoryListJson = objectMapper.writeValueAsString(categoryList);
 		
 		model.addAttribute("title", "모델별/상세스펙 수정");
 		model.addAttribute("modelSpecInfo", modelSpecInfo);
 		model.addAttribute("modelList", modelList);
 		model.addAttribute("categorySpecList", categorySpecList);
+		model.addAttribute("categoryListJson", categoryListJson);
 		model.addAttribute("activeMenu", "productInfo");
 		
 		return "admin/productInfo/modifyModelSpecView";
@@ -501,14 +529,16 @@ public class AdminProductInfoController {
 	}
 	
 	@GetMapping("/modifyCategorySpec")
-	public String modifyCategorySpec(String specNo, Model model) {		
-		
+	public String modifyCategorySpec(String specNo, Model model) throws JsonProcessingException {		
 		ProductInfoCategorySpec specInfo = adminProductInfoService.getCategorySpecInfoByNo(specNo);
 		List<ProductInfoCategory> categoryList = adminProductInfoService.getUsableCategoryList();
 		
+		ObjectMapper objectMapper = new ObjectMapper();
+	    String categoryListJson = objectMapper.writeValueAsString(categoryList);
+		
 		model.addAttribute("title", "카테고리별/상세스펙 수정");
 		model.addAttribute("specInfo", specInfo);
-		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("categoryListJson", categoryListJson);
 		model.addAttribute("activeMenu", "productInfo");
 		
 		return "admin/productInfo/modifyCategorySpecView";
@@ -547,16 +577,19 @@ public class AdminProductInfoController {
 	}
 	
 	@GetMapping("/modifyModel")
-	public String modifyModel(String modelNo, Model model) {		
+	public String modifyModel(String modelNo, Model model) throws JsonProcessingException {		
 		
 		ProductInfoModel modelInfo = adminProductInfoService.getModelInfoByNo(modelNo);
 		List<ProductInfoCategory> categoryList = adminProductInfoService.getUsableCategoryList();
 		List<ProductInfoBrand> brandList = adminProductInfoService.getUsableBrandList();
 		List<ProductInfoItem> itemList = adminProductInfoService.getUsableItemList();
 		
+		ObjectMapper objectMapper = new ObjectMapper();
+	    String categoryListJson = objectMapper.writeValueAsString(categoryList);		
+		
 		model.addAttribute("title", "모델 수정");
 		model.addAttribute("modelInfo", modelInfo);
-		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("categoryListJson", categoryListJson);
 		model.addAttribute("brandList", brandList);
 		model.addAttribute("itemList", itemList);
 		model.addAttribute("activeMenu", "productInfo");
@@ -575,14 +608,16 @@ public class AdminProductInfoController {
 	}
 	
 	@GetMapping("/modifyItem")
-	public String modifyItem(String itemNo, Model model) {		
-		
+	public String modifyItem(String itemNo, Model model) throws JsonProcessingException {		
 		ProductInfoItem itemInfo = adminProductInfoService.getItemInfoByNo(itemNo);
 		List<ProductInfoCategory> categoryList = adminProductInfoService.getUsableCategoryList();
 		
+		ObjectMapper objectMapper = new ObjectMapper();
+	    String categoryListJson = objectMapper.writeValueAsString(categoryList);
+		
 		model.addAttribute("title", "품목 수정");
 		model.addAttribute("itemInfo", itemInfo);
-		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("categoryListJson", categoryListJson);
 		model.addAttribute("activeMenu", "productInfo");
 		
 		return "admin/productInfo/modifyItemView";
@@ -740,6 +775,16 @@ public class AdminProductInfoController {
 	}
 
 	/**
+	 * 모델별/상세스펙 등록할 때, 카테고리코드로 모델 목록 조회
+	 */
+	@GetMapping("modelListByCategory")
+	@ResponseBody
+	public List<ProductInfoModel> getModelListByCategoryNo(@RequestParam String categoryNo) {
+		
+		return adminProductInfoService.getModelListByCategoryNo(categoryNo);
+	}
+	
+	/**
 	 * 모델 등록할 때, 카테고리코드로 품목 목록 조회
 	 */
 	@GetMapping("itemListByCategory")
@@ -767,14 +812,18 @@ public class AdminProductInfoController {
 	}
 	
 	@GetMapping("/addModelSpec")
-	public String addModelSpec(Model model) {
-		
-		List<ProductInfoModel> modelList = adminProductInfoService.getModelList();
+	public String addModelSpec(Model model) throws JsonProcessingException {
+		List<ProductInfoModel> modelList = adminProductInfoService.getUsableModelList();
 		List<ProductInfoCategorySpec> categorySpecList = adminProductInfoService.getUsableCateogrySpecList();
+		List<ProductInfoCategory> categoryList = adminProductInfoService.getUsableCategoryList();
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+	    String categoryListJson = objectMapper.writeValueAsString(categoryList);
 		
 		model.addAttribute("title", "모델별/상세스펙 등록");
 		model.addAttribute("modelList", modelList);
 		model.addAttribute("categorySpecList", categorySpecList);
+		model.addAttribute("categoryListJson", categoryListJson);
 		model.addAttribute("activeMenu", "productInfo");
 		model.addAttribute("activeSubMenu", "addProductInfo");
 		
@@ -796,12 +845,14 @@ public class AdminProductInfoController {
 	}
 	
 	@GetMapping("/addCategorySpec")
-	public String addCategorySpec(Model model) {
-		
+	public String addCategorySpec(Model model) throws JsonProcessingException {
 		List<ProductInfoCategory> categoryList = adminProductInfoService.getUsableCategoryList();
 		
+		ObjectMapper objectMapper = new ObjectMapper();
+	    String categoryListJson = objectMapper.writeValueAsString(categoryList);
+		
 		model.addAttribute("title", "카테고리별/상세스펙 등록");
-		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("categoryListJson", categoryListJson);
 		model.addAttribute("activeMenu", "productInfo");
 		model.addAttribute("activeSubMenu", "addProductInfo");
 		
@@ -847,16 +898,18 @@ public class AdminProductInfoController {
 	}
 	
 	@GetMapping("/addModel")
-	public String addModel(Model model) {
-		
+	public String addModel(Model model) throws JsonProcessingException {
 		List<ProductInfoBrand> brandList = adminProductInfoService.getUsableBrandList();
 		List<ProductInfoItem> itemList = adminProductInfoService.getUsableItemList();
 		List<ProductInfoCategory> categoryList = adminProductInfoService.getUsableCategoryList();
 		
+		ObjectMapper objectMapper = new ObjectMapper();
+	    String categoryListJson = objectMapper.writeValueAsString(categoryList);			
+		
 		model.addAttribute("title", "모델 등록");
 		model.addAttribute("brandList", brandList);
 		model.addAttribute("itemList", itemList);
-		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("categoryListJson", categoryListJson);
 		model.addAttribute("activeMenu", "productInfo");
 		model.addAttribute("activeSubMenu", "addProductInfo");
 		
@@ -878,12 +931,14 @@ public class AdminProductInfoController {
 	}
 	
 	@GetMapping("/addItem")
-	public String addItem(Model model) {
-		
+	public String addItem(Model model) throws JsonProcessingException {
 		List<ProductInfoCategory> categoryList = adminProductInfoService.getUsableCategoryList();
 		
+		ObjectMapper objectMapper = new ObjectMapper();
+	    String categoryListJson = objectMapper.writeValueAsString(categoryList);		
+		
 		model.addAttribute("title", "품목 등록");
-		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("categoryListJson", categoryListJson);
 		model.addAttribute("activeMenu", "productInfo");
 		model.addAttribute("activeSubMenu", "addProductInfo");
 		
