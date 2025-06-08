@@ -2,7 +2,8 @@ package ks54team01.enterprise.delivery.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,12 +15,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 import ks54team01.enterprise.delivery.domain.EnterpriseDelivery;
+import ks54team01.enterprise.delivery.domain.EnterpriseDeliveryInfo;
 import ks54team01.enterprise.delivery.service.EnterpriseDeliveryService;
+import ks54team01.system.util.PageInfo;
+import ks54team01.system.util.Pageable;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/enterprise/delivery")
+@Slf4j
 public class EnterpriseDeliveryController {
 
 	private final EnterpriseDeliveryService enterpriseDeliveryService;
@@ -74,29 +80,38 @@ public class EnterpriseDeliveryController {
 	
 	
 	
-	@GetMapping("/searchDeliveryList")
-	public String getSearchDeliveryList(String searchKey, String searchValue, Model model) {
-		
-		List <EnterpriseDelivery> deliveryList = enterpriseDeliveryService.getSearchDeliveryList(searchKey, searchValue);
-		
-		model.addAttribute("title", "배송정보 목록");
-		model.addAttribute("deliveryList", deliveryList);
-		model.addAttribute("searchKey", searchKey);
-		model.addAttribute("searchValue", searchValue);
-		
-		return "enterprise/delivery/deliveryListView";
-	}
-	
 	
 	@GetMapping("/deliveryList")
-	public String getDeliveryList(HttpSession session, Model model) {
+	public String getDeliveryList(@RequestParam(required = false) String searchKey,
+								  @RequestParam(required = false) String searchValue,
+								  Pageable pageable, Model model, HttpSession session) {
 		
 		String entCeoNo = (String) session.getAttribute("entCeoNo");
 		
-		List <EnterpriseDelivery> deliveryList = enterpriseDeliveryService.getDeliveryList(entCeoNo);
 		
-		model.addAttribute("title", "배송정보 목록");
-		model.addAttribute("deliveryList", deliveryList);
+		pageable.setRowPerPage(10);
+		
+		Map<String, Object> searchParamMap = new HashMap<>();
+		searchParamMap.put("entCeoNo", entCeoNo);
+	    searchParamMap.put("pageable", pageable);
+
+	    if (searchKey != null && !searchKey.isEmpty() && searchValue != null && !searchValue.isEmpty()) {
+	        searchParamMap.put("searchKey", searchKey);
+	        searchParamMap.put("searchValue", searchValue);
+	    }
+		
+	    PageInfo<EnterpriseDeliveryInfo> deliveryList = enterpriseDeliveryService.getDeliveryList(searchParamMap);
+		
+	    model.addAttribute("title", "배송정보 목록");
+	    model.addAttribute("deliveryList", deliveryList.getContents());
+	    model.addAttribute("currentPage", deliveryList.getCurrentPage());
+	    model.addAttribute("lastPage", deliveryList.getLastPage());
+	    model.addAttribute("startPageNum", deliveryList.getStartPageNum());
+	    model.addAttribute("endPageNum", deliveryList.getEndPageNum());
+	    model.addAttribute("rowPerPage", pageable.getRowPerPage());
+	    model.addAttribute("contentRowCount", deliveryList.getTotalRowCount());
+	    model.addAttribute("searchKey", searchKey);
+	    model.addAttribute("searchValue", searchValue);
 		
 		return "enterprise/delivery/deliveryListView";
 	}

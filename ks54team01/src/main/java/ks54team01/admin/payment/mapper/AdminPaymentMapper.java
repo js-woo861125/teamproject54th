@@ -24,10 +24,5 @@ public interface AdminPaymentMapper {
 	// 입접 업체별 수수료 조회
 	List<AdminFee> getSearchEntFee(String entCeoNo, String settlementMonth);
 	
-	// 회원별 결제내역 검색
-	List<AdminPayment> getSearchPaymentList(String searchKey, String searchValue);
-	
-	// 결제내역 조회
-	List<AdminPayment> getPaymentList();
 
 }

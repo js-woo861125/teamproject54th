@@ -21,4 +21,6 @@ public class EnterpriseDeliveryInfo {
 	private String departDate;
 	private String arriveDate;
 	private String regDate;
+	private String delAddr;
+	private String delDaddr;
 }

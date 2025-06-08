@@ -25,7 +25,5 @@ public interface AdminPaymentService {
 	
 	List<AdminFee> getAdminPayFee(String ceoCode, String settlementMonth);
 	
-	List<AdminPayment> getSearchPaymentList(String searchKey, String searchValue);
 	
-	List<AdminPayment> getPaymentList();
 }
