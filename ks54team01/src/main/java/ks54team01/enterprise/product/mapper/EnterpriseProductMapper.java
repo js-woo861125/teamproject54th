@@ -6,12 +6,17 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.data.repository.query.Param;
 
 import ks54team01.enterprise.product.domain.EnterpriseProduct;
-import ks54team01.enterprise.product.domain.EnterpriseProductBenefit;
 import ks54team01.enterprise.product.domain.EnterpriseProductQuantity;
 
 @Mapper
 public interface EnterpriseProductMapper {
-	List<EnterpriseProductQuantity> getQuantityList();
+	List<EnterpriseProductQuantity> getQuantityList(    
+				@Param("searchKey") String searchKey,
+		        @Param("searchValue") String searchValue,
+		        @Param("categoryNo") String categoryNo,
+		        @Param("status") String status,
+		        @Param("stockStatus") String stockStatus
+		       );
 	
 	List<EnterpriseProduct> getSellProductList();
 	
@@ -26,6 +31,18 @@ public interface EnterpriseProductMapper {
 			);
 	 
 
-	 EnterpriseProduct selectProductByNo(String sellProductsNo);
+	 EnterpriseProduct getProductByNo(String sellProductsNo);
+
+	 List<EnterpriseProduct> searchSellProductList(
+			    @Param("searchKey") String searchKey,
+			    @Param("searchValue") String searchValue,
+			    @Param("categoryNo") String categoryNo,
+			    @Param("status") String status
+			);
+	 void setSaleStoppage(@Param("sellProductNo")String sellProductNo);
+	    
+	 void unsetSaleStoppage(@Param("sellProductNo") String sellProductNo);
+
+	 int updateQuantity(String productsNo, int quantity);
 	 
 }

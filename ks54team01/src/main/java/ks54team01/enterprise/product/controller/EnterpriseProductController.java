@@ -2,6 +2,7 @@ package ks54team01.enterprise.product.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ks54team01.admin.product.domain.AdminProduct;
 import ks54team01.admin.product.service.AdminProductService;
 import ks54team01.admin.productInfo.domain.ProductInfoBenefit;
+import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.admin.productInfo.service.AdminProductInfoService;
 import ks54team01.enterprise.product.domain.EnterpriseMarginRatio;
 import ks54team01.enterprise.product.domain.EnterprisePenaltyCalculate;
@@ -53,28 +55,55 @@ public class EnterpriseProductController {
 	 * 입점업체 등록 상품 리스트
 	 */
 	@GetMapping("/sellProductList")
-	public String getsellProductList(Model model) {
-		List<EnterpriseProduct> sellProductList = enterpriseProductService.getSellProductList();
-	    System.out.println("==== sellProductList.size() : " + sellProductList.size());
-	    for(EnterpriseProduct p : sellProductList) {
-	        System.out.println("상품명: " + p.getProductName() + ", 기간: " + p.getPeriod() + ", 금액: " + p.getFinalPrice());
-	    }
-		model.addAttribute("title", "판매 상품목록");
-		model.addAttribute("sellProductList", sellProductList);
-		
-		return "enterprise/product/enterpriseProductListView";
+	public String getsellProductList(
+	        @RequestParam(required = false) String searchKey,
+	        @RequestParam( required = false) String searchValue,
+	        @RequestParam(required = false) String categoryNo,
+	        @RequestParam(required = false) String status,
+	        Model model) {
+
+	    List<EnterpriseProduct> sellProductList = enterpriseProductService.searchSellProductList(searchKey, searchValue, categoryNo, status);
+	    List<ProductInfoCategory> categoryList = adminProductService.loadCategoryList();
+	    
+	  
+	    model.addAttribute("title", "판매 상품목록");
+	    model.addAttribute("sellProductList", sellProductList);
+
+	    model.addAttribute("searchKey", searchKey);
+	    model.addAttribute("searchValue", searchValue);
+	    model.addAttribute("categoryList", categoryList);
+	    model.addAttribute("categoryNo", categoryNo);
+	    model.addAttribute("status", status);
+	    return "enterprise/product/enterpriseProductListView";
 	}
 	/*
 	 * 플랫폼 등록 상품 리스트
 	 */
 	@GetMapping("/productList")
-	public String getproductList(Model model) {
-		List<AdminProduct> getProductList = enterpriseProductService.getProductList();
-		
-		model.addAttribute("title", "플랫폼 상품목록");
-		model.addAttribute("getProductList", getProductList);
-		
-		return "enterprise/product/platformProductListView";
+	public String getproductList(
+	        @RequestParam(required = false) String searchKey,
+	        @RequestParam(required = false) String searchValue,
+	        @RequestParam(required = false) String categoryNo,
+	        @RequestParam(required = false) String status,
+	        Model model) {
+
+	    List<AdminProduct> getProductList = enterpriseProductService.getProductList(searchKey, searchValue, categoryNo, status);
+	    List<ProductInfoCategory> categoryList = adminProductService.loadCategoryList();
+
+	    // '판매중단' 제외 필터
+	    List<AdminProduct> filteredList = getProductList.stream()
+	        .filter(p -> !"판매중단".equals(p.getProductStatus()))
+	        .collect(Collectors.toList());
+
+	    model.addAttribute("title", "플랫폼 상품목록");
+	    model.addAttribute("getProductList", filteredList);
+	    model.addAttribute("searchKey", searchKey);
+	    model.addAttribute("searchValue", searchValue);
+	    model.addAttribute("categoryList", categoryList);
+	    model.addAttribute("categoryNo", categoryNo);
+	    model.addAttribute("status", status);
+
+	    return "enterprise/product/platformProductListView";
 	}
 	
 	@PostMapping("/addMarginRatio")
@@ -146,14 +175,36 @@ public class EnterpriseProductController {
 	 * 입점업체 재고 조회
 	 */
 	@GetMapping("/quantityList")
-	public String quantityList(Model model) {
+	public String quantityList(@RequestParam(required = false) String searchKey,
+							   @RequestParam(required = false) String searchValue,
+							   @RequestParam(required = false) String categoryNo,
+							   @RequestParam(required = false) String status,
+							   @RequestParam(required = false) String stockStatus,
+							   Model model) {
 		
-		List<EnterpriseProductQuantity> quantityList = enterpriseProductService.getQuantityList();
+		List<EnterpriseProductQuantity> quantityList = enterpriseProductService.getQuantityList(searchKey, searchValue, categoryNo, status, stockStatus);
+		List<ProductInfoCategory> categoryList = adminProductService.loadCategoryList();
 		
-		model.addAttribute("title", "재고관리");
-		model.addAttribute("quantityList", quantityList);
+		
+		 model.addAttribute("title", "보유수량 관리");
+		 model.addAttribute("quantityList", quantityList);
+		 model.addAttribute("categoryList", categoryList);
+		 
+		 model.addAttribute("searchKey", searchKey);
+		 model.addAttribute("searchValue", searchValue);
+		 model.addAttribute("categoryNo", categoryNo);
+		 model.addAttribute("status", status);
+		 model.addAttribute("stockStatus", stockStatus);
+		 
 		
 		return "enterprise/product/enterpriseQuantityView";
+	}
+	
+	@PostMapping("/modifyQuantity")
+	public String modifyQuantity(@RequestParam String productsNo, @RequestParam int quantity, RedirectAttributes redirect) {
+	    boolean updated = enterpriseProductService.updateQuantity(productsNo, quantity);
+	    redirect.addFlashAttribute("modifyQuantityResult", updated ? "success" : "fail");
+	    return "redirect:/enterprise/product/quantityList"; // 목록 페이지로 리다이렉트
 	}
 	/*
 	 * 
@@ -167,6 +218,7 @@ public class EnterpriseProductController {
 		List<EnterpriseMarginRatio> marginList = enterpriseMarginRatioService.getEnterpriseMarginRatio();
 		List<ProductInfoBenefit> benefitList = adminProductInfoService.getBenefitList();
 		
+		model.addAttribute("title", "플랫폼 상품목록");
 		model.addAttribute("product", product);
 		model.addAttribute("marginList", marginList);
 		model.addAttribute("benefitList", benefitList);
@@ -232,7 +284,6 @@ public class EnterpriseProductController {
 	@PostMapping("/modifySellProduct")
 	public String modifySellProduct(
 	    @ModelAttribute EnterpriseProduct product,
-	    @RequestParam("optionLumpSumPrice") int lumpSumPayPrice,
 	    @RequestParam("penaltyRatio") double penaltyRatio,
 	    @RequestParam("benefitNoList") List<String> benefitNoList,
 	    @RequestParam("benefitDetailList") List<String> benefitDetailList,
@@ -244,5 +295,23 @@ public class EnterpriseProductController {
 	    redirectAttributes.addFlashAttribute("msg", "수정 완료!");
 	    return "redirect:/enterprise/product/sellProductList";
 	}
+
+	// 판매중단 (비활성화)
+	@PostMapping("/setSaleStoppage")
+	@ResponseBody
+	public String setSaleStoppage(@RequestParam("sellProductsNo") String sellProductsNo) {
+	    enterpriseProductService.setSaleStoppage(sellProductsNo);
+	    return "ok";
+	}
+
+	// 판매중단 해제 (활성화)
+	@PostMapping("/unsetSaleStoppage")
+	@ResponseBody
+	public String unsetSaleStoppage(@RequestParam("sellProductsNo") String sellProductsNo) {
+	    enterpriseProductService.unsetSaleStoppage(sellProductsNo);
+	    return "ok";
+	}
+	
+	
 	
 }

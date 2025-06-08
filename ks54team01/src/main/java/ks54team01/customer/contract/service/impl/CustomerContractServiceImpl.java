@@ -18,6 +18,15 @@ public class CustomerContractServiceImpl implements CustomerContractService {
 
 	private final CustomerContractMapper customerContractMapper;
 	
+	
+	
+	@Override
+	public void deleteContractByRentalContractNo(String rentalContractNo) {
+		
+		customerContractMapper.deleteContractByRentalContractNo(rentalContractNo);
+	}
+	
+	
 	//고객 계약리스트 조회
 	@Override
 	public List<CustomerContract> myCustomerContractList(String custId, String searchKey) {

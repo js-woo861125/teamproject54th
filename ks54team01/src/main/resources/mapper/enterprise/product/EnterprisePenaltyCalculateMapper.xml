@@ -35,11 +35,11 @@
     	sell_products_no = #{sellProductsNo}
 	</select>
 
-	<update id="updatePenaltyCalculate">
+	<update id="updatePenaltyCalculate" parameterType="ks54team01.enterprise.product.domain.EnterprisePenaltyCalculate">
 	  UPDATE 
-	  	penalty_calculate
+	  	ent_penalty_calculate
 	  SET 
-	  	penalty_ratio = #{penaltyRatio}
+	  	penalty_fee_ratio  = #{penaltyFeeRatio}
 	  WHERE 
 	  	sell_products_no = #{sellProductsNo}
 	</update>

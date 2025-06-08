@@ -1,6 +1,8 @@
 package ks54team01.enterprise.payment.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,9 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import jakarta.servlet.http.HttpSession;
 import ks54team01.enterprise.payment.domain.EnterprisePayment;
 import ks54team01.enterprise.payment.domain.EnterprisePaymentDetail;
 import ks54team01.enterprise.payment.service.EnterprisePaymentService;
+import ks54team01.system.util.PageInfo;
+import ks54team01.system.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,28 +62,38 @@ public class EnterprisePaymentController {
 	
 	
 	
-	@GetMapping("/searchPaymentList")
-	public String getSearchPaymentList(String searchKey, String searchValue, Model model) {
-		
-		List<EnterprisePayment> paymentList = enterprisePaymentService.getSearchPaymentList(searchKey, searchValue);
-		
-		model.addAttribute("title", "주문 목록");
-		model.addAttribute("paymentList", paymentList);
-		model.addAttribute("searchKey", searchKey);
-		model.addAttribute("searchValue", searchValue);
-		
-		return "enterprise/payment/paymentListView";
-		
-	}
 	
 	
 	@GetMapping("/paymentList")
-	public String getPaymentList(Model model) {
+	public String getPaymentList(@RequestParam(required = false) String searchKey,
+								 @RequestParam(required = false) String searchValue,
+								 Pageable pageable, Model model, HttpSession session) {
 		
-		List<EnterprisePayment> paymentList = enterprisePaymentService.getPaymentList();
+		String entCeoNo = (String) session.getAttribute("entCeoNo");
 		
-		model.addAttribute("title", "주문 목록");
-		model.addAttribute("paymentList", paymentList);
+		pageable.setRowPerPage(10);
+		
+		Map<String, Object> searchParamMap = new HashMap<>();
+		searchParamMap.put("entCeoNo", entCeoNo);
+	    searchParamMap.put("pageable", pageable);
+
+	    if (searchKey != null && !searchKey.isEmpty() && searchValue != null && !searchValue.isEmpty()) {
+	        searchParamMap.put("searchKey", searchKey);
+	        searchParamMap.put("searchValue", searchValue);
+	    }
+		
+	    PageInfo<EnterprisePayment> paymentList = enterprisePaymentService.getPaymentList(searchParamMap);
+		
+	    model.addAttribute("title", "배송정보 목록");
+	    model.addAttribute("paymentList", paymentList.getContents());
+	    model.addAttribute("currentPage", paymentList.getCurrentPage());
+	    model.addAttribute("lastPage", paymentList.getLastPage());
+	    model.addAttribute("startPageNum", paymentList.getStartPageNum());
+	    model.addAttribute("endPageNum", paymentList.getEndPageNum());
+	    model.addAttribute("rowPerPage", pageable.getRowPerPage());
+	    model.addAttribute("contentRowCount", paymentList.getTotalRowCount());
+	    model.addAttribute("searchKey", searchKey);
+	    model.addAttribute("searchValue", searchValue);
 		
 		
 		return "enterprise/payment/paymentListView";

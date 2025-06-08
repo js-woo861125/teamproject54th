@@ -92,7 +92,7 @@ function unsetSaleStoppage(el) {
 <th:block layout:fragment="content">
     <div class="content-header d-flex justify-content-between align-items-center mb-3">
         <h2 class="content-title card-title" th:text="${title}">상품관리</h2>
-        <a th:href="@{/admin/product/addProduct}" class="btn btn-primary btn-sm rounded">등록하기</a>
+        <a th:href="@{/admin/product/addProduct}"></a>
     </div>
     <div class="card mb-4">
         <header class="card-header">
@@ -150,17 +150,19 @@ function unsetSaleStoppage(el) {
                         <tr>
                             <td><a class="fw-bold" th:text="${l.productName}"></a></td>
                             <td>
-                                <a class="item" href="#">
-                                    <div class="img">
-                                        <img th:if="${l.productImage != null}" 
-                                             th:src="${l.productImage}" 
-                                             class="img-sm img-main" 
-                                             alt="상품이미지" />
-                                        <div th:if="${l.productImage == null}" 
-                                             class="img-sm img-main bg-light d-inline-block" 
-                                             style="width: 100px; height: 100px;"></div>
-                                    </div>
-                                </a>
+                               <a class="item" href="#">
+			                    <div class="img">
+			                        <img th:if="${l.productImage != null}"
+			                             th:src="@{${l.productImage}}"
+			                             class="img-sm img-main"
+			                             alt="상품이미지" />
+			                        <img th:if="${l.productImage == null}" 
+			                             th:src="@{/images/no-image.png}" 
+			                             class="img-sm img-main bg-light d-inline-block"
+			                             style="width: 100px; height: 100px;" 
+			                             alt="이미지 없음"/>
+			                    </div>
+                               </a>
                             </td>
                             <td th:text="${l.modelName}">모델명</td>
                             <td class="col-lg-2 col-sm-2 col-4 col-status">
