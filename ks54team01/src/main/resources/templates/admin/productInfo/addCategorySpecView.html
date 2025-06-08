@@ -16,87 +16,87 @@
 		</script>
 		
 		<script>
-			$(document).ready(function () {
-			    const $lg = $('#lgCategory');
-			    const $md = $('#mdCategory');
-			    const $sm = $('#smCategory');
-			    // 대분류 로딩
-			    const lgSet = [...new Set(categoryList.map(c => c.lgCategory))];
-			    lgSet.forEach(lg => $lg.append(new Option(lg, lg)));
-	
-			    $lg.change(function () {
-			        const selectedLg = $(this).val();
-			        $md.empty().append(new Option('중분류를 선택해주세요', '')).prop('disabled', !selectedLg);
-			        $sm.empty().append(new Option('소분류를 선택해주세요', '')).prop('disabled', true);
-	
-			        if (!selectedLg) return;
-	
-			        const mdSet = [...new Set(categoryList
-			            .filter(c => c.lgCategory === selectedLg)
-			            .map(c => c.mdCategory))];
-			        mdSet.forEach(md => $md.append(new Option(md, md)));
-			    });
-	
-			    $md.change(function () {
-			        const selectedLg = $lg.val();
-			        const selectedMd = $(this).val();
-			        $sm.empty().append(new Option('소분류를 선택해주세요', '')).prop('disabled', !(selectedLg && selectedMd));
-	
-			        if (!(selectedLg && selectedMd)) return;
-	
-			        const smList = categoryList
-			            .filter(c => c.lgCategory === selectedLg && c.mdCategory === selectedMd);
-			        smList.forEach(c => $sm.append(new Option(c.smCategory, c.categoryNo)));
-			    });
-			});
-		    
-			$('#addCategorySpecBtn').click(function(){
-				const specName = $('#specName').val();
-				const categoryNo = $('#smCategory').val();
-				// 유효성 체크
-				if (!categoryNo) {
-					Swal.fire('', '카테고리를 선택해주세요.', 'warning');
-					$('#categoryNo').focus();
-					return;
-				}
-				if(specName.trim().length === 0){
-					Swal.fire('', '스펙명을 입력해주세요.', 'warning');
+		$(document).ready(function () {
+		    const $lg = $('#lgCategory');
+		    const $md = $('#mdCategory');
+		    const $sm = $('#smCategory');
+		    // 대분류 로딩
+		    const lgSet = [...new Set(categoryList.map(c => c.lgCategory))];
+		    lgSet.forEach(lg => $lg.append(new Option(lg, lg)));
+
+		    $lg.change(function () {
+		        const selectedLg = $(this).val();
+		        $md.empty().append(new Option('중분류를 선택해주세요', '')).prop('disabled', !selectedLg);
+		        $sm.empty().append(new Option('소분류를 선택해주세요', '')).prop('disabled', true);
+
+		        if (!selectedLg) return;
+
+		        const mdSet = [...new Set(categoryList
+		            .filter(c => c.lgCategory === selectedLg)
+		            .map(c => c.mdCategory))];
+		        mdSet.forEach(md => $md.append(new Option(md, md)));
+		    });
+
+		    $md.change(function () {
+		        const selectedLg = $lg.val();
+		        const selectedMd = $(this).val();
+		        $sm.empty().append(new Option('소분류를 선택해주세요', '')).prop('disabled', !(selectedLg && selectedMd));
+
+		        if (!(selectedLg && selectedMd)) return;
+
+		        const smList = categoryList
+		            .filter(c => c.lgCategory === selectedLg && c.mdCategory === selectedMd);
+		        smList.forEach(c => $sm.append(new Option(c.smCategory, c.categoryNo)));
+		    });
+		});
+	    
+		$('#addCategorySpecBtn').click(function(){
+			const specName = $('#specName').val();
+			const categoryNo = $('#smCategory').val();
+			// 유효성 체크
+			if (!categoryNo) {
+				Swal.fire('', '카테고리를 선택해주세요.', 'warning');
+				$('#categoryNo').focus();
+				return;
+			}
+			if(specName.trim().length === 0){
+				Swal.fire('', '스펙명을 입력해주세요.', 'warning');
+				$('#specName').focus();
+				return ;
+			}
+			if (specName.length > 10) {
+				Swal.fire('', '스펙명은 10자 이내로 입력해주세요.', 'warning');
+				$('#specName').focus();
+				return;
+			}
+			const validRegex = /^[가-힣a-zA-Z0-9.,~()+\/\s]+$/;
+			if (!validRegex.test(specName)) {
+				Swal.fire('', '특수문자는 . , ~ ( ) + / 만 사용 가능합니다.', 'warning');
+				$('#specName').focus();
+				return; 
+			}
+			// 중복 체크
+			$.ajax({
+				url : '/admin/productInfo/specNameCheck',
+				method : 'post',
+				data : {
+					'specName': specName,
+					'categoryNo' : categoryNo	
+				},
+				dataType : 'json'
+			}).done(function(isDuplicate) {
+				if(isDuplicate){
+					Swal.fire('', '이미 등록된 스펙명 입니다.', 'warning');
 					$('#specName').focus();
 					return ;
 				}
-				if (specName.length > 10) {
-					Swal.fire('', '스펙명은 10자 이내로 입력해주세요.', 'warning');
-					$('#specName').focus();
-					return;
-				}
-				const validRegex = /^[가-힣a-zA-Z0-9.,~()+\/\s]+$/;
-				if (!validRegex.test(specName)) {
-					Swal.fire('', '특수문자는 . , ~ ( ) + / 만 사용 가능합니다.', 'warning');
-					$('#specName').focus();
-					return; 
-				}
-				// 중복 체크
-				$.ajax({
-					url : '/admin/productInfo/specNameCheck',
-					method : 'post',
-					data : {
-						'specName': specName,
-						'categoryNo' : categoryNo	
-					},
-					dataType : 'json'
-				}).done(function(isDuplicate) {
-					if(isDuplicate){
-						Swal.fire('', '이미 등록된 스펙명 입니다.', 'warning');
-						$('#specName').focus();
-						return ;
-					}
-				
-					$('#addProductInfoForm').submit();
-			    }).fail(function(jqXHR, textStatus, error) {
-			        console.log("에러 발생:", textStatus, error);
-			        Swal.fire('', '스펙명 등록 중 오류가 발생했습니다.', 'warning');
-		    	});
-			});
+			
+				$('#addProductInfoForm').submit();
+		    }).fail(function(jqXHR, textStatus, error) {
+		        console.log("에러 발생:", textStatus, error);
+		        Swal.fire('', '스펙명 등록 중 오류가 발생했습니다.', 'error');
+	    	});
+		});
 		</script>
 		
 	</th:block>

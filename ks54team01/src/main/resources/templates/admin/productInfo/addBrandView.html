@@ -11,44 +11,44 @@
 	</th:block>
 	
 	<th:block layout:fragment="jsScript">
-		<script>
-			$('#addBrandBtn').click(function(){
-				const brandName = $('#brandName').val();
-				// 유효성 체크
-				if (brandName.trim().length === 0) {
-					Swal.fire('', '브랜드명을 입력해주세요.', 'warning');
+		<script>		
+		$('#addBrandBtn').click(function(){
+			const brandName = $('#brandName').val();
+			// 유효성 체크
+			if (brandName.trim().length === 0) {
+				Swal.fire('', '브랜드명을 입력해주세요.', 'warning');
+				$('#brandName').focus();
+				return;
+			}
+			if (brandName.length > 20) {
+				Swal.fire('', '브랜드명은 20자 이내로 입력해주세요.', 'warning');
+				$('#brandName').focus();
+				return;
+			}
+			const validRegex = /^[가-힣a-zA-Z0-9.,~()+\/\s]+$/;
+			if (!validRegex.test(brandName)) {
+				Swal.fire('', '특수문자는 . , ~ ( ) + / 만 사용 가능합니다.', 'warning');
+				$('#brandName').focus();
+				return; 
+			}
+			// 중복 체크
+			$.ajax({
+				url : '/admin/productInfo/brandNameCheck',
+				method : 'post',
+				data : {'brandName': brandName},
+				dataType : 'json'
+			}).done(function(isDuplicate) {
+				if(isDuplicate){
+					Swal.fire('', '이미 등록된 브랜드명 입니다.', 'warning');
 					$('#brandName').focus();
 					return;
 				}
-				if (brandName.length > 20) {
-					Swal.fire('', '브랜드명은 20자 이내로 입력해주세요.', 'warning');
-					$('#brandName').focus();
-					return;
-				}
-				const validRegex = /^[가-힣a-zA-Z0-9.,~()+\/\s]+$/;
-				if (!validRegex.test(brandName)) {
-					Swal.fire('', '특수문자는 . , ~ ( ) + / 만 사용 가능합니다.', 'warning');
-					$('#brandName').focus();
-					return; 
-				}
-				// 중복 체크
-				$.ajax({
-					url : '/admin/productInfo/brandNameCheck',
-					method : 'post',
-					data : {'brandName': brandName},
-					dataType : 'json'
-				}).done(function(isDuplicate) {
-					if(isDuplicate){
-						Swal.fire('', '이미 등록된 브랜드명 입니다.', 'warning');
-						$('#brandName').focus();
-						return ;
-					}
-					$('#addProductInfoForm').submit();
-			    }).fail(function(jqXHR, textStatus, error) {
-			        console.log("에러 발생:", textStatus, error);
-			        Swal.fire('', '브랜드명 등록 중 오류가 발생했습니다.', 'error');
-			    });
-			});
+				$('#addProductInfoForm').submit();
+		    }).fail(function(jqXHR, textStatus, error) {
+		        console.log("에러 발생:", textStatus, error);
+		        Swal.fire('', '브랜드명 등록 중 오류가 발생했습니다.', 'error');
+		    });
+		});
 		</script>
 	</th:block>	
 

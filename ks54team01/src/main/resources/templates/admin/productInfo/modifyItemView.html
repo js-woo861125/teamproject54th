@@ -69,47 +69,52 @@
 		        }
 		    }
 		});
-		
-			/**
-			* 카테고리 + 품목명 중복체크
-			*/
-			$('#modifyItemBtn').click(function(){
-				const itemName = $('#itemName').val();
-				const categoryNo = $('#smCategory').val();
-				
-				if (!categoryNo) {
-					alert('카테고리를 선택해주세요');
-					$('#categoryNo').focus();
-					return;
-				}
-				
-				if(!itemName){
-					alert('품목명을 입력해주세요');
+		$('#modifyItemBtn').click(function(){
+			const itemName = $('#itemName').val();
+			const categoryNo = $('#smCategory').val();
+			// 유효성 체크
+			if (!categoryNo) {
+				Swal.fire('', '카테고리를 선택해주세요.', 'warning');
+				$('#categoryNo').focus();
+				return;
+			}
+			if(itemName.trim().length === 0){
+				Swal.fire('', '품목명을 입력해주세요.', 'warning');
+				$('#itemName').focus();
+				return ;
+			}
+			if (itemName.length > 50) {
+				Swal.fire('', '품목명은 50자 이내로 입력해주세요.', 'warning');
+				$('#itemName').focus();
+				return;
+			}
+			const validRegex = /^[가-힣a-zA-Z0-9.,~()+\/\s]+$/;
+			if (!validRegex.test(itemName)) {
+				Swal.fire('', '특수문자는 . , ~ ( ) + / 만 사용 가능합니다.', 'warning');
+				$('#itemName').focus();
+				return; 
+			}
+			$.ajax({
+				url : '/admin/productInfo/itemNameCheck',
+				method : 'post',
+				data : {
+					'itemName': itemName,
+					'categoryNo' : categoryNo	
+				},
+				dataType : 'json'
+			}).done(function(isDuplicate) {
+				if(isDuplicate){
+					Swal.fire('', '이미 등록된 품목명 입니다.', 'warning');
 					$('#itemName').focus();
 					return ;
 				}
-				
-				$.ajax({
-					url : '/admin/productInfo/itemNameCheck',
-					method : 'post',
-					data : {
-						'itemName': itemName,
-						'categoryNo' : categoryNo	
-					},
-					dataType : 'json'
-				}).done(function(isDuplicate) {
-					if(isDuplicate){
-						alert('이미 등록된 품목명 입니다.');
-						$('#itemName').focus();
-						return ;
-					}
-				
-					$('#modifyProductInfoForm').submit();
-			    }).fail(function(jqXHR, textStatus, error) {
-			        console.log("에러 발생:", textStatus, error);
-			        alert('품목명 확인 중 오류가 발생했습니다.');
-			    });
-			});
+			
+				$('#modifyProductInfoForm').submit();
+		    }).fail(function(jqXHR, textStatus, error) {
+		        console.log("에러 발생:", textStatus, error);
+		        Swal.fire('', '품목명 수정 중 오류가 발생했습니다.', 'error');
+		    });
+		});
 		</script>
 	</th:block>
 	

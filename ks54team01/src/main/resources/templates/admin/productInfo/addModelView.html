@@ -7,130 +7,139 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
 		<script th:inline="javascript">
 		const categoryList = JSON.parse(/*[[${categoryListJson}]]*/ '[]');
 		</script>
 		
 		<script>
-			$(document).ready(function () {
-			    const $lg = $('#lgCategory');
-			    const $md = $('#mdCategory');
-			    const $sm = $('#smCategory');
-			    // 대분류 로딩
-			    const lgSet = [...new Set(categoryList.map(c => c.lgCategory))];
-			    lgSet.forEach(lg => $lg.append(new Option(lg, lg)));
-	
-			    $lg.change(function () {
-			        const selectedLg = $(this).val();
-			        $md.empty().append(new Option('중분류를 선택해주세요', '')).prop('disabled', !selectedLg);
-			        $sm.empty().append(new Option('소분류를 선택해주세요', '')).prop('disabled', true);
-	
-			        if (!selectedLg) return;
-	
-			        const mdSet = [...new Set(categoryList
-			            .filter(c => c.lgCategory === selectedLg)
-			            .map(c => c.mdCategory))];
-			        mdSet.forEach(md => $md.append(new Option(md, md)));
-			    });
-	
-			    $md.change(function () {
-			        const selectedLg = $lg.val();
-			        const selectedMd = $(this).val();
-			        $sm.empty().append(new Option('소분류를 선택해주세요', '')).prop('disabled', !(selectedLg && selectedMd));
-	
-			        if (!(selectedLg && selectedMd)) return;
-	
-			        const smList = categoryList
-			            .filter(c => c.lgCategory === selectedLg && c.mdCategory === selectedMd);
-			        smList.forEach(c => $sm.append(new Option(c.smCategory, c.categoryNo)));
-			    });	
-			});		
-			/**
-			* 카테고리 + 브랜드 + 품목 + 모델명 중복체크
-			*/
-			$('#addModelBtn').click(function(){
-				const modelName = $('#modelName').val();
-				const categoryNo = $('#smCategory').val();
-				const brandNo = $('#brandNo').val();
-				const itemNo = $('#itemNo').val();
-				
-				if (!categoryNo) {
-					alert('카테고리를 선택해주세요');
-					$('#categoryNo').focus();
-					return;
-				}
-				
-				if (!itemNo) {
-					alert('품목을 선택해주세요');
-					$('#itemNo').focus();
-					return;
-				}
-				
-				if (!brandNo) {
-					alert('브랜드를 선택해주세요');
-					$('#brandNo').focus();
-					return;
-				}
-				
-				if(!modelName){
-					alert('모델명을 입력해주세요');
+		$(document).ready(function () {
+		    const $lg = $('#lgCategory');
+		    const $md = $('#mdCategory');
+		    const $sm = $('#smCategory');
+		    // 대분류 로딩
+		    const lgSet = [...new Set(categoryList.map(c => c.lgCategory))];
+		    lgSet.forEach(lg => $lg.append(new Option(lg, lg)));
+
+		    $lg.change(function () {
+		        const selectedLg = $(this).val();
+		        $md.empty().append(new Option('중분류를 선택해주세요', '')).prop('disabled', !selectedLg);
+		        $sm.empty().append(new Option('소분류를 선택해주세요', '')).prop('disabled', true);
+
+		        if (!selectedLg) return;
+
+		        const mdSet = [...new Set(categoryList
+		            .filter(c => c.lgCategory === selectedLg)
+		            .map(c => c.mdCategory))];
+		        mdSet.forEach(md => $md.append(new Option(md, md)));
+		    });
+
+		    $md.change(function () {
+		        const selectedLg = $lg.val();
+		        const selectedMd = $(this).val();
+		        $sm.empty().append(new Option('소분류를 선택해주세요', '')).prop('disabled', !(selectedLg && selectedMd));
+
+		        if (!(selectedLg && selectedMd)) return;
+
+		        const smList = categoryList
+		            .filter(c => c.lgCategory === selectedLg && c.mdCategory === selectedMd);
+		        smList.forEach(c => $sm.append(new Option(c.smCategory, c.categoryNo)));
+		    });	
+		});		
+		
+		$('#addModelBtn').click(function(){
+			const modelName = $('#modelName').val();
+			const categoryNo = $('#smCategory').val();
+			const brandNo = $('#brandNo').val();
+			const itemNo = $('#itemNo').val();
+			// 유효성 체크
+			if (!categoryNo) {
+				Swal.fire('', '카테고리를 선택해주세요.', 'warning');
+				$('#categoryNo').focus();
+				return;
+			}
+			if (!itemNo) {
+				Swal.fire('', '품목을 선택해주세요.', 'warning');
+				$('#itemNo').focus();
+				return;
+			}
+			if (!brandNo) {
+				Swal.fire('', '브랜드를 선택해주세요.', 'warning');
+				$('#brandNo').focus();
+				return;
+			}
+			if(modelName.trim().length === 0){
+				Swal.fire('', '모델명을 입력해주세요.', 'warning');
+				$('#modelName').focus();
+				return ;
+			}
+			if (modelName.length > 50) {
+				Swal.fire('', '모델명은 50자 이내로 입력해주세요.', 'warning');
+				$('#modelName').focus();
+				return;
+			}
+			const validRegex = /^[가-힣a-zA-Z0-9.,~()+\/\s]+$/;
+			if (!validRegex.test(modelName)) {
+				Swal.fire('', '특수문자는 . , ~ ( ) + / 만 사용 가능합니다.', 'warning');
+				$('#modelName').focus();
+				return; 
+			}
+			// 중복 체크
+			$.ajax({
+				url : '/admin/productInfo/modelNameCheck',
+				method : 'post',
+				data : {
+					'modelName': modelName,
+					'categoryNo' : categoryNo,
+					'brandNo' : brandNo,
+					'itemNo' : itemNo
+				},
+				dataType : 'json'
+			}).done(function(isDuplicate) {
+				if(isDuplicate){
+					Swal.fire('', '이미 등록된 모델명 입니다.', 'warning');
 					$('#modelName').focus();
 					return ;
 				}
-				
-				$.ajax({
-					url : '/admin/productInfo/modelNameCheck',
-					method : 'post',
-					data : {
-						'modelName': modelName,
-						'categoryNo' : categoryNo,
-						'brandNo' : brandNo,
-						'itemNo' : itemNo
-					},
-					dataType : 'json'
-				}).done(function(isDuplicate) {
-					if(isDuplicate){
-						alert('이미 등록된 모델명 입니다.');
-						$('#modelName').focus();
-						return ;
-					}
 
-					$('#addProductInfoForm').submit();
-			    }).fail(function(jqXHR, textStatus, error) {
-			        console.log("에러 발생:", textStatus, error);
-			        alert('모델명 확인 중 오류가 발생했습니다.');
-			    });
-			});
-			
-			/**
-			* 카테고리 선택 시 해당 품목 조회
-			*/
-			$('#smCategory').change(function() {
-			    const categoryNo = $(this).val();
-			    const itemNo = $(this).val();
-			    $('#itemNo').empty().append('<option value="">품목을 선택해주세요</option>');
-			    
-			    if (categoryNo) {
-			        $.ajax({
-			            url: '/admin/productInfo/itemListByCategory',
-			            type: 'GET',
-			            data: { categoryNo: categoryNo },
-			            success: function(itemList) {
-			                if (itemList && itemList.length > 0) {
-			                	$.each(itemList, function(idx, item) {
-			                	    $('#itemNo').append('<option value="' + item.itemNo + '">' + item.itemName + '</option>');
-			                	});
-			                } else {
-			                    $('#itemNo').append('<option value="">품목이 없습니다</option>');
-			                }
-			            },
-			            error: function() {
-			                alert('품목 목록을 불러오는 중 오류가 발생했습니다.');
-			            }
-			        });
-			    }
-			});
-			
+				$('#addProductInfoForm').submit();
+		    }).fail(function(jqXHR, textStatus, error) {
+		        console.log("에러 발생:", textStatus, error);
+		        Swal.fire('', '모델명 등록 중 오류가 발생했습니다.', 'error');
+		    });
+		});
+		
+		/**
+		* 카테고리 선택 시 해당 품목 조회
+		*/
+		$('#smCategory').change(function() {
+		    const categoryNo = $(this).val();
+		    const itemNo = $(this).val();
+		    $('#itemNo').empty().append('<option value="">품목을 선택해주세요</option>');
+		    
+		    if (categoryNo) {
+		        $.ajax({
+		            url: '/admin/productInfo/itemListByCategory',
+		            type: 'GET',
+		            data: { categoryNo: categoryNo },
+		            success: function(itemList) {
+		                if (itemList && itemList.length > 0) {
+		                	$.each(itemList, function(idx, item) {
+		                	    $('#itemNo').append('<option value="' + item.itemNo + '">' + item.itemName + '</option>');
+		                	});
+		                } else {
+		                    $('#itemNo').append('<option value="">품목이 없습니다</option>');
+		                }
+		            },
+		            error: function() {
+		            	Swal.fire('', '품목 목록을 불러오는 중 오류가 발생했습니다.', 'error');
+		            }
+		        });
+		    }
+		});
 		</script>	
 	</th:block>
 	
