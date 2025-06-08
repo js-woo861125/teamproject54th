@@ -71,9 +71,6 @@
 		    }
 		});
 		
-		/**
-		* 카테고리 + 브랜드 + 품목 + 모델명 중복체크
-		*/
 		$('#modifyModelBtn').click(function(){
 			const modelName = $('#modelName').val();
 			const categoryNo = $('#smCategory').val();
@@ -81,29 +78,37 @@
 			const itemNo = $('#itemNo').val();
 			
 			if (!categoryNo) {
-				alert('카테고리를 선택해주세요');
+				Swal.fire('', '카테고리를 선택해주세요.', 'warning');
 				$('#categoryNo').focus();
 				return;
 			}
-			
 			if (!itemNo) {
-				alert('품목을 선택해주세요');
+				Swal.fire('', '품목을 선택해주세요.', 'warning');
 				$('#itemNo').focus();
 				return;
 			}
-			
 			if (!brandNo) {
-				alert('브랜드를 선택해주세요');
+				Swal.fire('', '브랜드를 선택해주세요.', 'warning');
 				$('#brandNo').focus();
 				return;
 			}
-			
-			if(!modelName){
-				alert('모델명을 입력해주세요');
+			if(modelName.trim().length === 0){
+				Swal.fire('', '모델명을 입력해주세요.', 'warning');
 				$('#modelName').focus();
 				return ;
 			}
-			
+			if (modelName.length > 50) {
+				Swal.fire('', '모델명은 50자 이내로 입력해주세요.', 'warning');
+				$('#modelName').focus();
+				return;
+			}
+			const validRegex = /^[가-힣a-zA-Z0-9.,~()+\/\s]+$/;
+			if (!validRegex.test(modelName)) {
+				Swal.fire('', '특수문자는 . , ~ ( ) + / 만 사용 가능합니다.', 'warning');
+				$('#modelName').focus();
+				return; 
+			}
+			// 중복 체크
 			$.ajax({
 				url : '/admin/productInfo/modelNameCheck',
 				method : 'post',
@@ -116,7 +121,7 @@
 				dataType : 'json'
 			}).done(function(isDuplicate) {
 				if(isDuplicate){
-					alert('이미 등록된 모델명 입니다.');
+					Swal.fire('', '이미 등록된 모델명 입니다.', 'warning');
 					$('#modelName').focus();
 					return ;
 				}
@@ -124,7 +129,7 @@
 				$('#modifyProductInfoForm').submit();
 		    }).fail(function(jqXHR, textStatus, error) {
 		        console.log("에러 발생:", textStatus, error);
-		        alert('모델명 확인 중 오류가 발생했습니다.');
+		        Swal.fire('', '모델명 수정 중 오류가 발생했습니다.', 'error');
 		    });
 		});
 		

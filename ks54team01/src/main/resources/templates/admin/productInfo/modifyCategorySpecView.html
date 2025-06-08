@@ -75,12 +75,12 @@
 			const categoryNo = $('#smCategory').val();
 			// 유효성 체크
 			if (!categoryNo) {
-				Swal.fire('', '카테고리를 선택해주세요', 'warning');
+				Swal.fire('', '카테고리를 선택해주세요.', 'warning');
 				$('#categoryNo').focus();
 				return;
 			}
 			if(specName.trim().length === 0){
-				Swal.fire('', '스펙명을 입력해주세요', 'warning');
+				Swal.fire('', '스펙명을 입력해주세요.', 'warning');
 				$('#specName').focus();
 				return ;
 			}
@@ -114,7 +114,7 @@
 				$('#modifyProductInfoForm').submit();
 		    }).fail(function(jqXHR, textStatus, error) {
 		        console.log("에러 발생:", textStatus, error);
-		        Swal.fire('', '스펙명 수정 중 오류가 발생했습니다.', 'warning');
+		        Swal.fire('', '스펙명 수정 중 오류가 발생했습니다.', 'error');
 		    });
 		});
 		</script>
