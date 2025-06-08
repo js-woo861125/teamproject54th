@@ -9,6 +9,9 @@ import ks54team01.customer.contract.domain.CustomerContract;
 @Mapper
 public interface CustomerContractMapper {
 
+	
+	void deleteContractByRentalContractNo(String rentalContractNo);
+	
 	//고객 계약리스트 조회
 	List<CustomerContract> myCustomerContractList(String custId, String searchKey);
 	

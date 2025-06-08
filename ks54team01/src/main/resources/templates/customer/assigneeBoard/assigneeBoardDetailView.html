@@ -25,7 +25,10 @@
                                 <div class="product-info row mb-50" style="background-color: white; box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
                                 	<div class="tab-style3">
                                         <div class="entry-main-content px-3">
-                                            <h2 th:text="*{productName}" class="title-detail mb-50">
+                                            <h2 th:if="*{productName} == null or *{productName} eq ''" th:text="*{productInfoCategory.smCategory}" class="title-detail mb-50">
+                                            	SK매직 올인원 정수기 양도합니다! 곧 약정 만료됩니다.
+                                            </h2>
+                                            <h2 th:unless="*{productName} == null or *{productName} eq ''" th:text="*{productName}" class="title-detail mb-50">
                                             	SK매직 올인원 정수기 양도합니다! 곧 약정 만료됩니다.
                                             </h2>
                                             <div class="fs-5 row mb-3">
@@ -41,7 +44,7 @@
 													    </div>
 													    <div class="d-flex">
 													        <div class="fw-semibold text-nowrap me-3" style="width: 120px;">작성자</div>
-													        <div th:text="*{customerId}" class="text-brand">렌고쿠</div>
+													        <div th:text="*{#strings.substring(customerMember.custName, 0, 1) + #strings.repeat('*', customerMember.custName.length() - 1)}" class="text-brand"></div>
 													    </div>
 													</div>
 												</div>
@@ -55,8 +58,8 @@
                                 <div class="product-info" style="background-color: white; box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
                                     <div class="tab-style3">
                                         <div class="entry-main-content">
-                                            <h4 th:text="*{productName}">삼성크리스탈 UHDTV 85인치</h4>
-
+                                            <h4 th:if="*{productName} == null or *{productName} eq ''" th:text="*{productInfoCategory.smCategory}">삼성크리스탈 UHDTV 85인치</h4>
+											<h4 th:unless="*{productName} == null or *{productName} eq ''" th:text="*{productName}">삼성크리스탈 UHDTV 85인치</h4>
                                             <div class="tab-pane fade show active" id="Description">
                                                 <div class="fs-5 d-flex flex-column gap-2 mt-3 mb-3">
 												    <div class="d-flex">
@@ -64,7 +67,7 @@
 												        <div th:text="*{remainingMonths + '개월 이하'}" class="text-brand">24개월</div>
 												    </div>
 												    <div class="d-flex">
-												        <div class="fw-semibold flex-shrink-0 text-nowrap me-3" style="width: 120px;">희망렌탈료</div>
+												        <div class="fw-semibold flex-shrink-0 text-nowrap me-3" style="width: 120px;">희망월렌탈료</div>
 												        <div th:text="|₩*{#numbers.formatInteger(rentalFee, 3, 'COMMA') + ' 이하'}" class="text-brand">₩ 20,000</div>
 												    </div>
 												</div>
@@ -78,13 +81,11 @@
                             </div>
                         </div>
                         <div class="col-xl-3 primary-sidebar sticky-sidebar mt-30">
-                            <div class="sidebar-widget widget-category-2 mb-30">
-                                <h5 class="section-title style-1 mb-30">💪 내 상품 추천하기</h5>
-                                <ul>
-                                    <li>
-                                        <a href="shop-grid-right.html">버튼으로 수정</a>
-                                    </li>
-                                </ul>
+                            <div class="sidebar-widget widget-category-2 mb-30 text-center">
+                                <h5 class="section-title style-1 mb-30">🔔 내 상품 추천하기</h5>
+                                <button type="button" class="applyBtn btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>
+									내 계약 추천하기
+								</button>
                             </div>
                         </div>
                     </div>

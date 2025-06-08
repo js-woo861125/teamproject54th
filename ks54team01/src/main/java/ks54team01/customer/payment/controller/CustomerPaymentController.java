@@ -36,6 +36,23 @@ public class CustomerPaymentController {
 	
 	
 	
+	@GetMapping("/billingFail")
+	public String getBillingFail(@RequestParam(required = false) String code, @RequestParam(required = false) String message
+							   , @RequestParam("rentalContractNo") String rentalContractNo, Model model) {
+		
+
+	    if (rentalContractNo != null && !rentalContractNo.isBlank()) {
+	        // 계약 삭제 시 주의: 다른 테이블과 외래키 연동 여부 확인
+	    	customerContractService.deleteContractByRentalContractNo(rentalContractNo);
+	    }
+		
+		model.addAttribute("failCode", code);
+		model.addAttribute("failMessage", message);
+		
+		return "customer/payment/billingFailView";
+	}
+	
+	
 	@GetMapping("/detail")
 	public String getPaymentDetailList(@RequestParam("rentalContractNo") String rentalContractNo, Model model) {
 		
@@ -202,7 +219,6 @@ public class CustomerPaymentController {
 		model.addAttribute("paymentList", paymentList);
 		model.addAttribute("custId", custId);
 		
-		
 		return "customer/myPage/myPaymentListView";
 	}
 	
@@ -252,10 +268,11 @@ public class CustomerPaymentController {
 	
 
 	@GetMapping("/addBillingPayment")
-	public String addBillingPaymnet(CustomerPayment customerPayment, @RequestParam("delNo") String delNo
+	public String addBillingPayment(CustomerPayment customerPayment, @RequestParam("delNo") String delNo
 								  , @RequestParam("quantity") Integer quantity, @RequestParam("prodNo") String prodNo
 								  , @RequestParam("delRecipientNm") String delRecipientNm, @RequestParam("delRecipientPhone") String delRecipientPhone
-								  , @RequestParam("delRequest") String delRequest, @RequestParam("rentalContractNo") String rentalContractNo, Model model) {
+								  , @RequestParam("delRequest") String delRequest, @RequestParam("rentalContractNo") String rentalContractNo
+								  , Model model, RedirectAttributes reAttr) {
 		
 		int orderQuantity = customerPayment.getPaymentCount();
 		String entCeoNo = customerPayment.getEntCeoNo();
@@ -287,6 +304,7 @@ public class CustomerPaymentController {
 		customerDeliveryInfo.setDelRequest(delRequest);
 		
 		customerPaymentService.addDeliveryInfo(customerDeliveryInfo);
+		
 		
 		return "redirect:/customer/payment/paymentList";
 	}
@@ -384,6 +402,7 @@ public class CustomerPaymentController {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	@GetMapping("/billing/success")
 	public String billingPaymentSuccess( @RequestParam("sellProductsNo") String sellProductsNo, @RequestParam("prodUnitPrice") Integer prodUnitPrice
 						               , @RequestParam("orderQuantity") Integer orderQuantity, @RequestParam("entCeoNo") String entCeoNo
@@ -398,6 +417,8 @@ public class CustomerPaymentController {
 		String custId = (String) session.getAttribute("loginId");
         
         Map<String, Object> responseMap = customerPaymentService.getBillingKey(authKey, customerKey);
+        Map<String, Object> card = (Map<String, Object>) responseMap.get("card");
+        
         
         String billingKey = (String) responseMap.get("billingKey");
         

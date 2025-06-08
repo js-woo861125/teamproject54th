@@ -32,8 +32,17 @@
     FROM 
     	ent_penalty_calculate
     WHERE 
-    	penalty_calculate_no = #{penaltyCalculateNo}
-</select>
+    	sell_products_no = #{sellProductsNo}
+	</select>
+
+	<update id="updatePenaltyCalculate" parameterType="ks54team01.enterprise.product.domain.EnterprisePenaltyCalculate">
+	  UPDATE 
+	  	ent_penalty_calculate
+	  SET 
+	  	penalty_fee_ratio  = #{penaltyFeeRatio}
+	  WHERE 
+	  	sell_products_no = #{sellProductsNo}
+	</update>
 </mapper>
 
 

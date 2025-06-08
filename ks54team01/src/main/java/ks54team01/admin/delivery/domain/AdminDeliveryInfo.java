@@ -7,6 +7,7 @@ public class AdminDeliveryInfo {
 
 	private String delInfoNo;
 	private String sellProdNo;
+	private String custId;
 	private String recipientNm;
 	private String delCompany;
 	private String delRequest;

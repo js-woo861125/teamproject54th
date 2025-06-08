@@ -93,101 +93,83 @@
 	
 	
 	
+
+	<select id="getPaymentCount" parameterType="map" resultType="int">
+	    SELECT 
+	    	COUNT(p.payment_completed_no)
+	    FROM
+	        payment p INNER JOIN customer c 
+	   		ON p.cust_id = c.cust_id
+	    	INNER JOIN sell_products sp 
+	   	 	ON p.sell_products_no = sp.sell_products_no
+	   		INNER JOIN products pd 
+	    	ON sp.products_no = pd.products_no
+	    <where>
+	        (p.rental_contract_no != '일시불판매' OR p.rental_contract_no = '일시불판매')
+	        <if test="entCeoNo != null">
+	            AND sp.ent_ceo_no = #{entCeoNo}
+	        </if>
+	        <if test="searchKey != null and searchValue != null and searchValue != ''">
+	            <choose>
+	                <when test="searchKey == 'custNm'">
+	                    AND c.cust_nm LIKE CONCAT('%', #{searchValue}, '%')
+	                </when>
+	                <when test="searchKey == 'prodNm'">
+	                    AND pd.products_nm LIKE CONCAT('%', #{searchValue}, '%')
+	                </when>
+	                <when test="searchKey == 'paymentStatus'">
+	                    AND p.payment_status LIKE CONCAT('%', #{searchValue}, '%')
+	                </when>
+	            </choose>
+	        </if>
+	    </where>
+	</select>
+
 	
 	
-	<select id="getSearchPaymentList" parameterType="string" resultMap="paymentResultMap">
+	<select id="getPaymentList" parameterType="map" resultMap="paymentResultMap">
 		SELECT
-			c.cust_nm,
-			pd.products_nm,
-			p.payment_count,
-			p.total_price,
-			p.rental_contract_no,
-			p.payment_status,
-			p.payment_completed_date
+		    c.cust_nm,
+		    pd.products_nm,
+		    MAX(p.payment_count) AS payment_count,
+   			MAX(p.total_price) AS total_price,
+		    p.rental_contract_no,
+		    MAX(p.payment_status) AS payment_status,
+   			MAX(p.payment_completed_date) AS payment_completed_date
 		FROM
-			payment p
-		INNER JOIN customer c USING(cust_id)
-		inner join sell_products sp
-		on sp.sell_products_no = p.sell_products_no
-		inner join products pd
-		on pd.products_no = sp.products_no
+		    payment p INNER JOIN customer c 
+		    ON p.cust_id = c.cust_id
+			INNER JOIN sell_products sp 
+			ON p.sell_products_no = sp.sell_products_no
+			INNER JOIN products pd 
+			ON sp.products_no = pd.products_no
 		<where>
-			p.rental_contract_no != '일시불판매'
-			<if test="searchValue != null and searchValue != ''">
-				AND ${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
+			(p.rental_contract_no != '일시불판매' OR p.rental_contract_no = '일시불판매')
+			<if test="entCeoNo != null">
+			    AND sp.ent_ceo_no = #{entCeoNo}
+			</if>
+			<if test="searchKey != null and searchValue != null and searchValue != ''">
+				<choose>
+				    <when test="searchKey == 'custNm'">
+				        AND c.cust_nm LIKE CONCAT('%', #{searchValue}, '%')
+				    </when>
+				    <when test="searchKey == 'prodNm'">
+				        AND pd.products_nm LIKE CONCAT('%', #{searchValue}, '%')
+				    </when>
+				    <when test="searchKey == 'paymentStatus'">
+				        AND p.payment_status LIKE CONCAT('%', #{searchValue}, '%')
+				    </when>
+				</choose>
 			</if>
 		</where>
 		GROUP BY
-			p.rental_contract_no
-		UNION ALL
-		SELECT
-			c.cust_nm,
-			pd.products_nm,
-			p.payment_count,
-			p.total_price,
-			p.rental_contract_no,
-			p.payment_status,
-			p.payment_completed_date
-		FROM
-			payment p
-		INNER JOIN customer c USING(cust_id)
-		inner join sell_products sp
-		on sp.sell_products_no = p.sell_products_no
-		inner join products pd
-		on pd.products_no = sp.products_no
-		<where>
-			p.rental_contract_no = '일시불판매'
-			<if test="searchValue != null and searchValue != ''">
-				AND ${searchKey} LIKE CONCAT('%', #{searchValue}, '%')
-			</if>
-		</where>
+   			p.rental_contract_no
 		ORDER BY
-			payment_completed_date ASC
+			MAX(p.payment_completed_date) DESC
+		LIMIT 
+			#{pageable.rowPerPage} OFFSET #{pageable.offset}
 	</select>
-	
-	
-	
-	<select id="getPaymentList" resultMap="paymentResultMap">
-		SELECT
-			c.cust_nm,
-			pd.products_nm,
-			p.payment_count,
-			p.total_price,
-			p.rental_contract_no,
-			p.payment_status,
-			p.payment_completed_date
-		FROM
-			payment p
-		INNER JOIN customer c USING(cust_id)
-		inner join sell_products sp
-		on sp.sell_products_no = p.sell_products_no
-		inner join products pd
-		on pd.products_no = sp.products_no
-		WHERE
-			p.rental_contract_no != '일시불판매'
-		GROUP BY
-			p.rental_contract_no
-		UNION ALL
-		SELECT
-			c.cust_nm,
-			pd.products_nm,
-			p.payment_count,
-			p.total_price,
-			p.rental_contract_no,
-			p.payment_status,
-			p.payment_completed_date
-		FROM
-			payment p
-		INNER JOIN customer c USING(cust_id)
-		inner join sell_products sp
-		on sp.sell_products_no = p.sell_products_no
-		inner join products pd
-		on pd.products_no = sp.products_no
-		WHERE
-			p.rental_contract_no = '일시불판매'
-		ORDER BY
-			payment_completed_date ASC;
-	</select>
+
 	
 </mapper>
 

@@ -1,13 +1,21 @@
 package ks54team01.admin.payment.service;
 
 import java.util.List;
+import java.util.Map;
 
 import ks54team01.admin.enterprise.domain.AdminEntList;
 import ks54team01.admin.payment.domain.AdminFee;
 import ks54team01.admin.payment.domain.AdminMonthlyFee;
 import ks54team01.admin.payment.domain.AdminPayment;
+import ks54team01.system.util.PageInfo;
 
 public interface AdminPaymentService {
+	
+	
+	
+	
+	PageInfo<AdminPayment> getPaymentPageList(Map<String, Object> searchParamMap);
+	
 
 	List<AdminMonthlyFee> getAdminPaymentCalc(String searchValue);
 	
@@ -17,7 +25,5 @@ public interface AdminPaymentService {
 	
 	List<AdminFee> getAdminPayFee(String ceoCode, String settlementMonth);
 	
-	List<AdminPayment> getSearchPaymentList(String searchKey, String searchValue);
 	
-	List<AdminPayment> getPaymentList();
 }

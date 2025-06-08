@@ -13,7 +13,21 @@
 	</th:block>
 	
 	<th:block layout:fragment="jsScript">
-	
+		<script th:inline="javascript">
+			/* 페이지이동 */
+			$('a.page-num').click(function(e){
+				e.preventDefault();
+				const currentPage = $(this).data('currentPage');
+		
+				const url = new URL(window.location.href);
+				const params = url.searchParams;
+		
+				// 기존 파라미터 유지하면서 currentPage만 갱신
+				params.set('currentPage', currentPage);
+		
+				window.location.href = `${url.pathname}?${params.toString()}`;
+			});
+		</script>
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
@@ -26,7 +40,7 @@
 		</div>
 		<div class="card mb-4">
 			<header class="card-header">
-				<form th:action="@{/admin/payment/searchPaymentList}" method="get">
+				<form th:action="@{/admin/payment/paymentList}" method="get">
 					<div class="row gx-3">
 	                   <div class="col-lg-2 col-md-3 col-12">
 	                       <select class="form-select" name="searchKey">
@@ -40,13 +54,6 @@
 	                   <div class="col-lg-1 col-md-1 me-auto">
 						   <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
 	                   </div>
-	                   <div class="col-lg-2 col-md-3 col-12">
-	                       <select class="form-select">
-	                           <option>Show 20</option>
-	                           <option>Show 30</option>
-	                           <option>Show 40</option>
-	                       </select>
-	                   </div>
 	               </div>
 				</form>
 			</header>
@@ -57,7 +64,6 @@
 						<table class="table align-middle table-nowrap mb-0">
 							<thead class="table-light text-center">
 								<tr>
-									
 									<th class="align-middle" scope="col">주문번호</th>
 									<th class="align-middle" scope="col">주문자명</th>
 									<th class="align-middle" scope="col">상품코드</th>
@@ -89,16 +95,32 @@
 			<!-- card-body end// -->
 		</div>
 		<!-- card end// -->
-		<div class="pagination-area mt-15 mb-50">
+		<div class="pagination-area mt-30 mb-50">
 			<nav aria-label="Page navigation example">
-				<ul class="pagination justify-content-start">
-					<li class="page-item active"><a class="page-link" href="#">01</a></li>
-					<li class="page-item"><a class="page-link" href="#">02</a></li>
-					<li class="page-item"><a class="page-link" href="#">03</a></li>
-					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
-					<li class="page-item"><a class="page-link" href="#">16</a></li>
-					<li class="page-item"><a class="page-link" href="#"><i
-							class="material-icons md-chevron_right"></i></a></li>
+				<ul class="pagination justify-content-center">
+					<!-- 이전페이지 이동 -->
+					<li id="prev-page" class="page-item" th:classappend="${startPageNum < 10} ? 'disabled'">
+						<a class="page-link"
+						   th:href="@{/admin/payment/paymentList(currentPage=${startPageNum - 1}, searchKey=${searchKey}, searchValue=${searchValue})}">
+						   <i class="material-icons md-first_page mt-5"></i>
+						</a>
+					</li>
+					<!-- 페이지 이동  -->
+					<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}" th:if="${contentRowCount > 0}">
+						<li class="page-item" th:classappend="${num eq currentPage} ? 'active disabled'">
+							<a class="page-link page-num"
+							   href="#"
+							   th:text="${num < 10 ? '0' + num : num}"
+							   th:data-current-page="${num}">01</a>
+						</li>
+					</th:block>
+					<!-- 다음페이지 이동 -->
+					<li id="next-page" class="page-item" th:classappend="${(startPageNum + 10) > lastPage} ? 'disabled'">
+						<a class="page-link"
+						   th:href="@{/admin/payment/paymentList(currentPage=${endPageNum + 1}, searchKey=${searchKey}, searchValue=${searchValue})}">
+						   <i class="material-icons md-last_page" style="margin-top : 5px;"></i>
+						</a>
+					</li>
 				</ul>
 			</nav>
 		</div>

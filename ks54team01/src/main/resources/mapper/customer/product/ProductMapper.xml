@@ -21,6 +21,7 @@
 		<result column="file_type" 				property="imageType"/>
 		<result column="file_path" 				property="imageFilePath"/>
 		<result column="max_period" 			property="maxPeriod"/>
+		<result column="products_detail" 		property="prodDetail"/>
 		
 		
 		<association property="customerModel" 	javaType="CustomerModel">
@@ -150,32 +151,40 @@
 	
 	
 	<select id="getCustomerProductList" parameterType= "String" resultMap="CustomerProductResultMap">
-		SELECT 
-			pc.product_category_no,
-			sp.sell_products_no ,
-			p.products_nm,
-			min(sp.lump_sum_pay_price) AS lump_price,
-			sp.period,
-			min(sp.final_price) AS min_rental_price,
-			sp.register_date,
-			p.products_nm,
-			pc.middle_category ,
-			pc.small_category ,
-			ec.ent_nm,
-			p.products_no,
-			f.file_type,
-			f.file_path
-		FROM
-			sell_products sp INNER JOIN products p 
-			ON sp.products_no = p.products_no
-			INNER JOIN ent_ceo ec 
-			ON sp.ent_ceo_no = ec.ent_ceo_no
-			INNER JOIN products_category pc 
-			ON p.product_category_no = pc.product_category_no
-			LEFT JOIN files f 
-			ON p.model_no = f.ref_id
-		WHERE
-			pc.small_category = #{smallCategory} AND p.products_status ='활' AND f.file_type  ='mainImage';
+	SELECT
+	    pc.product_category_no,
+	    p.products_no, 
+	    p.products_nm,
+	    MIN(sp.lump_sum_pay_price) AS lump_price,
+	    MIN(sp.final_price) AS min_rental_price,
+	    pc.middle_category,
+	    pc.small_category,
+	    ec.ent_nm,
+	    f.file_type,
+	    f.file_path
+	FROM
+	    sell_products sp
+	INNER JOIN products p
+	ON sp.products_no = p.products_no
+	INNER JOIN ent_ceo ec
+	ON sp.ent_ceo_no = ec.ent_ceo_no
+	INNER JOIN products_category pc
+	ON p.product_category_no = pc.product_category_no
+	LEFT JOIN files f
+	ON p.model_no = f.ref_id
+	WHERE
+	    pc.small_category = #{smallCategory}
+	    AND p.products_status = '활'
+	    AND f.file_type = 'mainImage'
+	GROUP BY
+	    pc.product_category_no,
+	    p.products_no,
+	    p.products_nm,
+	    pc.middle_category,
+	    pc.small_category,
+	    ec.ent_nm,
+	    f.file_type,
+	    f.file_path
 	</select>
 
 	
@@ -195,25 +204,24 @@
 			p.manager_id,
 			sp.ent_emp_id,
 			p.products_no,
-			q.quantity
+			q.quantity,
+			f.file_type, 
+			f.file_path,
+			p.products_detail
 		FROM
-			sell_products sp inner JOIN products p 
+			sell_products sp 
+			INNER JOIN products p 
 			ON sp.products_no = p.products_no
-			inner JOIN ent_ceo ec 
+			INNER JOIN ent_ceo ec 
 			ON sp.ent_ceo_no = ec.ent_ceo_no
-			inner join quantity q 
-			ON p.products_no = q.products_no and sp.ent_ceo_no = q.ent_ceo_no
+			INNER JOIN quantity q 
+			ON p.products_no = q.products_no AND sp.ent_ceo_no = q.ent_ceo_no
+			LEFT JOIN files f ON p.model_no = f.ref_id AND f.file_type = 'mainImage'
 		WHERE
 			p.products_no = #{productsNum}
 		order by
 			ec.ent_ceo_no , sp.period desc;
 	</select>
-	
-	
-	
-	
-	
-	
 	
 	<select id="getProductSpecList" parameterType="string" resultMap="CustomerProductResultMap">
 		select
@@ -247,15 +255,6 @@
 		order by
 			ec.ent_ceo_no , sp.period desc
 	</select>
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 
 </mapper>
