@@ -10,7 +10,13 @@ import ks54team01.enterprise.product.domain.EnterpriseProductQuantity;
 
 @Mapper
 public interface EnterpriseProductMapper {
-	List<EnterpriseProductQuantity> getQuantityList();
+	List<EnterpriseProductQuantity> getQuantityList(    
+				@Param("searchKey") String searchKey,
+		        @Param("searchValue") String searchValue,
+		        @Param("categoryNo") String categoryNo,
+		        @Param("status") String status,
+		        @Param("stockStatus") String stockStatus
+		       );
 	
 	List<EnterpriseProduct> getSellProductList();
 	
