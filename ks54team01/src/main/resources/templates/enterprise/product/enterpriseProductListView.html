@@ -163,9 +163,9 @@
                                 	 <a class="item" href="#">
 								        <div class="img">
 								            <img th:if="${sl.productImage != null}" 
-								                 th:src="${sl.productImage}" 
-								                 class="img-sm img-main" 
-								                 alt="상품이미지" />
+											     th:src="@{${sl.productImage}}" 
+											     class="img-sm img-main" 
+											     alt="상품이미지" />
 								                 
 								            <div th:if="${sl.productImage == null}" 
 								                 class="img-sm img-main bg-light d-inline-block" 
