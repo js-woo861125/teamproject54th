@@ -139,7 +139,7 @@
 						<div class="search-form col-4">
 							<form th:action="@{/customer/transferBoard/transferBoardList}" method="get">
 								<input type="text" name="searchValue" th:value="${searchValue}"
-									   placeholder="찾는 상품명을 입력해주세요." />
+									   placeholder="찾으려는 상품명을 입력해주세요." />
 								<button class="transfer-search" type="submit">
 									<i class="fi-rs-search"></i>
 								</button>
@@ -207,13 +207,13 @@
 							<div class="col-lg-3 col-md-4 col-12 col-sm-6">
 								<div class="product-cart-wrap mb-30">
 									<div class="product-img-action-wrap">
-										<div class="product-img product-img-zoom">
+										<!-- <div class="product-img product-img-zoom"> -->
 											<a th:href="@{/customer/transferBoard/transferBoardDetail(transferBoardNum=${l.transferBoardNum})}">
 												<img class="img-main"
 													 th:src="@{${l.uploadImage}}"
 													 alt="이미지"/>
 											</a>
-										</div>
+										<!-- </div> -->
 									</div>
 									<div class="product-content-wrap">
 										<div class="product-category d-flex justify-content-between">
@@ -223,7 +223,8 @@
 											<a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a>
 										</h2>
 										<div>
-											<span th:text="${l.customerMember.custName}" class="font-small text-muted">작성자
+											<!-- <span th:text="${l.customerMember.custName}" class="font-small text-muted">작성자 -->
+											<span th:text="${#strings.substring(l.customerMember.custName, 0, 1) + #strings.repeat('*', l.customerMember.custName.length() - 1)}" class="font-small text-muted">작성자
 												<a href="vendor-details-1.html">우에하라 아유무</a>
 											</span>
 										</div>
@@ -246,7 +247,7 @@
 											<th:block th:switch="${l.transferRentalProcsssingStatus}">
 												<span th:case="${'양도공개'}" class="stock-status in-stock">
 													진행중 </span>
-												<span th:case="${'양도계약완료'}" class="stock-status out-stock">
+												<span th:case="${'양도마감'}" class="stock-status out-stock">
 													마감 </span>
 											</th:block>
 										</div>

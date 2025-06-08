@@ -20,7 +20,7 @@
 				const img = new Image();
 				  img.src = URL.createObjectURL(file);
 				  img.onload = () => {
-				    const MAX_WIDTH = 225;
+				    const MAX_WIDTH = 300;
 				    const MAX_HEIGHT = 225;
 				    let width = img.width;
 				    let height = img.height;
@@ -92,16 +92,18 @@
 		   	                            : fileFullName;
 		   	        if(file.type.match('image.*')){
 		   	            const reader = new FileReader(); 
-		   	            reader.onload = function (e) { 
+		   	            reader.onload = function (e) {
+		   	            	const span = $('<span />', {'class': 'delete-img1 position-absolute top-0 end-0 me-2 px-2 py-1 bg-danger text-white rounded', 'data-remove-key' : lastModified}).text('X');
 		   	                const img = $('<img />', {src: e.target.result, id : lastModified, alt: fileName });
-		   	                const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
+		   	                /* const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X'); */
 		   	                imgDiv.append(img,span);
 		   	                imgDiv.appendTo('#extraImagePreview');
 		   	            } 
 		   	            reader.readAsDataURL(file);
 		   	        }else{
-		   	            const noImage = $('<img />', { src : '/manage/assets/imgs/theme/upload.svg', id : lastModified, alt : fileName});
-		   	            const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
+		   	        	const span = $('<span />', {'class': 'delete-img1 position-absolute top-0 end-0 me-2 px-2 py-1 bg-danger text-white rounded', 'data-remove-key' : lastModified}).text('X');
+		   	        	const noImage = $('<img />', { src : '/manage/assets/imgs/theme/upload.svg', id : lastModified, alt : fileName});
+		   	            /* const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X'); */
 		   	            imgDiv.append(noImage, span);
 		   	            imgDiv.appendTo('#extraImagePreview');
 		   	        }
@@ -110,8 +112,8 @@
 	
 	
 		   	// X버튼 클릭 시 상세 이미지 파일 삭제
-		   	$(document).on('click', '.delete-img2', function(){
-		   	    const input = document.getElementById('thumbnails');
+		   	$(document).on('click', '.delete-img1', function(){
+		   	    const input = document.getElementById('extraImage');
 		   	    const files = input.files;
 		   	    const dataTransfer = new DataTransfer();
 		   	    const removeTargetId = $(this).attr('data-remove-key');
@@ -119,7 +121,7 @@
 		   	        .filter(file => file.lastModified != removeTargetId)
 		   	        .forEach(file => dataTransfer.items.add(file));
 		   	    input.files = dataTransfer.files;
-		   	    $(this).closest('.img-box2').remove();
+		   	    $(this).closest('.img-box1').remove();
 		   	});
 		   	
 		   	/* 
@@ -170,8 +172,6 @@
   	     	e.preventDefault();
    			e.stopPropagation();
 
-		   	console.log($('#mainImage'));
-		    console.log($('#mainImage')[0]);
 		   	    
 		   	    const grantsVal = $('#individualGrantsInput').val()?.trim();
 		   	    const titleVal = $('#transferTitleInput').val()?.trim();
@@ -182,7 +182,7 @@
 		   	    console.log('length:', fileList?.length);
 		   	 	
 		   	    const numberRegex = /^[0-9]+$/;
-
+		
 		   	    // 렌탈 지원금 검증
 		   	    if (!grantsVal) {
 		   	        $('#individualGrantsInput').focus().attr('style', 'border: 1px solid red; border-radius: 6px;');
@@ -253,10 +253,31 @@
 		   	        $(this).focus();
 		   	    }
 		   	});
+		   	
+		   	$(document).ready(function () {
+		   	    const $checkbox = $('#differentaddress');
+		   	    const $collapse = $('#collapseAddress');
 
+		   	    // 체크박스 클릭 이벤트
+		   	    $checkbox.on('change', function () {
+		   	        if ($checkbox.is(':checked')) {
+		   	            // 1. 영역 펼치기
+		   	            $collapse.collapse('show');
 
+		   	            // 2. 다시 접히지 않도록 막기
+		   	            $collapse.on('hide.bs.collapse', function (e) {
+		   	                e.preventDefault();
+		   	            });
 
-
+		   	            // 3. 다시 체크 해제 못하게 (값은 유지하되 클릭 방지)
+		   	            $checkbox.prop('checked', true); // 혹시 모르니 강제 체크 상태 유지
+		   	            $checkbox.on('click.prevent', function (e) {
+		   	                e.preventDefault(); // 클릭 무효화
+		   	                return false;
+		   	            });
+		   	        }
+		   	    });
+		   	});
 		</script>
 	</th:block>
 	
@@ -280,9 +301,9 @@
                         	<div class="table-responsive order_table checkout">
                             	<!-- 이미지 파일 업로드 들어갈 부분 -->
                             	<div class="card-body">
-									<div>
+									<div class="mb-50">
 										<input type="file" id="mainImage" name="mainImage"
-											   class="form-control" required>
+											   class="form-control form-control-lg" required>
 									</div>
 									<div class="mt-3" id="mainImagePreview"></div>
 								</div>
@@ -298,7 +319,7 @@
 	                            <div class="card-body">
 									<div class="input-group">
 										<input type="file" id="extraImage" name="extraImage"
-											   class="form-control" multiple>
+											   class="form-control form-control-lg" multiple>
 									</div>
 									<div id="extraImagePreview" class="row mt-3 mb-2"></div>
 								</div>
@@ -306,67 +327,92 @@
                   		</div>
                 	</div>
 	                <div class="col-lg-6">
-	                    <div class="row">
-	                        <h4 class="mb-30">계약 정보</h4>
-	                            <div class="row">
-	                                <div class="form-group col-lg-6">
-	                                	<input id="rentalContrancNumInput" type="hidden"  th:value="${myRentalInfo.rentalContractNum}" name="rentalContractNum">
-	                                	<input id="sellProductsNumInput" type="hidden" th:value="${myRentalInfo.sellProductsNum}" name="sellProductsNum">
-	                                	<input id="modelNumInput" type="hidden" th:value="${myRentalInfo.modelNum}" name="modelNum">
-	                                	<input id="itemNumInput" type="hidden" th:value="${myRentalInfo.itemNum}" name="itemNum">
-	                                	<input id="productCategoryNumInput" th:value="${myRentalInfo.productCategoryNum}" type="hidden" name="productCategoryNum">
-	                                	<input id="delInfoNoInput" th:value="${myRentalInfo.customerDeliveryInfo.delInfoNo}" type="hidden" name="customerDeliveryInfo.delInfoNo">
-	                                    <input id="productNameInput" th:value="${myRentalInfo.productInfo.productsName}" type="text" name="productsName" placeholder="상품명" readonly>
-	                                </div>
-	                            </div>
-	                            <div class="row">
-	                                <div class="form-group col-lg-6">
-	                                    <input id="contractQuantityInput" type="text" th:value="${myRentalInfo.customerContract.contractQuantity}" name="contractQuantity" placeholder="계약수량 *" readonly>
-	                                </div>
-	                            </div>
-	                            <div class="row">
-	                                <div class="form-group col-lg-3">
-	                                    <input id="contractStartDateInput" type="text" th:value="${myRentalInfo.customerContract.rentalEndDate}" name="rentalStartDate" placeholder="계약시작일 *" readonly>
-	                                </div>
-	                                <div class="form-group col-lg-3">
-	                                    <input id="contractEndDateInput" type="text" th:value="${myRentalInfo.customerContract.rentalEndDate}" name="contractEndDate" placeholder="계약종료일 *" readonly>
-	                                </div>
-	                            </div>
-	                            <div class="row">
-	                                <div class="form-group col-lg-6">
-	                                    <input id="remainingMonthsInput" type="text" th:value="${myRentalInfo.remainingMonths}" name="remainingMonths" placeholder="잔여계약일(개월) *" readonly>
-	                                </div>
-	                            </div>
-	                            <div class="row">
-	                                <div class="form-group col-lg-6">
-	                                    <input id="rentalFeeInput" type="text" th:value="${myRentalInfo.customerSellProduct.finalPrice}" name="rentalFee" placeholder="월렌탈료 *" readonly>
-	                                </div>
-	                            </div>
-	                            <div class="ship_detail">
-	                                <div class="form-group">
-	                                    <div class="chek-form">
-	                                        <div class="custome-checkbox">
-	                                            <input class="form-check-input" type="checkbox" name="checkbox" id="differentaddress">
-	                                            <label class="form-check-label label_info" data-bs-toggle="collapse" data-target="#collapseAddress" href="#collapseAddress" aria-controls="collapseAddress" for="differentaddress">
-	                                            	<span>등록하려는 상품의 정보와 일치합니까?</span>
-	                                            </label>
+	                	<div class="row">
+	                    	<h4 class="mb-4">계약 정보</h4>
+                        	<!-- 상품명 -->
+                            <div class="mb-3 row align-items-center">
+                               	<input id="rentalContrancNumInput" type="hidden"  th:value="${myRentalInfo.rentalContractNum}" name="rentalContractNum">
+                               	<input id="sellProductsNumInput" type="hidden" th:value="${myRentalInfo.sellProductsNum}" name="sellProductsNum">
+                               	<input id="modelNumInput" type="hidden" th:value="${myRentalInfo.modelNum}" name="modelNum">
+                               	<input id="itemNumInput" type="hidden" th:value="${myRentalInfo.itemNum}" name="itemNum">
+                               	<input id="productCategoryNumInput" th:value="${myRentalInfo.productCategoryNum}" type="hidden" name="productCategoryNum">
+                               	<input id="delInfoNoInput" th:value="${myRentalInfo.customerDeliveryInfo.delInfoNo}" type="hidden" name="customerDeliveryInfo.delInfoNo">
+                                <label for="productNameInput" class="col-sm-2 col-form-label fw-bold">상품명</label>
+								<div class="col-sm-7">
+                                   	<input id="productNameInput" th:value="${myRentalInfo.productInfo.productsName}" type="text" name="productsName" placeholder="상품명" class="form-control" readonly>
+								</div>
+                            </div>
+                            <!-- 상품수량 -->
+                            <div class="mb-3 row align-items-center">
+                                <label for="contractQuantityInput" class="col-sm-2 col-form-label fw-bold">계약수량</label>
+                                <div class="col-sm-7">
+                                	<input id="contractQuantityInput" type="text" th:value="${myRentalInfo.customerContract.contractQuantity}" name="contractQuantity" placeholder="계약수량 *" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <!-- 렌탈 계약기간 -->
+                            <div class="mb-3 row align-items-center">
+                                <label for="contractPeriodInput" class="col-sm-2 col-form-label fw-bold">계약기간</label>
+                                <div class="col-sm-3">
+                                    <input id="contractStartDateInput" type="text" th:value="${myRentalInfo.customerContract.rentalEndDate}" name="rentalStartDate" placeholder="계약시작일 *" class="form-control" readonly>
+                                </div>
+                                <div class="col-sm-1">
+                                	<span>-</span>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input id="contractEndDateInput" type="text" th:value="${myRentalInfo.customerContract.rentalEndDate}" name="contractEndDate" placeholder="계약종료일 *" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <!-- 잔여계약기간 -->
+                            <div class="mb-3 row align-items-center">
+                                <label for="remainingMonthsInput" class="col-sm-2 col-form-label fw-bold">잔여 계약개월</label>
+                                <div class="col-sm-7">
+                                    <input id="remainingMonthsInput" type="text" th:value="${myRentalInfo.remainingMonths}" name="remainingMonths" placeholder="잔여계약일(개월) *" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <!-- 월렌탈료 -->
+                            <div class="mb-3 row align-items-center">
+                                <label for="rentalFeeInput" class="col-sm-2 col-form-label fw-bold">월 렌탈료</label>
+                                <div class="col-sm-7">
+                                    <input id="rentalFeeInput" type="text" th:value="${myRentalInfo.customerSellProduct.finalPrice}" name="rentalFee" placeholder="월렌탈료 *" class="form-control" readonly>
+                                </div>
+                            </div>
+                       	</div>
+                       	<div class="row mt-20">
+                       		<div class="ship_detail">
+                                <div class="form-group">
+                                    <div class="chek-form">
+                                        <div class="custome-checkbox">
+                                            <input class="form-check-input" type="checkbox" name="checkbox" id="differentaddress">
+                                            <label class="form-check-label label_info" data-bs-toggle="collapse" data-target="#collapseAddress" href="#collapseAddress" aria-controls="collapseAddress" for="differentaddress">
+                                            	<span>등록하려는 상품의 정보와 일치합니까?</span>
+                                            </label>
+                                        </div>
+                                   	</div>
+                                </div>
+                                <div class="row mt-50">
+                               		<div id="collapseAddress" class="different_address collapse in">
+					        			<h4 class="mb-4">게시글 정보</h4>
+	                                    <div class="mb-3 row align-items-center">
+	                                    	<label for="individualGrantsInput" class="col-sm-2 col-form-label fw-bold">*지원금</label>
+	                                        <div class="col-sm-7">
+	                                            <input id="individualGrantsInput" type="text" name="individualGrants" placeholder="지원금을 입력해주세요." class="form-control" required>
 	                                        </div>
 	                                    </div>
-	                                </div>
-	                                <div id="collapseAddress" class="different_address collapse in">
-	                                    <div class="row">
-	                                        <div class="form-group col-lg-5 d-flex">
-	                                            <input id="individualGrantsInput" type="text" name="individualGrants" placeholder="지원금을 입력해주세요." required>
+	                                    <div class="mb-3 row align-items-center">
+	                                        <label for="transferTitleInput" class="col-sm-2 col-form-label fw-bold">*게시글 제목</label>
+	                                        <div class="col-sm-7">
+	                                            <input id="transferTitleInput" type="text" name="transferTitle" placeholder="게시글 제목을 입력해주세요." class="form-control" required>
 	                                        </div>
 	                                    </div>
-	                                    <div class="row shipping_calculator">
-	                                        <div class="form-group col-lg-6">
-	                                            <input id="transferTitleInput" type="text" name="transferTitle" placeholder="게시글 제목을 입력해주세요." required>
-	                                        </div>
-	                                    </div>
-	                                     <div class="form-group mb-30">
-	                                		<textarea id="transferContentInput"  name="transferContent" cols="30" rows="3" placeholder="기타 상세 설명을 입력해주세요. 세부적으로 작성해 주실수록 원활한 양도 진행이 이루어집니다."></textarea>
+	                                		<label for="transferContentInput" class="form-label fw-bold">게시글 내용</label>
+	                                		<textarea id="transferContentInput"
+								              		  name="transferContent"
+								              		  class="form-control w-75"
+								              		  style="height: 180px; resize: vertical;"
+								              		  placeholder="기타 상세 설명을 입력해주세요. 세부적으로 작성해 주실수록 원활한 양도 진행이 이루어집니다.">
+								  			</textarea>
 	                            		</div>
+	                            		<!-- 버튼 영역 -->
 	               						<div class="row justify-content-end">
 										    <div class="col-auto">
 										        <button type="submit" id="addTransferBoardBtn"
@@ -374,19 +420,20 @@
 										            등록
 										        </button>
 										    </div>
-										    <div class="col-auto">
+										    <div class="col-auto" style="margin-right: 155px;">
 										        <a href="javascript:history.back();"
 										           class="btn btn-warning rounded font-lg hover-up text-white px-3 py-2 fs-6 text-center">
 										        	취소
 										        </a>
 										    </div>
 										</div>
-		                            </div>
-	                            </div>
-	                   		</div>
-	            		</div>
-	            	</div>
-	            </form>
+	                            	</div>
+                            	</div>
+                   			</div>
+            			</div>
+            		</div>
+            	</div>
+            </form>
 		</div>
 	</th:block>
 </html>
