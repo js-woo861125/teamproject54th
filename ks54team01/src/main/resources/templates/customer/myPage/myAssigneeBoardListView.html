@@ -117,6 +117,12 @@
 		                                <!-- <p class="mt-15 mb-15">급구</p> -->
 		                                <div class="mt-3 mb-4">
 											<div class="row g-4">
+											    <!-- 희망설치지역 -->
+											    <div class="col-12">
+											    	<span class="fw-normal text-primary me-2" style="font-size: 18px; padding-right: 10px;">희망설치지역</span>
+											    	<span th:text="${l.desiredInstallArea}" 
+											              class="text-dark" style="font-size: 20px; word-break: keep-all;">전주</span>
+											    </div>
 											    <!-- 희망렌탈료 -->
 											    <div class="col-5">
 										      		<span class="fw-normal text-primary me-2" style="font-size: 18px; padding-right: 10px;">희망렌탈료</span>
@@ -129,13 +135,6 @@
 										      		<span class="fw-normal text-primary me-2" style="font-size: 18px; padding-right: 10px;">희망계약기간</span>
 										      		<span th:text="${l.remainingMonths} + '개월 이하'" 
 											              class="text-dark" style="font-size: 20px; word-break: keep-all;">상관없음</span>
-											    </div>
-										
-											    <!-- 희망설치지역 -->
-											    <div class="col-12">
-											    	<span class="fw-normal text-primary me-2" style="font-size: 18px; padding-right: 10px;">희망설치지역</span>
-											    	<span th:text="${l.desiredInstallArea}" 
-											              class="text-dark" style="font-size: 20px; word-break: keep-all;">전주</span>
 											    </div>
 									  		</div>  
 										</div>
