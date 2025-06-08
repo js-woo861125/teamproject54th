@@ -32,7 +32,34 @@
 	</update>
 	
 	
-	<select id="getRefundList" resultMap="refundResultMap">
+	
+	<select id="getRefundCount" parameterType="map" resultType="int">
+	    SELECT 
+	    	COUNT(rrr.refund_request_no)
+	    FROM
+	    	rental_refund_request rrr inner join payment p
+			on rrr.payment_completed_no = p.payment_completed_no
+			inner join sell_products sp
+			on p.sell_products_no = sp.sell_products_no
+			inner join products pd
+			on sp.products_no = pd.products_no
+	    <where>
+			<if test="entCeoNo != null">
+			   rrr.ent_ceo_no = #{entCeoNo}
+			</if>
+			<if test="searchKey != null and searchValue != null and searchValue != ''">
+				<choose>
+				    <when test="searchKey == 'requestStatus'">
+				        AND rrr.request_status LIKE CONCAT('%', #{searchValue}, '%')
+				    </when>
+				</choose>
+			</if>
+		</where>
+	</select>
+	
+	
+	
+	<select id="getRefundList" parameterType="map" resultMap="refundResultMap">
 		select
 			rrr.cust_id,
 			pd.products_nm,
@@ -49,10 +76,22 @@
 			on p.sell_products_no = sp.sell_products_no
 			inner join products pd
 			on sp.products_no = pd.products_no
-		where
-			rrr.ent_ceo_no = #{entCeoNo}
+		<where>
+			<if test="entCeoNo != null">
+			   rrr.ent_ceo_no = #{entCeoNo}
+			</if>
+			<if test="searchKey != null and searchValue != null and searchValue != ''">
+				<choose>
+				    <when test="searchKey == 'requestStatus'">
+				        AND rrr.request_status LIKE CONCAT('%', #{searchValue}, '%')
+				    </when>
+				</choose>
+			</if>
+		</where>
 		order by
 			rrr.refund_date DESC
+		LIMIT 
+			#{pageable.rowPerPage} OFFSET #{pageable.offset}
 	</select>
 	    
 </mapper>

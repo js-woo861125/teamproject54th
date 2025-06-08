@@ -31,7 +31,8 @@
 	
 		<id 	column="del_info_no"			property="delInfoNo"/>
 		<result column="sell_products_no"		property="sellProdNo"/>
-		<result column="recipient_nm"		property="recipientNm"/>
+		<result column="cust_id"				property="custId"/>
+		<result column="recipient_nm"			property="recipientNm"/>
 		<result column="delivery_company"		property="delCompany"/>
 		<result column="delivery_request"		property="delRequest"/>
 		<result column="delivery_progress"		property="delProgress"/>
@@ -65,33 +66,36 @@
 	
 	
 	
-	<select id="getSearchDeliveryInfoList" parameterType="string" resultMap="deliveryInfoResultMap">
-		/* 배송정보 조회 검색 */
-		SELECT
-			del_info_no,
-			sell_products_no,
-			recipient_nm,
-			delivery_company,
-			delivery_request,
-			delivery_progress,
-			register_date,
-			depart_date,
-			arrive_date
-		from
-			delivery_information
+	
+	<select id="getDeliveryInfoCount" parameterType="map" resultType="int">
+		/* 검색 포함 전체 행 수 */
+		SELECT 
+			COUNT(di.del_info_no)
+		FROM
+		    delivery_information di
 		<where>
-			<if test="searchValue != null and searchValue !=''">
-				${searchKey} LIKE CONCAT('%', #{searchValue}, '%');
-			</if>
+		    <if test="searchKey != null and searchValue != null and searchValue != ''">
+		        <choose>
+		            <when test="searchKey == 'recipientNm'">
+		                di.recipient_nm LIKE CONCAT('%', #{searchValue}, '%')
+		            </when>
+		            <when test="searchKey == 'custId'">
+		                di.cust_id LIKE CONCAT('%', #{searchValue}, '%')
+		            </when>
+		            <when test="searchKey == 'delProgress'">
+		                di.delivery_progress LIKE CONCAT('%', #{searchValue}, '%')
+		            </when>
+		        </choose>
+		    </if>
 		</where>
 	</select>
 	
 	
-	
-	<select id="getDeliveryInfoList" parameterType="string" resultMap="deliveryInfoResultMap">
+	<select id="getDeliveryInfoList" parameterType="map" resultMap="deliveryInfoResultMap">
 		/* 배송정보 조회 */
 		SELECT
 			di.del_info_no,
+			di.cust_id,
 			di.sell_products_no,
 			di.recipient_nm,
 			di.delivery_company,
@@ -101,7 +105,26 @@
 			di.depart_date,
 			di.arrive_date
 		from
-			delivery_information di;
+			delivery_information di
+		<where>
+			<if test="searchKey != null and searchValue != null and searchValue != ''">
+			    <choose>
+			        <when test="searchKey == 'recipientNm'">
+		                di.recipient_nm LIKE CONCAT('%', #{searchValue}, '%')
+		            </when>
+		            <when test="searchKey == 'custId'">
+		                di.cust_id LIKE CONCAT('%', #{searchValue}, '%')
+		            </when>
+		            <when test="searchKey == 'delProgress'">
+		                di.delivery_progress LIKE CONCAT('%', #{searchValue}, '%')
+		            </when>
+			    </choose>
+			</if>
+		</where>
+		order by
+			di.register_date DESC
+		LIMIT 
+			#{pageable.rowPerPage} OFFSET #{pageable.offset};
 	</select>
 	
 	

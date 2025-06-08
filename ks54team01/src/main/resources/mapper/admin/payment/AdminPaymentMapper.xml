@@ -114,46 +114,6 @@
 	</select>
 	
 	
-	<select id="getSearchPaymentList" parameterType="string" resultMap="paymentResultMap">
-		/* 회원 검색 결제내역 조회 */
-		SELECT
-			p.payment_completed_no,
-			c.cust_nm,
-			p.sell_products_no,
-			ec.ent_nm,
-			p.total_price,
-			p.payment_status,
-			p.payment_completed_date
-		from
-			payment p inner join customer c
-			using(cust_id)
-			inner join ent_ceo ec 
-			using(ent_ceo_no)
-		<where>
-			<if test="searchValue != null and searchValue !=''">
-				${searchKey} LIKE CONCAT('%', #{searchValue}, '%');
-			</if>
-		</where>
-	</select>
-	
-	
-	
-	<select id="getPaymentList" resultMap="paymentResultMap">
-		/* 결제내역 조회 */
-		SELECT
-			p.payment_completed_no,
-			c.cust_nm,
-			p.sell_products_no,
-			ec.ent_nm,
-			p.total_price,
-			p.payment_status,
-			p.payment_completed_date
-		from
-			payment p inner join customer c
-			using(cust_id)
-			inner join ent_ceo ec 
-			using(ent_ceo_no);
-	</select>
 	
 	
 	<select id="getPaymentCount" parameterType="map" resultType="int">

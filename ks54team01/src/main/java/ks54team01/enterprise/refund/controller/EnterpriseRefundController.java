@@ -1,7 +1,6 @@
 package ks54team01.enterprise.refund.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -15,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.servlet.http.HttpSession;
 import ks54team01.enterprise.refund.domain.EnterpriseRefund;
 import ks54team01.enterprise.refund.service.EnterpriseRefundService;
+import ks54team01.system.util.PageInfo;
+import ks54team01.system.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,19 +59,37 @@ public class EnterpriseRefundController {
 	
 	
 	@GetMapping("/refundList")
-	public String getRefundList(HttpSession session ,Model model) {
+	public String getRefundList(@RequestParam(required = false) String searchKey,
+							    @RequestParam(required = false) String searchValue,
+							    Pageable pageable, Model model, HttpSession session) {
 		
 		String entCeoNo = (String) session.getAttribute("entCeoNo");
 		
-		log.info("entCeoNo:{}", entCeoNo);
-		model.addAttribute("title", "환불요청");
+		pageable.setRowPerPage(10);
 		
-		List<EnterpriseRefund> refundList = enterpriseRefundService.getRefundList(entCeoNo);
+		Map<String, Object> searchParamMap = new HashMap<>();
+		searchParamMap.put("entCeoNo", entCeoNo);
+	    searchParamMap.put("pageable", pageable);
+
+	    if (searchKey != null && !searchKey.isEmpty() && searchValue != null && !searchValue.isEmpty()) {
+	        searchParamMap.put("searchKey", searchKey);
+	        searchParamMap.put("searchValue", searchValue);
+	    }
 		
-		model.addAttribute("refundList", refundList);
+	    PageInfo<EnterpriseRefund> refundList = enterpriseRefundService.getRefundList(searchParamMap);
 		
-		log.info("refundList:{}", refundList);
-		
+	    model.addAttribute("title", "배송정보 목록");
+	    model.addAttribute("refundList", refundList.getContents());
+	    model.addAttribute("currentPage", refundList.getCurrentPage());
+	    model.addAttribute("lastPage", refundList.getLastPage());
+	    model.addAttribute("startPageNum", refundList.getStartPageNum());
+	    model.addAttribute("endPageNum", refundList.getEndPageNum());
+	    model.addAttribute("rowPerPage", pageable.getRowPerPage());
+	    model.addAttribute("contentRowCount", refundList.getTotalRowCount());
+	    model.addAttribute("searchKey", searchKey);
+	    model.addAttribute("searchValue", searchValue);
+	    
+	    
 		return "enterprise/request/refundRequestListView";
 	}
 }
