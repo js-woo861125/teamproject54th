@@ -84,7 +84,7 @@ public class EnterprisePaymentController {
 		
 	    PageInfo<EnterprisePayment> paymentList = enterprisePaymentService.getPaymentList(searchParamMap);
 		
-	    model.addAttribute("title", "배송정보 목록");
+	    model.addAttribute("title", "주문 목록");
 	    model.addAttribute("paymentList", paymentList.getContents());
 	    model.addAttribute("currentPage", paymentList.getCurrentPage());
 	    model.addAttribute("lastPage", paymentList.getLastPage());

@@ -78,7 +78,7 @@ public class EnterpriseRefundController {
 		
 	    PageInfo<EnterpriseRefund> refundList = enterpriseRefundService.getRefundList(searchParamMap);
 		
-	    model.addAttribute("title", "배송정보 목록");
+	    model.addAttribute("title", "환불요청 목록");
 	    model.addAttribute("refundList", refundList.getContents());
 	    model.addAttribute("currentPage", refundList.getCurrentPage());
 	    model.addAttribute("lastPage", refundList.getLastPage());
