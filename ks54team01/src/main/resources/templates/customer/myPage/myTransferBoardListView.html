@@ -91,7 +91,10 @@
 									<div class="product-cart-wrap mb-30">
 										<div class="product-img-action-wrap">
 											<div class="product-img product-img-zoom">
-												<a th:href="@{/customer/transferBoard/modifyTransferBoard(transferBoardNum=${l.transferBoardNum})}">
+												<img th:if="${l.transferRentalProcsssingStatus} == '양도마감'" class="img-main"
+												 th:src="@{${l.uploadImage}}"
+												 alt="이미지" />
+												<a th:unless="${l.transferRentalProcsssingStatus} == '양도마감'" th:href="@{/customer/transferBoard/modifyTransferBoard(transferBoardNum=${l.transferBoardNum})}">
 													<img class="img-main"
 													 th:src="@{${l.uploadImage}}"
 													 alt="이미지" />
@@ -114,7 +117,7 @@
 	                                    		</div>
 											</div>
 											<h2 th:text="${l.transferTitle}">
-												<a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a>
+												계약 2년 남은 TV 양도 원합니다.
 											</h2>
 											<div class="product-card-bottom">
 												<div class="product-price">
@@ -133,9 +136,9 @@
 												<p th:text="${l.registerDate}">2025-04-09</p>
 												<div></div>
 												<th:block th:switch="${l.transferRentalProcsssingStatus}">
-													<span th:case="${'양도계약공개'}" class="stock-status in-stock">
+													<span th:case="${'양도공개'}" class="stock-status in-stock">
 														진행중 </span>
-													<span th:case="${'양도계약완료'}" class="stock-status out-stock">
+													<span th:case="${'양도마감'}" class="stock-status out-stock">
 														마감 </span>
 												</th:block>
 											</div>

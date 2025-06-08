@@ -115,6 +115,16 @@
   		</association>
   	</resultMap>	
 	
+	<update id="changeStatusAfterApply" parameterType="CustomerTransferBoard">
+  		/* 양도 신청 후 마감 처리 */
+  		UPDATE transfer_board
+		SET  
+			transfer_rental_processing_status= '양도마감' ,
+			revision_date = NOW()
+		WHERE 
+			transfer_board_no = #{transferBoardNum};
+  	</update>
+	
 	<insert id="applyTransfer" parameterType="CustomerTransferBoard">
   		/* 신청 */
   		INSERT INTO transfer_rental_contract
@@ -249,8 +259,7 @@
 			LEFT JOIN files f
 			ON tb.transfer_board_no = f.ref_id AND f.file_type = 'mainImage'
 		 WHERE
-		 	tb.transfer_rental_processing_status != '양도공개전'
-		 	AND tb.cust_id = #{customerId}
+		 	tb.cust_id = #{customerId}
 		 ORDER BY tb.register_date DESC;
   	</select>
 
@@ -275,6 +284,7 @@
   		/* 양도 게시글 정보 조회 */
   		SELECT 
   			tb.transfer_board_no,
+  			c.cust_nm ,
   			f.file_path AS upload_image ,
 			tb.transfer_title,
 			tb.transfer_rental_processing_status, 
@@ -300,6 +310,8 @@
 			USING (delivery_location_no)
 			INNER JOIN transfer_board tb 
 			USING (del_info_no)
+			INNER JOIN customer c
+			ON tb.cust_id = c.cust_id
 			INNER JOIN rental_contract rc
 			ON tb.rental_contract_no = rc.rental_contract_no 
 			LEFT JOIN 

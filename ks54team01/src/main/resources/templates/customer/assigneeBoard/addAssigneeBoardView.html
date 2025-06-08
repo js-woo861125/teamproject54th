@@ -110,8 +110,8 @@
 	                 const appendElements = response.map((cateInfo, idx) => {
 	                	const $div = $('<div />', { class : 'col-6 col-md-4'});
 	                	const $subDiv = $('<div />', { class : 'form-check'});
-	                	const $radio = $('<input />', { class : 'form-check-input', type: 'radio', name : 'product', id : `product${idx+1}`,  value: cateInfo.categoryNo});
-	                	const $label = $('<label />', { class : 'form-check-label', for: `product${idx+1}`}).text(cateInfo.itemName);
+	                	const $radio = $('<input />', { class : 'form-check-input', type: 'radio', name : 'category', id : `category${idx+1}`,  value: cateInfo.categoryNo});
+	                	const $label = $('<label />', { class : 'form-check-label', for: `category${idx+1}`}).text(cateInfo.itemName);
 	                	$subDiv.append($radio, $label);
 	                	$div.append($subDiv);
 	                	return $div; 
@@ -135,8 +135,8 @@
 	        
 	        
 	        $('#selectItemBtn').click(function () {
-	        	  const productCategoryNum = $('input[name="product"]:checked').val();
-	        	  const itemName = $('input[name="product"]:checked').next().text();
+	        	  const productCategoryNum = $('input[name="category"]:checked').val();
+	        	  const itemName = $('input[name="category"]:checked').next().text();
 	        	  $('#selectedItem').val(itemName);
 	        	  if($('#selectedItem').val() != '') {
 	        	  	$('.searchProduct').removeClass('disabled');
@@ -158,8 +158,8 @@
 	      	  const productsNum = $('input[name="product"]:checked').val();
 	      	  const productsName = $('input[name="product"]:checked').next().text();
 	      	  //alert(value);
-	      	  $('#selectedProduct').val(productsName)
 	      	  $('#productNum').val(productNum);
+	      	  $('#selectedProduct').val(productsName);
 	      	  //const selectedValue = $(this).prev().val(); 
 	      	  //$('#selectedItem').val(selectedValue); 
 	      	  $('#selectProductModal').modal('hide');
@@ -259,14 +259,36 @@
 			                title: '계약 기간은 숫자만 입력해주세요.',
 			                confirmButtonText: "확인"
 			            })
-			            $periodInput.focus();
+			            /* $periodInput.focus(); */
+			            $periodInput.val('');
+			            $periodInput.css('border', '1px solid red');
 			            isSubmit = false;
 			        } else if (!numberRegex.test($rentalFeeInput.val()?.trim())) {
 			            Swal.fire({
 			                title: '렌탈료는 숫자만 입력해주세요.',
 			                confirmButtonText: "확인"
 			            })
-						$rentalFeeInput.focus();			            
+						/* $rentalFeeInput.focus(); */
+						$rentalFeeInput.val('');
+						$rentalFeeInput.css('border', '1px solid red');
+			            isSubmit = false;
+			        } else if($periodInput.val()?.trim() < 1 || $periodInput.val()?.trim() > 60) {
+			        	Swal.fire({
+			                title: '계약 기간은 1~60 개월 사이로 입력해주세요.',
+			                confirmButtonText: "확인"
+			            })
+			            /* $periodInput.focus(); */
+			            $periodInput.val('');
+			            $periodInput.css('border', '1px solid red');
+			            isSubmit = false;
+			        } else if($rentalFeeInput.val()?.trim() < 999) {
+			        	Swal.fire({
+			                title: '최소 ₩10,000 이상부터 입력해주세요.',
+			                confirmButtonText: "확인"
+			            })
+			            /* $periodInput.focus(); */
+			            $rentalFeeInput.val('');
+			            $rentalFeeInput.css('border', '1px solid red');
 			            isSubmit = false;
 			        }
 			    }
@@ -386,10 +408,12 @@
                 <div class="col-lg-7">
                     <div class="row">
                         <form id="addAssigneeBoardForm" th:action="@{/customer/assigneeBoard/addAssigneeBoard}" method="post">
-                            <div class="row">
-                                <div class="form-group col-lg-6">
+                            <div class="mb-30 row align-items-center">
+                            	<h4 class="mb-4">게시글 정보</h4>
+                                <label for="selectedItem" class="col-sm-2 col-form-label fw-bold">희망카테고리*</label>
+                                <div class="col-sm-7">
                                     <input id="productCategoryNum" type="hidden" name="productCategoryNum" required readonly>
-                                    <input id="selectedItem" type="text" placeholder="*상품 카테고리 선택" required readonly>
+                                    <input id="selectedItem" type="text" placeholder="*상품 카테고리 선택" class="form-control" required readonly>
                                 </div>
                                 <div class="col-2">
 									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardCategory}" class="openModal btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -397,10 +421,11 @@
 									</a>									
 	                            </div>                        		
                         	</div>
-	                        <div class="row">
-	                        	<div class="form-group col-lg-6">
+	                        <div class="mb-30 row align-items-center">
+	                        	<label for="selectedProduct" class="col-sm-2 col-form-label fw-bold">희망상품명</label>
+	                        	<div class="col-sm-7">
 	                        		<input id="productNum" type="hidden" name="productNum" required readonly>
-	                            	<input id="selectedProduct" type="text" name="productName" placeholder="상품명 입력 (선택사항)" readonly/>
+	                            	<input id="selectedProduct" type="text" name="productName" placeholder="상품명 입력 (선택사항)" class="form-control" readonly/>
 	                        	</div>
 	                        	<div class="col-2">
 									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardProduct}" class="searchProduct btn btn-primary disabled" data-bs-toggle="modal" data-bs-target="#selectProductModal">
@@ -408,9 +433,10 @@
 									</a>									
 	                            </div>
 	                     	</div>
-                            <div class="row">
-                                <div class="form-group col-lg-6">
-                                    <input type="text" id="hopeArea" name="desiredInstallArea" required placeholder="*희망 설치지역 입력" readonly/>
+                            <div class="mb-30 row align-items-center">
+                            	<label for="hopeArea" class="col-sm-2 col-form-label fw-bold">희망설치지역*</label>
+                                <div class="col-sm-7">
+                                    <input type="text" id="hopeArea" name="desiredInstallArea" required placeholder="*희망 설치지역 입력" class="form-control" readonly/>
                                 </div>
                                 <div class="col-2">
 		                            <div>
@@ -420,16 +446,24 @@
 		                            </div>                        		
 	                        	</div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-lg-4">
-                                    <input id="periodInput" type="text" name="remainingMonths" placeholder="*최소 희망 계약기간(개월) 입력" />
+                            <div class="mb-30 row align-items-center">
+                            	<label for="periodInput" class="col-sm-2 col-form-label fw-bold">희망계약기간(개월)*</label>
+                                <div class="col-sm-3 mr-50">
+                                    <input id="periodInput" type="text" name="remainingMonths" class="form-control" placeholder="*희망 계약기간(개월) 입력" />
                                 </div>
-                                <div class="form-group col-lg-4">
-                                    <input id="rentalFeeInput" type="text" name="rentalFee" placeholder="*최소 희망 렌탈료 입력" />
+                                <label for="rentalFeeInput" class="col-sm-2 col-form-label fw-bold">희망월렌탈료*</label>
+                                <div class="col-sm-3 ml-10">
+                                    <input id="rentalFeeInput" type="text" name="rentalFee" class="form-control" placeholder="*희망 렌탈료 입력" />
                                 </div>
                             </div>
-                            <div class="form-group mb-30">
-                                <textarea id="assigneeContent" name="assigneeContent" rows="5" placeholder="기타 상세 설명을 입력해주세요."></textarea>
+                            <div class="mb-30 mt-30">
+                            	<label for="assigneeContent" class="form-label fw-bold">게시글 내용</label>
+                                <textarea id="assigneeContent"
+					              		  name="assigneeContent"
+					              		  class="form-control"
+					              		  style="height: 180px; resize: vertical;"
+					              		  placeholder="기타 상세 설명을 입력해주세요.">
+					  			</textarea>
                             </div>
 							<div class="row justify-content-end">
 							    <div class="col-auto">

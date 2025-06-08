@@ -8,6 +8,7 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	</th:block>
 	
@@ -68,12 +69,150 @@
 				if (!loginId) {
 					location.href = '/customer/login/memberLogin';
 				    return false;
-				}	
+				}
+				
 			});
 			
 			$('#applyTransferBtn').click(function(e) {
 				e.preventDefault();
+				/* e.stopPropagation(); */
 				
+				const custNameVal = $('#custName').val()?.trim();
+				const delZipNoVal = $('#delZipNo').val()?.trim();
+		   	    const delAddrVal = $('#delAddr').val()?.trim();
+		   	    const delDaddrVal = $('#delDaddr').val()?.trim();
+		   	    const custPhone2Val = $('#custPhone2').val()?.trim();
+		   	    const custPhone3Val = $('#custPhone3').val()?.trim();
+				
+		   	 	const nameRegex = /^[가-힣]{2,6}$/;
+		   	 	const numberRegex = /^[0-9]+$/;
+		   	    const daddrRegex = /^[가-힣a-zA-Z0-9\s\-.,()]+$/;
+		   	 	
+		   		// 이름 검증
+		   	    if (!custNameVal) {
+		   	        $('#custName').focus().attr('style', 'border: 1px solid red; border-radius: 6px;');
+		   	        Swal.fire({
+		   	            title: '양도 받으실 분의 성함을 입력해주세요.',
+		   	            confirmButtonText: "확인"
+		   	        });
+		   	        return;
+		   	    } else if (!nameRegex.test(custNameVal)) {
+		   	        $('#custName').val('').focus().attr('style', 'border: 1px solid red; border-radius: 6px;');
+		   	        Swal.fire({
+		   	            title: '정확한 이름을 입력해주세요.',
+		   	            confirmButtonText: "확인"
+		   	        });
+		   	        return;
+		   	    } else $('#custName').attr('style', 'border: 1px solid green; border-radius: 6px;');
+			
+		   		// 주소 입력 검증
+		   	    if (!delAddrVal) {
+		   	        $('#delAddr').focus().attr('style', 'border: 1px solid red; border-radius: 6px;');
+		   	        Swal.fire({
+		   	            title: '주소를 선택해주세요.',
+		   	         	confirmButtonText: "확인",
+		                didOpen: () => {
+		                    const confirmBtn = Swal.getConfirmButton();
+		                    confirmBtn.focus();   
+		                }
+		            })
+		   	        return;
+		   	    }
+		   	    else $('#delAddr').attr('style', 'border: 1px solid green; border-radius: 6px;');
+			
+		   		// 상세주소 입력 검증
+		   	    if (!delDaddrVal) {
+		   	        $('#delDaddr').focus().attr('style', 'border: 1px solid red; border-radius: 6px;');
+		   	        Swal.fire({
+		   	            title: '상세주소를 입력해주세요.',
+		   	         	confirmButtonText: "확인",
+		                didOpen: () => {
+		                    const confirmBtn = Swal.getConfirmButton();
+		                    confirmBtn.focus();   
+		                }
+		            })
+		   	        return;
+		   	    } else if (!daddrRegex.test(delDaddrVal)) {
+	   	        	$('#delDaddr').val('').focus().attr('style', 'border: 1px solid red; border-radius: 6px;');
+		   	        Swal.fire({
+		   	            title: '정확한 상세주소를 입력해주세요.',
+		   	            confirmButtonText: "확인"
+		   	        });
+		   	        return;
+		   	    }
+		   	    else $('#delDaddr').attr('style', 'border: 1px solid green; border-radius: 6px;');
+		   		
+		   		// 전화번호 입력 검증
+		   	    if (!custPhone2Val) {
+		   	        $('#custPhone2').focus().attr('style', 'border: 1px solid red; border-radius: 6px;');
+		   	        Swal.fire({
+		   	            title: '전화번호를 입력해주세요.',
+		   	         	confirmButtonText: "확인",
+		                didOpen: () => {
+		                    const confirmBtn = Swal.getConfirmButton();
+		                    confirmBtn.focus();   
+		                }
+		            })
+		   	        return;
+		   	    } else if (!numberRegex.test(custPhone2Val)) {
+	   	        	$('#custPhone2').val('').focus().attr('style', 'border: 1px solid red; border-radius: 6px;');
+		   	        Swal.fire({
+		   	            title: '정확한 전화번호를 입력해주세요.',
+		   	            confirmButtonText: "확인"
+		   	        });
+		   	        return;
+		   	    }
+		   	    else $('#custPhone2').attr('style', 'border: 1px solid green; border-radius: 6px;');
+		   		
+		   	 	if (!custPhone3Val) {
+		   	        $('#custPhone3').focus().attr('style', 'border: 1px solid red; border-radius: 6px;');
+		   	        Swal.fire({
+		   	            title: '전화번호를 입력해주세요.',
+		   	         	confirmButtonText: "확인",
+		                didOpen: () => {
+		                    const confirmBtn = Swal.getConfirmButton();
+		                    confirmBtn.focus();   
+		                }
+		            })
+		   	        return;
+		   	    } else if (!numberRegex.test(custPhone3Val)) {
+	   	        	$('#custPhone3').val('').focus().attr('style', 'border: 1px solid red; border-radius: 6px;');
+		   	        Swal.fire({
+		   	            title: '정확한 전화번호를 입력해주세요.',
+		   	            confirmButtonText: "확인"
+		   	        });
+		   	        return;
+		   	    }
+		   	    else $('#custPhone3').attr('style', 'border: 1px solid green; border-radius: 6px;');
+		   	 	
+		   		// 모든 유효성 통과 시 제출
+		   	    $('#applyTransferForm').submit();
+			});
+			
+			const $status = document.querySelector('.stock-status');
+			if($($status).text().trim() != '진행중') {
+				$('.applyBtn').prop('disabled', true);
+			}
+			
+			const loginId = /*[[${session.loginId}]]*/"";
+			const writeId = $('.writeId').val();
+			if(loginId === writeId) {
+				$('.applyBtn').prop('disabled', true);
+			}
+			
+			
+			$(function(){
+			    // 이미지 클릭시 해당 이미지 모달
+			    $('div.extraImage img').click(function(){
+			        let img = new Image();
+			        img.src = $(this).attr("src");
+			        $('.imageModalBox').html(img);
+			        $(".imageModal").show();
+			    });
+			    // 모달 클릭할때 이미지 닫음
+			    $('.imageModal').click(function (e) {
+			    	$('.imageModal').toggle();
+			    });
 			});
 		</script>
 	</th:block>
@@ -91,7 +230,8 @@
 								<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 									<div class="modal-dialog modal-dialog-centered">
 										<div class="modal-content">
-											<form id="applyTransferForm" th:action="@{/customer/transferBoard/applyTransfer}" method="post">
+											<form id="applyTransferForm" th:action="@{/customer/transferBoard/applyTransfer}"
+												  enctype="multipart/form-data" method="post">
 												<div class="modal-header">
 													<h5 class="modal-title" id="staticBackdropLabel">양도 받기 신청서 작성</h5>
 													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -105,7 +245,6 @@
 															<input type="hidden" name="rentalContractNum" th:value="*{rentalContractNum}" id="rentalContractNumInput" class="form-control">
 															<input type="hidden" name="customerContract.rentalEndDate" th:value="*{customerContract.rentalEndDate}" id="rentalContractNumInput" class="form-control">
 															<input type="hidden" name="transferBoardNum" th:value="*{transferBoardNum}" id="transferBoardNumInput" class="form-control">
-															<!-- <input placeholder="배송지명" class="form-control" id="delNm" name="delNm" type="text"> -->
 															<input type="text" id="custName" name="custName" placeholder="양수자 이름을 입력해주세요." required /> 
 														</div>
 														<div class="form-group col-md-10">
@@ -149,9 +288,9 @@
                                             <div class="product-detail-rating">
                                                 <div class="product-rate-cover text-end">
                                                     <th:block th:switch="*{transferRentalProcsssingStatus}">
-			                                        	<span th:case="${'2.양도계약상태'}" 
+			                                        	<span th:case="${'양도공개'}" 
 			                                        		  class="stock-status in-stock"> 진행중 </span>
-			                                        	<span th:case="${'3.양도계약완료'}" 
+			                                        	<span th:case="${'양도계약완료'}" 
 			                                        		  class="stock-status out-stock"> 마감 </span>
 			                                        </th:block>
                                                 </div>
@@ -169,7 +308,8 @@
 													    </div>
 													    <div class="d-flex">
 													        <div class="fw-semibold text-nowrap me-3" style="width: 120px;">작성자</div>
-													        <div th:text="*{customerId}" class="text-brand">렌고쿠</div>
+													        <div th:text="*{#strings.substring(customerMember.custName, 0, 1) + #strings.repeat('*', customerMember.custName.length() - 1)}" class="text-brand"></div>
+													    	<input class="writeId" type="hidden" name="customerId" th:value="*{customerId}" />
 													    </div>
 													</div>
 												</div>
@@ -205,9 +345,13 @@
                                                 <p th:text="*{transferContent}">매월 첫째주에 방문케어 해주십니다!</p>
                                             	<div class="row g-3" th:if="${!#lists.isEmpty(fileList)}">
                                             		<div class="col-6 col-md-3" th:each="fl : ${fileList}">
-													    <div class="ratio ratio-4x3"> <!-- 1:1 비율 고정 -->
+													    <div class="extraImage ratio ratio-4x3"> <!-- 1:1 비율 고정 -->
 													        <img th:src="@{${fl.filePath}}" alt="이미지" class="img-fluid object-fit-cover rounded" />
 													    </div>
+													</div>
+													<!-- 이미지 모달 -->
+													<div class="imageModal">
+													    <div class="imageModalBox"></div>
 													</div>
                                             	</div>
                                             </div>
@@ -218,7 +362,9 @@
                         </div>
                         <div class="col-xl-3 primary-sidebar sticky-sidebar mt-30">
                             <div class="sidebar-widget widget-category-2 mb-30 text-center">
-                                <h5 class="text-center section-title style-1 mb-30">💪 양도 신청하기</h5>
+                                <h5 class="text-center align-items-center section-title style-1 mb-30">
+								    🖐 이 상품 양도 신청하기
+								</h5>
 								<button type="button" class="applyBtn btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 									양도 신청서 작성하기
 								</button>

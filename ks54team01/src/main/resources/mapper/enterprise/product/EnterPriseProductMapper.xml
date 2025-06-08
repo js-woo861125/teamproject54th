@@ -30,14 +30,20 @@
         p.products_no AS productsNo,
         p.products_nm AS productName,
         pc.small_category AS cateName,
-        p.products_status AS productStatus,
+        sp.use_status AS productStatus,
         q.quantity AS quantity,
-        b.brand_nm AS brandName
+        b.brand_nm AS brandName,
+        CASE
+    WHEN 
+    	q.quantity = 0 THEN '품절'
+    ELSE '사용중'
+    END 
+    	AS stockStatus
     FROM
         sell_products sp
         JOIN products p ON sp.products_no = p.products_no
         JOIN products_category pc ON p.product_category_no = pc.product_category_no
-        JOIN quantity q ON sp.products_no = q.products_no AND sp.ent_ceo_no = q.ent_ceo_no
+        JOIN quantity q ON sp.products_no = q.products_no
         JOIN model m ON p.model_no = m.model_no
         JOIN brand b ON m.brand_no = b.brand_no
     <where>
@@ -55,10 +61,19 @@
             AND p.product_category_no = #{categoryNo}
         </if>
         <if test="status != null and status != ''">
-            AND p.products_status = #{status}
+            AND sp.use_status = #{status}
+        </if>
+        <if test="stockStatus != null and stockStatus != ''">
+            <choose>
+                <when test="stockStatus == '품절'">
+                    AND q.quantity = 0
+                </when>
+                <when test="stockStatus == '재고있음'">
+                    AND q.quantity > 0
+                </when>
+            </choose>
         </if>
     </where>
-    GROUP BY sp.ent_ceo_no, p.products_no
 </select>
 	
 	<select id="getSellProductList" resultType="ks54team01.enterprise.product.domain.EnterpriseProduct">

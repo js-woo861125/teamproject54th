@@ -59,11 +59,11 @@
                         </select>
                     </div>
                     <div class="col-lg-2">
-                         <select class="form-select form-select-sm" name="status">
-                            <option th:value="''" th:selected="${status == null or status == ''}">전체 상태</option>
-                            <option th:value="활성화" th:selected="${status == '활'}">활성화</option>
-                            <option th:value="비활성화" th:selected="${status == '비활성화'}">비활성화</option>
-                        </select>
+                         <select name="stockStatus" class="form-select">
+						    <option value="" th:selected="${stockStatus == null or stockStatus == ''}">전체 재고</option>
+						    <option value="품절" th:selected="${stockStatus == '품절'}">품절</option>
+						    <option value="재고있음" th:selected="${stockStatus == '재고있음'}">사용중</option>
+						</select>
                     </div>
                     <div class="col-lg-1">
                         <button type="submit" class="btn btn-primary btn-sm w-100">검색</button>
