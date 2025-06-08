@@ -16,7 +16,7 @@
 				const brandName = $('#brandName').val();
 				// 유효성 체크
 				if (brandName.trim().length === 0) {
-					Swal.fire('', '브랜드명을 입력해주세요', 'warning');
+					Swal.fire('', '브랜드명을 입력해주세요.', 'warning');
 					$('#brandName').focus();
 					return;
 				}

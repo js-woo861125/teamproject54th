@@ -7,13 +7,75 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+		<script th:inline="javascript">
+		const categoryList = JSON.parse(/*[[${categoryListJson}]]*/ '[]');
+		const selectedCategoryNo = /*[[${itemInfo.categoryNo}]]*/ 0;
+		</script>
+		
 		<script>
+		$(document).ready(function () {
+		    const $lg = $('#lgCategory');
+		    const $md = $('#mdCategory');
+		    const $sm = $('#smCategory');
+		    // 대분류 선택 > 해당 중분류 선택 > 해당 소분류 선택
+		    const lgSet = [...new Set(categoryList.map(c => c.lgCategory))];
+		    lgSet.forEach(lg => $lg.append(new Option(lg, lg)));
+
+		    $lg.change(function () {
+		        const selectedLg = $(this).val();
+		        $md.empty().append(new Option('중분류를 선택해주세요', '')).prop('disabled', !selectedLg);
+		        $sm.empty().append(new Option('소분류를 선택해주세요', '')).prop('disabled', true);
+
+		        if (!selectedLg) return;
+
+		        const mdSet = [...new Set(categoryList
+		            .filter(c => c.lgCategory === selectedLg)
+		            .map(c => c.mdCategory))];
+		        mdSet.forEach(md => $md.append(new Option(md, md)));
+		    });
+
+		    $md.change(function () {
+		        const selectedLg = $lg.val();
+		        const selectedMd = $(this).val();
+		        $sm.empty().append(new Option('소분류를 선택해주세요', '')).prop('disabled', !(selectedLg && selectedMd));
+
+		        if (!(selectedLg && selectedMd)) return;
+
+		        const smList = categoryList
+		            .filter(c => c.lgCategory === selectedLg && c.mdCategory === selectedMd);
+		        smList.forEach(c => $sm.append(new Option(c.smCategory, c.categoryNo)));
+		    });
+		    
+		    // 수정하려는 기존 카테고리 정보 가져오기
+		    if (selectedCategoryNo) {
+		        const selectedCategory = categoryList.find(c => c.categoryNo == selectedCategoryNo);
+
+		        if (selectedCategory) {
+		            // 대분류 먼저 설정
+		            $lg.val(selectedCategory.lgCategory).trigger('change');
+
+		            // 중분류 → 소분류는 약간 딜레이 후 실행
+		            setTimeout(() => {
+		                $md.val(selectedCategory.mdCategory).trigger('change');
+
+		                setTimeout(() => {
+		                    $sm.val(selectedCategory.categoryNo).prop('disabled', false);
+		                }, 100);
+		            }, 100);
+		        }
+		    }
+		});
+		
 			/**
 			* 카테고리 + 품목명 중복체크
 			*/
 			$('#modifyItemBtn').click(function(){
 				const itemName = $('#itemName').val();
-				const categoryNo = $('#categoryNo').val();
+				const categoryNo = $('#smCategory').val();
 				
 				if (!categoryNo) {
 					alert('카테고리를 선택해주세요');
@@ -78,11 +140,16 @@
 		                            <!-- 수정 영역 -->
 		                            <div class="mb-4">
 		                                <label class="form-label fs-6" for="categoryNo">카테고리</label>
-		                                <select th:field="*{categoryNo}" class="form-select text-center fs-7" id="categoryNo" name="categoryNo">
-		                                    <option value="">카테고리를 선택해주세요</option>
-		                                    <th:block th:each="l : ${categoryList}">
-		                                        <option th:value="${l.categoryNo}" th:text="${l.lgCategory + ' > ' + l.mdCategory + ' > ' + l.smCategory}"></option>
-		                                    </th:block>
+		                                <select class="form-select text-center fs-7" id="lgCategory"> 
+		                                    <option value=""> 대분류를 선택해주세요 </option>
+		                                </select>
+	                                	<br />
+		                                <select class="form-select text-center fs-7" id="mdCategory" disabled> 
+		                                    <option value=""> 중분류를 선택해주세요 </option>
+		                                </select>
+	                                	<br />
+		                                <select class="form-select text-center fs-7" id="smCategory" name="categoryNo" disabled>
+		                                    <option value=""> 소분류를 선택해주세요 </option>
 		                                </select>
 		                            </div>
 		                            <div class="mb-4">

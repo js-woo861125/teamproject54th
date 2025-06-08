@@ -175,14 +175,16 @@ public interface AdminProductInfoService {
 	/**
 	 * 상품정보 목록 조회
 	 */
+	// 카테고리코드로 스펙 목록 조회 (모델별/상세스펙 등록)
+	List<ProductInfoCategorySpec> getSpecListByCategoryNo(String categoryNo);
+	// 카테고리코드로 모델 목록 조회 (모델별/상세스펙 등록)
+	List<ProductInfoModel> getModelListByCategoryNo(String categoryNo);	
+	// 카테고리코드로 품목 목록 조회 (모델 등록)
+	List<ProductInfoItem> getItemListByCategoryNo(String categoryNo);
 	// 등록되어있는 카테고리 중분류 목록 조회(카테고리 등록)
 	List<ProductInfoCategory> getMdCategory();
 	// 등록되어있는 카테고리 대분류 목록 조회(카테고리 등록)
 	List<ProductInfoCategory> getLgCategory();
-	// 카테고리코드로 스펙 목록 조회 (모델별/상세스펙 등록)
-	List<ProductInfoCategorySpec> getSpecListByCategoryNo(String categoryNo);
-	// 카테고리코드로 품목 목록 조회 (모델 등록)
-	List<ProductInfoItem> getItemListByCategoryNo(String categoryNo);
 	// 모델별/상세스펙 목록 조회
 	List<ProductInfoModelSpec> getModelSpecList();
 	// 카테고리별/상세스펙 목록 조회

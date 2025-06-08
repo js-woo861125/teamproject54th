@@ -16,7 +16,7 @@
 				const benefitName = $('#benefitName').val();
 				// 유효성 체크
 				if (benefitName.trim().length === 0){
-					Swal.fire('', '혜택명을 입력해주세요', 'warning');
+					Swal.fire('', '혜택명을 입력해주세요.', 'warning');
 					$('#benefitName').focus();
 					return;
 				}
