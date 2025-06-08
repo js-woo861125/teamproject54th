@@ -19,6 +19,7 @@
 		<result column="products_image" 		property="productImage"/>
 		<result column="item_no" 				property="itemNo"/>
 		<result column="model_nm" 				property="modelName"/>
+		<result column="file_path" 				property="filePath"/>
 	</resultMap>
 	
 	<select id="searchProductList" resultMap="adminProductResultMap">
@@ -90,7 +91,7 @@
 			END AS products_status,
 	        IFNULL(f.file_path, '/manage/assets/imgs/theme/upload.svg') AS products_image,
 	        DATE_FORMAT(p.register_date, '%Y-%m-%d %H:%i:%s') AS register_date,
-	        DATE_FORMAT(p.revision_date, '%Y-%m-%d %H:%i:%s') AS revision_date
+	        DATE_FORMAT(p.revision_date, '%Y-%m-%d %H:%i:%s') AS revision_date,
 	    FROM 
 	        products p
 	        INNER JOIN model m ON p.model_no = m.model_no 
@@ -311,10 +312,12 @@
 		    p.products_detail AS productDetail,
 		    p.products_status AS productStatus,
 		    p.register_date AS registerDate,
-		    p.revision_date AS revisionDate
+		    p.revision_date AS revisionDate,
+		    IFNULL(f.file_path, '/manage/assets/imgs/theme/upload.svg') AS products_image
 		FROM
 		    products p
 		    LEFT JOIN model m ON p.model_no = m.model_no
+		    LEFT JOIN files f ON m.model_no = f.ref_id AND f.file_type = 'mainImage' 
 		WHERE
 		    p.products_no = #{productNo}
 	</select>
