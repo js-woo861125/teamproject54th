@@ -179,9 +179,10 @@ public class EnterpriseProductController {
 							   @RequestParam(required = false) String searchValue,
 							   @RequestParam(required = false) String categoryNo,
 							   @RequestParam(required = false) String status,
+							   @RequestParam(required = false) String stockStatus,
 							   Model model) {
 		
-		List<EnterpriseProductQuantity> quantityList = enterpriseProductService.getQuantityList(searchKey, searchValue);
+		List<EnterpriseProductQuantity> quantityList = enterpriseProductService.getQuantityList(searchKey, searchValue, categoryNo, status, stockStatus);
 		List<ProductInfoCategory> categoryList = adminProductService.loadCategoryList();
 		
 		
@@ -193,6 +194,8 @@ public class EnterpriseProductController {
 		 model.addAttribute("searchValue", searchValue);
 		 model.addAttribute("categoryNo", categoryNo);
 		 model.addAttribute("status", status);
+		 model.addAttribute("stockStatus", stockStatus);
+		 
 		
 		return "enterprise/product/enterpriseQuantityView";
 	}

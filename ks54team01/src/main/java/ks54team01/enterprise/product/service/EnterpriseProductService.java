@@ -13,9 +13,10 @@ import ks54team01.enterprise.product.domain.EnterpriseSellProductRequest;
 
 public interface EnterpriseProductService {
 	 
-
+	
+	
 	// 재고 조회
-	List<EnterpriseProductQuantity> getQuantityList(String searchKey,String searchValue);
+	List<EnterpriseProductQuantity> getQuantityList(String searchKey,String searchValue, String categoryNo, String status, String stockStatus);
 	
 	// 입점업체 등록 상품리스트
 	List<EnterpriseProduct> getSellProductList(String searchKey, String searchValue, String categoryNo, String status);

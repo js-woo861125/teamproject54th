@@ -42,9 +42,9 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 	}
 
 	@Override
-	public List<EnterpriseProductQuantity> getQuantityList(String searchKey,String searchValue) {
+	public List<EnterpriseProductQuantity> getQuantityList(String searchKey,String searchValue, String categoryNo, String status, String stockStatus) {
 
-		List<EnterpriseProductQuantity> enterpriseQuantityList = enterpriseProductMapper.getQuantityList();
+		List<EnterpriseProductQuantity> enterpriseQuantityList = enterpriseProductMapper.getQuantityList(searchKey, searchValue, categoryNo, status, stockStatus);
 
 		return enterpriseQuantityList;
 	}
