@@ -128,12 +128,15 @@
 	<select id="getUsableModelList" resultType="ProductInfoModel">
 		/* 모델 사용유무 필터링 */
 		SELECT
-			model_no AS modelNo,
-			model_nm AS modemName
+			m.model_no AS modelNo,
+			m.model_nm AS modelName,
+			m.product_category_no AS categoryNo,
+			i.item_nm AS itemName
 		FROM
-			model
+			model m inner join item i
+			on m.item_no = i.item_no 
 		WHERE
-			use_status = '사용중'	
+			m.use_status = '사용중'	
 		ORDER BY CAST(SUBSTRING_INDEX(model_no, '_', -1) AS UNSIGNED);
 	</select>
 
@@ -754,6 +757,21 @@
 			model_no = #{modelNo}
 	</select>
 	
+	<select id="getModelListByCategoryNo" resultType="ProductInfoModel">
+		/* 카테고리코드로 모델 목록 조회 */
+		SELECT
+			m.model_no AS modelNo,
+			m.model_nm AS modelName,
+			i.item_nm AS itemName,
+			m.product_category_no
+		FROM
+			model m inner join item i
+			on m.item_no = i.item_no
+		WHERE
+			m.product_category_no = #{categoryNo}
+			AND m.use_status = '사용중'
+	</select>
+			
 	<select id="getSpecListByCategoryNo" resultType="ProductInfoCategorySpec">
 		/* 카테고리코드로 스펙 목록 조회 */
 		SELECT

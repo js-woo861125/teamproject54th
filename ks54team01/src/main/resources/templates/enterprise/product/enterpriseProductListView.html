@@ -8,46 +8,138 @@
 	
 	<th:block layout:fragment="jsFile">
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</th:block>
-
+	<th:block layout:fragment="jsScript">
+	<script>
+		function setSaleStoppage(el) {
+		    const sellProductsNo = el.getAttribute('data-sell-products-no');
+		    Swal.fire({
+		        title: "정말 판매중단 하시겠습니까?",
+		        text: "해당 상품이 비활성화됩니다.",
+		        icon: "warning",
+		        showCancelButton: true,
+		        confirmButtonColor: "#3085d6",
+		        cancelButtonColor: "#d33",
+		        confirmButtonText: "판매중단!"
+		    }).then((result) => {
+		        if (result.isConfirmed) {
+		            fetch('/enterprise/product/setSaleStoppage', {
+		                method: 'POST',
+		                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+		                body: 'sellProductsNo=' + encodeURIComponent(sellProductsNo)
+		            })
+		            .then(resp => {
+		                if (resp.ok) {
+		                    Swal.fire({
+		                        title: "처리 완료!",
+		                        text: "상품이 판매중단 처리되었습니다.",
+		                        icon: "success"
+		                    }).then(() => {
+		                        location.reload();
+		                    });
+		                } else {
+		                    Swal.fire({
+		                        title: "실패!",
+		                        text: "판매중단 처리에 실패했습니다.",
+		                        icon: "error"
+		                    });
+		                }
+		            });
+		        }
+		    });
+		}
+		
+		function unsetSaleStoppage(el) {
+		    const sellProductsNo = el.getAttribute('data-sell-products-no');
+		    Swal.fire({
+		        title: "판매중단 해제하시겠습니까?",
+		        text: "상품이 다시 활성화됩니다.",
+		        icon: "question",
+		        showCancelButton: true,
+		        confirmButtonColor: "#3085d6",
+		        cancelButtonColor: "#d33",
+		        confirmButtonText: "해제"
+		    }).then((result) => {
+		        if (result.isConfirmed) {
+		            fetch('/enterprise/product/unsetSaleStoppage', {
+		                method: 'POST',
+		                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+		                body: 'sellProductsNo=' + encodeURIComponent(sellProductsNo)
+		            })
+		            .then(resp => {
+		                if (resp.ok) {
+		                    Swal.fire({
+		                        title: "처리 완료!",
+		                        text: "상품이 활성화되었습니다.",
+		                        icon: "success"
+		                    }).then(() => {
+		                        location.reload();
+		                    });
+		                } else {
+		                    Swal.fire({
+		                        title: "실패!",
+		                        text: "해제 처리에 실패했습니다.",
+		                        icon: "error"
+		                    });
+		                }
+		            });
+		        }
+		    });
+		}
+	</script>
+	
+	
+	</th:block>
     <th:block layout:fragment="content">
         <div class="content-header">
             <div>
                 <h2 class="content-title card-title" th:text="${title}"></h2>
             </div>
             <div>
-                <a th:href="@{/enterprise/product/productList}" class="btn btn-primary btn-sm rounded">등록하기</a>
+                <a th:href="@{/enterprise/product/productList}"></a>
             </div>
          </div>
-        <div class="card mb-4">
-            <header class="card-header">
-                <div class="row align-items-center">
-					   <div class="col-lg-1 col-md-3 col-12">
-	                       <select class="form-select" name="searchKey">
-	                           <option>브랜드</option>
-	                           <option>상품</option>
-	                       </select>
-	                   </div>
-	                   <div class="col-lg-3 col-md-5">
-	                       <input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
-	                   </div>
-	                   <div class="col-lg-1 col-md-1 me-auto">
-						   <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>                   
-	                   </div>
-                    <div class="col-lg-2">
-                        <select class="form-select">
-                            <option>모든 카테고리</option>
-                            <option>TV</option>
-                            <option>노트북</option>
-                            <option>전기레인지</option>
-                            <option>냉장고</option>
-                            <option>식탁</option>
-                            <option>소파</option>
-                            <option>침대</option>
-                        </select>
-                    </div>
-                </div>
-            </header>
+	        <div class="card mb-4">
+	            <header class="card-header">
+	               <form th:action="@{/enterprise/product/sellProductList}" method="get">
+	        <div class="row align-items-center">
+	            <div class="col-lg-1 col-md-3 col-12">
+	              
+	                <select class="form-select" name="searchKey">
+	                    <option th:value="brandName" th:selected="${searchKey == 'brandName'}">브랜드</option>
+	                    <option th:value="productName" th:selected="${searchKey == 'productName'}">상품</option>
+	                </select>
+	            </div>
+	            <div class="col-lg-3 col-md-5">
+	                <!-- 3. 검색어 -->
+	                <input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />
+	            </div>
+	            <div class="col-lg-2">
+	            
+	                <select class="form-select" name="categoryNo">
+	                    <option th:value="''" th:selected="${categoryNo == null or categoryNo == ''}">모든 카테고리</option>
+	                    <option th:each="cat : ${categoryList}"
+	                            th:value="${cat.categoryNo}"
+	                            th:text="${cat.smCategory}"
+	                            th:selected="${categoryNo == cat.categoryNo}"></option>
+	                </select>
+	            </div>
+	            <div class="col-lg-2">
+	                <select class="form-select" name="status">
+	                    <option th:value="''" th:selected="${status == null or status == ''}">전체 상태</option>
+	                    <option th:value="사용중" th:selected="${status == '사용중'}">사용중</option>
+	                    <option th:value="사용불가" th:selected="${status == '사용불가'}">사용불가</option>
+	                    <option th:value="품절" th:selected="${status == '품절'}">품절</option>
+	                </select>
+	            </div>
+	            <div class="col-lg-1 col-md-1 me-auto">
+	                <!-- 6. 검색버튼 -->
+	                <button type="submit" class="form-control btn btn-primary p-0 justify-content-center">검색</button>
+	            </div>
+	        </div>
+	    </form>
+	</header>
             <!-- card-header end// -->
             <div class="card-body">
                 <div class="table-responsive">
@@ -71,9 +163,9 @@
                                 	 <a class="item" href="#">
 								        <div class="img">
 								            <img th:if="${sl.productImage != null}" 
-								                 th:src="${sl.productImage}" 
-								                 class="img-sm img-main" 
-								                 alt="상품이미지" />
+											     th:src="@{${sl.productImage}}" 
+											     class="img-sm img-main" 
+											     alt="상품이미지" />
 								                 
 								            <div th:if="${sl.productImage == null}" 
 								                 class="img-sm img-main bg-light d-inline-block" 
@@ -83,15 +175,34 @@
                                 </td>
                                 <td th:text="${sl.modelName}">모델명</td>
                                  <td class="col-lg-2 col-sm-2 col-4 col-status">
-                                    <span class="badge rounded-pill alert-success">사용중</span>
-                                    <div class="dropdown">
-                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="#">사용중</a>
-                                            <a class="dropdown-item text-danger" href="#">사용불가</a>
-                                        </div>
-                                    </div>
-                                </td>
+								    <span th:switch="${sl.useStatus}">
+									    <span th:case="'사용중'" class="badge rounded-pill alert-success">사용중</span>
+	                                    <span th:case="'사용불가'" class="badge rounded-pill alert-secondary">사용불가</span>
+	                                    <span th:case="'품절'" class="badge rounded-pill alert-danger">품절</span>							        
+								    </span>
+								    <div class="dropdown">
+								        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm">
+								            <i class="material-icons md-more_horiz"></i>
+								        </a>
+								        <div class="dropdown-menu">
+								            <a th:if="${sl.useStatus == '사용중'}"
+								               class="dropdown-item text-danger"
+								               href="#"
+								               th:attr="data-sell-products-no=${sl.sellProductsNo}"
+								               onclick="setSaleStoppage(this)">
+								                비활성화
+								            </a>
+								            <a th:if="${sl.useStatus == '사용불가'}"
+								               class="dropdown-item text-success"
+								               href="#"
+								               th:attr="data-sell-products-no=${sl.sellProductsNo}"
+								               onclick="unsetSaleStoppage(this)">
+								                활성화
+								            </a>
+								        </div>
+								    </div>
+								</td>
+
                                 <td th:text="${sl.period}">12개월</td>
                                 <td th:text="${sl.finalPrice}">60,000</td> 
                                 <td class="col-lg-2 col-sm-2 col-4 col-action">
@@ -111,20 +222,7 @@
         </div>
    </th:block>    
         <!-- card end// -->
-        <div class="pagination-area mt-15 mb-50">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-start">
-                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                    <li class="page-item"><a class="page-link" href="#">02</a></li>
-                    <li class="page-item"><a class="page-link" href="#">03</a></li>
-                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                    <li class="page-item"><a class="page-link" href="#">16</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+        
     <!-- content-main end// -->
 
         <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>

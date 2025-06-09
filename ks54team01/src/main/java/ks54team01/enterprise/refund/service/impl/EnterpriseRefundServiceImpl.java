@@ -8,6 +8,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,8 @@ import ks54team01.customer.payment.service.CustomerPaymentService;
 import ks54team01.enterprise.refund.domain.EnterpriseRefund;
 import ks54team01.enterprise.refund.mapper.EnterpriseRefundMapper;
 import ks54team01.enterprise.refund.service.EnterpriseRefundService;
+import ks54team01.system.util.PageInfo;
+import ks54team01.system.util.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,6 +57,25 @@ public class EnterpriseRefundServiceImpl implements EnterpriseRefundService{
 	
 	
 	@Override
+	public PageInfo<EnterpriseRefund> getRefundList(Map<String, Object> searchParamMap) {
+
+		// 전체 행 개수 조회
+		int contentRowCount = enterpriseRefundMapper.getRefundCount(searchParamMap);
+		
+		List<EnterpriseRefund> transferBoardList = enterpriseRefundMapper.getRefundList(searchParamMap);
+	
+		Pageable pageable = (Pageable) searchParamMap.get("pageable");
+		
+		log.info("contentRowCount: {}", contentRowCount);
+		log.info("transferBoardList: {}", transferBoardList);
+		
+		return new PageInfo<>(transferBoardList, pageable, contentRowCount);
+	}
+	
+	
+	
+	
+	@Override
 	public void rejectRefund(String orderId, String paymentKey) {
 
 		enterpriseRefundMapper.modifyRefundApproved(orderId, "환불거부");
@@ -77,25 +99,7 @@ public class EnterpriseRefundServiceImpl implements EnterpriseRefundService{
 	}
 	
 	
-	
-	@Override
-	public List<EnterpriseRefund> getRefundList(String entCeoNo) {
-		
-		List<EnterpriseRefund> enterpriseRefund = enterpriseRefundMapper.getRefundList(entCeoNo);
-		
-		return enterpriseRefund;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	

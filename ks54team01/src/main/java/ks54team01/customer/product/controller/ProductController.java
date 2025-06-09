@@ -60,6 +60,7 @@ public class ProductController {
 		
 		String prodNm = productDetailByProd.get(0).getProductsName();
 		String image = productDetailByProd.get(0).getImageFilePath();
+		String prodDetail = productDetailByProd.get(0).getProdDetail();
 		
 		CustomerProduct checkPrice = customerProductService.getLowerPriceAndMaxPeriod(productsNum);
 		String lowerPrice = checkPrice.getMinRentalPrice();
@@ -83,6 +84,7 @@ public class ProductController {
 		model.addAttribute("addResult", addResult);
 		model.addAttribute("benefit", benefit);
 		model.addAttribute("image", image);
+		model.addAttribute("prodDetail", prodDetail);
 		
 		return "customer/product/prodDetailView";
 	}

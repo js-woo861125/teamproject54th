@@ -7,85 +7,160 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
+		<script th:inline="javascript">
+		const categoryList = JSON.parse(/*[[${categoryListJson}]]*/ '[]');
+		</script>
+		
 		<script>
-			/**
-			* 모델 + 스펙 + 상세스펙내용 중복체크
-			*/
-			$('#addModelSpecBtn').click(function(){
-				const modelSpecName = $('#modelSpecName').val();
-				const modelNo = $('#modelNo').val();
-				const specNo = $('#specNo').val();
-				
-				if (!modelNo) {
-					alert('모델을 선택해주세요');
-					$('#modelNo').focus();
-					return;
-				}
-				
-				if (!specNo) {
-					alert('스펙을 선택해주세요');
-					$('#specNo').focus();
-					return;
-				}
-				
-				if(!modelSpecName){
-					alert('상세스펙내용을 입력해주세요');
+		$(document).ready(function () {
+		    const $lg = $('#lgCategory');
+		    const $md = $('#mdCategory');
+		    const $sm = $('#smCategory');
+		    // 대분류 로딩
+		    const lgSet = [...new Set(categoryList.map(c => c.lgCategory))];
+		    lgSet.forEach(lg => $lg.append(new Option(lg, lg)));
+
+		    $lg.change(function () {
+		        const selectedLg = $(this).val();
+		        $md.empty().append(new Option('중분류를 선택해주세요', '')).prop('disabled', !selectedLg);
+		        $sm.empty().append(new Option('소분류를 선택해주세요', '')).prop('disabled', true);
+
+		        if (!selectedLg) return;
+
+		        const mdSet = [...new Set(categoryList
+		            .filter(c => c.lgCategory === selectedLg)
+		            .map(c => c.mdCategory))];
+		        mdSet.forEach(md => $md.append(new Option(md, md)));
+		    });
+
+		    $md.change(function () {
+		        const selectedLg = $lg.val();
+		        const selectedMd = $(this).val();
+		        $sm.empty().append(new Option('소분류를 선택해주세요', '')).prop('disabled', !(selectedLg && selectedMd));
+
+		        if (!(selectedLg && selectedMd)) return;
+
+		        const smList = categoryList
+		            .filter(c => c.lgCategory === selectedLg && c.mdCategory === selectedMd);
+		        smList.forEach(c => $sm.append(new Option(c.smCategory, c.categoryNo)));
+		    });	
+		});	
+		
+		$('#addModelSpecBtn').click(function(){
+			const modelSpecName = $('#modelSpecName').val();
+			const modelNo = $('#modelNo').val();
+			const specNo = $('#specNo').val();
+			// 유효성 체크
+			if (!modelNo) {
+				Swal.fire('', '모델을 선택해주세요.', 'warning');
+				$('#modelNo').focus();
+				return;
+			}
+			if (!specNo) {
+				Swal.fire('', '스펙을 선택해주세요.', 'warning');
+				$('#specNo').focus();
+				return;
+			}
+			if(modelSpecName.trim().length === 0){
+				Swal.fire('', '상세스펙내용을 입력해주세요.', 'warning');
+				$('#modelSpecName').focus();
+				return ;
+			}
+			if (modelSpecName.length > 50) {
+				Swal.fire('', '상세스펙내용은 50자 이내로 입력해주세요.', 'warning');
+				$('#modelSpecName').focus();
+				return;
+			}
+			const validRegex = /^[가-힣a-zA-Z0-9.,~()+\/\s]+$/;
+			if (!validRegex.test(modelSpecName)) {
+				Swal.fire('', '특수문자는 . , ~ ( ) + / 만 사용 가능합니다.', 'warning');
+				$('#modelSpecName').focus();
+				return; 
+			}
+			// 중복 체크
+			$.ajax({
+				url : '/admin/productInfo/specContentCheck',
+				method : 'post',
+				data : {
+					'modelSpecName': modelSpecName,
+					'modelNo' : modelNo,
+					'specNo' : specNo
+				},
+				dataType : 'json'
+			}).done(function(isDuplicate) {
+				if(isDuplicate){
+					Swal.fire('', '이미 등록된 상세스펙내용 입니다.', 'warning');
 					$('#modelSpecName').focus();
 					return ;
 				}
-				
-				$.ajax({
-					url : '/admin/productInfo/specContentCheck',
-					method : 'post',
-					data : {
-						'modelSpecName': modelSpecName,
-						'modelNo' : modelNo,
-						'specNo' : specNo
-					},
-					dataType : 'json'
-				}).done(function(isDuplicate) {
-					if(isDuplicate){
-						alert('이미 등록된 상세스펙내용 입니다.');
-						$('#itemName').focus();
-						return ;
-					}
-				
-					$('#addProductInfoForm').submit();
-			    }).fail(function(jqXHR, textStatus, error) {
-			        console.log("에러 발생:", textStatus, error);
-			        alert('품목명 확인 중 오류가 발생했습니다.');
-			    });
-			});
 			
-			/**
-			* 모델 선택 시 해당 스펙 조회
-			*/
-			$('#modelNo').change(function() {
-			    const modelNo = $(this).val();
-			    const specNo = $(this).val();
-			    $('#specNo').empty().append('<option value="">스펙을 선택해주세요</option>');
-			    
-			    if (modelNo) {
-			        $.ajax({
-			            url: '/admin/productInfo/specListByModel',
-			            type: 'GET',
-			            data: { modelNo: modelNo },
-			            success: function(categorySpecList) {
-			                console.log(categorySpecList); // 응답 데이터 확인
-			                if (categorySpecList && categorySpecList.length > 0) {
-			                	$.each(categorySpecList, function(idx, spec) {
-			                	    $('#specNo').append('<option value="' + spec.specNo + '">' + spec.specName + '</option>');
-			                	});
-			                } else {
-			                    $('#specNo').append('<option value="">스펙이 없습니다</option>');
-			                }
-			            },
-			            error: function() {
-			                alert('스펙 목록을 불러오는 중 오류가 발생했습니다.');
-			            }
-			        });
-			    }
-			});
+				$('#addProductInfoForm').submit();
+		    }).fail(function(jqXHR, textStatus, error) {
+		        console.log("에러 발생:", textStatus, error);
+		        Swal.fire('', '상세스펙내용 등록 중 오류가 발생했습니다.', 'error');
+		    });
+		});
+		/**
+		* 카테고리 선택 시 해당 모델 조회
+		*/
+		$('#smCategory').change(function() {
+		    const categoryNo = $(this).val();
+		    $('#modelNo').empty().append('<option value="">모델을 선택해주세요</option>');
+		
+		    if (!categoryNo) return;
+
+		    $.ajax({
+		        url: '/admin/productInfo/modelListByCategory',
+		        type: 'GET',
+		        data: { categoryNo: categoryNo },
+		        success: function(modelList) {
+		        	console.log(modelList);
+		            if (modelList && modelList.length > 0) {
+		                $.each(modelList, function(i, model) {
+		                    $('#modelNo').append('<option value="' + model.modelNo + '">' + "[" + model.itemName + "] " + model.modelName + '</option>');
+		                });
+		            } else {
+		                $('#modelNo').append('<option value="">모델이 없습니다</option>');
+		            }
+		        },
+		        error: function() {
+		            alert('모델 목록을 불러오는 중 오류가 발생했습니다.');
+		        }
+		    });
+		});
+		/**
+		* 모델 선택 시 해당 스펙 조회
+		*/
+		$('#modelNo').change(function() {
+		    const modelNo = $(this).val();
+		    const specNo = $(this).val();
+		    $('#specNo').empty().append('<option value="">스펙을 선택해주세요</option>');
+		    
+		    if (modelNo) {
+		        $.ajax({
+		            url: '/admin/productInfo/specListByModel',
+		            type: 'GET',
+		            data: { modelNo: modelNo },
+		            success: function(categorySpecList) {
+		                console.log(categorySpecList); // 응답 데이터 확인
+		                if (categorySpecList && categorySpecList.length > 0) {
+		                	$.each(categorySpecList, function(idx, spec) {
+		                	    $('#specNo').append('<option value="' + spec.specNo + '">' + spec.specName + '</option>');
+		                	});
+		                } else {
+		                    $('#specNo').append('<option value="">스펙이 없습니다</option>');
+		                }
+		            },
+		            error: function() {
+		                alert('스펙 목록을 불러오는 중 오류가 발생했습니다.');
+		            }
+		        });
+		    }
+		});
 		</script>	
 	</th:block>
 	
@@ -120,6 +195,20 @@
 									<!-- 모델별 상세스펙 정보 등록 -->
 									<div class="col-12">
 										<div class="mb-4">
+			                                <label class="form-label fs-6" for="categoryNo">카테고리</label>
+			                                <select class="form-select text-center fs-7" id="lgCategory"> 
+			                                    <option value=""> 대분류를 선택해주세요 </option>
+			                                </select>
+		                                	<br />
+			                                <select class="form-select text-center fs-7" id="mdCategory" disabled> 
+			                                    <option value=""> 중분류를 선택해주세요 </option>
+			                                </select>
+		                                	<br />
+			                                <select class="form-select text-center fs-7" id="smCategory" disabled>
+			                                    <option value=""> 소분류를 선택해주세요 </option>
+			                                </select>
+			                            </div>
+										<div class="mb-4">
 											<label class="form-label fs-6" for="modelNo">모델</label> 
 											<select class="form-select text-center fs-7" id="modelNo" name="modelNo">
 												<option value="">모델을 선택해주세요</option>
@@ -142,7 +231,7 @@
 											<input type="text" id="modelSpecName" name="modelSpecName" class="form-control" placeholder="상세스펙내용을 입력해주세요" />
 										</div>
 									</div>
-									<br/>
+									<br />
 									<!-- 버튼 -->
 									<div class="d-grid gap-2 d-md-flex justify-content-md-end">
 										<div class="col-md-2 col-2 ms-auto">

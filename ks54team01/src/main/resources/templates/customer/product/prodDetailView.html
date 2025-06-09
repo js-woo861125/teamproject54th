@@ -160,7 +160,26 @@
 			});
 			
 			
-			
+			// 관심상품 등록 체크
+			$(function() {
+				 // 1. 서버에서 받은 결과 처리
+			 	 const addResult = /*[[${addResult}]]*/ 'none';
+			     console.log("addResult:", addResult);
+		
+			    if (addResult === 'success') {
+			      Swal.fire({
+			        /* text: "관심상품 등록되었습니다.", */
+			        html: '<p>관심상품 등록되었습니다.<a href="/customer/wishList/myWishList">찜목록 보러가기</a></p>',
+			        confirmButtonText: "계속 쇼핑하기"
+			      });
+			    } else if (addResult === 'duplicate') {
+			      Swal.fire({
+			    	/* text: "이미 등록된 상품입니다.", */
+			        html: '<p>이미 등록된 상품입니다.<a href="/customer/wishList/myWishList">찜목록 보러가기</a></p>',
+			        confirmButtonText: "계속 쇼핑하기"
+			      });
+			    }
+			});
 			
 		</script>
 	</th:block>
@@ -180,11 +199,13 @@
                                         <h2 class="title-detail" th:text="${prodNm}">[LG] 디오스 매직스페이스 양문형 냉장고 832L (화이트)</h2>
                                     </div>
                                     <div class="col-md-1 col-sm-1 col-xs-1 mb-md-0 text-end">
-                                        <div class="detail-extralink">
-                                            <div class="product-extra-link2 mr-15">
-                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
-                                            </div>
-                                        </div>
+                                        <!-- 관심상품 등록 버튼 -->
+									    <form th:action="@{/customer/wishList/addMyWishList}" method="post" class="d-inline">
+									        <input type="hidden" name="productsNum" th:value="${productDetailByProd[0].productsNum}" />
+									        <button type="submit" class="btn btn-outline-danger d-flex align-items-center px-2" style="height: 40px;" aria-label="Add to Wishlist">
+									            <i class="fi-rs-heart" style="font-size: 24px;"></i>
+									        </button>
+									    </form>
                                     </div>
                                 </div>
                                 <div class="row mb-50 mt-30">
@@ -326,7 +347,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+                                    <div class="row mt-50">
+                                    	<div class="d-flex justify-content-center" th:utext="${prodDetail}"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

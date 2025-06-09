@@ -15,6 +15,8 @@ public class ProductInfoModel {
 	private String modelRevDate;
 	private String useStatus;
 	
+	private String itemName;
+	
 	private ProductInfoCategory categoryInfo;
 	private ProductInfoBrand brandInfo;
 	private ProductInfoItem itemInfo;
