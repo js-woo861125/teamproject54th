@@ -30,12 +30,12 @@
         p.products_no AS productsNo,
         p.products_nm AS productName,
         pc.small_category AS cateName,
-        sp.use_status AS productStatus,
-        q.quantity AS quantity,
-        b.brand_nm AS brandName,
+        MAX(sp.use_status) AS productStatus,      
+    	SUM(q.quantity) AS quantity,          
+   		MAX(b.brand_nm) AS brandName,
         CASE
     WHEN 
-    	q.quantity = 0 THEN '품절'
+    	SUM(q.quantity) = 0 THEN '품절'
     ELSE '사용중'
     END 
     	AS stockStatus
@@ -74,6 +74,7 @@
             </choose>
         </if>
     </where>
+    GROUP BY p.products_no
 </select>
 	
 	<select id="getSellProductList" resultType="ks54team01.enterprise.product.domain.EnterpriseProduct">
