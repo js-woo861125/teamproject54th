@@ -23,6 +23,8 @@ public interface CustomerProductService {
 
 	List<CustomerProduct> getCustomerProductList(String smallCategory);
 	
+	List<CustomerProduct> getCutomeProductListAll(String productsNum);
+	
 	CustomerProduct getLowerPriceAndMaxPeriod(String productsNum);
 	
 }
