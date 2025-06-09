@@ -4322,3 +4322,29 @@ body.dark .dropdown-menu .dropdown-item.text-danger {
   }
 }
 /*# sourceMappingURL=main.css.map */
+
+
+/* image modal */
+.imageModal {
+    display: none;
+    z-index: 500;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+.imageModalBox {
+    position: relative;
+    text-align: center;
+    top : 15%;
+    left : 30%;
+    width: 50%;
+    max-height: 50%;
+    position : sticky;
+}
+.extraImage img:hover{
+    cursor: -webkit-zoom-in;
+}
+/* image modal end */
