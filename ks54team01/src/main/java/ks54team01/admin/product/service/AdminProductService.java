@@ -25,10 +25,10 @@ public interface AdminProductService {
 	AdminProduct getProduct(String productNo);
 
 	// 상품 수정
-	void modifyProduct(AdminProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails, String deleteFileIdxs);
+	void modifyProduct(AdminProduct product, MultipartFile[] mainImage, String deleteFileIdxs);
 	
 	// 상품 등록
-	public void addProduct(AdminAddProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails);
+	public void addProduct(AdminAddProduct product, MultipartFile[] mainImage);
 	
 	List<AdminProductSpecContent> loadSpecContent(@Param("modelNo") String modelNo);
 	List<ProductInfoCategory> loadCategoryList();
