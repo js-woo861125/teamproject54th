@@ -283,6 +283,32 @@
 	    WHERE 
 	    	products_no = #{productsNo}
 	</update>
+	
+	<update id="updateUseStatusSoldOut">
+	    UPDATE 
+	    	sell_products
+	    SET 
+	    	use_status = '품절'
+	    WHERE 
+	    	products_no = #{productsNo}
+	      AND 
+	      	ent_ceo_no = #{entCeoNo}
+	</update>
+
+	<update id="updateUseStatusActive">
+	    UPDATE 
+	    	sell_products
+	    SET 
+	    	use_status = '사용중'
+	    WHERE 
+	    	products_no = #{productsNo}
+	      AND 
+	      	ent_ceo_no = #{entCeoNo}
+	</update>
+		
+	
+	
+	
 </mapper>
 
 

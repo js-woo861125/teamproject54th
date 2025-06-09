@@ -7,4 +7,7 @@ import ks54team01.enterprise.product.domain.EnterpriseProductQuantity;
 @Mapper
 public interface EnterpriseProductQuantityMapper {
 	  void insertEnterpriseProductQuantity(EnterpriseProductQuantity quantity);
+
+	int getQuantity(String productsNo, String entCeoNo);
+	
 }

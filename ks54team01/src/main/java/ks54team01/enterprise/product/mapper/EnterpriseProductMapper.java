@@ -45,4 +45,6 @@ public interface EnterpriseProductMapper {
 
 	 int updateQuantity(String productsNo, int quantity);
 	 
+	 int updateQunatityStatusSoldOut(String productsNo, String entCeoNo);
+	 int updateQunatityStatusActive(String productsNo, String entCeoNo);
 }

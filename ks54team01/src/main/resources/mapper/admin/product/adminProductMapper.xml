@@ -89,7 +89,7 @@
 			    ) THEN '활'
 			    ELSE '비활'
 			END AS products_status,
-	        IFNULL(f.file_path, '/manage/assets/imgs/theme/upload.svg') AS products_image,
+	        IFNULL (f.file_path, '/manage/assets/imgs/theme/upload.svg') AS products_image,
 	        DATE_FORMAT(p.register_date, '%Y-%m-%d %H:%i:%s') AS register_date,
 	        DATE_FORMAT(p.revision_date, '%Y-%m-%d %H:%i:%s') AS revision_date,
 	    FROM 
