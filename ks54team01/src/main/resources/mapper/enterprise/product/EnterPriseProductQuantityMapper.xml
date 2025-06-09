@@ -15,6 +15,17 @@
         (#{quantityNo}, #{productsNo}, #{entCeoNo}, #{entEmpId}, #{quantity}, NOW(), NOW())
     </insert>
   
+  <select id="getQuantity" resultType="int">
+  	SELECT 
+  		quantity
+  	FROM
+  		quantity
+  	WHERE
+  		products_no = #{productsNo}
+  	AND
+  		ent_ceo_no = #{entCeoNo}
+  	
+  </select>
 
 </mapper>
 	

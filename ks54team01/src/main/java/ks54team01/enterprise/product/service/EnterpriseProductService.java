@@ -57,4 +57,6 @@ public interface EnterpriseProductService {
 	  
 	  boolean updateQuantity(String productsNo, int quantity);
 	  
+	  void updateQunatityStatus(String producsNo, String entCeoNo);
+	  
 }

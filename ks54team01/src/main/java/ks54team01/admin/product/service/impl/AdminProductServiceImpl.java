@@ -122,7 +122,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 	        product.setBrandNo(modelInfo.getBrandNo());
 		        
 		    product.setManagerId("managerid1");    
-		    product.setProductStatus("비활성화");
+		    product.setProductStatus("비활");
 		    LocalDateTime now = LocalDateTime.now();
 	        product.setRegisterDate(now.toString());
 	        product.setRevisionDate(now.toString());
