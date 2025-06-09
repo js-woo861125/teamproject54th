@@ -350,6 +350,6 @@
     	products
     WHERE 
     	model_no = #{modelNo}
-</select>
+	</select>
 	    
 </mapper>

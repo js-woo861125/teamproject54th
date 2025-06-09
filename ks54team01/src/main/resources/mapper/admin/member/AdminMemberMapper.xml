@@ -178,6 +178,7 @@
 	    </if>
 	    ORDER BY 
 	    	memberRegDate
+	    LIMIT #{rowPerPage} offset #{offset};
 	</select>
 	
 	

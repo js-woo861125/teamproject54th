@@ -148,7 +148,7 @@
 			                    filteredBenefits.forEach(function (b) {
 			                        benefitArea.innerHTML +=
 			                            '<div>' +
-			                            '<p class="mb-10">' + b.benefitDetail + '</p>' +
+			                            '<p class="mb-5 mt-5 ml-5" style="font-size: 20px;">' + '• '+ b.benefitDetail + '</p>' +
 			                            '</div>';
 			                    });
 			                }
@@ -229,7 +229,7 @@
                                                     <ul>
                                                         <li class="d-flex align-items-center justify-content-between">
                                                             <div class="product-price primary-color">
-                                                                <span class="current-price text-brand" th:text="${#numbers.formatInteger(lowerPrice, 3, 'COMMA')}">38,000</span>
+                                                                <span class="current-price text-brand" style="font-size: 50px;" th:text="${#numbers.formatInteger(lowerPrice, 0, 'COMMA')}">38,000</span>
                                                             </div>
                                                             <span class="fs-3"> 원 </span>
                                                         </li>
@@ -266,7 +266,7 @@
                                 <div class="row mt-60">
                                     <div class="col-12 d-flex section-title style-1 mb-30">
                                         <h3>렌탈사 비교·선택</h3>
-                                        <p>각 렌탈사의 월 렌탈료, 제휴카드혜택, A/S기간, 약정기간, 혜택 등 비교하고 선택해 보세요.</p>
+                                        <p>각 렌탈사의 월 렌탈료, 일시불 판매가, 상품 혜택 등을 비교하고 선택해 보세요.</p>
                                     </div>
                                     
                                     

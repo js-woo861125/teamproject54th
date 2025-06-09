@@ -1,18 +1,28 @@
 package ks54team01.common.interceptor;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ks54team01.admin.productInfo.domain.ProductInfoCategory;
+import ks54team01.admin.productInfo.mapper.AdminProductInfoMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class AccessLogInterceptor implements HandlerInterceptor{
+
+	private final AdminProductInfoMapper adminProductInfoMapper;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -54,4 +64,30 @@ public class AccessLogInterceptor implements HandlerInterceptor{
 		
 		return ip;
 	}
+	@Override
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+			ModelAndView modelAndView) throws Exception {
+		
+		String requestUri = request.getRequestURI();
+		if(requestUri != null && (requestUri.indexOf("/customer") > -1 || requestUri.equals("/"))) {
+			List<ProductInfoCategory> mdCategoryList = adminProductInfoMapper.getMdCategory();
+			modelAndView.addObject("mdCategoryList", mdCategoryList);
+		
+			 Map<String, List<ProductInfoCategory>> smCategoryMap = new HashMap<>();
+
+		        for (ProductInfoCategory mdCategory : mdCategoryList) {
+		            String mdCategoryNo = mdCategory.getMdCategoryNo();  // 중분류 코드
+		            
+		            List<ProductInfoCategory> smCategoryList = adminProductInfoMapper.getSmCategoryByMdCategoryNo(mdCategoryNo);
+
+		            smCategoryMap.put(mdCategoryNo, smCategoryList);
+		        }
+
+		        // 뷰에서 사용할 수 있도록 모델에 추가
+		        modelAndView.addObject("smCategoryMap", smCategoryMap);
+		  }
+		
+		HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
+	}
+	
 }
