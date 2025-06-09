@@ -64,30 +64,31 @@ public class AccessLogInterceptor implements HandlerInterceptor{
 		
 		return ip;
 	}
-	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-			ModelAndView modelAndView) throws Exception {
-		
-		String requestUri = request.getRequestURI();
-		if(requestUri != null && (requestUri.indexOf("/customer") > -1 || requestUri.equals("/"))) {
-			List<ProductInfoCategory> mdCategoryList = adminProductInfoMapper.getMdCategory();
-			modelAndView.addObject("mdCategoryList", mdCategoryList);
-		
-			 Map<String, List<ProductInfoCategory>> smCategoryMap = new HashMap<>();
-
-		        for (ProductInfoCategory mdCategory : mdCategoryList) {
-		            String mdCategoryNo = mdCategory.getMdCategoryNo();  // 중분류 코드
-		            
-		            List<ProductInfoCategory> smCategoryList = adminProductInfoMapper.getSmCategoryByMdCategoryNo(mdCategoryNo);
-
-		            smCategoryMap.put(mdCategoryNo, smCategoryList);
-		        }
-
-		        // 뷰에서 사용할 수 있도록 모델에 추가
-		        modelAndView.addObject("smCategoryMap", smCategoryMap);
-		  }
-		
-		HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
-	}
+	
+	  @Override public void postHandle(HttpServletRequest request,
+	  HttpServletResponse response, Object handler, ModelAndView modelAndView)
+	  throws Exception {
+	  
+	  String requestUri = request.getRequestURI(); 
+	  if(modelAndView != null && (requestUri != null && (requestUri.indexOf("/customer") > -1 || requestUri.equals("/")))) {
+	  List<ProductInfoCategory> mdCategoryList =
+	  adminProductInfoMapper.getMdCategory();
+	  modelAndView.addObject("mdCategoryList", mdCategoryList);
+	  
+	  Map<String, List<ProductInfoCategory>> smCategoryMap = new HashMap<>();
+	  
+	  for (ProductInfoCategory mdCategory : mdCategoryList) { String mdCategoryNo =
+	  mdCategory.getMdCategoryNo(); // 중분류 코드
+	  
+	  List<ProductInfoCategory> smCategoryList =
+	  adminProductInfoMapper.getSmCategoryByMdCategoryNo(mdCategoryNo);
+	  
+	  smCategoryMap.put(mdCategoryNo, smCategoryList); }
+	  
+	  // 뷰에서 사용할 수 있도록 모델에 추가
+	  modelAndView.addObject("smCategoryMap", smCategoryMap); }
+	  
+	  HandlerInterceptor.super.postHandle(request, response, handler,
+	  modelAndView); }
 	
 }
