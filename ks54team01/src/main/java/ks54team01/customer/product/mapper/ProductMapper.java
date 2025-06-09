@@ -22,8 +22,10 @@ public interface ProductMapper {
 	List<CustomerProduct> getProductDetailByProd(String productsNum);
 	
 	
-	//상품목록 조회
+	//소분류별 상품목록 조회
 	List<CustomerProduct> getCustomerProductList(String smallCategory);
 			
+	//전체상품조회
+	List<CustomerProduct> getCutomeProductListAll(String productsNum);
 	
 }
