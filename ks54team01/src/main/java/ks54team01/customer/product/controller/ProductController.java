@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
+import ks54team01.admin.productInfo.domain.ProductInfoCategory;
+import ks54team01.admin.productInfo.mapper.AdminProductInfoMapper;
 import ks54team01.customer.product.domain.BenefitDetail;
 import ks54team01.customer.product.domain.CustomerProduct;
 import ks54team01.customer.product.service.CustomerProductService;
@@ -35,11 +38,8 @@ public class ProductController {
 
 	private final CustomerProductService customerProductService;
 	
-	@GetMapping("/productDetailByProd/{productsNum}")
-	public String productDetail(@PathVariable Long productsNum, Model model) {
-	    // productsNum에 해당하는 상품 정보 로딩
-	    return "customer/prodDetail"; // Thymeleaf 템플릿 경로
-	}
+	
+	
 	
 	@GetMapping("/productDetailByProd")
 	public String getProductDetailByProd(@RequestParam(value="productsNum") String productsNum,
