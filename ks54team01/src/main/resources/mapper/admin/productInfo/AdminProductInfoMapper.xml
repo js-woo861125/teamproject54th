@@ -1082,4 +1082,15 @@
 		FROM 
 			products_category;
 	</select>
+	
+	<select id="getSmCategoryByMdCategoryNo" resultMap="categoryResultMap">
+		SELECT 
+			product_category_no,
+			small_category
+		FROM 
+			products_category
+		WHERE
+			use_status = '사용중' 
+			AND middle_category_no = #{mdCategoryNo};
+	</select>
 </mapper>

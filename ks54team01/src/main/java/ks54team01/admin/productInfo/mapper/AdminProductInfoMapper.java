@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import ks54team01.admin.productInfo.domain.ProductInfoBenefit;
 import ks54team01.admin.productInfo.domain.ProductInfoBrand;
@@ -188,4 +189,7 @@ public interface AdminProductInfoMapper {
 	List<ProductInfoBrand> getBrandList();
 	// 카테고리 목록 조회
 	List<ProductInfoCategory> getCategoryList();
+	
+	
+	List<ProductInfoCategory> getSmCategoryByMdCategoryNo(@Param("mdCategoryNo") String mdCategoryNo);
 }
