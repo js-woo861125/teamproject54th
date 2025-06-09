@@ -49,13 +49,17 @@
 								  	optionObj.title = '';
 									optionObj.text = '선택하신 양도 게시글이 삭제되었습니다.';
 								  	optionObj.icon = 'success';
+								} else {
+									optionObj.title = '';
+									optionObj.text = '현재 양도 절차 진행 중. 삭제 처리에 실패했습니다.';
+									optionObj.icon = 'error';
 								}
 					    	});
 					    	request.fail((jqXHR, textStatus, error) => {
 								console.log(jqXHR, textStatus, error);
 					    	});
 						}
-						Swal.fire(optionObj).then(result => location.reload());
+						Swal.fire(optionObj).then(result => history.back());
 					});
 				});
 			
