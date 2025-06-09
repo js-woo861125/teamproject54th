@@ -20,6 +20,14 @@ public class CustomerProductServiceImpl implements CustomerProductService {
 
 	private final ProductMapper productMapper;
 	
+	
+	@Override
+	public List<CustomerProduct> getCutomeProductListAll(String productsNum) {
+		
+		List<CustomerProduct> customerProductListAll = productMapper.getCutomeProductListAll(productsNum);
+		
+		return customerProductListAll;
+	}
 
 
 	@Override

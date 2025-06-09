@@ -7,86 +7,97 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</th:block>
+	
+	<th:block layout:fragment="jsScript">
 		<script>
-			/**
-			* 대분류 선택 시 대분류코드 자동 입력
-			*/
-			$('#lgCategory').on('input', function(){
-				const val = $(this).val();
-				let codeMatch = '';
-				$('#lgCategoryList option').each(function() {
-					if ($(this).val() === val) {
-						codeMatch = $(this).data('lg-category-no');
-					}
-				});
-				if(codeMatch) {
-					$('#lgCategoryNo').val(codeMatch);
-				} 
-			});
-			
-			/**
-			* 중분류 선택 시 중분류코드 자동 입력
-			*/
-			$('#mdCategory').on('input', function(){
-				const val = $(this).val();
-				let codeMatch = '';
-				$('#mdCategoryList option').each(function() {
-					if ($(this).val() === val) {
-						codeMatch = $(this).data('md-category-no');
-					}
-				});
-				if(codeMatch) {
-					$('#mdCategoryNo').val(codeMatch);
+		/**
+		* 대분류 선택 시 대분류코드 자동 입력
+		*/
+		$('#lgCategory').on('input', function(){
+			const val = $(this).val();
+			let codeMatch = '';
+			$('#lgCategoryList option').each(function() {
+				if ($(this).val() === val) {
+					codeMatch = $(this).data('lg-category-no');
 				}
 			});
-			
-			/**
-			* 대분류 + 중분류 + 소분류 중복체크
-			*/
-			$('#addCategoryBtn').click(function(){
-				const lgCategory = $('#lgCategory').val();
-				const mdCategory = $('#mdCategory').val();
-				const smCategory = $('#smCategory').val();
-				
-				if(!lgCategory){
-					alert('대분류를 선택하거나 입력해주세요');
-					$('#lgCategory').focus();
+			if(codeMatch) {
+				$('#lgCategoryNo').val(codeMatch);
+			} 
+		});
+		
+		/**
+		* 중분류 선택 시 중분류코드 자동 입력
+		*/
+		$('#mdCategory').on('input', function(){
+			const val = $(this).val();
+			let codeMatch = '';
+			$('#mdCategoryList option').each(function() {
+				if ($(this).val() === val) {
+					codeMatch = $(this).data('md-category-no');
+				}
+			});
+			if(codeMatch) {
+				$('#mdCategoryNo').val(codeMatch);
+			}
+		});
+		
+		$('#addCategoryBtn').click(function(){
+			const lgCategory = $('#lgCategory').val();
+			const mdCategory = $('#mdCategory').val();
+			const smCategory = $('#smCategory').val();
+			// 유효성 체크
+			if(!lgCategory){
+				Swal.fire('', '대분류를 선택하거나 입력해주세요.', 'warning');
+				$('#lgCategory').focus();
+				return ;
+			}
+			if (!mdCategory) {
+				Swal.fire('', '중분류를 선택하거나 입력해주세요.', 'warning');
+				$('#mdCategory').focus();
+				return;
+			}
+			if (smCategory.trim().length === 0) {
+				Swal.fire('', '소분류를 입력해주세요.', 'warning');
+				$('#smCategory').focus();
+				return;
+			}
+			if (smCategory.length > 10) {
+				Swal.fire('', '소분류는 10자 이내로 입력해주세요.', 'warning');
+				$('#smCategory').focus();
+				return;
+			}
+			const validRegex = /^[가-힣a-zA-Z0-9.,~()+\/\s]+$/;
+			if (!validRegex.test(smCategory)) {
+				Swal.fire('', '특수문자는 . , ~ ( ) + / 만 사용 가능합니다.', 'warning');
+				$('#smCategory').focus();
+				return; 
+			}
+			// 중복 체크
+			$.ajax({
+				url : '/admin/productInfo/categoryCheck',
+				method : 'post',
+				data : {
+					'lgCategory': lgCategory,
+					'mdCategory' : mdCategory,
+					'smCategory' : smCategory
+				},
+				dataType : 'json'
+			}).done(function(isDuplicate) {
+				if(isDuplicate){
+					Swal.fire('', '이미 등록된 카테고리 입니다.', 'warning');
+					$('#itemName').focus();
 					return ;
 				}
-				
-				if (!mdCategory) {
-					alert('중분류를 선택하거나 입력해주세요');
-					$('#mdCategory').focus();
-					return;
-				}
-				
-				if (!smCategory) {
-					alert('소분류를 입력해주세요');
-					$('#smCategory').focus();
-					return;
-				}
-				$.ajax({
-					url : '/admin/productInfo/categoryCheck',
-					method : 'post',
-					data : {
-						'lgCategory': lgCategory,
-						'mdCategory' : mdCategory,
-						'smCategory' : smCategory
-					},
-					dataType : 'json'
-				}).done(function(isDuplicate) {
-					if(isDuplicate){
-						alert('이미 등록된 카테고리 입니다.');
-						$('#itemName').focus();
-						return ;
-					}
-				
-					$('#addProductInfoForm').submit();
-			    }).fail(function(jqXHR, textStatus, error) {
-			        console.log("에러 발생:", textStatus, error);
-			        alert('품목명 확인 중 오류가 발생했습니다.');
-			    });
-			});
+			
+				$('#addProductInfoForm').submit();
+		    }).fail(function(jqXHR, textStatus, error) {
+		        console.log("에러 발생:", textStatus, error);
+		        Swal.fire('', '카테고리 등록 중 오류가 발생했습니다.', 'error');
+		    });
+		});
 		</script>	
 	</th:block>
 	

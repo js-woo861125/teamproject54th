@@ -148,7 +148,7 @@
 			                    filteredBenefits.forEach(function (b) {
 			                        benefitArea.innerHTML +=
 			                            '<div>' +
-			                            '<p class="mb-10">' + b.benefitDetail + '</p>' +
+			                            '<p class="mb-5 mt-5 ml-5" style="font-size: 20px;">' + '• '+ b.benefitDetail + '</p>' +
 			                            '</div>';
 			                    });
 			                }
@@ -160,7 +160,26 @@
 			});
 			
 			
-			
+			// 관심상품 등록 체크
+			$(function() {
+				 // 1. 서버에서 받은 결과 처리
+			 	 const addResult = /*[[${addResult}]]*/ 'none';
+			     console.log("addResult:", addResult);
+		
+			    if (addResult === 'success') {
+			      Swal.fire({
+			        /* text: "관심상품 등록되었습니다.", */
+			        html: '<p>관심상품 등록되었습니다.<a href="/customer/wishList/myWishList">찜목록 보러가기</a></p>',
+			        confirmButtonText: "계속 쇼핑하기"
+			      });
+			    } else if (addResult === 'duplicate') {
+			      Swal.fire({
+			    	/* text: "이미 등록된 상품입니다.", */
+			        html: '<p>이미 등록된 상품입니다.<a href="/customer/wishList/myWishList">찜목록 보러가기</a></p>',
+			        confirmButtonText: "계속 쇼핑하기"
+			      });
+			    }
+			});
 			
 		</script>
 	</th:block>
@@ -180,11 +199,13 @@
                                         <h2 class="title-detail" th:text="${prodNm}">[LG] 디오스 매직스페이스 양문형 냉장고 832L (화이트)</h2>
                                     </div>
                                     <div class="col-md-1 col-sm-1 col-xs-1 mb-md-0 text-end">
-                                        <div class="detail-extralink">
-                                            <div class="product-extra-link2 mr-15">
-                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
-                                            </div>
-                                        </div>
+                                        <!-- 관심상품 등록 버튼 -->
+									    <form th:action="@{/customer/wishList/addMyWishList}" method="post" class="d-inline">
+									        <input type="hidden" name="productsNum" th:value="${productDetailByProd[0].productsNum}" />
+									        <button type="submit" class="btn btn-outline-danger d-flex align-items-center px-2" style="height: 40px;" aria-label="Add to Wishlist">
+									            <i class="fi-rs-heart" style="font-size: 24px;"></i>
+									        </button>
+									    </form>
                                     </div>
                                 </div>
                                 <div class="row mb-50 mt-30">
@@ -194,7 +215,7 @@
                                             <!-- MAIN SLIDES -->
                                             <div class="product-image-slider">
                                                 <figure class="border-radius-10">
-                                                    <img src="/attachment/20250522/image/product/2318b7ab-72f9-4c39-bc05-6cb158180c75.jpg" alt="product image" />
+                                                    <img th:src="@{${image}}" alt="product image" />
                                                 </figure>
                                             </div>
                                         </div>
@@ -208,7 +229,7 @@
                                                     <ul>
                                                         <li class="d-flex align-items-center justify-content-between">
                                                             <div class="product-price primary-color">
-                                                                <span class="current-price text-brand" th:text="${#numbers.formatInteger(lowerPrice, 3, 'COMMA')}">38,000</span>
+                                                                <span class="current-price text-brand" style="font-size: 50px;" th:text="${#numbers.formatInteger(lowerPrice, 0, 'COMMA')}">38,000</span>
                                                             </div>
                                                             <span class="fs-3"> 원 </span>
                                                         </li>
@@ -245,7 +266,7 @@
                                 <div class="row mt-60">
                                     <div class="col-12 d-flex section-title style-1 mb-30">
                                         <h3>렌탈사 비교·선택</h3>
-                                        <p>각 렌탈사의 월 렌탈료, 제휴카드혜택, A/S기간, 약정기간, 혜택 등 비교하고 선택해 보세요.</p>
+                                        <p>각 렌탈사의 월 렌탈료, 일시불 판매가, 상품 혜택 등을 비교하고 선택해 보세요.</p>
                                     </div>
                                     
                                     
@@ -326,7 +347,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+                                    <div class="row mt-50">
+                                    	<div class="d-flex justify-content-center" th:utext="${prodDetail}"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

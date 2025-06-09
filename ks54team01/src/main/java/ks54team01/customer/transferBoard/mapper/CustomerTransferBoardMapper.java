@@ -10,6 +10,8 @@ import ks54team01.customer.transferBoard.domain.CustomerTransferBoard;
 @Mapper
 public interface CustomerTransferBoardMapper {
 	
+	void changeStatusAfterApply(CustomerTransferBoard customerTransferBoard);
+	
 	// 양도 신청
 	int applyTransfer(CustomerTransferBoard customerTransferBoard);
 	

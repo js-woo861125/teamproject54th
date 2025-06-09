@@ -4,6 +4,16 @@
       layout:decorate="~{admin/layout/default}">
 	<!-- head 삽입공간 -->
 	<head>
+		<style>
+		.select-disabled {
+		    pointer-events: none;
+		    background-color: #f8f9fa;
+		    appearance: none;
+		    -moz-appearance: none;
+		    -webkit-appearance: none;
+		    background-image: none !important;
+		}
+		</style>
 	</head>
 
 	<th:block layout:fragment="jsFile">
@@ -145,9 +155,10 @@
 				<form th:action="@{/admin/productInfo/searchBrand}" method="get">
 					<div class="row gx-3">
 	                   <div class="col-lg-2 col-md-3 col-12">
-	                       <select class="form-select" name="searchKey">
-	                           <option value="brandName" th:selected="${searchKey == 'brandName'}">브랜드명</option>
+	                       <select class="form-select select-disabled">
+	                           <option selected>브랜드명</option>
 	                       </select>
+	                       <input type="hidden" name="searchKey" value="brandName" />
 	                   </div>
 	                   <div class="col-lg-4 col-md-5">
 	                       <input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />

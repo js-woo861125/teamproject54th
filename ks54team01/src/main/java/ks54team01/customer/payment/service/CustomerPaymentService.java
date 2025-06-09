@@ -10,6 +10,7 @@ import ks54team01.customer.payment.domain.CustomerPayment;
 public interface CustomerPaymentService {
 	
 	
+	
 	CustomerPayment getFirstPaymentDetail(String rentalContractNo);
 	
 	List<CustomerPayment> getPaymentDetailList(String rentalContractNo);
