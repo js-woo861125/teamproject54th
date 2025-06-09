@@ -120,16 +120,16 @@
         </div>
         <!-- card end// -->
         <div class="pagination-area mt-30 mb-50">
-	            <nav aria-label="Page navigation example">
-	                <ul class="pagination justify-content-center">
+	          <nav aria-label="Page navigation example">
+	              	<ul class="pagination justify-content-center">
 	                	 <li class="page-item" th:classappend="${currentPage eq startPageNum} ? 'disabled'">
 	                        <a class="page-link" th:href="@{/admin/member/memberList}"><i class="material-icons md-first_page"></i></a>
 	                     </li>
 	                     <li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
 	                        <a class="page-link" th:href="${searchKey != null} 
 	                        							  ?  @{/admin/member/searchMember(currentPage=${currentPage - 1}, searchKey=${searchKey},
-																						   		searchValue=${searchValue}, memberType=${memberType}, status=${status})}
-	                        							  :  @{/admin/member/memberList(currentPage=${currentPage - 1})}">
+																						   		searchValue=${searchValue}, memberType=${memberType}, status=${status}, rowPerPage=${rowPerPage})}
+	                        							  :  @{/admin/member/memberList(currentPage=${currentPage - 1}, rowPerPage=${rowPerPage})}">
 	                        	<i class="material-icons md-chevron_left"></i>
 	                        </a>
 	                     </li>
@@ -269,7 +269,7 @@
 	    	</script>
 	    	<script th:inline="javascript">
 				const rowPerPage = /*[[${rowPerPage}]]*/'';
-				if(rowPerPage) {
+				/* if(rowPerPage) {
 					$('.page-link').each((idx, item)=>{
 						let href = $(item).attr('href');
 						let separator = '?';
@@ -277,7 +277,7 @@
 						href += `${separator}rowPerPage=${rowPerPage}`;
 						$(item).attr('href', href);
 					});
-				}
+				} */
 				$('#rowPerPage').change(function(){
 					const href = location.href;
 					const url = new URL(href);
