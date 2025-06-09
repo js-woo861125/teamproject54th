@@ -13,7 +13,31 @@
 	</th:block>
 	
 	<th:block layout:fragment="jsScript">
-	
+		<script th:inline="javascript">
+			/* 정렬 */	
+			$('.sort-by a').click(function(e){
+				e.preventDefault();
+				const sortValue = $(this).data('sortValue');
+				const href = location.href;
+				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
+				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
+				urlParams.set('sortValue', sortValue);
+
+				
+				location.href = `${url.pathname}?${urlParams.toString()}`;
+			});
+			
+			/* 페이지이동 */
+			$('a.page-num').click(function(e){
+				e.preventDefault();
+				const currentPage = $(this).data('currentPage');
+				const href = location.href; // 현재 url 가져온다.
+				const url = new URL(href); // 현재 url를 가져오고 url 객체를 생성한다.
+				const urlParams = url.searchParams; // 현재 url객체의 파라미터를 가져온다.
+				urlParams.set('currentPage', currentPage);
+				location.href = `${url.pathname}?${urlParams.toString()}`;
+			});
+		</script>
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
@@ -25,371 +49,143 @@
 		</div>
 		<div class="card mb-4">
 			<header class="card-header">
-				<div class="row gx-3">
-					<div class="col-lg-2 col-md-3 col-12">
-						<select class="form-select">
-							<option>회원이름</option>
-							<option>주문상태</option>
-						</select>
+				<form th:action="@{/admin/transferBoard/transferBoardList}" method="get">
+					<div class="row gx-3 d-flex">
+						<!-- <div class="col-lg-2 col-md-3 col-12">
+							<select class="form-select">
+								<option>회원이름</option>
+								<option>주문상태</option>
+							</select>
+						</div> -->
+						<div class="col-lg-4 col-md-5">
+							<input class="form-control" type="text" name="searchValue" th:value="${searchValue}" 
+                                	placeholder="게시글 검색어를 입력해주세요." />
+						</div>
+						<div class="col-lg-1 col-md-1 me-auto">
+							<button type="submit"
+								class="form-control btn btn-primary p-0 justify-content-center">검색</button>
+						</div>
 					</div>
-					<div class="col-lg-4 col-md-5">
-						<input type="text" placeholder="검색어를 입력해주세요" class="form-control" />
-					</div>
-					<div class="col-lg-1 col-md-1 me-auto">
-						<button type="submit"
-							class="form-control btn btn-primary p-0 justify-content-center">검색</button>
-					</div>
-					<div class="col-lg-2 col-md-3 col-12">
-						<select class="form-select">
-							<option>Show 20</option>
-							<option>Show 30</option>
-							<option>Show 40</option>
-						</select>
-					</div>
-				</div>
+				</form>
 			</header>
 			<div class="card-body">
-				<div class="row product-grid">
-						<div class="col-lg-3 col-md-4 col-12 col-sm-6">
-							<div class="product-cart-wrap mb-30">
-								<div class="product-img-action-wrap">
-									<div class="product-img product-img-zoom">
-										<a th:href="@{/admin/transferBoard/transferBoardDetail}">
-											<img class="default-img" th:src="@{/user/assets/imgs/shop/products_image5.jpg}" alt="" />
-										</a>
-									</div>
-								</div>
-								<div class="product-content-wrap">
-									<div class="product-category">
-										<div class="product-category d-flex justify-content-between">
-											<a href="shop-grid-right.html">TV</a>
-											<div class="dropdown">
-		                                        <button href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm" aria-expanded="false"> <i class="material-icons md-more_horiz"></i> </button>
-		                                        <div class="dropdown-menu" style="margin: 0px;">
-		                                            <button class="dropdown-item" type="submit">게시글 삭제</button>
-		                                        </div>
-	                                    	</div>
-										</div>
-										
-									</div>
-									<h2>
-										<a th:href="@{/admin/transferBoard/transferBoardDetail}">계약 2년 남은 TV 양도 원합니다.</a>
-									</h2>
-									<div>
-										<span class="font-small text-muted">작성자
-											<a href="vendor-details-1.html">우에하라 아유무</a>
-										</span>
-									</div>
-									<div class="product-card-bottom">
-										<div class="product-price">
-											<span>💸월렌탈료</span> <span>85,000원</span>
-										</div>
-									</div>
-									<div class="product-card-bottom">
-										<div class="product-price">
-											<span>💰지원금</span> <span>1,000원</span>
-										</div>
-									</div>
-									<div class="product-card-bottom">
-										<p>등록일</p>
-										<p>2025-04-09</p>
-										<div></div>
-											<span class="stock-status in-stock">진행중 </span>
-											<span class="stock-status out-stock">마감 </span>
-									</div>
-								</div>
-							</div>
+				<div class="d-flex justify-content-between shop-product-fillter mb-3">
+					<div class="totall-product">
+						<h4 class="text-body">
+							게시글
+							<span th:text="${'&emsp;' + contentRowCount}"
+								  class="text-brand">5
+							</span> 
+							<span>건</span>
+						</h4>
+					</div>
+					<th:block th:if="${contentRowCount > 0}">
+						<div class="d-flex align-items-center gap-3 flex-wrap sort-by-product-area">
+ 								<div class="sort-by-cover">
+								<div class="sort-by">
+						      		<a href="#"
+							           th:data-sort-value="recentReg"
+							           th:classappend="${sortValue} == null or ${sortValue} == 'recentReg' ? ' text-primary fw-bold fs-6' : ' text-dark fw-medium'"
+							           class="text-decoration-none">
+							        	<span>최근등록순</span>
+							     	</a>
+							    </div>
+					  		</div>
+							<div class="sort-by-cover">
+						    	<div class="sort-by">
+						      		<a href="#"
+							           th:data-sort-value="highPrice"
+							           th:classappend="${sortValue} == 'highPrice' ? ' text-primary fw-bold fs-6' : ' text-dark fw-medium'"
+							           class="text-decoration-none">
+							        	<span>높은가격순</span>
+						      		</a>
+				    			</div>
+					  		</div>
+							<div class="sort-by-cover">
+						    	<div class="sort-by">
+						      		<a href="#"
+							           th:data-sort-value="rowPrice"
+							           th:classappend="${sortValue} == 'rowPrice' ? ' text-primary fw-bold fs-6' : ' text-dark fw-medium'"
+							           class="text-decoration-none">
+							        	<span>낮은가격순</span>
+							      	</a>
+							    </div>
+				 			</div>
+							<div class="sort-by-cover">
+						    	<div class="sort-by">
+						      		<a href="#"
+							           th:data-sort-value="deadline"
+							           th:classappend="${sortValue} == 'deadline' ? ' text-primary fw-bold fs-6' : ' text-dark fw-medium'"
+							           class="text-decoration-none">
+							        	<span>마감임박순</span>
+							      	</a>
+					    		</div>
+					  		</div>
 						</div>
-						<div class="col-lg-3 col-md-4 col-12 col-sm-6">
-							<div class="product-cart-wrap mb-30">
-								<div class="product-img-action-wrap">
-									<div class="product-img product-img-zoom">
-										<a>
-											<img class="default-img" th:src="@{/user/assets/imgs/shop/products_image5.jpg}" alt="" />
-										</a>
-									</div>
-								</div>
-								<div class="product-content-wrap">
-									<div class="product-category">
-										<a href="shop-grid-right.html">TV</a>
-									</div>
-									<h2>
-										<a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a>
-									</h2>
-									<div>
-										<span class="font-small text-muted">작성자
-											<a href="vendor-details-1.html">우에하라 아유무</a>
-										</span>
-									</div>
-									<div class="product-card-bottom">
-										<div class="product-price">
-											<span>💸월렌탈료</span> <span>85,000원</span>
-										</div>
-									</div>
-									<div class="product-card-bottom">
-										<div class="product-price">
-											<span>💰지원금</span> <span>1,000원</span>
-										</div>
-									</div>
-									<div class="product-card-bottom">
-										<p>등록일</p>
-										<p>2025-04-09</p>
-										<div></div>
-											<span class="stock-status in-stock">진행중 </span>
-											<span class="stock-status out-stock">마감 </span>
-									</div>
-								</div>
-							</div>
+					</th:block>
+				</div>
+				<div class="row product-grid gx-3 gy-4">
+					<th:block th:each="l : ${transferBoardList}">
+				    	<div class="col-lg-2 col-md-3 col-sm-4 col-6 px-2 mb-4">
+				      		<div class="product-cart-wrap h-100 p-2 border rounded shadow-sm">
+				        		<div class="product-img-action-wrap">
+				          			<a th:href="@{/admin/transferBoard/transferBoardDetail(transferBoardNum=${l.transferBoardNum})}">
+							            <img class="img-main w-100"
+							                 th:src="@{${l.uploadImage}}"
+							                 alt="이미지"
+							                 style="height: 140px; object-fit: cover;" />
+							        </a>
+						        </div>
+						        <div class="product-content-wrap mt-2">
+						        	<div class="product-category small text-muted" th:text="${l.productInfoCategory.smCategory}"></div>
+						          		<h6 class="mt-1 mb-1" th:text="${l.transferTitle}"></h6>
+						          		<div class="product-card-bottom small">
+						            		<div>💸 월렌탈료: <span th:text="|₩${#numbers.formatInteger(l.rentalFee, 3, 'COMMA')}"></span></div>
+						            		<div>💰 지원금: <span th:text="|₩${l.individualGrants >= 1000 ? #numbers.formatInteger(l.individualGrants, 3, 'COMMA') : l.individualGrants}"></span></div>
+						          		</div>
+								        <div class="mt-1 small text-muted">
+							            	<span th:text="${l.registerDate}"></span> | 
+							            	<span th:text="${l.customerId}"></span>
+							         	</div>
+					        		</div>
+			      				</div>
+			    			</div>
+			  			</th:block>
+			  			<div th:if="${contentRowCount < 1}"
+							 class="mt-100" style="text-align: center;">
+							<p>게시글이 없습니다.</p>	
 						</div>
-						<div class="col-lg-3 col-md-4 col-12 col-sm-6">
-							<div class="product-cart-wrap mb-30">
-								<div class="product-img-action-wrap">
-									<div class="product-img product-img-zoom">
-										<a>
-											<img class="default-img" th:src="@{/user/assets/imgs/shop/products_image5.jpg}" alt="" />
-										</a>
-									</div>
-								</div>
-								<div class="product-content-wrap">
-									<div class="product-category">
-										<a href="shop-grid-right.html">TV</a>
-									</div>
-									<h2>
-										<a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a>
-									</h2>
-									<div>
-										<span class="font-small text-muted">작성자
-											<a href="vendor-details-1.html">우에하라 아유무</a>
-										</span>
-									</div>
-									<div class="product-card-bottom">
-										<div class="product-price">
-											<span>💸월렌탈료</span> <span>85,000원</span>
-										</div>
-									</div>
-									<div class="product-card-bottom">
-										<div class="product-price">
-											<span>💰지원금</span> <span>1,000원</span>
-										</div>
-									</div>
-									<div class="product-card-bottom">
-										<p>등록일</p>
-										<p>2025-04-09</p>
-										<div></div>
-											<span class="stock-status in-stock">진행중 </span>
-											<span class="stock-status out-stock">마감 </span>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-3 col-md-4 col-12 col-sm-6">
-							<div class="product-cart-wrap mb-30">
-								<div class="product-img-action-wrap">
-									<div class="product-img product-img-zoom">
-										<a>
-											<img class="default-img" th:src="@{/user/assets/imgs/shop/products_image5.jpg}" alt="" />
-										</a>
-									</div>
-								</div>
-								<div class="product-content-wrap">
-									<div class="product-category">
-										<a href="shop-grid-right.html">TV</a>
-									</div>
-									<h2>
-										<a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a>
-									</h2>
-									<div>
-										<span class="font-small text-muted">작성자
-											<a href="vendor-details-1.html">우에하라 아유무</a>
-										</span>
-									</div>
-									<div class="product-card-bottom">
-										<div class="product-price">
-											<span>💸월렌탈료</span> <span>85,000원</span>
-										</div>
-									</div>
-									<div class="product-card-bottom">
-										<div class="product-price">
-											<span>💰지원금</span> <span>1,000원</span>
-										</div>
-									</div>
-									<div class="product-card-bottom">
-										<p>등록일</p>
-										<p>2025-04-09</p>
-										<div></div>
-											<span class="stock-status in-stock">진행중 </span>
-											<span class="stock-status out-stock">마감 </span>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-3 col-md-4 col-12 col-sm-6">
-							<div class="product-cart-wrap mb-30">
-								<div class="product-img-action-wrap">
-									<div class="product-img product-img-zoom">
-										<a>
-											<img class="default-img" th:src="@{/user/assets/imgs/shop/products_image5.jpg}" alt="" />
-										</a>
-									</div>
-								</div>
-								<div class="product-content-wrap">
-									<div class="product-category">
-										<a href="shop-grid-right.html">TV</a>
-									</div>
-									<h2>
-										<a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a>
-									</h2>
-									<div>
-										<span class="font-small text-muted">작성자
-											<a href="vendor-details-1.html">우에하라 아유무</a>
-										</span>
-									</div>
-									<div class="product-card-bottom">
-										<div class="product-price">
-											<span>💸월렌탈료</span> <span>85,000원</span>
-										</div>
-									</div>
-									<div class="product-card-bottom">
-										<div class="product-price">
-											<span>💰지원금</span> <span>1,000원</span>
-										</div>
-									</div>
-									<div class="product-card-bottom">
-										<p>등록일</p>
-										<p>2025-04-09</p>
-										<div></div>
-											<span class="stock-status in-stock">진행중 </span>
-											<span class="stock-status out-stock">마감 </span>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-3 col-md-4 col-12 col-sm-6">
-							<div class="product-cart-wrap mb-30">
-								<div class="product-img-action-wrap">
-									<div class="product-img product-img-zoom">
-										<a>
-											<img class="default-img" th:src="@{/user/assets/imgs/shop/products_image5.jpg}" alt="" />
-										</a>
-									</div>
-								</div>
-								<div class="product-content-wrap">
-									<div class="product-category">
-										<a href="shop-grid-right.html">TV</a>
-									</div>
-									<h2>
-										<a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a>
-									</h2>
-									<div>
-										<span class="font-small text-muted">작성자
-											<a href="vendor-details-1.html">우에하라 아유무</a>
-										</span>
-									</div>
-									<div class="product-card-bottom">
-										<div class="product-price">
-											<span>💸월렌탈료</span> <span>85,000원</span>
-										</div>
-									</div>
-									<div class="product-card-bottom">
-										<div class="product-price">
-											<span>💰지원금</span> <span>1,000원</span>
-										</div>
-									</div>
-									<div class="product-card-bottom">
-										<p>등록일</p>
-										<p>2025-04-09</p>
-										<div></div>
-											<span class="stock-status in-stock">진행중 </span>
-											<span class="stock-status out-stock">마감 </span>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-3 col-md-4 col-12 col-sm-6">
-							<div class="product-cart-wrap mb-30">
-								<div class="product-img-action-wrap">
-									<div class="product-img product-img-zoom">
-										<a>
-											<img class="default-img" th:src="@{/user/assets/imgs/shop/products_image5.jpg}" alt="" />
-										</a>
-									</div>
-								</div>
-								<div class="product-content-wrap">
-									<div class="product-category">
-										<a href="shop-grid-right.html">TV</a>
-									</div>
-									<h2>
-										<a href="shop-product-right.html">계약 2년 남은 TV 양도 원합니다.</a>
-									</h2>
-									<div>
-										<span class="font-small text-muted">작성자
-											<a href="vendor-details-1.html">우에하라 아유무</a>
-										</span>
-									</div>
-									<div class="product-card-bottom">
-										<div class="product-price">
-											<span>💸월렌탈료</span> <span>85,000원</span>
-										</div>
-									</div>
-									<div class="product-card-bottom">
-										<div class="product-price">
-											<span>💰지원금</span> <span>1,000원</span>
-										</div>
-									</div>
-									<div class="product-card-bottom">
-										<p>등록일</p>
-										<p>2025-04-09</p>
-										<div></div>
-											<span class="stock-status in-stock">진행중 </span>
-											<span class="stock-status out-stock">마감 </span>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-3 col-md-4 col-12 col-sm-6">
-							<div class="product-cart-wrap mb-30">
-								<div class="product-img-action-wrap">
-									<div class="product-img product-img-zoom">
-										<a th:href="@{/admin/transferBoard/transferBoardDetail}">
-											<img class="default-img" th:src="@{/user/assets/imgs/shop/products_image5.jpg}" alt="" />
-										</a>
-									</div>
-								</div>
-								<div class="product-content-wrap">
-									<div class="product-category">
-										<a href="shop-grid-right.html">TV</a>
-									</div>
-									<h2>
-										<a th:href="@{/admin/transferBoard/transferBoardDetail}">계약 2년 남은 TV 양도 원합니다.</a>
-									</h2>
-									<div>
-										<span class="font-small text-muted">작성자
-											<a href="vendor-details-1.html">우에하라 아유무</a>
-										</span>
-									</div>
-									<div class="product-card-bottom">
-										<div class="product-price">
-											<span>💸월렌탈료</span> <span>85,000원</span>
-										</div>
-									</div>
-									<div class="product-card-bottom">
-										<div class="product-price">
-											<span>💰지원금</span> <span>1,000원</span>
-										</div>
-									</div>
-									<div class="product-card-bottom">
-										<p>등록일</p>
-										<p>2025-04-09</p>
-										<div></div>
-											<span class="stock-status in-stock">진행중 </span>
-											<span class="stock-status out-stock">마감 </span>
-									</div>
-								</div>
-							</div>
-						</div>
+					</div>
 				</div>
 			</div>
-		</div>
+			<div class="pagination-area mt-30 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-center">
+						<!-- 이전페이지 이동 -->
+						<li id="prev-page" class="page-item" th:classappend="${startPageNum < 10} ? 'disabled'">
+							<a class="page-link"
+							   th:href="@{/admin/payment/paymentList(currentPage=${startPageNum - 1}, searchKey=${searchKey}, searchValue=${searchValue})}">
+							   <i class="material-icons md-first_page mt-5"></i>
+							</a>
+						</li>
+						<!-- 페이지 이동  -->
+						<th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}" th:if="${contentRowCount > 0}">
+							<li class="page-item" th:classappend="${num eq currentPage} ? 'active disabled'">
+								<a class="page-link page-num"
+								   href="#"
+								   th:text="${num < 10 ? '0' + num : num}"
+								   th:data-current-page="${num}">01</a>
+							</li>
+						</th:block>
+						<!-- 다음페이지 이동 -->
+						<li id="next-page" class="page-item" th:classappend="${(startPageNum + 10) > lastPage} ? 'disabled'">
+							<a class="page-link"
+							   th:href="@{/admin/payment/paymentList(currentPage=${endPageNum + 1}, searchKey=${searchKey}, searchValue=${searchValue})}">
+							   <i class="material-icons md-last_page" style="margin-top : 5px;"></i>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
 	</th:block>
-
 </html>

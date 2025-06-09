@@ -6,9 +6,12 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import ks54team01.admin.assigneeBoard.service.AdminAssigneeBoardService;
 import ks54team01.customer.assigneeBoard.domain.CustomerAssigneeBoard;
 import ks54team01.customer.assigneeBoard.service.CustomerAssigneeBoardService;
 import ks54team01.system.util.PageInfo;
@@ -21,6 +24,17 @@ import lombok.RequiredArgsConstructor;
 public class AdminAssigneeBoardController {
 	
 	private final CustomerAssigneeBoardService customerAssigneeBoardService;
+	private final AdminAssigneeBoardService adminAssigneeBoardService;
+	
+	
+	@PostMapping("/removeAssigneeBoard")
+	@ResponseBody
+	public boolean removeAssigneeBoard(@RequestParam(name="assigneeBoardNum") String assigneeBoardNum) {
+		
+		boolean isRemove = adminAssigneeBoardService.removeAssigneeBoard(assigneeBoardNum);
+		
+		return isRemove;
+	}
 	
 	@GetMapping("/assigneeBoardDetail")
 	public String getAssigneeBoardDetail(@RequestParam(name="assigneeBoardNum", required = false) String assigneeBoardNum
