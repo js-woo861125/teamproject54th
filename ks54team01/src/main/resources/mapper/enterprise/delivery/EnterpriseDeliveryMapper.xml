@@ -40,6 +40,26 @@
 	</resultMap>
 	
 	
+	<resultMap type="EnterpriseDeliveryInfo" id="deliveryInfoResultMap">
+		<id 	column="del_info_no"			property="delInfoNo"/>
+		<result column="cust_id"				property="custId"/>
+		<result column="ent_ceo_no"				property="entCeoNo"/>
+		<result column="ent_emp_id"				property="entEmpId"/>
+		<result column="payment_completed_no"	property="PaymentCompletedNo"/>
+		<result column="sell_products_no"		property="sellProdNo"/>
+		<result column="delivery_location_no"	property="delLocationNo"/>
+		<result column="recipient_nm"			property="recipientNm"/>
+		<result column="delivery_company"		property="delCompany"/>
+		<result column="delivery_request"		property="delRequest"/>
+		<result column="delivery_progress"		property="delProgress"/>
+		<result column="register_date"			property="regDate"/>
+		<result column="depart_date"			property="departDate"/>
+		<result column="arrive_date"			property="arriveDate"/>
+		<result column="delivery_addr"			property="delAddr"/>
+		<result column="delivery_daddr"			property="delDaddr"/>
+	</resultMap>
+	
+	
 	<update id="modifyDelivery" parameterType="EnterpriseDelivery">
 		UPDATE delivery_information
 		<trim prefix="SET" suffixOverrides=",">
@@ -76,32 +96,33 @@
 	</select>
 	
 	
-	<select id="getSearchDeliveryList" parameterType="string" resultMap="deliveryResultMap">
-		/* 배송정보 조회 검색 */
-		SELECT
-			di.del_info_no,
-			di.sell_products_no,
-			di.recipient_nm,
-			dl.delivery_addr,
-			dl.delivery_daddr,
-			di.delivery_company,
-			di.delivery_request,
-			di.delivery_progress,
-			di.register_date,
-			di.depart_date,
-			di.arrive_date
-		from
-			delivery_information di inner join delivery_list dl
+	
+	
+	
+	<select id="getDeliveryCount" parameterType="map" resultType="int">
+	    SELECT 
+	    	COUNT(di.del_info_no)
+	    FROM
+	        delivery_information di inner join delivery_list dl
 			using(delivery_location_no)
-		<where>
-			<if test="searchValue != null and searchValue !=''">
-				${searchKey} LIKE CONCAT('%', #{searchValue}, '%');
+	    <where>
+			<if test="entCeoNo != null">
+			   di.ent_ceo_no = #{entCeoNo}
+			</if>
+			<if test="searchKey != null and searchValue != null and searchValue != ''">
+				<choose>
+				    <when test="searchKey == 'delProgress'">
+				        AND di.delivery_progress LIKE CONCAT('%', #{searchValue}, '%')
+				    </when>
+				</choose>
 			</if>
 		</where>
 	</select>
 	
 	
-	<select id="getDeliveryList" parameterType="string" resultMap="deliveryResultMap">
+	
+	
+	<select id="getDeliveryList" parameterType="map" resultMap="deliveryInfoResultMap">
 		/* 배송정보 조회 */
 		SELECT
 			di.del_info_no,
@@ -118,10 +139,22 @@
 		from
 			delivery_information di inner join delivery_list dl
 			using(delivery_location_no)
-		where
-			di.ent_ceo_no = #{entCeoNo}
+		<where>
+			<if test="entCeoNo != null">
+			   di.ent_ceo_no = #{entCeoNo}
+			</if>
+			<if test="searchKey != null and searchValue != null and searchValue != ''">
+				<choose>
+				    <when test="searchKey == 'delProgress'">
+				        AND di.delivery_progress LIKE CONCAT('%', #{searchValue}, '%')
+				    </when>
+				</choose>
+			</if>
+		</where>
 		order by
 			di.register_date DESC
+		LIMIT 
+			#{pageable.rowPerPage} OFFSET #{pageable.offset}
 	</select>
 
 	

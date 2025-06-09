@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ks54team01.enterprise.product.mapper.EnterprisePenaltyCalculateMapper">
+
+	<insert id="insertPenaltyCalculate" parameterType="ks54team01.enterprise.product.domain.EnterprisePenaltyCalculate">
+    <selectKey resultType="string" keyProperty="penaltyCalculateNo" order="BEFORE">
+        SELECT CONCAT('No', IFNULL(MAX(CAST(SUBSTRING(penalty_calculate_no, 3) AS UNSIGNED)), 0) + 1) 
+        FROM ent_penalty_calculate
+    </selectKey>
+    INSERT INTO 
+    ent_penalty_calculate (
+        penalty_calculate_no, ent_ceo_no, ent_emp_id, sell_products_no, period_start, period_end, penalty_fee_ratio, register_date, revision_date, use_status
+    ) VALUES (
+        #{penaltyCalculateNo}, #{entCeoNo}, #{entEmpId}, #{sellProductsNo}, #{periodStart}, #{periodEnd}, #{penaltyFeeRatio}, #{registerDate}, #{revisionDate}, #{useStatus}
+    )
+	</insert>
+	
+	<select id="selectPenaltyCalculateByNo" resultType="ks54team01.enterprise.product.domain.EnterprisePenaltyCalculate" parameterType="string">
+    SELECT
+        penalty_calculate_no     AS penaltyCalculateNo,
+        ent_ceo_no               AS entCeoNo,
+        ent_emp_id               AS entEmpId,
+        sell_products_no         AS sellProductsNo,
+        period_start             AS periodStart,
+        period_end               AS periodEnd,
+        penalty_fee_ratio        AS penaltyFeeRatio,
+        register_date            AS registerDate,
+        revision_date            AS revisionDate,
+        use_status               AS useStatus
+    FROM 
+    	ent_penalty_calculate
+    WHERE 
+    	sell_products_no = #{sellProductsNo}
+	</select>
+
+	<update id="updatePenaltyCalculate" parameterType="ks54team01.enterprise.product.domain.EnterprisePenaltyCalculate">
+	  UPDATE 
+	  	ent_penalty_calculate
+	  SET 
+	  	penalty_fee_ratio  = #{penaltyFeeRatio}
+	  WHERE 
+	  	sell_products_no = #{sellProductsNo}
+	</update>
+</mapper>
+
+
+
+
+
+

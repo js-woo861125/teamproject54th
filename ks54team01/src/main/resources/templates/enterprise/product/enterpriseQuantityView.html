@@ -8,8 +8,31 @@
 	
 	<th:block layout:fragment="jsFile">
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</th:block>
-
+	<th:block layout:fragment="jsScript">
+		<script th:inline="javascript">
+		    function openQuantityModal(el) {
+		        const productsNo = el.getAttribute('data-products-no');
+		        const quantity = el.getAttribute('data-quantity');
+		        document.getElementById('modalProductsNo').value = productsNo;
+		        document.getElementById('modalQuantity').value = quantity;
+		
+		        let modal = new bootstrap.Modal(document.getElementById('quantityModal'));
+		        modal.show();
+		    }
+		
+	
+		    $(function() {
+		        const result = /*[[${modifyQuantityResult}]]*/ 'none';
+		        if(result === 'success') {
+		            Swal.fire({ text: "수정 완료!", confirmButtonText: "확인" });
+		        } else if(result === 'fail') {
+		            Swal.fire({ icon: 'error', text: "수정 실패!", confirmButtonText: "확인" });
+		        }
+		    });
+		</script>
+	</th:block>
     <th:block layout:fragment="content">
         <div class="content-header">
             <div>
@@ -18,32 +41,42 @@
          </div>
         <div class="card mb-4">
              <header class="card-header">
-                        <div class="row gx-3">
-                            <div class="col-lg-4 col-md-6 me-auto">
-                                <input type="text" placeholder="Search..." class="form-control" />
-                            </div>
-                            <div class="col-lg-2 col-md-3 col-6">
-                                <select class="form-select">
-                                    <option>제품명</option>
-                                    <option>카테고리명</option>
-                                    <option>제품상태</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-2 col-md-3 col-6">
-                                <select class="form-select">
-                                    <option>Show 20</option>
-                                    <option>Show 30</option>
-                                    <option>Show 40</option>
-                                </select>
-                            </div>
-                        </div>
+               <form th:action="@{/enterprise/product/quantityList}" method="get" class="row gx-3 align-items-center mb-3">
+                <div class="row align-items-center g-2">
+                    <div class="col-lg-2">
+                        <select class="form-select form-select-sm" name="searchKey">
+                            <option th:value="productName" th:selected="${searchKey == 'productName'}">상품명</option>
+                            <option th:value="brandName" th:selected="${searchKey == 'brandName'}">브랜드</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-3">
+                        <input type="text" name="searchValue" th:value="${searchValue}" class="form-control form-control-sm" placeholder="검색어 입력" />
+                    </div>
+                    <div class="col-lg-2">
+                        <select class="form-select form-select-sm" name="categoryNo">
+                            <option th:value="''" th:selected="${categoryNo == null or categoryNo == ''}">전체 카테고리</option>
+                            <option th:each="cat : ${categoryList}" th:value="${cat.categoryNo}" th:text="${cat.smCategory}" th:selected="${categoryNo == cat.categoryNo}"></option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2">
+                         <select name="stockStatus" class="form-select">
+						    <option value="" th:selected="${stockStatus == null or stockStatus == ''}">전체 재고</option>
+						    <option value="품절" th:selected="${stockStatus == '품절'}">품절</option>
+						    <option value="재고있음" th:selected="${stockStatus == '재고있음'}">사용중</option>
+						</select>
+                    </div>
+                    <div class="col-lg-1">
+                        <button type="submit" class="btn btn-primary btn-sm w-100">검색</button>
+                    </div>
+                </div>
+            </form>
                     </header>
 				         <!-- card-header end// -->
 				         <div class="card-body">
 	                        <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead>
-                                    <tr>
+                                    <tr class=text-center>
                                         <th>No</th>
                                         <th>제품명</th>
                                         <th>카테고리명</th>
@@ -53,39 +86,58 @@
                                     </tr>
                                 </thead>
                                 <tbody class="text-center">
-                                    <tr>
-                                        <td><a class="fw-bold"/>1</td>                    
-                                        <td>삼성냉장고</td>
-                                        <td>냉장고</td>
-                                        <td><span class="badge rounded-pill alert-success">활성화</span></td>
-                                        <td>50</td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-sm btn-brand rounded font-sm mt-15">수정</a>
-                                        </td>
-                                    </tr>    
-                                </tbody>
+								    <tr th:each="q, stat : ${quantityList}">
+								        <td th:text="${stat.count + 1}">1</td>
+								        <td th:text="${q.productName}">삼성냉장고</td>
+								        <td th:text="${q.cateName}">냉장고</td>
+								        <td>
+								            <span th:switch="${q.productStatus}">
+								                <span th:case="'사용중'" class="badge rounded-pill alert-success">사용중</span>
+								                <span th:case="'사용불가'" class="badge rounded-pill alert-secondary">사용불가</span>
+								                <span th:case="'품절'" class="badge rounded-pill alert-danger">품절</span>
+								             </span>								               
+								        </td>
+								        <td th:text="${q.quantity}">50</td>
+								       <td class="text-end">
+									    <button type="button"
+									            class="btn btn-sm btn-brand rounded font-sm mt-15"
+									            th:attr="data-products-no=${q.productsNo}, data-quantity=${q.quantity}"
+									            onclick="openQuantityModal(this)"> 수정</button>
+									   </td>
+								    </tr>
+								    <tr th:if="${#lists.isEmpty(quantityList)}">
+								        <td colspan="6">등록된 재고가 없습니다.</td>
+								    </tr>
+								</tbody>
                             </table>
                             <!-- table-responsive.// -->
                         </div>
                     </div>
             <!-- card-body end// -->
         </div>
+        <div class="modal fade" id="quantityModal" tabindex="-1" aria-labelledby="quantityModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered">
+		    <div class="modal-content">
+		      <form id="modifyQuantityForm" th:action="@{/enterprise/product/modifyQuantity}" method="post">
+		        <div class="modal-header">
+		          <h5 class="modal-title" id="quantityModalLabel">재고 수량 변경</h5>
+		          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+		        </div>
+		        <div class="modal-body">
+		          <input type="hidden" id="modalProductsNo" name="productsNo" />
+		          <label>수정할 보유 수량</label>
+		          <input type="number" id="modalQuantity" name="quantity" class="form-control" min="0" required />
+		        </div>
+		        <div class="modal-footer">
+		          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+		          <button id="modifyQuantityBtn" type="submit" class="btn btn-primary">변경</button>
+		        </div>
+		      </form>
+		    </div>
+		  </div>
+		</div>
    </th:block>    
-        <!-- card end// -->
-        <div class="pagination-area mt-15 mb-50">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-start">
-                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                    <li class="page-item"><a class="page-link" href="#">02</a></li>
-                    <li class="page-item"><a class="page-link" href="#">03</a></li>
-                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                    <li class="page-item"><a class="page-link" href="#">16</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+      
     <!-- content-main end// -->
 
         <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>

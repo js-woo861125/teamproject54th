@@ -263,14 +263,34 @@
 			                title: '계약 기간은 숫자만 입력해주세요.',
 			                confirmButtonText: "확인"
 			            });
-			            $periodInput.focus();
+			            $periodInput.val('');
+			            $periodInput.css('border', '1px solid red');
 			            isSubmit = false;
 			        } else if (!numberRegex.test($rentalFeeInput.val()?.trim())) {
 			            Swal.fire({
 			                title: '렌탈료는 숫자만 입력해주세요.',
 			                confirmButtonText: "확인"
 			            });
-			            $rentalFeeInput.focus();
+			            $rentalFeeInput.val('');
+						$rentalFeeInput.css('border', '1px solid red');
+			            isSubmit = false;
+			        }else if($periodInput.val()?.trim() < 1 || $periodInput.val()?.trim() > 60) {
+			        	Swal.fire({
+			                title: '계약 기간은 1~60 개월 사이로 입력해주세요.',
+			                confirmButtonText: "확인"
+			            })
+			            /* $periodInput.focus(); */
+			            $periodInput.val('');
+			            $periodInput.css('border', '1px solid red');
+			            isSubmit = false;
+			        } else if($rentalFeeInput.val()?.trim() < 999) {
+			        	Swal.fire({
+			                title: '최소 ₩10,000 이상부터 입력해주세요.',
+			                confirmButtonText: "확인"
+			            })
+			            /* $periodInput.focus(); */
+			            $rentalFeeInput.val('');
+			            $rentalFeeInput.css('border', '1px solid red');
 			            isSubmit = false;
 			        }
 			    }
@@ -391,11 +411,13 @@
                 <div class="col-lg-7">
                     <div class="row" th:object="${customerAssigneeBoardInfo}">
                         <form id="modifyAssigneeBoardForm" th:action="@{/customer/assigneeBoard/modifyAssigneeBoard}" method="post">
-                            <div class="row">
-                                <div class="form-group col-lg-6">
+                            <h4 class="mb-4">게시글 정보</h4>
+                            <div class="mb-30 row align-items-center">
+                            	<label for="selectedItem" class="col-sm-2 col-form-label fw-bold">희망카테고리*</label>
+                                <div class="col-sm-7">
                                  	<input type="hidden" name="assigneeBoardNum" th:value="*{assigneeBoardNum}" />
                                     <input id="productCategoryNum" type="hidden" th:value="*{productCategoryNum}" name="productCategoryNum" required readonly>
-                                    <input id="selectedItem" type="text" th:value="*{productInfoCategory.smCategory}" placeholder="*상품 카테고리 선택" required readonly>
+                                    <input id="selectedItem" class="form-control" type="text" th:value="*{productInfoCategory.smCategory}" placeholder="*상품 카테고리 선택" required readonly>
                                 </div>
                                 <div class="col-2">
 									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardCategory}" class="openModal btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -403,10 +425,11 @@
 									</a>									
 	                            </div>                        		
                         	</div>
-	                        <div class="row">
-	                        	<div class="form-group col-lg-6">
+	                        <div class="mb-30 row align-items-center">
+	                        	<label for="selectedProduct" class="col-sm-2 col-form-label fw-bold">희망상품명</label>
+	                        	<div class="col-sm-7">
 	                        		<input id="productNum" type="hidden" th:value="*{customerProduct.productsNum}" name="customerProduct.productsNum" required readonly>
-	                            	<input id="selectedProduct" type="text" th:value="*{productName}" name="productName" placeholder="상품명 입력 (선택사항)" readonly />
+	                            	<input id="selectedProduct" class="form-control" type="text" th:value="*{productName}" name="productName" placeholder="상품명 입력 (선택사항)" readonly />
 	                        	</div>
 	                        	<div class="col-2">
 									<a th:href="@{/customer/assigneeBoard/selectAssigneeBoardProduct}" class="searchProduct btn btn-primary" data-bs-toggle="modal" data-bs-target="#selectProductModal">
@@ -414,9 +437,10 @@
 									</a>									
 	                            </div>
 	                     	</div>
-                            <div class="row">
-                                <div class="form-group col-lg-6">
-                                    <input type="text" id="hopeArea" name="desiredInstallArea" th:value="*{desiredInstallArea}" required placeholder="*희망 설치지역 입력" readonly/>
+                            <div class="mb-30 row align-items-center">
+                                <label for="hopeArea" class="col-sm-2 col-form-label fw-bold">희망설치지역*</label>
+                                <div class="col-lg-7">
+                                    <input type="text" id="hopeArea" class="form-control" name="desiredInstallArea" th:value="*{desiredInstallArea}" required placeholder="*희망 설치지역 입력" readonly/>
                                 </div>
                                 <div class="col-2">
 		                            <div>
@@ -426,16 +450,25 @@
 		                            </div>                        		
 	                        	</div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-lg-4">
-                                    <input id="periodInput" type="text" name="remainingMonths" th:value="*{remainingMonths}" placeholder="*최소 희망 계약기간(개월) 입력" />
+                            <div class="mb-30 row align-items">
+                                <label for="periodInput" class="col-sm-2 col-form-label fw-bold">희망계약기간(개월)*</label>
+                                <div class="col-sm-3 mr-50">
+                                    <input id="periodInput" class="form-control" type="text" name="remainingMonths" th:value="*{remainingMonths}" placeholder="*희망 계약기간(개월) 입력" />
                                 </div>
-                                <div class="form-group col-lg-4">
-                                    <input id="rentalFeeInput" type="text" name="rentalFee" th:value="*{rentalFee}" placeholder="*최소 희망 렌탈료 입력" />
+                                <label for="rentalFeeInput" class="col-sm-2 col-form-label fw-bold">희망월렌탈료*</label>
+                                <div class="col-sm-3 ml-10">
+                                    <input id="rentalFeeInput" class="form-control" type="text" name="rentalFee" th:value="*{rentalFee}" placeholder="*희망 렌탈료 입력" />
                                 </div>
                             </div>
-                            <div class="form-group mb-30">
-                                <textarea name="assigneeContent" rows="5" th:field="*{assigneeContent}" placeholder="기타 상세 설명을 입력해주세요."></textarea>
+                            <div class="mb-30 mt-30">
+                            	<label for="assigneeContent" class="form-label fw-bold">게시글 내용</label>
+                                <textarea id="assigneeContent" 
+                                		  name="assigneeContent" 
+                                		  th:field="*{assigneeContent}" 
+                                		  class="form-control"
+					              		  style="height: 180px; resize: vertical;"
+					              		  placeholder="기타 상세 설명을 입력해주세요.">
+                                </textarea>
                             </div>
 							<div class="row justify-content-end">
 							    <div class="col-auto">

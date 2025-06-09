@@ -6,22 +6,35 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import ks54team01.admin.productInfo.domain.ProductInfoCategory;
-import ks54team01.admin.productInfo.mapper.AdminProductInfoMapper;
+import ks54team01.customer.product.domain.CustomerProduct;
+import ks54team01.customer.product.service.CustomerProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
+
 public class CustomerCommonController {
 
-	private final AdminProductInfoMapper adminProductInfoMapper;
+
+
+	private final CustomerProductService customerProductService;
+	
 	
 	@GetMapping({"","/"})
-	public String customerHome(Model model) {
+	public String customerHome(
+								String productsNum, Model model) {
+	
+		
+		List<CustomerProduct> productListAll = customerProductService.getCutomeProductListAll(productsNum);
+		
+		model.addAttribute("productListAll", productListAll);
+		
+		log.info("customerProductAll: {}", productListAll);
+		
 
-			List<ProductInfoCategory> mdCategoryList = adminProductInfoMapper.getMdCategory();
-			
-			model.addAttribute("mdCategoryList", mdCategoryList);
 		
 		return "customer/main";
 	}

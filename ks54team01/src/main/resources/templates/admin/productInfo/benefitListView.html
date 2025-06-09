@@ -4,6 +4,16 @@
 	  layout:decorate="~{admin/layout/default}">
 	<!-- head 삽입공간 -->
 	<head>
+		<style>
+		.select-disabled {
+		    pointer-events: none;
+		    background-color: #f8f9fa;
+		    appearance: none;
+		    -moz-appearance: none;
+		    -webkit-appearance: none;
+		    background-image: none !important;
+		}
+		</style>
 	</head>
 
 	<th:block layout:fragment="jsFile">
@@ -134,18 +144,18 @@
 	<!-- 본문 content 영역 -->
 	<th:block layout:fragment="content">
 	<div class="content-header">
-		<div>
-			<h2 class="content-title card-title" th:text="${title}"></h2>
-		</div>
+		<h2 class="content-title card-title" th:text="${title}"></h2>
+		<button type="submit" class="btn btn-md rounded font-lg hover-up" onclick="location.href='/admin/productInfo/addBenefit'">등록</button>
 	</div>
 	<div class="card mb-4 col-12">
 			<header class="card-header">
 				<form th:action="@{/admin/productInfo/searchBenefit}" method="get">
 					<div class="row gx-3">
 	                   <div class="col-lg-2 col-md-3 col-12">
-	                       <select class="form-select" name="searchKey">
-	                           <option value="benefitName" th:selected="${searchKey == 'benefitName'}">혜택명</option>
+	                       <select class="form-select select-disabled">
+	                           <option selected>혜택명</option>
 	                       </select>
+	                       <input type="hidden" name="searchKey" value="benefitName" />
 	                   </div>
 	                   <div class="col-lg-4 col-md-5">
 	                       <input type="text" name="searchValue" th:value="${searchValue}" placeholder="검색어를 입력해주세요" class="form-control" />

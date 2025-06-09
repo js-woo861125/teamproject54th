@@ -71,45 +71,43 @@
 	                        		<div class="col-6">	                        		
 			                            <div class="mb-4">
 			                                <label class="form-label fs-6" for="memberPw">비밀번호</label>
-			                                <input type="text" id="memberPw" name="memberPw" th:value="*{memberPw}"
+			                                <input type="text" id="memberPw" name="memberPw" 
 			                                	   placeholder="회원의 비밀번호를 입력해주세요" class="form-control fs-6" />
 			                            </div>
 	                        		</div>
 	                        	</div>
 	                        	<div class="row">
-	                        		<div class="col-6">
-			                            <div class="mb-4">
-			                                <label class="form-label fs-6" for="managerName">이름</label>
-			                                <input type="text" id="managerName" name="managerName" th:value="*{managerName}"
-			                                	   placeholder="회원의 이름을 입력해주세요" class="form-control fs-6" />
-			                            </div>
-	                        		</div>
-	                        	</div>
-	                            <div class="row">
-	                            	<div class="col-6">
-	                            		<div class="row align-items-end">
+		                        		<div class="col-md-6 mb-3">
+				                            <div class="mb-4">
+				                                <label class="form-label fs-6" for="managerName">이름</label>
+				                                <input type="text" id="managerName" name="managerName" th:value="*{managerName}"
+				                                	   placeholder="회원의 이름을 입력해주세요" class="form-control fs-6" />
+				                            </div>
+		                        		</div>
+		                            	<div class="col-md-6 mb-3">
 	                            			<input type="hidden" id="managerPhone" name="managerPhone" class="form-control " />
-	                            			<div class="col-4">
-					                            <div class="mb-4">
-					                                <label class="form-label fs-6" for="managerPhone">연락처</label>
-					                            	<input type="text" class="form-control" id ="managerPhone1" name="managerPhone1" th:value="${managerPhone1}" readonly />
-					                            </div>
-	                            			</div>
-	                            			<div class="col-4">
-	                            				<div class="mb-4">
-					                                <input type="text" id="managerPhone2" name="managerPhone2" th:value="${managerPhone2}"
-					                                	   placeholder="중간 연락처" class="form-control fs-6" />
+			                                <label class="form-label fs-6" for="managerPhone">연락처</label>
+			                                <div class="row">
+	                            				<div class="col-4">
+						                            <div class="mb-4">
+						                            	<input type="text" class="form-control" id ="managerPhone1" name="managerPhone1" th:value="${managerPhone1}" readonly />
+						                            </div>
 	                            				</div>
-	                            			</div>
-	                            			<div class="col-4">
-	                            				<div class="mb-4">
-					                                <input type="text" id="managerPhone3" name="managerPhone3" th:value="${managerPhone3}"
-					                                	   placeholder="마지막 연락처" class="form-control fs-6" />
-	                            				</div>
-	                            			</div>
-	                            		</div>
-	                            	</div>
-	                            </div>
+		                            			<div class="col-4">
+		                            				<div class="mb-4">
+						                                <input type="text" id="managerPhone2" name="managerPhone2" th:value="${managerPhone2}"
+						                                	   placeholder="중간 연락처" class="form-control fs-6" />
+		                            				</div>
+		                            			</div>
+		                            			<div class="col-4">
+		                            				<div class="mb-4">
+						                                <input type="text" id="managerPhone3" name="managerPhone3" th:value="${managerPhone3}"
+						                                	   placeholder="마지막 연락처" class="form-control fs-6" />
+		                            				</div>
+		                            			</div>
+		                            		</div>
+	                        			</div>
+	                        	</div >
 	                            
 	                        </div> <!-- col.// -->
 	                    </div> <!-- row.// -->

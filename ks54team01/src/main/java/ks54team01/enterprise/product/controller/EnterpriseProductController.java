@@ -2,25 +2,33 @@ package ks54team01.enterprise.product.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ks54team01.admin.product.domain.AdminProduct;
 import ks54team01.admin.product.service.AdminProductService;
 import ks54team01.admin.productInfo.domain.ProductInfoBenefit;
+import ks54team01.admin.productInfo.domain.ProductInfoCategory;
 import ks54team01.admin.productInfo.service.AdminProductInfoService;
 import ks54team01.enterprise.product.domain.EnterpriseMarginRatio;
+import ks54team01.enterprise.product.domain.EnterprisePenaltyCalculate;
 import ks54team01.enterprise.product.domain.EnterpriseProduct;
 import ks54team01.enterprise.product.domain.EnterpriseProductBenefit;
 import ks54team01.enterprise.product.domain.EnterpriseProductQuantity;
+import ks54team01.enterprise.product.domain.EnterpriseSellProductAllRequest;
+import ks54team01.enterprise.product.domain.EnterpriseSellProductRequest;
 import ks54team01.enterprise.product.mapper.EnterpriseMarginRatioMapper;
 import ks54team01.enterprise.product.service.EnterpriseMarginRatioService;
 import ks54team01.enterprise.product.service.EnterpriseProductService;
@@ -47,25 +55,55 @@ public class EnterpriseProductController {
 	 * 입점업체 등록 상품 리스트
 	 */
 	@GetMapping("/sellProductList")
-	public String getsellProductList(Model model) {
-		List<EnterpriseProduct> sellProductList = enterpriseProductService.getSellProductList();
-		
-		model.addAttribute("title", "판매 상품목록");
-		model.addAttribute("sellProductList", sellProductList);
-		
-		return "enterprise/product/enterpriseProductListView";
+	public String getsellProductList(
+	        @RequestParam(required = false) String searchKey,
+	        @RequestParam( required = false) String searchValue,
+	        @RequestParam(required = false) String categoryNo,
+	        @RequestParam(required = false) String status,
+	        Model model) {
+
+	    List<EnterpriseProduct> sellProductList = enterpriseProductService.searchSellProductList(searchKey, searchValue, categoryNo, status);
+	    List<ProductInfoCategory> categoryList = adminProductService.loadCategoryList();
+	    
+	  
+	    model.addAttribute("title", "판매 상품목록");
+	    model.addAttribute("sellProductList", sellProductList);
+
+	    model.addAttribute("searchKey", searchKey);
+	    model.addAttribute("searchValue", searchValue);
+	    model.addAttribute("categoryList", categoryList);
+	    model.addAttribute("categoryNo", categoryNo);
+	    model.addAttribute("status", status);
+	    return "enterprise/product/enterpriseProductListView";
 	}
 	/*
 	 * 플랫폼 등록 상품 리스트
 	 */
 	@GetMapping("/productList")
-	public String getproductList(Model model) {
-		List<AdminProduct> getProductList = enterpriseProductService.getProductList();
-		
-		model.addAttribute("title", "플랫폼 상품목록");
-		model.addAttribute("getProductList", getProductList);
-		
-		return "enterprise/product/platformProductListView";
+	public String getproductList(
+	        @RequestParam(required = false) String searchKey,
+	        @RequestParam(required = false) String searchValue,
+	        @RequestParam(required = false) String categoryNo,
+	        @RequestParam(required = false) String status,
+	        Model model) {
+
+	    List<AdminProduct> getProductList = enterpriseProductService.getProductList(searchKey, searchValue, categoryNo, status);
+	    List<ProductInfoCategory> categoryList = adminProductService.loadCategoryList();
+
+	    // '판매중단' 제외 필터
+	    List<AdminProduct> filteredList = getProductList.stream()
+	        .filter(p -> !"판매중단".equals(p.getProductStatus()))
+	        .collect(Collectors.toList());
+
+	    model.addAttribute("title", "플랫폼 상품목록");
+	    model.addAttribute("getProductList", filteredList);
+	    model.addAttribute("searchKey", searchKey);
+	    model.addAttribute("searchValue", searchValue);
+	    model.addAttribute("categoryList", categoryList);
+	    model.addAttribute("categoryNo", categoryNo);
+	    model.addAttribute("status", status);
+
+	    return "enterprise/product/platformProductListView";
 	}
 	
 	@PostMapping("/addMarginRatio")
@@ -137,14 +175,36 @@ public class EnterpriseProductController {
 	 * 입점업체 재고 조회
 	 */
 	@GetMapping("/quantityList")
-	public String quantityList(Model model) {
+	public String quantityList(@RequestParam(required = false) String searchKey,
+							   @RequestParam(required = false) String searchValue,
+							   @RequestParam(required = false) String categoryNo,
+							   @RequestParam(required = false) String status,
+							   @RequestParam(required = false) String stockStatus,
+							   Model model) {
 		
-		List<EnterpriseProductQuantity> quantityList = enterpriseProductService.getQuantityList();
+		List<EnterpriseProductQuantity> quantityList = enterpriseProductService.getQuantityList(searchKey, searchValue, categoryNo, status, stockStatus);
+		List<ProductInfoCategory> categoryList = adminProductService.loadCategoryList();
 		
-		model.addAttribute("title", "재고관리");
-		model.addAttribute("quantityList", quantityList);
+		
+		 model.addAttribute("title", "보유수량 관리");
+		 model.addAttribute("quantityList", quantityList);
+		 model.addAttribute("categoryList", categoryList);
+		 
+		 model.addAttribute("searchKey", searchKey);
+		 model.addAttribute("searchValue", searchValue);
+		 model.addAttribute("categoryNo", categoryNo);
+		 model.addAttribute("status", status);
+		 model.addAttribute("stockStatus", stockStatus);
+		 
 		
 		return "enterprise/product/enterpriseQuantityView";
+	}
+	
+	@PostMapping("/modifyQuantity")
+	public String modifyQuantity(@RequestParam String productsNo, @RequestParam int quantity, RedirectAttributes redirect) {
+	    boolean updated = enterpriseProductService.updateQuantity(productsNo, quantity);
+	    redirect.addFlashAttribute("modifyQuantityResult", updated ? "success" : "fail");
+	    return "redirect:/enterprise/product/quantityList"; // 목록 페이지로 리다이렉트
 	}
 	/*
 	 * 
@@ -158,6 +218,7 @@ public class EnterpriseProductController {
 		List<EnterpriseMarginRatio> marginList = enterpriseMarginRatioService.getEnterpriseMarginRatio();
 		List<ProductInfoBenefit> benefitList = adminProductInfoService.getBenefitList();
 		
+		model.addAttribute("title", "플랫폼 상품목록");
 		model.addAttribute("product", product);
 		model.addAttribute("marginList", marginList);
 		model.addAttribute("benefitList", benefitList);
@@ -166,23 +227,91 @@ public class EnterpriseProductController {
 	}
 	
 	@PostMapping("/addSellProduct")
-	public String addSellProduct(
-	    @ModelAttribute EnterpriseProduct enterpriseProduct,
-	    @RequestParam List<String> benefitNoList,
-	    @RequestParam List<String> benefitDetailList,
-	    @RequestParam List<String> platformPriceList,
-	    @RequestParam List<String> finalPriceList,
-	    @RequestParam List<String> optionLumpSumPriceList,
-	    @ModelAttribute EnterpriseProductQuantity quantity
-	) {  
-	
-	    if (quantity.getQuantity() == null) {
-	        throw new IllegalArgumentException("수량은 필수 입력값입니다.");
+	@ResponseBody
+	public ResponseEntity<?> addSellProduct(
+	    @RequestBody EnterpriseSellProductAllRequest allRequest
+	) {
+		// JSON 가져오기
+	    List<EnterpriseSellProductRequest> sellProductRequests = allRequest.getSellProductRequests();
+	    EnterpriseProductQuantity quantity = allRequest.getQuantity();
+
+	    // 수량 검증
+	    if (quantity == null || quantity.getQuantity() == null || quantity.getQuantity() == 0) {
+	        return ResponseEntity.badRequest().body("수량은 필수 입력값입니다.");
 	    }
-		
-	    enterpriseProductService.addSellProduct(enterpriseProduct,  benefitNoList, benefitDetailList, quantity);
-	  
+
+	    try {
+	        // 중복체크 및 등록 (중복이면 IllegalStateException 발생)
+	        enterpriseProductService.addSellProductBatch(sellProductRequests, quantity);
+	        return ResponseEntity.ok("등록 되었습니다");
+	    } catch (IllegalStateException e) {
+	        // 중복 등록시 메시지 반환
+	        return ResponseEntity.badRequest().body(e.getMessage());
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 콘솔에 에러 전체 로그
+	        return ResponseEntity.status(500).body(e.getMessage());
+	    }
+	}
+	
+	/*
+	 * 입점업체 등록 상품 수정
+	 */
+	@GetMapping("/modifySellProduct")
+	public String showModifySellProductForm(
+	        @RequestParam("sellProductsNo") String sellProductsNo, 
+	        Model model
+	) {
+
+	    EnterpriseProduct product = enterpriseProductService.getProductByNo(sellProductsNo);
+	
+	    List<EnterpriseProductBenefit> productBenefitList = enterpriseProductService.getBenefitListBySellProductNo(sellProductsNo);
+	   
+	    EnterprisePenaltyCalculate penalty = enterpriseProductService.getPenaltyCalculateByNo(sellProductsNo);
+	    
+	    List<ProductInfoBenefit> benefitList = adminProductInfoService.getBenefitList();
+	    
+	    List<EnterpriseMarginRatio> marginList = enterpriseMarginRatioService.getEnterpriseMarginRatio();
+
+	    model.addAttribute("product", product);
+	    model.addAttribute("productBenefitList", productBenefitList);
+	    model.addAttribute("penalty", penalty);
+	    model.addAttribute("benefitList", benefitList);
+	    model.addAttribute("marginList", marginList);
+
+	    return "enterprise/product/modifySellProductView";
+	}
+	    
+	@PostMapping("/modifySellProduct")
+	public String modifySellProduct(
+	    @ModelAttribute EnterpriseProduct product,
+	    @RequestParam("penaltyRatio") double penaltyRatio,
+	    @RequestParam("benefitNoList") List<String> benefitNoList,
+	    @RequestParam("benefitDetailList") List<String> benefitDetailList,
+	    RedirectAttributes redirectAttributes
+	) {
+	    enterpriseProductService.modifySellProductBenefits(
+	    		   product, benefitNoList, benefitDetailList, penaltyRatio
+	    );
+	    redirectAttributes.addFlashAttribute("msg", "수정 완료!");
 	    return "redirect:/enterprise/product/sellProductList";
 	}
+
+	// 판매중단 (비활성화)
+	@PostMapping("/setSaleStoppage")
+	@ResponseBody
+	public String setSaleStoppage(@RequestParam("sellProductsNo") String sellProductsNo) {
+	    enterpriseProductService.setSaleStoppage(sellProductsNo);
+	    return "ok";
+	}
+
+	// 판매중단 해제 (활성화)
+	@PostMapping("/unsetSaleStoppage")
+	@ResponseBody
+	public String unsetSaleStoppage(@RequestParam("sellProductsNo") String sellProductsNo) {
+	    enterpriseProductService.unsetSaleStoppage(sellProductsNo);
+	    return "ok";
+	}
+	
+	
 	
 }

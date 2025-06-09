@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8" />
+        <title th:text="${title}">Nest Dashboard</title>
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="/manage/assets/imgs/theme/favicon.svg" />
+        <!-- Template CSS -->
+        <link href="/manage/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+    </head>
+
+    <body>
+        <main>
+            <header class="main-header navbar justify-content-center">
+                <div class="logo logo-width-1">
+                    <a th:href="@{/}">
+                    	<img src="/user/assets/imgs/theme/billeasy-store-removebg-preview.png" alt="logo" style="height: 80px;"/>
+                    </a>
+                </div>
+            </header>
+            <section class="content-main mt-80 mb-80">
+            	 <div class="col-sm-12">
+		            <div class="w-50 mx-auto text-center">
+                        <h1 class="mt-40 mb-15">관리자에게 문의하세요</h1>
+                        <h3 class="mb-15">연락처 [[${telno}]]</h3>
+                        <a href="javascript:history.back();" class="btn btn-primary mt-4">
+                			<i class="material-icons md-keyboard_return"></i>
+                			 &ensp; 이전 페이지로
+               			</a>
+                    </div>
+                </div>
+            </section>
+            <footer class="main-footer text-center">
+                <p class="font-xs">
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script>
+                    &copy; Nest - HTML Ecommerce Template .
+                </p>
+                <p class="font-xs mb-30">All rights reserved</p>
+            </footer>
+        </main>
+        <script src="/manage/assets/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="/manage/assets/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="/manage/assets/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="/manage/assets/js/main.js?v=1.1" type="text/javascript"></script>
+        <script>
+        </script>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+

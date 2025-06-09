@@ -32,7 +32,8 @@ public class AdminProductServiceImpl implements AdminProductService{
 		private final AdminProductMapper adminProductMapper;
 		private final FileService fileService;
 		
-		
+
+			
 		@Override
 	    public List<AdminProduct> searchProductList(String searchKey, String searchValue, String categoryNo, String status) {
 	        Map<String, Object> paramMap = new HashMap<>();
@@ -50,7 +51,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 		}
 		
 		@Override
-		public void modifyProduct(AdminProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails, String deleteFileIdxs) {
+		public void modifyProduct(AdminProduct product, MultipartFile[] mainImage, String deleteFileIdxs) {
 		 
 		    adminProductMapper.modifyProduct(product);
 
@@ -67,10 +68,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 		        fileService.addFiles(mainImage, "mainImage", product.getModelNo());
 		    }
 
-
-		    if (thumbnails != null && thumbnails.length > 0 && !thumbnails[0].isEmpty()) {
-		        fileService.addFiles(thumbnails, "thumbnail", product.getModelNo());
-		    }
+		   
 		}
 		
 		@Override
@@ -111,7 +109,7 @@ public class AdminProductServiceImpl implements AdminProductService{
 		}
 		
 		@Override
-		public void addProduct(AdminAddProduct product, MultipartFile[] mainImage, MultipartFile[] thumbnails) {
+		public void addProduct(AdminAddProduct product, MultipartFile[] mainImages) {
 			
 			// Pk 랜덤 생성
 			String productNo = UUID.randomUUID().toString().replace("-", "");
@@ -134,8 +132,8 @@ public class AdminProductServiceImpl implements AdminProductService{
 	        adminProductMapper.insertProduct(product);
 	
 	        //  파일 메타데이터 DB에 등록   
-	        fileService.addFiles(mainImage, "mainImage", product.getModelNo());
-	        fileService.addFiles(thumbnails, "thumbnail", product.getModelNo());
+	        fileService.addFiles(mainImages, "mainImage", product.getModelNo());
+
 		}
 		
 		
@@ -148,4 +146,5 @@ public class AdminProductServiceImpl implements AdminProductService{
 		 adminProductMapper.unsetSaleStoppage(productNo);
 		
 		}
+
 }

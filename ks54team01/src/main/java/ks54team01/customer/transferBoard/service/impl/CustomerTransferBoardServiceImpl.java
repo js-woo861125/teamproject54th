@@ -39,6 +39,7 @@ public class CustomerTransferBoardServiceImpl implements CustomerTransferBoardSe
 		String transferRentalContractNum =  "transfer_rental_contract_" + UUID.randomUUID().toString().replace("-", "");
 		customerTransferBoard.setTransferRentalContractNum(transferRentalContractNum);
 		customerTransferBoardMapper.applyTransfer(customerTransferBoard);
+		customerTransferBoardMapper.changeStatusAfterApply(customerTransferBoard);
 	}
 	
 	/**

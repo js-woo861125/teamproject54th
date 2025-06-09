@@ -213,36 +213,7 @@
 	    }
 	});
 	
- // 썸네일 미리보기 & 삭제
-   	$('#thumbnails').change(function(){
-   	    $('#previewThumnail').empty();
-   	    const files = this.files;
-   	    const fileList = [...files];
-   	    fileList.forEach(function(file, idx){
-   	        const imgDiv = $('<div class="col-md-6 img-box1" style="position:relative"></div>');
-   	        const lastModified = files[idx].lastModified;
-   	        const fileFullName = files[idx].name;
-   	        const dotIdx = fileFullName.lastIndexOf('.');
-   	        const fileName = (dotIdx != -1 &&  dotIdx < fileFullName.length - 1) 
-   	                            ? fileFullName.substring(0, dotIdx) 
-   	                            : fileFullName;
-   	        if(file.type.match('image.*')){
-   	            const reader = new FileReader(); 
-   	            reader.onload = function (e) { 
-   	                const img = $('<img />', {src: e.target.result, id : lastModified, alt: fileName });
-   	                const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
-   	                imgDiv.append(img,span);
-   	                imgDiv.appendTo('#previewThumnail');
-   	            } 
-   	            reader.readAsDataURL(file);
-   	        }else{
-   	            const noImage = $('<img />', { src : '/manage/assets/imgs/theme/upload.svg', id : lastModified, alt : fileName});
-   	            const span = $('<span />', {'class': 'delete-img1', 'data-remove-key' : lastModified}).text('X');
-   	            imgDiv.append(noImage, span);
-   	            imgDiv.appendTo('#previewThumnail');
-   	        }
-   	    });
-   	});
+
 
    	// X버튼 클릭 시 썸네일 파일 삭제
    	$(document).on('click', '.delete-img1', function(){
@@ -257,18 +228,6 @@
    	    $(this).closest('.img-box1').remove();
    	});
 
-   	// X버튼 클릭 시 상세 이미지 파일 삭제
-   	$(document).on('click', '.delete-img2', function(){
-   	    const input = document.getElementById('thumbnails');
-   	    const files = input.files;
-   	    const dataTransfer = new DataTransfer();
-   	    const removeTargetId = $(this).attr('data-remove-key');
-   	    Array.from(files)
-   	        .filter(file => file.lastModified != removeTargetId)
-   	        .forEach(file => dataTransfer.items.add(file));
-   	    input.files = dataTransfer.files;
-   	    $(this).closest('.img-box2').remove();
-   	});
    		
    		$(document).ready(function(){
    		    // 1. 페이지 로딩 시 카테고리 목록 불러오기
@@ -495,12 +454,10 @@
 							</div>
 						</div>
 					</div>
-						<!-- row.// -->
-
-					</div>
+				</div>
 			
 			</div>
-			<div class="row col-lg-3">
+			<div class="row col-lg-3 h-100">
 				<div class="card">
 					<div class="card-header">
 						<h4>대표 사진 미리보기</h4>
@@ -512,19 +469,7 @@
 								class="form-control">
 						</div>
 					</div>
-				</div>
-				<div class="card">
-					<div class="card-header">
-						<h4>상품 썸네일 미리보기</h4>
-					</div>
-					<div class="card-body">
-						<div id="previewThumnail" class="mb-2"></div>
-						<div class="input-group">
-							<input type="file" id="thumbnails" name="thumbnails"
-								class="form-control" multiple>
-						</div>
-					</div>
-				</div>
+				</div>			
 			</div>
 		</div>	
 	</form>

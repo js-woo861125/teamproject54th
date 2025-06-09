@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/admin/product")
 @Slf4j
 public class AdminProductController {
-	
+		
 	@Value("${file.path}")
 	private String fileRealPath;
 	
@@ -80,10 +80,9 @@ public class AdminProductController {
 	public String modifyProduct(
 	    AdminProduct product,
 	    @RequestParam(value = "mainImage", required = false) MultipartFile[] mainImage,
-	    @RequestParam(value = "thumbnails", required = false) MultipartFile[] thumbnails,
 	    @RequestParam(value = "deleteFileIdxs", required = false) String deleteFileIdxs) {
 
-		adminProductService.modifyProduct(product, mainImage, thumbnails, deleteFileIdxs);
+		adminProductService.modifyProduct(product, mainImage, deleteFileIdxs);
 		
 	    return "redirect:/admin/product/productList";
 	}
@@ -127,7 +126,6 @@ public class AdminProductController {
 	    @RequestParam("modelNo") String modelNo,
 	    @RequestParam("productName") String productName,
 	    @RequestParam("mainImage") MultipartFile[] mainImage,
-	    @RequestParam("thumbnails") MultipartFile[] thumbnails,
 	    @RequestParam("productsDetail") String productsDetail,
 	    Model model
 	) {
@@ -147,7 +145,7 @@ public class AdminProductController {
 	    addProduct.setProductDetail(productsDetail);
 
 	  
-	    adminProductService.addProduct(addProduct, mainImage, thumbnails);
+	    adminProductService.addProduct(addProduct, mainImage);
 
 	    return "redirect:/admin/product/productList";
 	}
