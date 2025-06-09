@@ -37,7 +37,19 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductController {
 
 	private final CustomerProductService customerProductService;
+
+	@GetMapping("/customer/product/productDetailByProd/{productsNum}")
+	public String productDetail(@PathVariable Long productsNum, Model model) {
+	    // productsNum에 해당하는 상품 정보 로딩
+	    return "customer/productDetail"; // Thymeleaf 템플릿 경로
+	}
+
 	
+	// 이미지 파일이 저장된 기본 경로 (application.properties 등에서 설정)
+    
+	@Value("${file.path:/}") // 
+    private String uploadDir;
+
 	
 	
 	
