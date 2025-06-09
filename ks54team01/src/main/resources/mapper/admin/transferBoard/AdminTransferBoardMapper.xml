@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="ks54team01.admin.transferBoard.mapper.AdminTransferBoardMapper">
+  
+  	<delete id="removeTransferBoard" parameterType="string">
+		/* 양도 게시글 삭제하기 */
+		UPDATE transfer_board
+		SET
+			transfer_rental_processing_status = '양도공개전'
+		WHERE
+			transfer_board_no = #{transferBoardNum}
+			AND transfer_rental_processing_status != '양도마감';
+	</delete>
+  	
+  </mapper>

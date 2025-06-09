@@ -9,11 +9,70 @@
 	</head>
 	
 	<th:block layout:fragment="jsFile">
-	
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</th:block>
 	
 	<th:block layout:fragment="jsScript">
-	
+		<script th:inline="javascript">
+			$('.deleteBtn').click(e => {
+				e.preventDefault();
+				const transferBoardNum = $(e.currentTarget).data('transferBoardNum');
+				Swal.fire({
+				  	text: "선택하신 양도 게시글을 삭제하시겠습니까?",
+				  	icon: "warning",
+				  	showCancelButton: true,
+				  	confirmButtonColor: "#3085d6",
+				  	cancelButtonColor: "#d33",
+				  	confirmButtonText: "삭제",
+				  	cancelButtonText: "취소"
+				}).then(async (result) => {
+						console.log(result);
+						
+						if (result.isDismissed) return ;
+						
+						const optionObj = {
+								title: '',
+								text: '',
+								icon: ''
+							};
+						
+						if (result.isConfirmed) {
+					    	const request = $.ajax({
+								url : '/admin/transferBoard/removeTransferBoard',
+								method : 'post',
+								data : { 'transferBoardNum' : transferBoardNum},
+								dataType : 'json',
+								async : false
+					    	});
+					    	request.done(isDelete => {
+								if(isDelete) {
+								  	optionObj.title = '';
+									optionObj.text = '선택하신 양도 게시글이 삭제되었습니다.';
+								  	optionObj.icon = 'success';
+								}
+					    	});
+					    	request.fail((jqXHR, textStatus, error) => {
+								console.log(jqXHR, textStatus, error);
+					    	});
+						}
+						Swal.fire(optionObj).then(result => location.reload());
+					});
+				});
+			
+				$(function(){
+				    // 이미지 클릭시 해당 이미지 모달
+				    $('div.extraImage img').click(function(){
+				        let img = new Image();
+				        img.src = $(this).attr("src");
+				        $('.imageModalBox').html(img);
+				        $(".imageModal").show();
+				    });
+				    // 모달 클릭할때 이미지 닫음
+				    $('.imageModal').click(function (e) {
+				    	$('.imageModal').toggle();
+				    });
+				});
+		</script>
 	</th:block>
 	
 	<!-- 페이지 삽입공간 -->
@@ -22,85 +81,97 @@
 			<div class="card col-6">
 				<header class="card-header">
 	                <div class="row align-items-end pe-4">
-	                    <div class="col-md-3 ms-auto">
-	                        <button type="submit" class="btn btn-danger w-100 rounded font-lg hover-up text-white justify-content-center fs-6" >게시글 삭제</button>
-	                    </div>
-	                </div>
+						<div class="col-md-3 ms-auto">
+							<a th:data-transfer-board-num="${transferBoardInfo.transferBoardNum}" 
+				         	   class="deleteBtn btn btn-danger w-100 rounded font-lg hover-up text-white justify-content-center fs-6" href="#">
+				        		게시글 삭제
+				      		</a>
+						</div>
+					</div>
 	            </header>
 				<div class="card-body">
-					 <div class="container mb-30">
-			            <div class="row">
+					<div class="container mb-30">
+			        	<div class="row">
 			                <div class="col-xl-11 col-lg-12 m-auto">
 			                    <div class="row">
 			                        <div class="product-info mt-30">
-			                            <div class="product-detail accordion-detail">
+			                            <div class="product-detail accordion-detail" th:object="${transferBoardInfo}">
 			                                <div class="row mb-50 mt-30">
 			                                    <div class="col-md-12 col-sm-12 col-xs-12">
 			                                        <div class="detail-info pr-30 pl-30 product-info">
-			                                            <h2 class="title-detail">SK매직 올인원 정수기 양도합니다! 곧 약정 만료됩니다.</h2>
-			                                            <div class="product-detail-rating">
-			                                                <div class="product-rate-cover text-end">
-			                                                    <th:block>
-						                                        	<span class="stock-status out-stock"> 마감 </span>
-						                                        </th:block>
-			                                                </div>
-			                                            </div>
+			                                            <h2 th:text="*{transferTitle}"  class="title-detail">SK매직 올인원 정수기 양도합니다! 곧 약정 만료됩니다.</h2>
+
 			                                            <div class="fs-5">
-			                                                <ul class="mr-50 float-start">
-			                                                    <li class="mb-20">마감일</li>
-			                                                    <li class="mb-20">설치지역</li>
-			                                                    <li class="mb-20">작성자</li>
-			                                                </ul>
-			                                                <ul class="mr-50 float-start">
-			                                                    <li class="mb-20 text-brand">2025-05-05</li>
-			                                                    <li class="mb-20 text-brand">서울 영등포구 버드나루로 11길</li>
-			                                                    <li class="mb-20 text-brand">렌고쿠</li>
-			                                                </ul>
-			                                                <div style="clear: both;"></div>
+			                                                <div class="fs-5 d-flex flex-column gap-2">
+															    <div class="fs-5 d-flex flex-column gap-2 mb-3">
+																    <div class="d-flex">
+																        <div class="fw-semibold text-nowrap me-3" style="width: 120px;">마감일</div>
+																        <div th:text="*{boardValidDate}" class="text-brand">2025-05-05</div>
+																    </div>
+																    <div class="d-flex">
+																        <div class="fw-semibold text-nowrap me-3" style="width: 120px;">설치지역</div>
+																        <div th:text="*{customerDeliveryList.delAddr}" class="text-brand">서울 영등포구 버드나루로 11길</div>
+																    </div>
+																    <div class="d-flex">
+																        <div class="fw-semibold text-nowrap me-3" style="width: 120px;">작성자</div>
+																        <div th:text="*{customerId}" class="text-brand"></div>
+																    	<input class="writeId" type="hidden" name="customerId" th:value="*{customerId}" />
+																    </div>
+																</div>
+															</div>
 			                                            </div>
 			                                        </div>
 			                                        <!-- Detail Info -->
 			                                    </div>
 			                                </div>
 			                                <div style="width: 100%; height: 2px; min-height: 1px; margin: 0px; background-color: rgba(112, 115, 124, 0.16);"></div>
-			                                <h3 class="mt-20 mb-20">찾는 상품</h3>
+			                                <h3 class="mt-20 mb-20">양도하는 상품</h3>
 			                                <div class="product-info">
 			                                    <div class="tab-style3">
 			                                        <div class="entry-main-content">
-			                                            <h4>삼성크리스탈 UHDTV 85인치</h4>
+			                                             <h3 th:text="*{productInfo.productsName}">삼성크리스탈 UHDTV 85인치</h3>
 			
 			                                            <div class="tab-pane fade show active" id="Description">
-			                                                <div class="fs-5">
-			                                                    <ul class="mr-60 float-start product-more-infor mt-30">
-			                                                        <li class="mb-20">남은 계약기간</li>
-			                                                        <li class="mb-20">렌탈료</li>
-			                                                        <li class="mb-20">지원금</li>
-			                                                    </ul>
-			                                                    <ul class="mr-50 float-start product-more-infor mt-30">
-			                                                        <li class="mb-20 text-brand">24개월</li>
-			                                                        <li  class="mb-20 text-brand">₩ 20,000</li>
-			                                                        <li class="mb-20 text-brand">₩ 10,000</li>
-			                                                    </ul>
-			                                                    <div style="clear: both;"></div>
-			                                                </div>
+                                               	 			<div class="fs-5 d-flex flex-column gap-2 mt-3 mb-3">
+															    <div class="d-flex">
+															        <div class="fw-semibold flex-shrink-0 text-nowrap me-3" style="width: 120px;">잔여계약기간</div>
+															        <div th:text="*{remainingMonths + '개월'}" class="text-brand">24개월</div>
+															    </div>
+															    <div class="d-flex">
+															        <div class="fw-semibold flex-shrink-0 text-nowrap me-3" style="width: 120px;">렌탈료</div>
+															        <div th:text="|₩*{#numbers.formatInteger(rentalFee, 3, 'COMMA')}|" class="text-brand">₩ 20,000</div>
+															    </div>
+															    <div class="d-flex">
+															        <div class="fw-semibold flex-shrink-0 text-nowrap me-3" style="width: 120px;">지원금</div>
+															        <div th:text="|₩*{individualGrants >= 1000 ? #numbers.formatInteger(individualGrants, 3, 'COMMA') : individualGrants}|" class="text-brand">₩ 20,000</div>
+															    </div>
+															</div>
 			                                                <div style="width: 100%; height: 1px; min-height: 1px; margin: 24px 0px; background-color: rgba(112, 115, 124, 0.16);"></div>
-			                                                <h4>기타 전달사항</h4>
-			                                                <p th:text="*{transferContent}">매월 첫째주에 방문케어 해주십니다!</p>
-			                                            </div>
-			                                        </div>
+		                                               		<h4>기타 전달사항</h4>
+		                                                	<p th:text="*{transferContent}">매월 첫째주에 방문케어 해주십니다!</p>
+		                                            		<div class="row g-3" th:if="${!#lists.isEmpty(fileList)}">
+		                                            			<div class="col-6 col-md-3" th:each="fl : ${fileList}">
+															    	<div class="extraImage ratio ratio-4x3"> <!-- 1:1 비율 고정 -->
+															        	<img th:src="@{${fl.filePath}}" alt="이미지" class="img-fluid object-fit-cover rounded" />
+															   	 	</div>
+																</div>
+				                                            </div>
+				                                        </div>
+				                                	</div>
 			                                    </div>
 			                                </div>
 			                            </div>
 			                        </div>
-			                       
 			                    </div>
 			                </div>
 			            </div>
 			        </div>
 				</div>
-			
+			</div>
+			<!-- 이미지 모달 -->
+			<div class="imageModal">
+			    <div class="imageModalBox"></div>
 			</div>
 		</div>
 	</th:block>
-
 </html>
