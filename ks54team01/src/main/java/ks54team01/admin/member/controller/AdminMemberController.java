@@ -107,7 +107,7 @@ public class AdminMemberController {
 								  @RequestParam(name="memberType", required = false) String memberType,
 								  @RequestParam(name="status", required = false) String status,
 								  Pageable pageable, Model model) {
-		pageable.setRowPerPage(10);
+//		pageable.setRowPerPage(10);
 		
 	    String withdrawStatus = null;
 	    String dormantStatus = null;

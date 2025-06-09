@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8" />
+        <title th:text="${title}">Nest Dashboard</title>
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="/manage/assets/imgs/theme/favicon.svg" />
+        <!-- Template CSS -->
+        <link href="/manage/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+    </head>
+
+    <body>
+        <main>
+            <header class="main-header style-2 navbar justify-content-center">
+                <div class="col-brand">
+                    <a href="/admin/" class="brand-wrap">
+                        <img src="/manage/assets/imgs/theme/logo.svg" class="logo" alt="Nest Dashboard" />
+                    </a>
+                </div>
+            </header>
+            <section class="content-main mt-80 mb-80">
+            	 <div class="col-sm-12">
+		            <div class="w-50 mx-auto text-center">
+                    	<img th:src="@{/manage/assets/imgs/theme/404.png}" width="350" alt="Page Not Found" />
+                        <h3 class="mt-40 mb-15">페이지를 찾을 수 없습니다.</h3>
+                        <p>방문하시려는 페이지의 주소가 잘못 입력되었거나,</p>
+                        <p>페이지의 주소가 변경 혹은 삭제되어 요청하신 페이지를 찾을 수 없습니다.</p>
+                        <p>입력하신 주소가 정확한지 다시 한번 확인해 주시기 바랍니다.</p>
+                        <a href="javascript:history.back();" class="btn btn-primary mt-4">
+                			<i class="material-icons md-keyboard-return"></i>
+                			 &ensp; 이전 페이지로
+               			</a>
+                    </div>
+                </div>
+            </section>
+            <footer class="main-footer text-center">
+                <p class="font-xs">
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script>
+                    &copy; Nest - HTML Ecommerce Template .
+                </p>
+                <p class="font-xs mb-30">All rights reserved</p>
+            </footer>
+        </main>
+        <script src="/manage/assets/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="/manage/assets/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="/manage/assets/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="/manage/assets/js/main.js?v=1.1" type="text/javascript"></script>
+        <script>
+        </script>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
