@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
+import ks54team01.admin.productInfo.domain.ProductInfoCategory;
+import ks54team01.admin.productInfo.mapper.AdminProductInfoMapper;
 import ks54team01.customer.product.domain.BenefitDetail;
 import ks54team01.customer.product.domain.CustomerProduct;
 import ks54team01.customer.product.service.CustomerProductService;
@@ -35,6 +38,15 @@ public class ProductController {
 
 	private final CustomerProductService customerProductService;
 	
+
+	
+	// 이미지 파일이 저장된 기본 경로 (application.properties 등에서 설정)
+    
+	@Value("${file.path:/}") // 
+    private String uploadDir;
+	
+	
+
 	@GetMapping("/productDetailByProd")
 	public String getProductDetailByProd(@RequestParam(value="productsNum") String productsNum,
 										@ModelAttribute("addResult") String addResult, 

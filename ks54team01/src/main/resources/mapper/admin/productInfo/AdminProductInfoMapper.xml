@@ -1170,4 +1170,15 @@
 			CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(product_category_no, '_', 2), 'M', -1) AS UNSIGNED), 
 			CAST(SUBSTRING_INDEX(product_category_no, '_', -1) AS UNSIGNED);
 	</select>
+	
+	<select id="getSmCategoryByMdCategoryNo" resultMap="categoryResultMap">
+		SELECT 
+			product_category_no,
+			small_category
+		FROM 
+			products_category
+		WHERE
+			use_status = '사용중' 
+			AND middle_category_no = #{mdCategoryNo};
+	</select>
 </mapper>

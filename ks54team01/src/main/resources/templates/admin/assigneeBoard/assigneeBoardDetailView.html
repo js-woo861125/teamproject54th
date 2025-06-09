@@ -35,13 +35,13 @@
 							<div class="col-xl-11 col-lg-12 m-auto">
 								<div class="row">
 									<div class="product-info mt-30">
-										<div class="product-detail accordion-detail">
+										<div class="product-detail accordion-detail" 
+											 th:object="${assigneeBoardInfo}" style="background-color:#f8f8f8;">
 											<div class="row mb-50 mt-30">
 												<div class="col-md-12 col-sm-12 col-xs-12">
 													<div class="detail-info pr-30 pl-30 product-info">
-														<h2 class="title-detail">SK매직
+														<h2 th:text="*{productName}" class="title-detail mb-50">SK매직
 															올인원 정수기 양도합니다! 곧 약정 만료됩니다.</h2>
-													
 														<div class="fs-5">
 															<ul class="mr-50 float-start">
 																<li class="mb-20">마감일</li>
