@@ -35,6 +35,12 @@ public class ProductController {
 
 	private final CustomerProductService customerProductService;
 	
+	@GetMapping("/productDetailByProd/{productsNum}")
+	public String productDetail(@PathVariable Long productsNum, Model model) {
+	    // productsNum에 해당하는 상품 정보 로딩
+	    return "customer/prodDetail"; // Thymeleaf 템플릿 경로
+	}
+	
 	@GetMapping("/productDetailByProd")
 	public String getProductDetailByProd(@RequestParam(value="productsNum") String productsNum,
 										@ModelAttribute("addResult") String addResult, 
