@@ -223,7 +223,8 @@
 		                                    </div>
 		                                    <div class="text-brand price fs-6 mt-10 mb-10">
 		                                    	<span>판매최저가: </span>
-		                                    	<span th:text="|₩${l.minimumPrice >= 1000 ? #numbers.formatInteger(l.minimumPrice, 3, 'COMMA') : l.minimumPrice}|">₩ 56,000 </span>
+		                                    	<span th:if="${l.minimumPrice} == 0" th:text="${'판매안함'}">₩ 56,000 </span>
+		                                    	<span th:unless="${l.minimumPrice} == 0" th:text="|₩${l.minimumPrice >= 1000 ? #numbers.formatInteger(l.minimumPrice, 3, 'COMMA') : l.minimumPrice}|">₩ 56,000 </span>
 		                                    </div>
 		                                </div>
                                		 <!-- </a> -->
