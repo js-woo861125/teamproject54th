@@ -20,5 +20,5 @@ public interface EnterpriseMarginRatioMapper {
 	void modifyEnterpriseMarginRatio(EnterpriseMarginRatio marginRatio);
 	
 	// 업체별 마진율 설정
-	List<EnterpriseMarginRatio> getEnterpriseMarginRatio();
+	List<EnterpriseMarginRatio> getEnterpriseMarginRatio(String entCeoNo);
 }
