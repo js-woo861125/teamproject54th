@@ -12,5 +12,5 @@ public interface EnterpriseMarginRatioService {
 	
 	void modifyEnterpriseMarginRatio(List<EnterpriseMarginRatio> list);
 	
-	List<EnterpriseMarginRatio> getEnterpriseMarginRatio();
+	List<EnterpriseMarginRatio> getEnterpriseMarginRatio(String entCeoNo);
 }

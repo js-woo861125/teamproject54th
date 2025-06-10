@@ -4,14 +4,14 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ks54team01.enterprise.product.mapper.EnterpriseMarginRatioMapper">
 
-	<select id="existMarginRatioByPeriod" parameterType="int">
+	<select id="existMarginRatioByPeriod" parameterType="ks54team01.enterprise.product.domain.EnterpriseMarginRatio">
 		/* 마진율 등록 전 이미 등록되어있는 기간 등록 시 실행, 미등록 시 실행하지 않음*/
 		SELECT
 			COUNT(margin_ratio_no)
 		FROM
 			margin_ratio
 		WHERE
-			ent_ceo_no = 'ent_ceo_1'
+			ent_ceo_no = #{enterpriseCeoNum}
 			AND period = #{period};
 	</select>
 
@@ -19,7 +19,7 @@
 		/* 업체별 마진율 최초 등록 (랜덤코드) */
 		INSERT INTO margin_ratio
 		(margin_ratio_no, ent_ceo_no, ent_emp_id, period, margin_ratio, register_date, revision_date, use_status)
-		VALUES(#{marginRatioNum}, 'ent_ceo_1', 'entempid1', #{period}, #{marginRatio}, NOW(), NOW(), '사용중');
+		VALUES(#{marginRatioNum}, #{enterpriseCeoNum}, #{enterpriseEmployeeId}, #{period}, #{marginRatio}, NOW(), NOW(), '사용중');
 	</insert>
 	
 	<update id="modifyMarginRatioUseStatus" parameterType="ks54team01.enterprise.product.domain.EnterpriseMarginRatio">
@@ -62,7 +62,7 @@
 		FROM
 			margin_ratio
 		WHERE
-			ent_ceo_no = 'ent_ceo_1'
+			ent_ceo_no = #{entCeoNo}
 		ORDER BY period DESC;
 	</select>
 </mapper>

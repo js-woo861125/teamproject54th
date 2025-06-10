@@ -59,9 +59,9 @@ public class EnterpriseMarginRatioServiceImpl implements EnterpriseMarginRatioSe
 	 * 업체별 마진율 조회
 	 */
 	@Override
-	public List<EnterpriseMarginRatio> getEnterpriseMarginRatio() {
+	public List<EnterpriseMarginRatio> getEnterpriseMarginRatio(String entCeoNo) {
 		
-		List<EnterpriseMarginRatio> enterpriseMarginRatio = enterpriseMarginRatioMapper.getEnterpriseMarginRatio();
+		List<EnterpriseMarginRatio> enterpriseMarginRatio = enterpriseMarginRatioMapper.getEnterpriseMarginRatio(entCeoNo);
 		
 		return enterpriseMarginRatio;
 	}
