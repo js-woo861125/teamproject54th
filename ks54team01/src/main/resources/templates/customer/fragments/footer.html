@@ -3,110 +3,85 @@
 	<footer class="main main-footer font-xs" th:fragment="footerFragment">
 
         <!-- !밑에서 두번째 -->
+        
+                <div class="container pb-30">
+            <div class="row align-items-center">
+
+
+                <div class="col-12 mb-30">
+                    <div class="footer-bottom"></div>
+                </div>
+
         <section class="section-padding footer-mid">
             <div class="container pt-15 pb-20">
                 <div class="row">
-                    
+                        
                     <!-- !Company -->
                     <div class="footer-link-widget col">
-                        <h4 class="widget-title">김</h4>
+                        <h4 class="widget-title">KIM</h4>
                         <ul class="footer-list mb-sm-5 mb-md-0">
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Delivery Information</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Terms &amp; Conditions</a></li>
-                            <li><a href="#">Contact Us</a></li>
-                            <li><a href="#">Support Center</a></li>
-                            <li><a href="#">Careers</a></li>
+                            <li><a th:href="@{/admin/productInfo/addCategory}">플랫폼상품관리</a></li>
+                        
                         </ul>
                     </div>
                     <!-- !Account -->
                     <div class="footer-link-widget col">
-                        <h4 class="widget-title">박</h4>
+                        <h4 class="widget-title">PARK</h4>
                         <ul class="footer-list mb-sm-5 mb-md-0">
-                            <li><a href="#">Sign In</a></li>
-                            <li><a href="#">View Cart</a></li>
-                            <li><a href="#">My Wishlist</a></li>
-                            <li><a href="#">Track My Order</a></li>
-                            <li><a href="#">Help Ticket</a></li>
-                            <li><a href="#">Shipping Details</a></li>
-                            <li><a href="#">Compare products</a></li>
+                            <li><a th:href="@{/customer/transferBoard/transferBoardList}">양도양수</a></li>
                         </ul>
                     </div>
                     <!-- !Corporate -->
                     <div class="footer-link-widget col">
-                        <h4 class="widget-title">손</h4>
+                        <h4 class="widget-title">SON</h4>
                         <ul class="footer-list mb-sm-5 mb-md-0">
-                            <li><a href="#">Become a Vendor</a></li>
-                            <li><a href="#">Affiliate Program</a></li>
-                            <li><a href="#">Farm Business</a></li>
-                            <li><a href="#">Farm Careers</a></li>
-                            <li><a href="#">Our Suppliers</a></li>
-                            <li><a href="#">Accessibility</a></li>
-                            <li><a href="#">Promotions</a></li>
+                            <li><a th:href="@{/customer/member/myAccount}">회원관리</a></li>
                         </ul>
                     </div>
                     <!-- !Popular -->
                     <div class="footer-link-widget col">
-                        <h4 class="widget-title">장</h4>
+                        <h4 class="widget-title">JANG</h4>
                         <ul class="footer-list mb-sm-5 mb-md-0">
-                            <li><a href="#">Milk & Flavoured Milk</a></li>
-                            <li><a href="#">Butter and Margarine</a></li>
-                            <li><a href="#">Eggs Substitutes</a></li>
-                            <li><a href="#">Marmalades</a></li>
-                            <li><a href="#">Sour Cream and Dips</a></li>
-                            <li><a href="#">Tea & Kombucha</a></li>
-                            <li><a href="#">Cheese</a></li>
+                            <li><a th:href="@{/admin/payment/calculate}">정산관리</a></li>
                         </ul>
                     </div>
                     <!-- !Popular -->
                     <div class="footer-link-widget col">
-                        <h4 class="widget-title">전</h4>
+                        <h4 class="widget-title">JEON</h4>
                         <ul class="footer-list mb-sm-5 mb-md-0">
-                            <li><a href="#">Milk & Flavoured Milk</a></li>
-                            <li><a href="#">Butter and Margarine</a></li>
-                            <li><a href="#">Eggs Substitutes</a></li>
-                            <li><a href="#">Marmalades</a></li>
-                            <li><a href="#">Sour Cream and Dips</a></li>
-                            <li><a href="#">Tea & Kombucha</a></li>
-                            <li><a href="#">Cheese</a></li>
+                            <li><a th:href="@{/admin/product/addProduct}">판매상품관리</a></li>
                         </ul>
                     </div>
                     <!-- !Popular -->
                     <div class="footer-link-widget col">
-                        <h4 class="widget-title">최</h4>
+                        <h4 class="widget-title">CHOI</h4>
                         <ul class="footer-list mb-sm-5 mb-md-0">
-                            <li><a href="#">Milk & Flavoured Milk</a></li>
-                            <li><a href="#">Butter and Margarine</a></li>
-                            <li><a href="#">Eggs Substitutes</a></li>
-                            <li><a href="#">Marmalades</a></li>
-                            <li><a href="#">Sour Cream and Dips</a></li>
-                            <li><a href="#">Tea & Kombucha</a></li>
-                            <li><a href="#">Cheese</a></li>
+                            <li><a href="#">결제/배송 관리</a></li>
                         </ul>
                     </div>
-                    
                 </div>
             </div>
         </section>
-                <div class="container pb-30">
-            <div class="row align-items-center">
-                <div class="col-12 mb-30">
-                    <div class="footer-bottom"></div>
+                <div class="d-flex justify-content-between">
+                    <p class="font-sm mb-0">&copy; 2025,06 <strong class="text-brand">한국스마트 정보교육원 54기</strong>  <br /> billeasy.store <br> 교육용 페이지 입니다. </p>
+                    
+                    
+
+                <div class="mobile-social-icon mb-50">
+                    <a href="#"><img src="/user/assets/imgs/theme/icons/icon-facebook-white.svg" alt="" /></a>
+                    <a href="#"><img src="/user/assets/imgs/theme/icons/icon-twitter-white.svg" alt="" /></a>
+                    <a href="#"><img src="/user/assets/imgs/theme/icons/icon-instagram-white.svg" alt="" /></a>
+                    <a href="#"><img src="/user/assets/imgs/theme/icons/icon-pinterest-white.svg" alt="" /></a>
+                    <a href="#"><img src="/user/assets/imgs/theme/icons/icon-youtube-white.svg" alt="" /></a>
                 </div>
-                <div class="col-xl-4 col-lg-6 col-md-6">
-                    <p class="font-sm mb-0">&copy; 2025, <strong class="text-brand">ks54team</strong> - ks rental <br />All rights reserved</p>
-                </div>
-                <div class="col-xl-4 col-lg-6 text-center d-none d-xl-block justify-content-end">
-                    <div class="hotline d-lg-inline-flex mr-30">
-                        <img src="/user/assets/imgs/theme/icons/phone-call.svg" alt="hotline" />
-                        <p>1900 - 6666<span>Working 8:00 - 22:00</span></p>
+
+                    <div class="logo logo-width-1 d-flex ">
+                        <a th:href="@{/}"><img src="/user/assets/imgs/theme/billeasy-store-removebg-preview.png" alt="logo" /></a>
                     </div>
-                    <div class="hotline d-lg-inline-flex">
-                        <img src="/user/assets/imgs/theme/icons/phone-call.svg" alt="hotline" />
-                        <p>1900 - 8888<span>24/7 Support Center</span></p>
-                    </div>
+
                 </div>
+
+               
             </div>
         </div>
     </footer>
