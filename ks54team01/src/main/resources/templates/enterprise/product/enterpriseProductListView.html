@@ -166,10 +166,16 @@
 											     th:src="@{${sl.mainImageData}}" 
 											     class="img-sm img-main" 
 											     alt="상품이미지" />
+<<<<<<< HEAD
+											<div th:if="${sl.mainImageData == null}" 
+											     class="img-sm img-main bg-light d-inline-block" 
+											     style="width: 100px; height: 100px;"></div>
+=======
 								                 
 								            <div th:if="${sl.mainImageData == null}" 
 								                 class="img-sm img-main bg-light d-inline-block" 
 								                 style="width: 100px; height: 100px;"></div>
+>>>>>>> refs/heads/develop
 								        </div>							       
 								    </a>
                                 </td>
@@ -208,10 +214,7 @@
                                 <td class="col-lg-2 col-sm-2 col-4 col-action">
                                   <a th:href="@{/enterprise/product/modifySellProduct(sellProductsNo=${sl.sellProductsNo})}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> 수정 </a>
                                 </td>
-                           </tr>
-	                           <tr th:if="${#lists.isEmpty(sellProductList)}">
-								    <td colspan="7">등록된 상품이 없습니다.</td>
-								</tr>
+                           </tr>	                        
                           </th:block>
                         </tbody>
                     </table>
