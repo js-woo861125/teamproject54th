@@ -199,11 +199,29 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 
 	}
 
+	
+	/*
+	 * 재고 업데이트
+	 */
 	@Transactional
 	@Override
 	public boolean updateQuantity(String productsNo, int quantity) {
 		int updated = enterpriseProductMapper.updateQuantity(productsNo, quantity);
 		return updated > 0;
 	}
+	
+	@Transactional
+	@Override
+	public void updateQunatityStatus(String productsNo, String entCeoNo) {
+		int leftQuantity = enterpriseProductQuantityMapper.getQuantity(productsNo, entCeoNo);
+	
+		if(leftQuantity <= 0) {
+			enterpriseProductMapper.updateQunatityStatusSoldOut(productsNo, entCeoNo);
+		}else {
+			enterpriseProductMapper.updateQunatityStatusActive(productsNo, entCeoNo);
+		}
+	
+	}
+	
 
 }
