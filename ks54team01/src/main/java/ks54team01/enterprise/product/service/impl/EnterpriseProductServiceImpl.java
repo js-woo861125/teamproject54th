@@ -74,10 +74,11 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 	@Transactional
 	public void addSellProductBatch(List<EnterpriseSellProductRequest> sellProductRequests,
 			EnterpriseProductQuantity quantity) {
-
+		EnterpriseProduct enterpriseProduct = null;
+		EnterprisePenaltyCalculate penalty = null;
 		// 상품(개월수별) 등록
 		for (EnterpriseSellProductRequest req : sellProductRequests) {
-			EnterpriseProduct enterpriseProduct = req.getEnterpriseProduct();
+			enterpriseProduct = req.getEnterpriseProduct();
 			String sellProductNo = UUID.randomUUID().toString().replace("-", "");
 			LocalDateTime now = LocalDateTime.now();
 
@@ -94,7 +95,6 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 			enterpriseProduct.setUseStatus("사용중");
 			enterpriseProduct.setRegisterDate(now);
 			enterpriseProduct.setRevisionDate(now);
-
 			// 2. 상품 인서트
 			enterpriseProductMapper.addSellProduct(enterpriseProduct);
 
@@ -117,7 +117,7 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 					enterpriseProductBenefitMapper.insertEnterpriseProductBenefit(benefit);
 				}
 			}
-			EnterprisePenaltyCalculate penalty = new EnterprisePenaltyCalculate();
+			penalty = new EnterprisePenaltyCalculate();
 
 			penalty.setEntCeoNo(enterpriseProduct.getEntCeoNo());
 			penalty.setEntEmpId(enterpriseProduct.getEntEmpId());
@@ -135,6 +135,7 @@ public class EnterpriseProductServiceImpl implements EnterpriseProductService {
 		// 4. 재고 인서트 (한 번만)
 		quantity.setRegisterDate(LocalDateTime.now().toString());
 		quantity.setRevisionDate(LocalDateTime.now().toString());
+		quantity.setEntCeoNo(penalty.getEntCeoNo());
 		enterpriseProductQuantityMapper.insertEnterpriseProductQuantity(quantity);
 
 	}

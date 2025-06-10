@@ -66,6 +66,10 @@ public class LoginController {
 
 	     if ("입점업체 대표".equals(loginMemberType) || "입점업체 직원".equals(loginMemberType)) {
 	    	 EntMember entCeo = (EntMember) loginResult.get("memberInfo");
+	    	 //손 내가 추가 했어!
+	    	 log.info("memberLoginPro getMemberId{}",entCeo.getMemberId());
+	    	 session.setAttribute("entEmpId", entCeo.getMemberId());
+	    	 
 	    	 session.setAttribute("entCeoNo", entCeo.getEntCeoNo());
 	    	 session.setAttribute("entBrno", entCeo.getEntBrno());
 	    	 session.setAttribute("entName", entCeo.getEntName());
