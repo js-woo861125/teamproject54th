@@ -172,7 +172,7 @@
 							<div class="product-cart-wrap border mb-10" style="box-shadow:0 6px 12px 0 rgba(0,0,0,.04);">
 	                            <article class="row align-items-center hover-up">
 	                                <figure class="col-md-4 mb-0">
-	                                    <a href="shop-product-right.html">
+	                                    <a th:href="@{/customer/product/productDetailByProd(productsNum=${l.productsNum})}">
 	                                        <img th:src="@{${l.imageFilePath}}" alt="" />
 	                                    </a>
 	                                </figure>
