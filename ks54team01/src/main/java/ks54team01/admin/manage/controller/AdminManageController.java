@@ -82,12 +82,14 @@ public class AdminManageController {
 		String adminId = adminInfo.getMemberId();
 	    String adminName = adminInfo.getManagerName();
 	    String memberType = adminInfo.getMemberType();
+	    String entEmpId = adminInfo.getMemberId();
 	    
 	    // 세션 저장
 	    session.setAttribute("loginAdmin", adminInfo);
 	    session.setAttribute("adminId", adminId);
 	    session.setAttribute("adminName", adminName);
 	    session.setAttribute("memberType", memberType);
+	    session.setAttribute("entEmpId", adminId);
 	    
 	    
 	    log.info("로그인 성공: adminId={} adminName={}", memberId, adminName);
