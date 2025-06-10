@@ -40,7 +40,7 @@ import lombok.RequiredArgsConstructor;
 public class EnterpriseProductController {
 	
 	
-	@Value("${file.path}")
+	@Value("${file.path:/}")
 	private String fileRealPath;
 	
 	private final EnterpriseProductService enterpriseProductService;
