@@ -162,12 +162,12 @@
                                 <td>
                                 	 <a class="item" href="#">
 								        <div class="img">
-								            <img th:if="${sl.productImage != null}" 
-											     th:src="@{${sl.productImage}}" 
+								            <img th:if="${sl.mainImageData != null}" 
+											     th:src="@{${sl.mainImageData}}" 
 											     class="img-sm img-main" 
 											     alt="상품이미지" />
 								                 
-								            <div th:if="${sl.productImage == null}" 
+								            <div th:if="${sl.mainImageData == null}" 
 								                 class="img-sm img-main bg-light d-inline-block" 
 								                 style="width: 100px; height: 100px;"></div>
 								        </div>							       

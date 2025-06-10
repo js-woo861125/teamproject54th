@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpSession;
 import ks54team01.admin.product.domain.AdminProduct;
 import ks54team01.admin.product.service.AdminProductService;
 import ks54team01.admin.productInfo.domain.ProductInfoBenefit;
@@ -33,10 +34,12 @@ import ks54team01.enterprise.product.mapper.EnterpriseMarginRatioMapper;
 import ks54team01.enterprise.product.service.EnterpriseMarginRatioService;
 import ks54team01.enterprise.product.service.EnterpriseProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/enterprise/product")
+@Slf4j
 public class EnterpriseProductController {
 	
 	
@@ -108,7 +111,16 @@ public class EnterpriseProductController {
 	
 	@PostMapping("/addMarginRatio")
 	public String addEnterpriseMarginRatio(EnterpriseMarginRatio enterpriseMarginRatio
-										 , RedirectAttributes redirectAttributes) {
+										 , RedirectAttributes redirectAttributes
+										 , HttpSession session) {
+		
+		String entCeoNo = (String) session.getAttribute("entCeoNo");
+		String entEmpId = (String) session.getAttribute("loginId");
+		
+		log.info("entEmpId: {}", entEmpId);
+		
+		enterpriseMarginRatio.setEnterpriseCeoNum(entCeoNo);
+		enterpriseMarginRatio.setEnterpriseEmployeeId(entEmpId);
 		
 		int isAdd = enterpriseMarginRatioMapper.existMarginRatioByPeriod(enterpriseMarginRatio);
 		
@@ -118,12 +130,6 @@ public class EnterpriseProductController {
 		    enterpriseMarginRatioService.addEnterpriseMarginRatio(enterpriseMarginRatio);
 		    redirectAttributes.addFlashAttribute("addResult", "success");
 		}
-		/*
-		 * 
-		 * redirectAttributes.addFlashAttribute("addResult", isAdd == 1 ? "duplicate" :
-		 * "success");
-		 * enterpriseMarginRatioService.addEnterpriseMarginRatio(enterpriseMarginRatio);
-		 */
 		
 		return "redirect:/enterprise/product/marginRatio";
 	}
@@ -139,13 +145,13 @@ public class EnterpriseProductController {
 	
 	@PostMapping("/modifyMarginRatio")
 	public String modifymodifyMarginRatio(@RequestParam("periodList") List<Integer> periodList,
-										  @RequestParam("marginRatioList") List<Double>  marginRatioList) {
+										  @RequestParam("marginRatioList") List<Double>  marginRatioList, 
+										  HttpSession session) {
 		
 		
 		List<EnterpriseMarginRatio> list = new ArrayList<>();
 
-	    // 예시로 "ent_ceo_1" 하드코딩
-	    String entCeoNo = "ent_ceo_1";
+		String entCeoNo = (String) session.getAttribute("entCeoNo");
 
 	    for (int i = 0; i < periodList.size(); i++) {
 	        EnterpriseMarginRatio emr = new EnterpriseMarginRatio();
@@ -161,16 +167,20 @@ public class EnterpriseProductController {
 	}
 	
 	@GetMapping("/marginRatio")
-	public String enterpriseMarginRatio(@ModelAttribute("addResult") String addResult, Model model) {
+	public String enterpriseMarginRatio(@ModelAttribute("addResult") String addResult, Model model, HttpSession session) {
 		
-		List<EnterpriseMarginRatio> enterpriseMarginRatio = enterpriseMarginRatioService.getEnterpriseMarginRatio();
+		String entCeoNo = (String) session.getAttribute("entCeoNo");
+		
+		List<EnterpriseMarginRatio> enterpriseMarginRatio = enterpriseMarginRatioService.getEnterpriseMarginRatio(entCeoNo);
 		
 		model.addAttribute("title", "마진율 등록");
 		model.addAttribute("enterpriseMarginRatio", enterpriseMarginRatio);
 		model.addAttribute("addResult", addResult);
 		
 		return "enterprise/product/enterpriseMarginRatioView";
+	
 	}
+	
 	/*
 	 * 입점업체 재고 조회
 	 */
@@ -211,11 +221,13 @@ public class EnterpriseProductController {
 	 * 입점업체 상품등록
 	 */
 	@GetMapping("/addProduct")
-	public String enterpriseAddProduct(@RequestParam("productNo") String productNo, Model model) {
+	public String enterpriseAddProduct(@RequestParam("productNo") String productNo, Model model, HttpSession session) {
+		
+		String entCeoNo = (String) session.getAttribute("entCeoNo");
 		
 		AdminProduct product = adminProductService.getProduct(productNo);
 	
-		List<EnterpriseMarginRatio> marginList = enterpriseMarginRatioService.getEnterpriseMarginRatio();
+		List<EnterpriseMarginRatio> marginList = enterpriseMarginRatioService.getEnterpriseMarginRatio(entCeoNo);
 		List<ProductInfoBenefit> benefitList = adminProductInfoService.getBenefitList();
 		
 		model.addAttribute("title", "플랫폼 상품목록");
@@ -259,9 +271,12 @@ public class EnterpriseProductController {
 	@GetMapping("/modifySellProduct")
 	public String showModifySellProductForm(
 	        @RequestParam("sellProductsNo") String sellProductsNo, 
-	        Model model
+	        Model model ,
+	        HttpSession session
 	) {
 
+		String entCeoNo = (String) session.getAttribute("entCeoNo");
+		
 	    EnterpriseProduct product = enterpriseProductService.getProductByNo(sellProductsNo);
 	
 	    List<EnterpriseProductBenefit> productBenefitList = enterpriseProductService.getBenefitListBySellProductNo(sellProductsNo);
@@ -270,7 +285,7 @@ public class EnterpriseProductController {
 	    
 	    List<ProductInfoBenefit> benefitList = adminProductInfoService.getBenefitList();
 	    
-	    List<EnterpriseMarginRatio> marginList = enterpriseMarginRatioService.getEnterpriseMarginRatio();
+	    List<EnterpriseMarginRatio> marginList = enterpriseMarginRatioService.getEnterpriseMarginRatio(entCeoNo);
 
 	    model.addAttribute("product", product);
 	    model.addAttribute("productBenefitList", productBenefitList);
