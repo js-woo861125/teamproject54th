@@ -14,14 +14,6 @@
 	
 	<!-- 페이지 삽입공간 -->
 	<th:block layout:fragment="customContents">
-        <div class="page-header breadcrumb-wrap">
-            <div class="container">
-                <div class="breadcrumb">
-                    <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
-                    <span></span> Pages <span></span> My Account
-                </div>
-            </div>
-        </div>
         <div class="page-content pt-150 pb-150">
             <div class="container">
                 <div class="row">
@@ -35,12 +27,12 @@
                                         </div>
                                         <form id="forgotPwForm" th:action="@{/customer/member/forgotPw}"method="post">
                                         	<div class="form-group">
-                                                <input type="text" id="memberId" name="memberId" placeholder="아이디" value="entempid3" required />
+                                                <input type="text" id="memberId" name="memberId" placeholder="아이디" value="entempid1" required />
                                             </div>
                                             <div class="form-group">
                                             	<input type="hidden" id="memberEmail" name="memberEmail"/>
 	                                            	<div class="form-group d-flex">
-		                                                <input type="text" class="w-60" id="emailFirst" name="emailFirst" placeholder="Email" value="snh2520" required />
+		                                                <input type="text" class="w-60" id="emailFirst" name="emailFirst" placeholder="Email" required />
 		                                                <select class="w-auto border-1 border-radius-10 ml-10" id="emailLast" name="emailLast">
 		                                                    <option value="@naver.com">@naver.com</option>
 		                                                    <option value="@daum.net">@daum.net</option>
@@ -58,7 +50,7 @@
 											<!-- 회원 유형 선택 -->
                                             <div class="custome-radio type-radio d-flex justify-content-evenly mb-30">
                                                 <div class="custome-radio">
-												    <input class="form-check-input" type="radio" id="memberTypeCustomer" name="memberType" value="개인고객" checked="checked" required />
+												    <input class="form-check-input" type="radio" id="memberTypeCustomer" name="memberType" value="개인고객"  required />
 												    <label class="form-check-label" for="memberTypeCustomer">일반회원</label>
 												</div>
                                                 <div class="custome-radio">
@@ -66,7 +58,7 @@
 												    <label class="form-check-label" for="memberTypeCorp">기업회원</label>
 												</div>
 												<div class="custome-radio">
-												    <input class="form-check-input" type="radio" id="memberTypeEnt" name="memberType" value="입점업체" required />
+												    <input class="form-check-input" type="radio" id="memberTypeEnt" name="memberType" value="입점업체" checked="checked" required />
 												    <label class="form-check-label" for="memberTypeEnt">입점업체</label>
 												</div>
                                             </div>
